@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>net.fhirfactory.pegacorn</groupId>
-        <artifactId>the-pegacorn-project</artifactId>
+        <artifactId>pegacorn</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../pegacorn</relativePath>
     </parent>
