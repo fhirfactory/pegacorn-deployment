@@ -6,7 +6,6 @@
 package net.fhirfactory.pegacorn.deploymentproperties;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 
