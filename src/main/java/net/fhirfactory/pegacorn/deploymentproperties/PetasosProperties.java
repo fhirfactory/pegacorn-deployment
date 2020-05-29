@@ -5,7 +5,12 @@
  */
 package net.fhirfactory.pegacorn.deploymentproperties;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.enterprise.context.ApplicationScoped;
+
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -35,8 +40,28 @@ public class PetasosProperties {
     // Size of the cache in bytes, once exceeded entries will be written to the overflow
     // directory
     private final long CACHE_SIZE_IN_BYTES = 1000000000;
-    
 
+    // The name of the environment variable which holds a list of Petasos service endpoints
+    // in <service name>:<base port> form
+    // For example, in a 3 site pegacorn deployment, at site A this variable would
+    // be set to something like:
+    // petasos.mitaf.siteb:80660;petasos.mitaf.sitec:80760
+    private final String SITE_ENDPOINT_ENV_VAR_NAME = "DIST_HOST_PORT_AND_URI_SEMI_COLON_LIST";
+
+    // An array which holds the Petasos Node endpoints at other sites. This information is
+    // pulled from the {$SITE_ENDPOINT_ENV_VAR_NAME} environment variable
+    private ArrayList<String> siteServiceEndpoints;
+
+    // The name of the environment variable which holds service endpointof this deployment.
+    // For example, at site A this variable would be set to something like:
+    // petasos.mitaf.sitea:80560
+    private final String MY_SITE_ENDPOINT_ENV_VAR_NAME = "MY_HOST_PORT_AND_URI";
+
+    // A string holding the site Petasos service endpoint. For example, at site A 
+    // this variable would be set to something like:
+    // petasos.mitaf.sitea:80560
+    private String myServiceEndpoint;
+    
     public int getExpectedCompletionTimeBufferMillis() {
         return EXPECTED_COMPLETION_TIME_BUFFER_MILLIS;
     }
@@ -59,5 +84,35 @@ public class PetasosProperties {
     
     public long getCacheSizeInBytes() {
         return CACHE_SIZE_IN_BYTES;
+    }
+    
+    // parse an environment variable holding a comma separated list of Kubernetes Petasos
+    // service endpoints and add each endpoint to a List
+    public ArrayList<String> getOtherSiteServiceEndpoints() {
+        if (siteServiceEndpoints == null) {
+    		this.siteServiceEndpoints = new ArrayList<String>();
+        	String distributionEndPointsHostPortAndURISemiColonList = System.getenv(SITE_ENDPOINT_ENV_VAR_NAME);
+        	if (!StringUtils.isBlank(distributionEndPointsHostPortAndURISemiColonList)) {
+            	String[] distributionEndPointsHostPortAndURIs = distributionEndPointsHostPortAndURISemiColonList.split(";");
+            	for (int i=0; i < distributionEndPointsHostPortAndURIs.length; i++) {
+            		siteServiceEndpoints.add(distributionEndPointsHostPortAndURIs[i].trim());
+            	}
+        	}
+        }
+        
+        return this.siteServiceEndpoints;
+    }
+    
+    public String getMyServiceEndpoint() {
+        if (myServiceEndpoint == null) {
+        	String myServiceEndpoint = System.getenv(MY_SITE_ENDPOINT_ENV_VAR_NAME);
+        	if (StringUtils.isBlank(myServiceEndpoint)) {
+        		myServiceEndpoint = null;
+        	} else {
+          		myServiceEndpoint = myServiceEndpoint.trim();
+        	}
+        }
+        
+        return myServiceEndpoint;
     }
 }
