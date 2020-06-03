@@ -61,6 +61,17 @@ public class PetasosProperties {
     // petasos.mitaf.sitea:80560
     private String myServiceEndpoint;
     
+    private final String SITE_FDNS_ENV_VAR_NAME = "SITE_FDNS_SEMI_COLON_LIST";
+    
+    // list of qualified site FDNs for other Petasos site services. This is the 
+    // value that will be stored on the Component Status Map.
+    private ArrayList<String> siteFDNs;
+
+    private final String MY_SITE_FDN_ENV_VAR_NAME = "MY_SITE_FDN";
+    
+    private String mySiteFDN;
+
+    
     public int getExpectedCompletionTimeBufferMillis() {
         return EXPECTED_COMPLETION_TIME_BUFFER_MILLIS;
     }
@@ -87,6 +98,8 @@ public class PetasosProperties {
     
     // parse an environment variable holding a comma separated list of Kubernetes Petasos
     // service endpoints and add each endpoint to a List
+    // TODO: if we get more semicolon lists or ev vars to parse, put the parsing
+    // into separate methods so not repeating code
     public ArrayList<String> getOtherSiteServiceEndpoints() {
         if (siteServiceEndpoints == null) {
     		this.siteServiceEndpoints = new ArrayList<String>();
@@ -113,5 +126,35 @@ public class PetasosProperties {
         }
         
         return myServiceEndpoint;
+    }
+    
+    // parse an environment variable holding a comma separated list of FDNs
+    // of other site Petasos services
+    public ArrayList<String> getSiteFDNs() {
+        if (siteFDNs == null) {
+    		this.siteFDNs = new ArrayList<String>();
+        	String siteFDNsSemiColonList = System.getenv(SITE_FDNS_ENV_VAR_NAME);
+        	if (!StringUtils.isBlank(siteFDNsSemiColonList)) {
+            	String[] siteFDNs = siteFDNsSemiColonList.split(";");
+            	for (int i=0; i < siteFDNs.length; i++) {
+            		siteServiceEndpoints.add(siteFDNs[i].trim());
+            	}
+        	}
+        }
+        
+        return this.siteFDNs;
+    }
+    
+    public String getMySiteFDN() {
+        if (mySiteFDN == null) {
+        	String mySiteFDN = System.getenv(MY_SITE_FDN_ENV_VAR_NAME);
+        	if (StringUtils.isBlank(mySiteFDN)) {
+        		mySiteFDN = null;
+        	} else {
+        		mySiteFDN = mySiteFDN.trim();
+        	}
+        }
+        
+        return mySiteFDN;
     }
 }
