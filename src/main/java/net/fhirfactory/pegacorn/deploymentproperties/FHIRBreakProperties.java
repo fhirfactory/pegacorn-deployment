@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 MAHun
+ * Copyright (c) 2020 Mark A. Hunter (ACT Health)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,26 +22,26 @@
 
 package net.fhirfactory.pegacorn.deploymentproperties;
 
+import javax.enterprise.context.ApplicationScoped;
 import net.fhirfactory.pegacorn.common.model.FDN;
 import net.fhirfactory.pegacorn.common.model.RDN;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
-public class CommunicateProperties {
+public class FHIRBreakProperties {
     @Inject
     SystemWideProperties siteCommonProperties;
 
-    private static final String COMMUNICATE_SUBSYSTEM_DEPLOYMENT_NAME = "Pegacorn-Communicate(R1.0.0-SNAPSHOT)";
+    private static final String FHIRBREAK_SUBSYSTEM_DEPLOYMENT_NAME = "Pegacorn-FHIRBreak(R1.0.0-SNAPSHOT)";
 
-    public String getCommunicateSubsystemDeploymentName(){
-        return(COMMUNICATE_SUBSYSTEM_DEPLOYMENT_NAME);
+    public String getFHIRBreakSubsystemDeploymentName(){
+        return(FHIRBREAK_SUBSYSTEM_DEPLOYMENT_NAME);
     }
 
-    public FDN getCommunicateSubsystemDeploymentInstanceID(){
+    public FDN getFHIRBreakSubsystemDeploymentInstanceID(){
         FDN newFDN = siteCommonProperties.getSystemDeploymentInstanceID();
-        newFDN.appendRDN(new RDN(siteCommonProperties.getSubsystemQualifier(), getCommunicateSubsystemDeploymentName()));
+        newFDN.appendRDN(new RDN(siteCommonProperties.getSubsystemQualifier(), getFHIRBreakSubsystemDeploymentName()));
         return(newFDN);
     }
 }

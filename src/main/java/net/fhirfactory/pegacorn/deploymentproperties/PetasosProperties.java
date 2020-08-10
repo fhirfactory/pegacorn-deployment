@@ -1,20 +1,33 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (c) 2020 Mark A. Hunter (ACT Health)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 package net.fhirfactory.pegacorn.deploymentproperties;
 
-import java.util.ArrayList;
-
 import javax.enterprise.context.ApplicationScoped;
-
-import org.apache.commons.lang3.StringUtils;
 
 /**
  *
- * @author mhunter
+ * @author Mark A. Hunter
  */
+
 @ApplicationScoped
 public class PetasosProperties {
     
@@ -40,38 +53,7 @@ public class PetasosProperties {
     // directory
     private final long CACHE_SIZE_IN_BYTES = 1000000000;
 
-    // The name of the environment variable which holds a list of Petasos service endpoints
-    // in <service name>:<base port> form
-    // For example, in a 3 site pegacorn deployment, at site A this variable would
-    // be set to something like:
-    // petasos.mitaf.siteb:80660;petasos.mitaf.sitec:80760
-    private final String SITE_ENDPOINT_ENV_VAR_NAME = "DIST_HOST_PORT_AND_URI_SEMI_COLON_LIST";
-
-    // An array which holds the Petasos Node endpoints at other sites. This information is
-    // pulled from the {$SITE_ENDPOINT_ENV_VAR_NAME} environment variable
-    private ArrayList<String> siteServiceEndpoints;
-
-    // The name of the environment variable which holds service endpointof this deployment.
-    // For example, at site A this variable would be set to something like:
-    // petasos.mitaf.sitea:80560
-    private final String MY_SITE_ENDPOINT_ENV_VAR_NAME = "MY_HOST_PORT_AND_URI";
-
-    // A string holding the site Petasos service endpoint. For example, at site A 
-    // this variable would be set to something like:
-    // petasos.mitaf.sitea:80560
-    private String myServiceEndpoint;
-    
-    private final String SITE_FDNS_ENV_VAR_NAME = "SITE_FDNS_SEMI_COLON_LIST";
-    
-    // list of qualified site FDNs for other Petasos site services. This is the 
-    // value that will be stored on the Component Status Map.
-    private ArrayList<String> siteFDNs;
-
-    private final String MY_SITE_FDN_ENV_VAR_NAME = "MY_SITE_FDN";
-    
-    private String mySiteFDN;
-
-    
+  
     public int getExpectedCompletionTimeBufferMillis() {
         return EXPECTED_COMPLETION_TIME_BUFFER_MILLIS;
     }
@@ -95,66 +77,5 @@ public class PetasosProperties {
     public long getCacheSizeInBytes() {
         return CACHE_SIZE_IN_BYTES;
     }
-    
-    // parse an environment variable holding a comma separated list of Kubernetes Petasos
-    // service endpoints and add each endpoint to a List
-    // TODO: if we get more semicolon lists or ev vars to parse, put the parsing
-    // into separate methods so not repeating code
-    public ArrayList<String> getOtherSiteServiceEndpoints() {
-        if (siteServiceEndpoints == null) {
-    		this.siteServiceEndpoints = new ArrayList<String>();
-        	String distributionEndPointsHostPortAndURISemiColonList = System.getenv(SITE_ENDPOINT_ENV_VAR_NAME);
-        	if (!StringUtils.isBlank(distributionEndPointsHostPortAndURISemiColonList)) {
-            	String[] distributionEndPointsHostPortAndURIs = distributionEndPointsHostPortAndURISemiColonList.split(";");
-            	for (int i=0; i < distributionEndPointsHostPortAndURIs.length; i++) {
-            		siteServiceEndpoints.add(distributionEndPointsHostPortAndURIs[i].trim());
-            	}
-        	}
-        }
-        
-        return this.siteServiceEndpoints;
-    }
-    
-    public String getMyServiceEndpoint() {
-        if (myServiceEndpoint == null) {
-        	String myServiceEndpoint = System.getenv(MY_SITE_ENDPOINT_ENV_VAR_NAME);
-        	if (StringUtils.isBlank(myServiceEndpoint)) {
-        		myServiceEndpoint = null;
-        	} else {
-          		myServiceEndpoint = myServiceEndpoint.trim();
-        	}
-        }
-        
-        return myServiceEndpoint;
-    }
-    
-    // parse an environment variable holding a comma separated list of FDNs
-    // of other site Petasos services
-    public ArrayList<String> getSiteFDNs() {
-        if (siteFDNs == null) {
-    		this.siteFDNs = new ArrayList<String>();
-        	String siteFDNsSemiColonList = System.getenv(SITE_FDNS_ENV_VAR_NAME);
-        	if (!StringUtils.isBlank(siteFDNsSemiColonList)) {
-            	String[] siteFDNs = siteFDNsSemiColonList.split(";");
-            	for (int i=0; i < siteFDNs.length; i++) {
-            		siteServiceEndpoints.add(siteFDNs[i].trim());
-            	}
-        	}
-        }
-        
-        return this.siteFDNs;
-    }
-    
-    public String getMySiteFDN() {
-        if (mySiteFDN == null) {
-        	String mySiteFDN = System.getenv(MY_SITE_FDN_ENV_VAR_NAME);
-        	if (StringUtils.isBlank(mySiteFDN)) {
-        		mySiteFDN = null;
-        	} else {
-        		mySiteFDN = mySiteFDN.trim();
-        	}
-        }
-        
-        return mySiteFDN;
-    }
+   
 }

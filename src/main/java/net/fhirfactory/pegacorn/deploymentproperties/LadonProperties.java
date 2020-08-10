@@ -5,10 +5,13 @@
  */
 package net.fhirfactory.pegacorn.deploymentproperties;
 
+import javax.enterprise.context.ApplicationScoped;
+
 /**
  *
  * @author Mark A. Hunter (ACT Health)
  */
+@ApplicationScoped
 public class LadonProperties {
 
     /*
