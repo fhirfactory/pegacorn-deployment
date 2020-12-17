@@ -53,6 +53,9 @@ public abstract class PegacornSubsystem {
     protected int getDefaultEdgeReceiverBasePort() {
         throw new IllegalStateException("Subclass must override this method to use edge receiver ports");                                
     }
+    protected int getDefaultFHIRBasePort() {
+        throw new IllegalStateException("Subclass must override this method to use FHIR ports");                                
+    }
     
     private static final Integer DEFAULT_EXTERNAL_PORT = Integer.valueOf(443);
 
@@ -66,6 +69,10 @@ public abstract class PegacornSubsystem {
     
     protected int getDefaultEdgeReceiverBasePortInsidePod() {
         return getDefaultEdgeReceiverBasePort();
+    }       
+    
+    protected int getDefaultFHIRBasePortInsidePod() {
+        return getDefaultFHIRBasePort();
     }       
     
     private String getPropertyNameInItsNameSpace(String propertyName) {
@@ -172,5 +179,25 @@ public abstract class PegacornSubsystem {
      */
     protected Integer getPetasosPortInsidePod(int offset) {
         return getProperty("PETASOS_BASE_PORT_INSIDE_POD", getPetasosBasePort(getDefaultPetasosBasePortInsidePod())) + offset;
+    }
+
+    /**
+     * @param offset the port offset from the base port
+     * @return the exposed kubernetes service port
+     */
+    protected Integer getFHIRPort(int offset) {
+        return getFHIRBasePort(getDefaultFHIRBasePort()) + offset;
+    }
+        
+    private Integer getFHIRBasePort(Integer defaultValue) {
+        return getProperty("FHIR_BASE_PORT", defaultValue);
+    }
+    
+    /**
+     * @param offset the port offset from the base port
+     * @return the internal port used on the Pod/Container
+     */
+    protected Integer getFHIRPortInsidePod(int offset) {
+        return getProperty("FHIR_BASE_PORT_INSIDE_POD", getFHIRBasePort(getDefaultFHIRBasePortInsidePod())) + offset;
     }
 }
