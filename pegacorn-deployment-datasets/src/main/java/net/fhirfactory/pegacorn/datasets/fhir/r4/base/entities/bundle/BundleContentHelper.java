@@ -99,6 +99,23 @@ public class BundleContentHelper {
         Bundle bundle = new Bundle();
         bundle.setTimestamp(Date.from(Instant.now()));
         bundle.addEntry(bundleEntryComponent);
+        bundle.setTotal(1);
+        return(bundle);
+    }
+
+    public Bundle buildSearchResponseBundle(List<Resource> resourceSet){
+        Bundle bundle = new Bundle();
+        for(Resource currentResource: resourceSet) {
+            Bundle.BundleEntrySearchComponent bundleEntrySearchComponent = new Bundle.BundleEntrySearchComponent();
+            bundleEntrySearchComponent.setScore(1);
+            bundleEntrySearchComponent.setMode(Bundle.SearchEntryMode.MATCH);
+            Bundle.BundleEntryComponent bundleEntryComponent = new Bundle.BundleEntryComponent();
+            bundleEntryComponent.setResource(currentResource);
+            bundleEntryComponent.setSearch(bundleEntrySearchComponent);
+            bundle.setTimestamp(Date.from(Instant.now()));
+            bundle.addEntry(bundleEntryComponent);
+        }
+        bundle.setTotal(resourceSet.size());
         return(bundle);
     }
 }
