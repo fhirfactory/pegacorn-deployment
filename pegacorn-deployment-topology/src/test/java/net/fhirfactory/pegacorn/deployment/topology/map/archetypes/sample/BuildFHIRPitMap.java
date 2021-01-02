@@ -40,8 +40,63 @@ import net.fhirfactory.pegacorn.deployment.topology.map.model.DeploymentMapNodeE
 public class BuildFHIRPitMap extends FHIRPitPegacornSubsystem {
 
     String nodeFHIRPitText = "FHIRPit";
-    String nodeFHIRPitGen0Text = "gen0-fhirbreak";
-    String NodeFHIRPitGen1Text = "gen1-fhirbreak";
+    String nodeFHIRPitGen0Text = "gen0-fhirpit";
+    String NodeFHIRPitGen1Text = "gen1-fhirpit";
+
+    @Override
+    protected ResilienceModeEnum specifyResilienceMode() {
+        return (ResilienceModeEnum.RESILIENCE_MODE_STANDALONE);
+    }
+
+    @Override
+    protected String getDefaultServiceDNSEntry() {
+        return (nodeFHIRPitGen0Text);
+    }
+
+    @Override
+    protected int getDefaultServiceInteractBasePort() {
+        return (19008);
+    }
+
+    @Override
+    protected int getDefaultServicePetasosBasePort() {
+        return (19002);
+    }
+
+    @Override
+    protected int getDefaultServiceEdgeReceiveBasePort() {
+        return (19001);
+    }
+
+    @Override
+    protected int getDefaultServiceEdgeAnswerBasePort() {
+        return (19000);
+    }
+
+    @Override
+    protected int getDefaultProcessingPlantInteractBasePort() {
+        return (8080);
+    }
+
+    @Override
+    protected int getDefaultProcessingPlantPetasosBasePort() {
+        return (19002);
+    }
+
+    @Override
+    protected int getDefaultProcessingPlantEdgeReceiveBasePort() {
+        return (19001);
+    }
+
+    @Override
+    protected int getDefaultProcessingPlantEdgeAnswerBasePort() {
+        return (19000);
+    }
+
+    @Override
+    protected String getDefaultProcessingPlantDNSEntry() {
+        return (nodeFHIRPitGen0Text);
+    }
 
     @Override
     public void buildSubsystemNode(DeploymentMapNodeElement solutionNode) {

@@ -44,6 +44,61 @@ public class BuildFHIRViewMap extends FHIRViewPegacornSubsystem {
     String nodeFHIRViewGen1 = "gen1-fhirview";
 
     @Override
+    protected ResilienceModeEnum specifyResilienceMode() {
+        return (ResilienceModeEnum.RESILIENCE_MODE_STANDALONE);
+    }
+
+    @Override
+    protected String getDefaultServiceDNSEntry() {
+        return (nodeFHIRViewGen0);
+    }
+
+    @Override
+    protected int getDefaultServiceInteractBasePort() {
+        return (19408);
+    }
+
+    @Override
+    protected int getDefaultServicePetasosBasePort() {
+        return (19402);
+    }
+
+    @Override
+    protected int getDefaultServiceEdgeReceiveBasePort() {
+        return (19401);
+    }
+
+    @Override
+    protected int getDefaultServiceEdgeAnswerBasePort() {
+        return (19400);
+    }
+
+    @Override
+    protected int getDefaultProcessingPlantInteractBasePort() {
+        return (19408);
+    }
+
+    @Override
+    protected int getDefaultProcessingPlantPetasosBasePort() {
+        return (19402);
+    }
+
+    @Override
+    protected int getDefaultProcessingPlantEdgeReceiveBasePort() {
+        return (19401);
+    }
+
+    @Override
+    protected int getDefaultProcessingPlantEdgeAnswerBasePort() {
+        return (19400);
+    }
+
+    @Override
+    protected String getDefaultProcessingPlantDNSEntry() {
+        return (nodeFHIRViewGen0);
+    }
+
+    @Override
     public void buildSubsystemNode(DeploymentMapNodeElement solutionNode) {
         DeploymentMapNodeElement fhirviewNode = new DeploymentMapNodeElement();
         fhirviewNode.setConcurrencyMode(ConcurrencyModeEnum.CONCURRENCY_MODE_STANDALONE);

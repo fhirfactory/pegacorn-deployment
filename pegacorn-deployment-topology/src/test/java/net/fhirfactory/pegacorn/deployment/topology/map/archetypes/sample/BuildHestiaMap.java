@@ -44,6 +44,61 @@ public class BuildHestiaMap extends HestiaPegacornSubsystem {
     String nodeHestiaDAM = "dam-hestia";
 
     @Override
+    protected ResilienceModeEnum specifyResilienceMode() {
+        return (ResilienceModeEnum.RESILIENCE_MODE_STANDALONE);
+    }
+
+    @Override
+    protected String getDefaultServiceDNSEntry() {
+        return (nodeHestiaAudit);
+    }
+
+    @Override
+    protected int getDefaultServiceInteractBasePort() {
+        return (0);
+    }
+
+    @Override
+    protected int getDefaultServicePetasosBasePort() {
+        return (19330);
+    }
+
+    @Override
+    protected int getDefaultServiceEdgeReceiveBasePort() {
+        return (19340);
+    }
+
+    @Override
+    protected int getDefaultServiceEdgeAnswerBasePort() {
+        return (19300);
+    }
+
+    @Override
+    protected int getDefaultProcessingPlantInteractBasePort() {
+        return (0);
+    }
+
+    @Override
+    protected int getDefaultProcessingPlantPetasosBasePort() {
+        return (19330);
+    }
+
+    @Override
+    protected int getDefaultProcessingPlantEdgeReceiveBasePort() {
+        return (19340);
+    }
+
+    @Override
+    protected int getDefaultProcessingPlantEdgeAnswerBasePort() {
+        return (19300);
+    }
+
+    @Override
+    protected String getDefaultProcessingPlantDNSEntry() {
+        return (nodeHestiaAudit);
+    }
+
+    @Override
     public void buildSubsystemNode(DeploymentMapNodeElement solutionNode) {
         DeploymentMapNodeElement hestiaNode = new DeploymentMapNodeElement();
         hestiaNode.setConcurrencyMode(ConcurrencyModeEnum.CONCURRENCY_MODE_STANDALONE);

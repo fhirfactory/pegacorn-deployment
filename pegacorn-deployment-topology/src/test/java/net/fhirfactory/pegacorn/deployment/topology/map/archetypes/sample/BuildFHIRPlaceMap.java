@@ -43,6 +43,61 @@ public class BuildFHIRPlaceMap extends FHIRPlacePegacornSubsystem {
     String nodeFHIRPlaceGen0Text = "gen0-fhirplace";
 
     @Override
+    protected ResilienceModeEnum specifyResilienceMode() {
+        return (ResilienceModeEnum.RESILIENCE_MODE_STANDALONE);
+    }
+
+    @Override
+    protected String getDefaultServiceDNSEntry() {
+        return (nodeFHIRPlaceGen0Text);
+    }
+
+    @Override
+    protected int getDefaultServiceInteractBasePort() {
+        return (0);
+    }
+
+    @Override
+    protected int getDefaultServicePetasosBasePort() {
+        return (19130);
+    }
+
+    @Override
+    protected int getDefaultServiceEdgeReceiveBasePort() {
+        return (19140);
+    }
+
+    @Override
+    protected int getDefaultServiceEdgeAnswerBasePort() {
+        return (19100);
+    }
+
+    @Override
+    protected int getDefaultProcessingPlantInteractBasePort() {
+        return (0);
+    }
+
+    @Override
+    protected int getDefaultProcessingPlantPetasosBasePort() {
+        return (19130);
+    }
+
+    @Override
+    protected int getDefaultProcessingPlantEdgeReceiveBasePort() {
+        return (19140);
+    }
+
+    @Override
+    protected int getDefaultProcessingPlantEdgeAnswerBasePort() {
+        return (19100);
+    }
+
+    @Override
+    protected String getDefaultProcessingPlantDNSEntry() {
+        return (nodeFHIRPlaceGen0Text);
+    }
+
+    @Override
     public void buildSubsystemNode(DeploymentMapNodeElement solutionNode) {
         DeploymentMapNodeElement fhirplaceNode = new DeploymentMapNodeElement();
         fhirplaceNode.setConcurrencyMode(ConcurrencyModeEnum.CONCURRENCY_MODE_STANDALONE);

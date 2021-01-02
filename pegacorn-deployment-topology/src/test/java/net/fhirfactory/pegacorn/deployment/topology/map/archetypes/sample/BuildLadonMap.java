@@ -45,6 +45,56 @@ public class BuildLadonMap extends LadonExternalisedServices {
     String nodeLadonGen0Text = "gen0-ladon";
 
     @Override
+    protected String getDefaultServiceDNSEntry() {
+        return (nodeLadonGen0Text);
+    }
+
+    @Override
+    protected int getDefaultServiceInteractBasePort() {
+        return (0);
+    }
+
+    @Override
+    protected int getDefaultServicePetasosBasePort() {
+        return (10500);
+    }
+
+    @Override
+    protected int getDefaultServiceEdgeReceiveBasePort() {
+        return (10000);
+    }
+
+    @Override
+    protected int getDefaultServiceEdgeAnswerBasePort() {
+        return (10300);
+    }
+
+    @Override
+    protected int getDefaultProcessingPlantInteractBasePort() {
+        return (0);
+    }
+
+    @Override
+    protected int getDefaultProcessingPlantPetasosBasePort() {
+        return (10500);
+    }
+
+    @Override
+    protected int getDefaultProcessingPlantEdgeReceiveBasePort() {
+        return (10000);
+    }
+
+    @Override
+    protected int getDefaultProcessingPlantEdgeAnswerBasePort() {
+        return (10300);
+    }
+
+    @Override
+    protected String getDefaultProcessingPlantDNSEntry() {
+        return (nodeLadonGen0Text);
+    }
+
+    @Override
     public void buildSubsystemNode(DeploymentMapNodeElement solutionNode) {
         DeploymentMapNodeElement ladonNode = new DeploymentMapNodeElement();
         ladonNode.setConcurrencyMode(ConcurrencyModeEnum.CONCURRENCY_MODE_STANDALONE);
@@ -201,6 +251,11 @@ public class BuildLadonMap extends LadonExternalisedServices {
     @Override
     public Set<DeploymentMapNodeElement> buildConnectedSystemSet() {
         return(new HashSet<DeploymentMapNodeElement>());
+    }
+
+    @Override
+    protected ResilienceModeEnum specifyResilienceMode() {
+        return (ResilienceModeEnum.RESILIENCE_MODE_STANDALONE);
     }
 
 }

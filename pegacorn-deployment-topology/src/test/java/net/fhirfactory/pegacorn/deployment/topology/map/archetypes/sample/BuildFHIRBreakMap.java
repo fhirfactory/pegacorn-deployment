@@ -46,6 +46,62 @@ public class BuildFHIRBreakMap extends FHIRBreakPegacornSubsystem {
     String nodeFHIRBreakGen1 = "gen1-fhirbreak";
 
     @Override
+    protected ResilienceModeEnum specifyResilienceMode() {
+        return (ResilienceModeEnum.RESILIENCE_MODE_STANDALONE);
+    }
+
+    @Override
+    protected String getDefaultServiceDNSEntry() {
+        return (nodeFHIRBreakGen0);
+    }
+
+    @Override
+    protected int getDefaultServiceInteractBasePort() {
+        return (11050);
+    }
+
+    @Override
+    protected int getDefaultServicePetasosBasePort() {
+        return (11040);
+    }
+
+    @Override
+    protected int getDefaultServiceEdgeReceiveBasePort() {
+        return (11000);
+    }
+
+    @Override
+    protected int getDefaultServiceEdgeAnswerBasePort() {
+        return (11030);
+    }
+
+    @Override
+    protected int getDefaultProcessingPlantInteractBasePort() {
+        return (11050);
+    }
+
+    @Override
+    protected int getDefaultProcessingPlantPetasosBasePort() {
+        return (11040);
+    }
+
+    @Override
+    protected int getDefaultProcessingPlantEdgeReceiveBasePort() {
+        return (11000);
+    }
+
+    @Override
+    protected int getDefaultProcessingPlantEdgeAnswerBasePort() {
+        return (8080);
+    }
+
+    @Override
+    protected String getDefaultProcessingPlantDNSEntry() {
+        return (nodeFHIRBreakGen0);
+    }
+
+
+    @Override
     public void buildSubsystemNode(DeploymentMapNodeElement solutionNode) {
         DeploymentMapNodeElement fhirbreakNode = new DeploymentMapNodeElement();
         fhirbreakNode.setConcurrencyMode(ConcurrencyModeEnum.CONCURRENCY_MODE_STANDALONE);
@@ -272,5 +328,4 @@ public class BuildFHIRBreakMap extends FHIRBreakPegacornSubsystem {
     public Set<DeploymentMapNodeElement> buildConnectedSystemSet() {
         return(new HashSet<DeploymentMapNodeElement>());
     }
-
 }
