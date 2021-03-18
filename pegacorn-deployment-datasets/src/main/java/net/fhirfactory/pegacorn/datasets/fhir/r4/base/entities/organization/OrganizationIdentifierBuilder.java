@@ -21,7 +21,7 @@
  */
 package net.fhirfactory.pegacorn.datasets.fhir.r4.base.entities.organization;
 
-import net.fhirfactory.pegacorn.datasets.fhir.r4.base.entities.endpoint.EndpointIdentifierBuilder;
+import net.fhirfactory.pegacorn.datasets.fhir.r4.base.entities.endpoint.EndpointIdentifierHelper;
 import net.fhirfactory.pegacorn.datasets.fhir.r4.codesystems.PegacornIdentifierCodeSystemFactory;
 import net.fhirfactory.pegacorn.datasets.fhir.r4.internal.systems.DeploymentInstanceDetailInterface;
 import org.hl7.fhir.r4.model.CodeableConcept;
@@ -38,7 +38,7 @@ import java.util.Date;
 
 @ApplicationScoped
 public class OrganizationIdentifierBuilder {
-    private static final Logger LOG = LoggerFactory.getLogger(EndpointIdentifierBuilder.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EndpointIdentifierHelper.class);
     @Inject
     private PegacornIdentifierCodeSystemFactory pegacornIdentifierCodeSystemFactory;
 

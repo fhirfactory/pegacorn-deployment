@@ -23,22 +23,18 @@
  */
 package net.fhirfactory.pegacorn.datasets.fhir.r4.internal.systems;
 
-import java.time.Instant;
-import java.util.Date;
-
-import net.fhirfactory.pegacorn.datasets.fhir.r4.base.entities.endpoint.EndpointIdentifierBuilder;
+import net.fhirfactory.pegacorn.datasets.PegacornReferenceProperties;
 import net.fhirfactory.pegacorn.datasets.fhir.r4.codesystems.PegacornIdentifierCodeEnum;
 import net.fhirfactory.pegacorn.datasets.fhir.r4.codesystems.PegacornIdentifierCodeSystemFactory;
-import net.fhirfactory.pegacorn.deployment.properties.SystemWideProperties;
-import net.fhirfactory.pegacorn.petasos.model.topology.NodeElement;
+import net.fhirfactory.pegacorn.deployment.topology.model.nodes.SubsystemTopologyNode;
 import org.hl7.fhir.r4.model.*;
-
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import java.time.Instant;
+import java.util.Date;
 
 /**
  *
@@ -78,13 +74,13 @@ public abstract class SourceSystem {
     protected Endpoint endpointSystem;
     protected Identifier identifierSystemEndpoint;
     protected Reference systemEndpointReference;
-    protected NodeElement topologyNode;
+    protected SubsystemTopologyNode topologyNode;
 
     @Inject
     private PegacornIdentifierCodeSystemFactory pegacornIdentifierCodeSystemFactory;
 
     @Inject
-    private SystemWideProperties systemWideProperties;
+    private PegacornReferenceProperties systemWideProperties;
 
     public SourceSystem() {
         this.systemOwnerContactName = specifySystemOwnerContactName();
@@ -188,7 +184,7 @@ public abstract class SourceSystem {
         CodeableConcept idType = pegacornIdentifierCodeSystemFactory.buildIdentifierType(PegacornIdentifierCodeEnum.IDENTIFIER_CODE_FHIR_ENDPOINT_SYSTEM);
         systemSystemEndpointIdentifier.setType(idType);
         systemSystemEndpointIdentifier.setSystem(getSystemReference());
-        systemSystemEndpointIdentifier.setValue(systemWideProperties.getSystemDeploymentID());
+        systemSystemEndpointIdentifier.setValue(systemWideProperties.getSystemDeploymentName());
         Period validPeriod = new Period();
         validPeriod.setStart(Date.from(Instant.now()));
         systemSystemEndpointIdentifier.setPeriod(validPeriod);
@@ -196,7 +192,7 @@ public abstract class SourceSystem {
         Reference systemEndpointReference = new Reference();
         systemEndpointReference.setIdentifier(systemSystemEndpointIdentifier);
         systemEndpointReference.setType("Endpoint");
-        systemEndpointReference.setDisplay(systemWideProperties.getSystemDeploymentID());
+        systemEndpointReference.setDisplay(systemWideProperties.getSystemDeploymentName());
         return(systemEndpointReference);
     }
 
@@ -524,7 +520,7 @@ public abstract class SourceSystem {
         return referenceSystemAdministratorPractitionerRole;
     }
 
-    public NodeElement getTopologyNode() {
+    public SubsystemTopologyNode getTopologyNode() {
         return topologyNode;
     }
 

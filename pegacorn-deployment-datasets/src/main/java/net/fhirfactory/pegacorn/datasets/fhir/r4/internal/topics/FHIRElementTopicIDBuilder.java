@@ -21,10 +21,10 @@
  */
 package net.fhirfactory.pegacorn.datasets.fhir.r4.internal.topics;
 
-import net.fhirfactory.pegacorn.common.model.FDN;
-import net.fhirfactory.pegacorn.common.model.RDN;
-import net.fhirfactory.pegacorn.petasos.model.topics.TopicToken;
-import net.fhirfactory.pegacorn.petasos.model.topics.TopicTypeEnum;
+import net.fhirfactory.pegacorn.common.model.generalid.FDN;
+import net.fhirfactory.pegacorn.common.model.generalid.RDN;
+import net.fhirfactory.pegacorn.common.model.topicid.TopicToken;
+import net.fhirfactory.pegacorn.common.model.topicid.TopicTypeEnum;
 
 import javax.enterprise.context.ApplicationScoped;
 

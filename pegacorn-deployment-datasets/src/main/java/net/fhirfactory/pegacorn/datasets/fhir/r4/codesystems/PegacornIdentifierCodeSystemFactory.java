@@ -22,7 +22,7 @@
 package net.fhirfactory.pegacorn.datasets.fhir.r4.codesystems;
 
 
-import net.fhirfactory.pegacorn.deployment.properties.SystemWideProperties;
+import net.fhirfactory.pegacorn.datasets.PegacornReferenceProperties;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.StringType;
@@ -34,12 +34,13 @@ import javax.inject.Inject;
 public class PegacornIdentifierCodeSystemFactory {
 
     @Inject
-    private SystemWideProperties systemWideProperties;
+    private PegacornReferenceProperties systemWideProperties;
 
-    private static final String PEGACORN_IDENTIFIER_CODE_SYSTEM = "http://pegacorn.fhirfactory.net/code-systems/identifier-type";
+    private static final String PEGACORN_IDENTIFIER_CODE_SYSTEM = "/identifier-type";
 
-    public static String getPegacornIdentifierCodeSystem() {
-        return PEGACORN_IDENTIFIER_CODE_SYSTEM;
+    public String getPegacornIdentifierCodeSystem() {
+        String codeSystem = systemWideProperties.getPegacornCodeSystemSite() + PEGACORN_IDENTIFIER_CODE_SYSTEM;
+        return (codeSystem);
     }
 
     public CodeableConcept buildIdentifierType(PegacornIdentifierCodeEnum identifierCode){
@@ -49,7 +50,8 @@ public class PegacornIdentifierCodeSystemFactory {
         idTypeCoding.setSystem(getPegacornIdentifierCodeSystem());
         idTypeCoding.setDisplayElement(codeDisplayText(identifierCode));
         idType.getCoding().add(idTypeCoding);
-        idType.setText(systemWideProperties.getSystemDeploymentID() + " / " + codeDisplayText(identifierCode) );
+
+        idType.setText(getPegacornIdentifierCodeSystem() + " / " + codeDisplayText(identifierCode) );
         return(idType);
     }
 
