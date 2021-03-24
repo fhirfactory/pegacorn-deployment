@@ -21,11 +21,12 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.manager;
 
+import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDNToken;
 import net.fhirfactory.pegacorn.deployment.topology.manager.cache.TopologyNodesDM;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeTypeEnum;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.IPCEndpoint;
+import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCEndpoint;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -189,6 +190,14 @@ public class TopologyIM {
         TopologyNode retrievedNode = topologyDataManager.nodeSearch(nodeID);
         LOG.debug(".getNode(): Exit, retrievedNode --> {}", retrievedNode);
         return (retrievedNode);
+    }
+
+    public TopologyNode getNode(TopologyNodeFDNToken nodeFDNToken){
+        LOG.debug(".getNode(): Entry, nodeFDNToken --> {}", nodeFDNToken);
+        TopologyNodeFDN nodeFDN = new TopologyNodeFDN(nodeFDNToken);
+        TopologyNode retrievedNode = getNode(nodeFDN);
+        LOG.debug(".getNode(): Exit, retrievedNode --> {}", retrievedNode);
+        return(retrievedNode);
     }
 
     public List<TopologyNode> nodeSearch(TopologyNodeTypeEnum nodeType, String nodeName,  String nodeVersion ){

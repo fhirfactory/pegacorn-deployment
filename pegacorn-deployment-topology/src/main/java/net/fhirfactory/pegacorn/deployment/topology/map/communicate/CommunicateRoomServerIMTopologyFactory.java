@@ -28,9 +28,9 @@ import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.com
 import net.fhirfactory.pegacorn.deployment.topology.map.common.archetypes.common.PetasosEnabledSubsystemTopologyFactory;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeRDN;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeTypeEnum;
+import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCEndpoint;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.EndpointTypeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.PegacornHTTPProcessingPlantPort;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.internal.PegacornIPCviaHTTPServerPort;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.ClusterServiceTopologyNode;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.ProcessingPlantTopologyNode;
 import org.slf4j.Logger;
@@ -61,7 +61,7 @@ public  class CommunicateRoomServerIMTopologyFactory extends PetasosEnabledSubsy
 
     public void buildClusterServiceEndpoints(CommunicateRoomServerIMPropertyFile propertyFile, ClusterServiceTopologyNode serviceNode) {
         LOG.debug(".buildClusterServiceEndpoints(): Entry");
-        PegacornIPCviaHTTPServerPort matrixClientServicesServer = new PegacornIPCviaHTTPServerPort();
+        IPCEndpoint matrixClientServicesServer = new IPCEndpoint();
         String name = roomServerComponentNames.getEndpointServerName(roomServerComponentNames.getFunctionNameMatrixClientServices());
         TopologyNodeRDN serverRDN = createNodeRDN(name, propertyFile.getSubsystemInstant().getProcessingPlantVersion(), TopologyNodeTypeEnum.ENDPOINT);
         matrixClientServicesServer.constructFDN(serviceNode.getNodeFDN(),serverRDN);

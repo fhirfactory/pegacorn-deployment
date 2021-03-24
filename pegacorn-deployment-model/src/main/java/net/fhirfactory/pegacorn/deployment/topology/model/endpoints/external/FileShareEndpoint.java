@@ -1,6 +1,6 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.external;
 
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.IPCEndpoint;
+import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCEndpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

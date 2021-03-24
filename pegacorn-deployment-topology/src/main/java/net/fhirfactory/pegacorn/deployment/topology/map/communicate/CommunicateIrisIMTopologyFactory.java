@@ -21,18 +21,18 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.map.communicate;
 
+import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeRDN;
+import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeTypeEnum;
 import net.fhirfactory.pegacorn.deployment.names.common.SubsystemBaseNames;
 import net.fhirfactory.pegacorn.deployment.names.subsystems.CommunicateIrisComponentNames;
 import net.fhirfactory.pegacorn.deployment.names.subsystems.CommunicateRoomServerComponentNames;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.communicate.iris.im.CommunicateIrisIMPropertyFile;
 import net.fhirfactory.pegacorn.deployment.topology.map.common.archetypes.common.PegacornTopologyFactoryBase;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeRDN;
+import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCEndpoint;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.EndpointTypeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.PegacornHTTPProcessingPlantPort;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.internal.PegacornIPCviaHTTPServerPort;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.ClusterServiceTopologyNode;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.ProcessingPlantTopologyNode;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,7 +61,7 @@ public class CommunicateIrisIMTopologyFactory extends PegacornTopologyFactoryBas
 
     public void buildClusterServiceEndpoints(CommunicateIrisIMPropertyFile propertyFile, ClusterServiceTopologyNode serviceNode) {
         LOG.debug(".buildClusterServiceEndpoints(): Entry");
-        PegacornIPCviaHTTPServerPort matrixApplicationServicesServer = new PegacornIPCviaHTTPServerPort();
+        IPCEndpoint matrixApplicationServicesServer = new IPCEndpoint();
         String name = communicateIrisComponentNames.getEndpointServerName(communicateIrisComponentNames.getFunctionNameInteractMatrixApplicationServices());
         TopologyNodeRDN nodeRDN = createNodeRDN(name, propertyFile.getSubsystemInstant().getProcessingPlantVersion(), TopologyNodeTypeEnum.ENDPOINT);
         matrixApplicationServicesServer.constructFDN(serviceNode.getNodeFDN(),nodeRDN);

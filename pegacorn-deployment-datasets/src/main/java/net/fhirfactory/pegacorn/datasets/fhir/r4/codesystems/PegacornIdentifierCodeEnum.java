@@ -22,8 +22,15 @@
 package net.fhirfactory.pegacorn.datasets.fhir.r4.codesystems;
 
 public enum PegacornIdentifierCodeEnum {
-    IDENTIFIER_CODE_FHIR_ENDPOINT_SYSTEM("endpoint-name"),
-    IDENTIFIER_CODE_SOURCE_OF_TRUTH_RECORD_ID("sot-rid");
+    IDENTIFIER_CODE_FHIR_ENDPOINT_SYSTEM("idcode:endpoint-name"),
+    IDENTIFIER_CODE_SOURCE_OF_TRUTH_RECORD_ID("idcode:sot-rid"),
+    IDENTIFIER_CODE_PRACTITIONER_ROLE_SHORT_NAME("idcode:practitioner-role-short-name"),
+    IDENTIFIER_CODE_PRACTITIONER_ROLE_LONG_NAME("idcode:practitioner-role-long-name"),
+    IDENTIFIER_CODE_PRACTITIONER_EMAIL("idcode:practitioner-email"),
+    IDENTIFIER_CODE_BUSINESS_UNIT("idcode:business_unit"),
+    IDENTIFIER_CODE_CONTAINMENT_BASED_LOCATION("idcode:containment-based-location-id"),
+    IDENTIFIER_CODE_PRACTITIONER_ROLE_GROUP("idcode:group-containing-practitioner-roles"),
+    IDENTIFIER_CODE_PRACTITIONER_GROUP("idcode:group-containing-practitioners");
 
     private String identifierCode;
     private PegacornIdentifierCodeEnum(String code){ this.identifierCode = code;}

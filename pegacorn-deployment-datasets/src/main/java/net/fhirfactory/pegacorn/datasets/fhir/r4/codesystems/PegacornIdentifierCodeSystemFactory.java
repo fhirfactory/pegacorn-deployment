@@ -51,7 +51,7 @@ public class PegacornIdentifierCodeSystemFactory {
         idTypeCoding.setDisplayElement(codeDisplayText(identifierCode));
         idType.getCoding().add(idTypeCoding);
 
-        idType.setText(getPegacornIdentifierCodeSystem() + " / " + codeDisplayText(identifierCode) );
+        idType.setText(identifierCode.getIdentifierCode() + " --> " + codeDisplayText(identifierCode));
         return(idType);
     }
 
@@ -63,6 +63,27 @@ public class PegacornIdentifierCodeSystemFactory {
                 break;
             case IDENTIFIER_CODE_SOURCE_OF_TRUTH_RECORD_ID:
                 displayText = "Manufactured Identifier for Source-of-Truth Internal/Local Record Id (RID) for Resource";
+                break;
+            case IDENTIFIER_CODE_PRACTITIONER_ROLE_SHORT_NAME:
+                displayText = "FHIR::PractitionerRole Identifier (The Short Name given to the PractitionerRole instance)";
+                break;
+            case IDENTIFIER_CODE_PRACTITIONER_ROLE_LONG_NAME:
+                displayText = "FHIR::PractitionerRole Identifier (The Long Name given to the PractitionerRole instance)";
+                break;
+            case IDENTIFIER_CODE_BUSINESS_UNIT:
+                displayText = "FHIR::Organization Identifier (A Business Unit within an Organization)";
+                break;
+            case IDENTIFIER_CODE_CONTAINMENT_BASED_LOCATION:
+                displayText = "FHIR::Location Identifier (Containment Based Location Identifier)";
+                break;
+            case IDENTIFIER_CODE_PRACTITIONER_ROLE_GROUP:
+                displayText = "FHIR::Group Identifier (PractitionerRole Group Identifier)";
+                break;
+            case IDENTIFIER_CODE_PRACTITIONER_GROUP:
+                displayText = "FHIR::Group Identifier (Practitioner Group Identifier)";
+                break;
+            case IDENTIFIER_CODE_PRACTITIONER_EMAIL:
+                displayText = "FHIR::Practitioner Identifier (Corporate Email Address)";
                 break;
         }
         return(new StringType(displayText));

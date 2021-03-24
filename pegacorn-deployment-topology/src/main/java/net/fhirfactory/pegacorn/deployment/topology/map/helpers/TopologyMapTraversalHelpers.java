@@ -23,7 +23,7 @@ package net.fhirfactory.pegacorn.deployment.topology.map.helpers;
 
 import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCInterface;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCInterfaceDefinition;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.IPCEndpoint;
+import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCEndpoint;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

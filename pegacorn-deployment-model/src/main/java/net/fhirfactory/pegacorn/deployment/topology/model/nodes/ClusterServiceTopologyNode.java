@@ -1,7 +1,7 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.nodes;
 
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeRDN;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.IPCEndpoint;
+import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCEndpoint;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

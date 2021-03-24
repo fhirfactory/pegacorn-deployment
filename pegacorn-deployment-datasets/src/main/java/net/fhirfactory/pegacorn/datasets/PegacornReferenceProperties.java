@@ -63,6 +63,10 @@ public class PegacornReferenceProperties {
         return("http://pegacorn.fhirfactory.net/fhir/code-systems");
     }
 
+    public String getContainmentSeperator(){
+        return("+");
+    }
+
     public String getPegacornDefaultFHIRVersion(){return("4.0.1");}
 
     public static String getPegacornPetasosStatusPath() {

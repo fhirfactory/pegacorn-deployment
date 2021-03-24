@@ -78,6 +78,7 @@ public abstract class PegacornTopologyFactoryBase {
         subsystem.setConcurrencyMode(getConcurrenceMode(propertyFile));
         subsystem.setResilienceMode(getResilienceMode(propertyFile));
         subsystem.setSiteCount(propertyFile.getDeploymentSites().getSiteCount());
+        subsystem.setContainingComponent(solution);
         solution.getSubsystemList().put(nodeRDN, subsystem);
         getLogger().debug(".buildSubsystemNode(): Exit");
         return(subsystem);
@@ -98,6 +99,7 @@ public abstract class PegacornTopologyFactoryBase {
         businessService.constructFDN(subsystem.getNodeFDN(),nodeRDN);
         businessService.constructFunctionFDN(subsystem.getNodeFunctionFDN(),nodeRDN);
         businessService.setNodeRDN(nodeRDN);
+        businessService.setContainingComponent(subsystem);
         subsystem.getBusinessServices().put(nodeRDN, businessService);
         getLogger().debug(".buildBusinessServiceNode(): Exit");
         return(businessService);
@@ -119,6 +121,7 @@ public abstract class PegacornTopologyFactoryBase {
         site.constructFunctionFDN(businessService.getNodeFunctionFDN(), nodeRDN);
         site.setNodeRDN(nodeRDN);
         site.setInstanceCount(propertyFile.getDeploymentSites().getSiteCount());
+        site.setContainingComponent(businessService);
         businessService.getDeploymentSites().put(nodeRDN, site);
         getLogger().debug(".addDeploymentSiteNode(): Exit");
         return(site);
@@ -142,6 +145,7 @@ public abstract class PegacornTopologyFactoryBase {
         clusterService.setConcurrencyMode(getConcurrenceMode(propertyFile));
         clusterService.setDefaultDNSName(propertyFile.getSubsystemInstant().getClusterServiceDNSName());
         clusterService.setInternalTrafficEncrypted(propertyFile.getDeploymentMode().isUsingInternalEncryption());
+        clusterService.setContainingComponent(site);
         site.getClusterServices().put(nodeRDN, clusterService);
         getLogger().debug(".addClusterServiceNode(): Exit");
         return(clusterService);
@@ -163,7 +167,8 @@ public abstract class PegacornTopologyFactoryBase {
         node.constructFunctionFDN(service.getNodeFunctionFDN(), nodeRDN);
         node.setNodeRDN(nodeRDN);
         node.setInstanceCount(propertyFile.getDeploymentMode().getProcessingPlantReplicationCount());
-        service.getPlatformNodes().put(nodeRDN, node);
+        node.setContainingComponent(service);
+        service.getPlatformNodes().putIfAbsent(nodeRDN, node);
         getLogger().debug(".addPlatformNode(): Exit");
         return(node);
     }
@@ -187,6 +192,7 @@ public abstract class PegacornTopologyFactoryBase {
         processingPlant.setDefaultDNSName(propertyFile.getSubsystemInstant().getProcessingPlantDNSName());
         processingPlant.setInternalTrafficEncrypted(propertyFile.getDeploymentMode().isUsingInternalEncryption());
         processingPlant.setInstanceCount(propertyFile.getDeploymentMode().getProcessingPlantReplicationCount());
+        processingPlant.setContainingComponent(node);
         node.getProcessingPlants().put(nodeRDN, processingPlant);
         getLogger().debug(".addPegacornProcessingPlant(): Exit");
         return(processingPlant);
@@ -205,6 +211,7 @@ public abstract class PegacornTopologyFactoryBase {
         workshop.constructFDN(processingPlant.getNodeFDN(), nodeRDN);
         workshop.constructFunctionFDN(processingPlant.getNodeFunctionFDN(), nodeRDN);
         workshop.setNodeRDN(nodeRDN);
+        workshop.setContainingComponent(processingPlant);
         processingPlant.getWorkshops().put(nodeRDN, workshop);
         getLogger().debug(".addWorkshop(): Exit");
         return(workshop);
@@ -222,6 +229,7 @@ public abstract class PegacornTopologyFactoryBase {
         TopologyNodeRDN nodeRDN = createNodeRDN(name, version, nodeType);
         wup.constructFDN(workshop.getNodeFDN(), nodeRDN);
         wup.constructFunctionFDN(workshop.getNodeFunctionFDN(), nodeRDN);
+        wup.setContainingComponent(workshop);
         wup.setNodeRDN(nodeRDN);
         workshop.getWupSet().put(nodeRDN, wup);
         getLogger().debug(".addWorkshop(): Exit");
@@ -241,6 +249,7 @@ public abstract class PegacornTopologyFactoryBase {
         wupComponent.constructFDN(wup.getNodeFDN(), nodeRDN);
         wupComponent.constructFunctionFDN(wup.getNodeFunctionFDN(), nodeRDN);
         wupComponent.setNodeRDN(nodeRDN);
+        wupComponent.setContainingComponent(wup);
         wup.getWupComponents().put(nodeRDN, wupComponent);
         getLogger().debug(".addWorkUnitProcessorComponent(): Exit");
         return(wupComponent);
