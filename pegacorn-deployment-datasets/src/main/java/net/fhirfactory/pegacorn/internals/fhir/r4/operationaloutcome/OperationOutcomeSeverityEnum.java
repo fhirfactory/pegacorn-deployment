@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Mark A. Hunter (ACT Health)
+ * Copyright (c) 2020 Mark A. Hunter
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,18 +19,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.properties.codebased;
+package net.fhirfactory.pegacorn.internals.fhir.r4.operationaloutcome;
 
-import javax.enterprise.context.ApplicationScoped;
+public enum OperationOutcomeSeverityEnum {
+    SEVERITY_INFORMATION("information"),
+    SEVERITY_WARNING("warning"),
+    SEVERITY_ERROR("error"),
+    SEVERITY_FATAL("fatal");
 
-@ApplicationScoped
-public class ContainmentBasedValueSeparators {
-    public String getEntryPrefix(){return("[");}
-    public String getEntrySuffix(){return("]");}
-    public String getEntrySeparator(){return(".");}
+    private String severityCode;
+    private OperationOutcomeSeverityEnum(String code){ this.severityCode = code;}
 
-    public String wrapEntry(String entryValue){
-        String outcome = getEntryPrefix() + entryValue + getEntrySuffix();
-        return(outcome);
-    }
+    public String getSeverityCode(){return(this.severityCode);}
 }

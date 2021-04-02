@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Mark A. Hunter (ACT Health)
+ * Copyright (c) 2021 Mark A. Hunter
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,18 +19,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.properties.codebased;
+package net.fhirfactory.pegacorn.internals.matrix.digitaltwin.common;
 
-import javax.enterprise.context.ApplicationScoped;
-
-@ApplicationScoped
-public class ContainmentBasedValueSeparators {
-    public String getEntryPrefix(){return("[");}
-    public String getEntrySuffix(){return("]");}
-    public String getEntrySeparator(){return(".");}
-
-    public String wrapEntry(String entryValue){
-        String outcome = getEntryPrefix() + entryValue + getEntrySuffix();
-        return(outcome);
-    }
+public enum MatrixRoomStatusEnum {
+    CREATED,
+    ACTIVE,
+    DELETED,
+    MARKED_FOR_DELETION
 }

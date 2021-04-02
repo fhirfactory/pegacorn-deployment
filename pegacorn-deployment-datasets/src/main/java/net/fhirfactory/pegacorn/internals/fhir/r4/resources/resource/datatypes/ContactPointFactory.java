@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Mark A. Hunter (ACT Health)
+ * Copyright (c) 2021 Mark A. Hunter
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,18 +19,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.properties.codebased;
+package net.fhirfactory.pegacorn.internals.fhir.r4.resources.resource.datatypes;
+
+import org.hl7.fhir.r4.model.ContactPoint;
+import org.hl7.fhir.r4.model.Period;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.time.Instant;
+import java.util.Date;
 
 @ApplicationScoped
-public class ContainmentBasedValueSeparators {
-    public String getEntryPrefix(){return("[");}
-    public String getEntrySuffix(){return("]");}
-    public String getEntrySeparator(){return(".");}
+public class ContactPointFactory {
+    private static final Logger LOG = LoggerFactory.getLogger(ContactPointFactory.class);
 
-    public String wrapEntry(String entryValue){
-        String outcome = getEntryPrefix() + entryValue + getEntrySuffix();
-        return(outcome);
+    public ContactPoint buildContactPoint(String value, ContactPoint.ContactPointUse use, ContactPoint.ContactPointSystem system, int rank){
+        LOG.debug(".buildContactPoint(): Entry, value --> {}, use --> {}, system --> {}, rank --> {}", value, use, system, rank);
+        ContactPoint contact = new ContactPoint();
+        contact.setSystem(system);
+        contact.setValue(value);
+        contact.setUse(use);
+        contact.setRank(rank);
+        Period contactPeriod = new Period();
+        contactPeriod.setStart(Date.from(Instant.now()));
+        contact.setPeriod(contactPeriod);
+        LOG.debug(".buildContactPoint(): Exit, ContactPoint --> {}", contact);
+        return(contact);
     }
 }

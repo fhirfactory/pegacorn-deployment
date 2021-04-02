@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Mark A. Hunter (ACT Health)
+ * Copyright (c) 2020 Mark A. Hunter
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,18 +19,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.properties.codebased;
+package net.fhirfactory.pegacorn.internals.fhir.r4.codesystems;
 
-import javax.enterprise.context.ApplicationScoped;
+public enum PegacornIdentifierCodeEnum {
+    IDENTIFIER_CODE_FHIR_ENDPOINT_SYSTEM("idcode:endpoint-name"),
+    IDENTIFIER_CODE_SOURCE_OF_TRUTH_RECORD_ID("idcode:sot-rid"),
+    IDENTIFIER_CODE_PRACTITIONER_ROLE_SHORT_NAME("idcode:practitioner-role-short-name"),
+    IDENTIFIER_CODE_PRACTITIONER_ROLE_LONG_NAME("idcode:practitioner-role-long-name"),
+    IDENTIFIER_CODE_PRACTITIONER_EMAIL("idcode:practitioner-email"),
+    IDENTIFIER_CODE_BUSINESS_UNIT("idcode:business_unit"),
+    IDENTIFIER_CODE_CONTAINMENT_BASED_LOCATION("idcode:containment-based-location-id"),
+    IDENTIFIER_CODE_PRACTITIONER_ROLE_GROUP("idcode:group-containing-practitioner-roles"),
+    IDENTIFIER_CODE_PRACTITIONER_GROUP("idcode:group-containing-practitioners");
 
-@ApplicationScoped
-public class ContainmentBasedValueSeparators {
-    public String getEntryPrefix(){return("[");}
-    public String getEntrySuffix(){return("]");}
-    public String getEntrySeparator(){return(".");}
+    private String identifierCode;
+    private PegacornIdentifierCodeEnum(String code){ this.identifierCode = code;}
 
-    public String wrapEntry(String entryValue){
-        String outcome = getEntryPrefix() + entryValue + getEntrySuffix();
-        return(outcome);
-    }
+    public String getIdentifierCode(){return(this.identifierCode);}
 }

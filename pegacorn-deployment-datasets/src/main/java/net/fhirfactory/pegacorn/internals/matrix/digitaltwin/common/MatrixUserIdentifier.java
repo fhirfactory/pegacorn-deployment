@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Mark A. Hunter (ACT Health)
+ * Copyright (c) 2021 Mark A. Hunter
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,18 +19,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.properties.codebased;
+package net.fhirfactory.pegacorn.internals.matrix.digitaltwin.common;
 
-import javax.enterprise.context.ApplicationScoped;
+import net.fhirfactory.pegacorn.internals.directories.entries.datatypes.IdentifierDE;
+import net.fhirfactory.pegacorn.internals.directories.entries.datatypes.IdentifierDEUseEnum;
 
-@ApplicationScoped
-public class ContainmentBasedValueSeparators {
-    public String getEntryPrefix(){return("[");}
-    public String getEntrySuffix(){return("]");}
-    public String getEntrySeparator(){return(".");}
+public class MatrixUserIdentifier extends IdentifierDE {
 
-    public String wrapEntry(String entryValue){
-        String outcome = getEntryPrefix() + entryValue + getEntrySuffix();
-        return(outcome);
+    public MatrixUserIdentifier(){
+        super();
+        this.setType("MatrixUserID");
+        this.setUse(IdentifierDEUseEnum.SECONDARY);
+        this.setValue(null);
+    }
+
+    public MatrixUserIdentifier(String userIdentifier){
+        this.setValue(userIdentifier);
+    }
+
+    public MatrixUserIdentifier(MatrixUserIdentifier oriIdentifier){
+        this.setType("MatrixUserID");
+        this.setUse(IdentifierDEUseEnum.SECONDARY);
+        this.setValue(oriIdentifier.getValue());
     }
 }

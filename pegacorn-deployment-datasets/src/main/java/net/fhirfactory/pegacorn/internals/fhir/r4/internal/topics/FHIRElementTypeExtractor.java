@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Mark A. Hunter (ACT Health)
+ * Copyright (c) 2020 Mark A. Hunter
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,18 +19,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.properties.codebased;
+package net.fhirfactory.pegacorn.internals.fhir.r4.internal.topics;
+
+import net.fhirfactory.pegacorn.common.model.generalid.FDN;
+import net.fhirfactory.pegacorn.common.model.generalid.RDN;
+import net.fhirfactory.pegacorn.common.model.topicid.TopicToken;
+import net.fhirfactory.pegacorn.common.model.topicid.TopicTypeEnum;
 
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class ContainmentBasedValueSeparators {
-    public String getEntryPrefix(){return("[");}
-    public String getEntrySuffix(){return("]");}
-    public String getEntrySeparator(){return(".");}
+public class FHIRElementTypeExtractor {
 
-    public String wrapEntry(String entryValue){
-        String outcome = getEntryPrefix() + entryValue + getEntrySuffix();
-        return(outcome);
+	public Class<?> extractResourceType(TopicToken token) throws ClassNotFoundException {
+
+    	if(token == null) {
+    		return(null);
+    	}
+    	if(token.getIdentifier() == null) {
+    		return(null);
+    	}
+    	FDN topicFDN = new FDN(token.getIdentifier());
+        String resourceName = null;
+        for(RDN currentRDN: topicFDN.getRDNSet()) {
+        	if(currentRDN.getQualifier().contentEquals(TopicTypeEnum.DATASET_RESOURCE.getTopicType())) {
+        		resourceName = currentRDN.getValue();
+        		break;
+        	}
+        }
+        if(resourceName==null) {
+        	return(null);
+        }
+        return(Class.forName("org.hl7.fhir.r4.model." + resourceName));
     }
+
+    
 }

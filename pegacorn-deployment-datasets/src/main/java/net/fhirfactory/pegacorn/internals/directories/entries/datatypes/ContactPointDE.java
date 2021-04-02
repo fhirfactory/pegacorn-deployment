@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Mark A. Hunter (ACT Health)
+ * Copyright (c) 2021 Mark A. Hunter
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,18 +19,52 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.properties.codebased;
+package net.fhirfactory.pegacorn.internals.directories.entries.datatypes;
 
-import javax.enterprise.context.ApplicationScoped;
+public class ContactPointDE {
+    private String name;
+    private String value;
+    private Integer rank;
+    private ContactPointDETypeEnum type;
+    private ContactPointDEUseEnum use;
 
-@ApplicationScoped
-public class ContainmentBasedValueSeparators {
-    public String getEntryPrefix(){return("[");}
-    public String getEntrySuffix(){return("]");}
-    public String getEntrySeparator(){return(".");}
+    public String getName() {
+        return name;
+    }
 
-    public String wrapEntry(String entryValue){
-        String outcome = getEntryPrefix() + entryValue + getEntrySuffix();
-        return(outcome);
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getRank() {
+        return rank;
+    }
+
+    public void setRank(Integer rank) {
+        this.rank = rank;
+    }
+
+    public ContactPointDETypeEnum getType() {
+        return type;
+    }
+
+    public void setType(ContactPointDETypeEnum type) {
+        this.type = type;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public ContactPointDEUseEnum getUse() {
+        return use;
+    }
+
+    public void setUse(ContactPointDEUseEnum use) {
+        this.use = use;
     }
 }

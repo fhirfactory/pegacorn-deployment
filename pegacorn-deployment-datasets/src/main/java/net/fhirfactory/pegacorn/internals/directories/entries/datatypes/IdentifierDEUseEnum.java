@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Mark A. Hunter (ACT Health)
+ * Copyright (c) 2021 Mark A. Hunter
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,18 +19,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.properties.codebased;
+package net.fhirfactory.pegacorn.internals.directories.entries.datatypes;
 
-import javax.enterprise.context.ApplicationScoped;
+public enum IdentifierDEUseEnum {
+    OFFICIAL("Official"),
+    SECONDARY("Secondary"),
+    USUAL("Usual"),
+    OTHER("Other"),
+    UNKNOWN("Unknown");
 
-@ApplicationScoped
-public class ContainmentBasedValueSeparators {
-    public String getEntryPrefix(){return("[");}
-    public String getEntrySuffix(){return("]");}
-    public String getEntrySeparator(){return(".");}
+    private String useCode;
 
-    public String wrapEntry(String entryValue){
-        String outcome = getEntryPrefix() + entryValue + getEntrySuffix();
-        return(outcome);
+    private IdentifierDEUseEnum(String useValue){
+        this.useCode = useValue;
+    }
+
+    public String getUseCode(){
+        return(useCode);
+    }
+
+    public static IdentifierDEUseEnum fromUseCode(String code){
+        if(code.toLowerCase().contentEquals("official")){
+            return(IdentifierDEUseEnum.OFFICIAL);
+        }
+        if(code.toLowerCase().contentEquals("secondary")){
+            return(IdentifierDEUseEnum.SECONDARY);
+        }
+        if(code.toLowerCase().contentEquals("usual")){
+            return(IdentifierDEUseEnum.USUAL);
+        }
+        if(code.toLowerCase().contentEquals("other")){
+            return(IdentifierDEUseEnum.OTHER);
+        }
+        return(IdentifierDEUseEnum.UNKNOWN);
     }
 }

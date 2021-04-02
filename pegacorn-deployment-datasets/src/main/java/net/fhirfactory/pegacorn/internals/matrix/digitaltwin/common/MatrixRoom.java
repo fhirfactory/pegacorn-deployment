@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Mark A. Hunter (ACT Health)
+ * Copyright (c) 2021 Mark A. Hunter
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,18 +19,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.properties.codebased;
+package net.fhirfactory.pegacorn.internals.matrix.digitaltwin.common;
 
-import javax.enterprise.context.ApplicationScoped;
+public class MatrixRoom {
+    private MatrixRoomIdentifier roomID;
+    private String roomOwner;
+    private boolean irisControlled;
+    private MatrixRoomStatusEnum roomStatus;
 
-@ApplicationScoped
-public class ContainmentBasedValueSeparators {
-    public String getEntryPrefix(){return("[");}
-    public String getEntrySuffix(){return("]");}
-    public String getEntrySeparator(){return(".");}
+    public MatrixRoomIdentifier getRoomID() {
+        return roomID;
+    }
 
-    public String wrapEntry(String entryValue){
-        String outcome = getEntryPrefix() + entryValue + getEntrySuffix();
-        return(outcome);
+    public void setRoomID(MatrixRoomIdentifier roomID) {
+        this.roomID = roomID;
+    }
+
+    public String getRoomOwner() {
+        return roomOwner;
+    }
+
+    public void setRoomOwner(String roomOwner) {
+        this.roomOwner = roomOwner;
+    }
+
+    public boolean isIrisControlled() {
+        return irisControlled;
+    }
+
+    public void setIrisControlled(boolean irisControlled) {
+        this.irisControlled = irisControlled;
+    }
+
+    public MatrixRoomStatusEnum getRoomStatus() {
+        return roomStatus;
+    }
+
+    public void setRoomStatus(MatrixRoomStatusEnum roomStatus) {
+        this.roomStatus = roomStatus;
     }
 }
