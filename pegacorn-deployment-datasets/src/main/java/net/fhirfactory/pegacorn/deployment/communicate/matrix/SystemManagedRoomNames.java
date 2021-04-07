@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Mark A. Hunter
+ * Copyright (c) 2020 Mark A. Hunter (ACT Health)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,27 +19,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.internals.matrix.digitaltwin.common;
+package net.fhirfactory.pegacorn.deployment.communicate.matrix;
 
-import net.fhirfactory.pegacorn.internals.directories.entries.datatypes.IdentifierDE;
-import net.fhirfactory.pegacorn.internals.directories.entries.datatypes.IdentifierDEUseEnum;
+import javax.enterprise.context.ApplicationScoped;
 
-public class MatrixUserIdentifier extends IdentifierDE {
+@ApplicationScoped
+public class SystemManagedRoomNames {
+    public String getPractitionerCallRoom(){return("MyCalls");}
+    public String getPractitionerMediaRoom(){return("MyMedia");}
+    public String getPractitionerSystemMessagesRoom(){return("SystemMessages");}
+    public String getPractitionerCodeNotificationsRoom(){return("CodeNotifications");}
+    public String getPractitionerCriticalResultsNotificationsRoom(){return("ResultNotifications");}
 
-    public MatrixUserIdentifier(){
-        super();
-        this.setType("MatrixUserID");
-        this.setUse(IdentifierDEUseEnum.SECONDARY);
-        this.setValue(null);
-    }
+    public String getPractitionersPractitionerRoleRoomPrefix(){return("MyRole->");}
+    public String getPractitionerRoleRoomPrefix(){return("");}
+    public String getPractitionerRoleSharedRoomPrefix(){return("PRHidden->");}
+    public String getPractitionerRolePublicCallRoom(){return("PRCalls->");}
 
-    public MatrixUserIdentifier(String userIdentifier){
-        this.setValue(userIdentifier);
-    }
-
-    public MatrixUserIdentifier(MatrixUserIdentifier oriIdentifier){
-        this.setType("MatrixUserID");
-        this.setUse(IdentifierDEUseEnum.SECONDARY);
-        this.setValue(oriIdentifier.getValue());
-    }
+    public String getPractitionerSharedExtensionRoom(){return("SharedPhone->");}
 }

@@ -215,6 +215,7 @@
             </plugin>
             <!--Build configuration for the WAR plugin: -->
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>${version-org.apache.maven-war-plugin}</version>
                 <configuration>
@@ -229,99 +230,10 @@
                 <version>${version-org.apache.maven-surefire-plugin}</version>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>${version-org.apache.maven-failsafe-plugin}</version>
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <!-- An optional Arquillian testing profile -->
-            <id>pegacorn-on-wildfly</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>org.wildfly.arquillian</groupId>
-                    <artifactId>wildfly-arquillian-container-managed</artifactId>
-                    <version>${version-org.wildfly.arquillian-wildfly-arquillian-container-managed}</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-            <build>
-              <pluginManagement>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                        <version>${version-org.apache.maven-dependency-plugin}</version>
-                        <executions>
-                            <execution>
-                                <id>unpack</id>
-                                <phase>process-test-classes</phase>
-                                <goals>
-                                    <goal>unpack</goal>
-                                </goals>
-                                <configuration>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>org.wildfly</groupId>
-                                            <artifactId>wildfly-dist</artifactId>
-                                            <version>${version-org.wildfly}</version>
-                                            <type>zip</type>
-                                            <overWrite>false</overWrite>
-                                            <outputDirectory>${project.basedir}/target/</outputDirectory>
-                                        </artifactItem>
-                                    </artifactItems>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <version>${version-org.apache.maven-antrun-plugin}</version>
-                        <executions>
-                            <execution>
-                                <id>set-wildfly-xml</id>
-                                <phase>process-test-classes</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target>
-                                        <echo>ANT TASK - Copying standalone-full-ha.xml from ${project.basedir}/src/test/resources/wildfly/${version-org.wildfly} to ${project.basedir}/target/wildfly-${version-org.wildfly}/standalone/configuration</echo>
-                                        <copy todir="${project.basedir}/target/wildfly-${version-org.wildfly}/standalone/configuration" overwrite="true" flatten="true">
-                                            <fileset dir="${project.basedir}/src/test/resources/wildfly/${version-org.wildfly}/">
-                                                <include name="standalone-full-ha.xml"/>
-                                            </fileset>
-                                        </copy>
-                                    </target>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>${version-org.apache.maven-surefire-plugin}</version>
-                        <configuration>
-                            <!-- Configuration for Arquillian: -->
-                            <systemPropertyVariables>
-                                <arquillian.launch>pegacorn-on-wildfly</arquillian.launch>
-                                <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-                                <JBOSS_HOME>${project.basedir}/target/wildfly-${version-org.wildfly}</JBOSS_HOME>
-                            </systemPropertyVariables>
-                            <redirectTestOutputToFile>false</redirectTestOutputToFile>
-                        </configuration>
-                    </plugin>
-                </plugins>
-              </pluginManagement>
-            </build>
-        </profile>
-    </profiles>
-
-
 </project>
