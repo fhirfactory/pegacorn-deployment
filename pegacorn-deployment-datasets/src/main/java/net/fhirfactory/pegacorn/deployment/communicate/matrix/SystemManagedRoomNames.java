@@ -31,6 +31,12 @@ public class SystemManagedRoomNames {
     public String getPractitionerCodeNotificationsRoom(){return("CodeNotifications");}
     public String getPractitionerCriticalResultsNotificationsRoom(){return("ResultNotifications");}
 
+    public String getPractitionerCallRoomAlias(String practitionerRecordID){return("MyCalls-"+practitionerRecordID);}
+    public String getPractitionerMediaRoomAlias(String practitionerRecordID){return("MyMedia-"+practitionerRecordID);}
+    public String getPractitionerSystemMessagesRoomAlias(String practitionerRecordID){return("SystemMessages-"+practitionerRecordID);}
+    public String getPractitionerCodeNotificationsRoomAlias(String practitionerRecordID){return("CodeNotifications-"+practitionerRecordID);}
+    public String getPractitionerCriticalResultsNotificationsRoomAlias(String practitionerRecordID){return("ResultNotifications-"+practitionerRecordID);}
+
     public String getPractitionersPractitionerRoleRoomPrefix(){return("MyRole->");}
     public String getPractitionerRoleRoomPrefix(){return("");}
     public String getPractitionerRoleSharedRoomPrefix(){return("PRHidden->");}
