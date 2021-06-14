@@ -1,9 +1,9 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.nodes;
 
 public enum DefaultWorkshopSetEnum {
-    INTERACT_WORKSHOP("InteractionWorkshop"),
-    TRANSFORM_WORKSHOP("TransformationWorkshop"),
-    EDGE_WORKSHOP("EdgeIPCWorkshop");
+    INTERACT_WORKSHOP("Interact"),
+    TRANSFORM_WORKSHOP("Transform"),
+    EDGE_WORKSHOP("EdgeIPC");
 
     private String workshop;
 

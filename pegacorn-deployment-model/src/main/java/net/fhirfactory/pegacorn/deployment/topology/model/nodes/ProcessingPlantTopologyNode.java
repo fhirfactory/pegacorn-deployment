@@ -1,22 +1,19 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.nodes;
 
+import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeRDN;
-import net.fhirfactory.pegacorn.deployment.topology.model.connector.common.IPCConnection;
-import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCEndpoint;
+import net.fhirfactory.pegacorn.deployment.topology.model.nodes.common.EndpointProviderInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
 
-public class ProcessingPlantTopologyNode extends TopologyNode {
+public class ProcessingPlantTopologyNode extends TopologyNode implements EndpointProviderInterface {
     private static final Logger LOG = LoggerFactory.getLogger(ProcessingPlantTopologyNode.class);
 
-    private ConcurrentHashMap<TopologyNodeRDN, WorkshopTopologyNode> workshops;
-    private ConcurrentHashMap<TopologyNodeRDN, IPCEndpoint> enpoints;
-    private ConcurrentHashMap<TopologyNodeRDN, IPCConnection> connections;
+    private ArrayList<TopologyNodeFDN> workshops;
+    private ArrayList<TopologyNodeFDN> endpoints;
+    private ArrayList<TopologyNodeFDN> connections;
 
     private String defaultDNSName;
     private boolean internalTrafficEncrypted;
@@ -28,16 +25,12 @@ public class ProcessingPlantTopologyNode extends TopologyNode {
     }
 
     public ProcessingPlantTopologyNode(){
-        this.workshops = new ConcurrentHashMap<>();
-        this.enpoints = new ConcurrentHashMap<>();
-        this.connections = new ConcurrentHashMap<>();
+        this.workshops = new ArrayList<>();
+        this.endpoints = new ArrayList<>();
+        this.connections = new ArrayList<>();
 
         this.defaultDNSName = null;
         internalTrafficEncrypted = false;
-    }
-
-    public Map<TopologyNodeRDN, WorkshopTopologyNode> getWorkshops() {
-        return workshops;
     }
 
     public boolean isInternalTrafficEncrypted() {
@@ -48,36 +41,28 @@ public class ProcessingPlantTopologyNode extends TopologyNode {
         this.internalTrafficEncrypted = internalTrafficEncrypted;
     }
 
-    public void setWorkshops(Map<TopologyNodeRDN, WorkshopTopologyNode> workshops) {
-        this.workshops = new ConcurrentHashMap<>();
-        Set<TopologyNodeRDN> workshopNames = workshops.keySet();
-        for(TopologyNodeRDN name: workshopNames){
-            this.workshops.putIfAbsent(name, workshops.get(name));
-        }
+    public ArrayList<TopologyNodeFDN> getWorkshops() {
+        return workshops;
     }
 
-    public Map<TopologyNodeRDN, IPCEndpoint> getEnpoints() {
-        return enpoints;
+    public void setWorkshops(ArrayList<TopologyNodeFDN> workshops) {
+        this.workshops = workshops;
     }
 
-    public void setEnpoints(Map<TopologyNodeRDN, IPCEndpoint> enpoints) {
-        this.enpoints = new ConcurrentHashMap<>();
-        Set<TopologyNodeRDN> endpointNames = enpoints.keySet();
-        for(TopologyNodeRDN name: endpointNames){
-            this.enpoints.putIfAbsent(name, enpoints.get(name));
-        }
+    public ArrayList<TopologyNodeFDN> getEndpoints() {
+        return endpoints;
     }
 
-    public Map<TopologyNodeRDN, IPCConnection> getConnections() {
+    public void setEndpoints(ArrayList<TopologyNodeFDN> endpoints) {
+        this.endpoints = endpoints;
+    }
+
+    public ArrayList<TopologyNodeFDN> getConnections() {
         return connections;
     }
 
-    public void setConnections(Map<TopologyNodeRDN, IPCConnection> connections) {
-        this.connections = new ConcurrentHashMap<>();
-        Set<TopologyNodeRDN> connectionNames = connections.keySet();
-        for(TopologyNodeRDN name: connectionNames){
-            this.connections.putIfAbsent(name, connections.get(name));
-        }
+    public void setConnections(ArrayList<TopologyNodeFDN> connections) {
+        this.connections = connections;
     }
 
     public String getDefaultDNSName() {
@@ -94,5 +79,10 @@ public class ProcessingPlantTopologyNode extends TopologyNode {
 
     public void setInstanceCount(Integer instanceCount) {
         this.instanceCount = instanceCount;
+    }
+
+    @Override
+    public void addEndpoint(TopologyNodeFDN endpointFDN) {
+        endpoints.add(endpointFDN);
     }
 }

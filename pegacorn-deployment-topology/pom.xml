@@ -43,6 +43,11 @@
     </properties>
 
     <dependencies>
+
+        <!--                                 -->
+        <!-- Jakarta/JEE & Wildfly Libraries -->
+        <!--                                 -->
+
         <dependency>
             <groupId>javax.enterprise</groupId>
             <artifactId>cdi-api</artifactId>
@@ -75,6 +80,9 @@
             <scope>provided</scope>
         </dependency>
 
+        <!--                          -->
+        <!-- Apache Commons Libraries -->
+        <!--                          -->
 
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -82,6 +90,9 @@
             <version>${version-org.apache.commons-lang3}</version>
         </dependency>
 
+        <!--                -->
+        <!-- JSON Libraries -->
+        <!--                -->
 
         <dependency>
             <groupId>org.json</groupId>
@@ -96,6 +107,9 @@
             <version>${version-com.fasterxml.jackson.core-jackson-core}</version>
         </dependency>
 
+        <!--                              -->
+        <!-- Pegacorn Component Libraries -->
+        <!--                              -->
 
         <!-- Pegacorn Common Code -->
         <dependency>
@@ -117,17 +131,23 @@
         <dependency>
             <groupId>net.fhirfactory.pegacorn</groupId>
             <artifactId>pegacorn-deployment-properties</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <!-- Pegacorn Deployment Datasets -->
         <dependency>
             <groupId>net.fhirfactory.pegacorn</groupId>
             <artifactId>pegacorn-deployment-datasets</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
-
+        <!-- Pegacorn Building Blocks Data Models (Components/Interfaces) -->
+        <dependency>
+            <groupId>net.fhirfactory.pegacorn</groupId>
+            <artifactId>pegacorn-buildingblocks-datamodels-components</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
 
         <!-- Infinispan -->
         <dependency>
@@ -147,6 +167,22 @@
             <artifactId>jgroups</artifactId>
             <scope>compile</scope>
             <version>${version-org.jgroups-jgroups}</version>
+        </dependency>
+
+        <!--         -->
+        <!-- Logging -->
+        <!--         -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${version-ch.qos.logback-classic}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${version-ch.qos.logback-classic}</version>
+            <scope>compile</scope>
         </dependency>
 
         <!-- Testing -->

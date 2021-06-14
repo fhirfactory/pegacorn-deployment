@@ -1,37 +1,37 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.fhirbreak.emailgateway;
 
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.PegacornClusterServiceInteractPort;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.PegacornStandardIPCPort;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.ClusterServiceInteractPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.common.StandardPortSegment;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.fhirbreak.common.FHIRBreakSubsystemPropertyFile;
 
 public class FHIRBreakEmailGatewayPropertyFile extends FHIRBreakSubsystemPropertyFile {
 
-    private PegacornClusterServiceInteractPort smtpGateway;
-    private PegacornClusterServiceInteractPort imapGateway;
+    private ClusterServiceInteractPortSegment smtpGateway;
+    private ClusterServiceInteractPortSegment imapGateway;
 
-    private PegacornStandardIPCPort edgeReceiveCommunication;
+    private StandardPortSegment edgeReceiveCommunication;
 
-    public PegacornClusterServiceInteractPort getSmtpGateway() {
+    public ClusterServiceInteractPortSegment getSmtpGateway() {
         return smtpGateway;
     }
 
-    public void setSmtpGateway(PegacornClusterServiceInteractPort smtpGateway) {
+    public void setSmtpGateway(ClusterServiceInteractPortSegment smtpGateway) {
         this.smtpGateway = smtpGateway;
     }
 
-    public PegacornClusterServiceInteractPort getImapGateway() {
+    public ClusterServiceInteractPortSegment getImapGateway() {
         return imapGateway;
     }
 
-    public void setImapGateway(PegacornClusterServiceInteractPort imapGateway) {
+    public void setImapGateway(ClusterServiceInteractPortSegment imapGateway) {
         this.imapGateway = imapGateway;
     }
 
-    public PegacornStandardIPCPort getEdgeReceiveCommunication() {
+    public StandardPortSegment getEdgeReceiveCommunication() {
         return edgeReceiveCommunication;
     }
 
-    public void setEdgeReceiveCommunication(PegacornStandardIPCPort edgeReceiveCommunication) {
+    public void setEdgeReceiveCommunication(StandardPortSegment edgeReceiveCommunication) {
         this.edgeReceiveCommunication = edgeReceiveCommunication;
     }
 }

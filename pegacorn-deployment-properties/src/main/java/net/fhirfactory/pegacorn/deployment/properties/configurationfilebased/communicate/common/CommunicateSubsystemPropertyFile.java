@@ -21,7 +21,7 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.communicate.common;
 
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes.ClusterServiceDeliverySubsystemPropertyFile;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes.PetasosEnabledSubsystemPropertyFile;
 
 /**
  *
@@ -29,6 +29,6 @@ import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.com
  */
 
 
-public abstract class CommunicateSubsystemPropertyFile extends ClusterServiceDeliverySubsystemPropertyFile {
+public abstract class CommunicateSubsystemPropertyFile extends PetasosEnabledSubsystemPropertyFile {
 
 }

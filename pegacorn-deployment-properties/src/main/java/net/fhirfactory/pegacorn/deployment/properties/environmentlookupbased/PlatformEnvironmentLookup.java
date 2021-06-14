@@ -21,9 +21,9 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.environmentlookupbased;
 
-import javax.enterprise.context.ApplicationScoped;
 
-@ApplicationScoped
+
+//@ApplicationScoped
 public class PlatformEnvironmentLookup {
 
     public String getPlatformName(boolean isKubernetesDeployed){

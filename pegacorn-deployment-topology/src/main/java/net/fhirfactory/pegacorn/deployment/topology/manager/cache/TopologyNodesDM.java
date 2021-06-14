@@ -22,8 +22,12 @@
 package net.fhirfactory.pegacorn.deployment.topology.manager.cache;
 
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeTypeEnum;
+import net.fhirfactory.pegacorn.common.model.generalid.FDNToken;
+import net.fhirfactory.pegacorn.deployment.topology.model.common.NetworkSecurityZoneEnum;
+import net.fhirfactory.pegacorn.deployment.properties.codebased.DeploymentSystemIdentificationInterface;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
+import net.fhirfactory.pegacorn.deployment.topology.model.nodes.SolutionTopologyNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,11 +41,11 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 2020-07-01
  */
 @ApplicationScoped
-public class TopologyNodesDM {
+public class TopologyNodesDM implements DeploymentSystemIdentificationInterface {
 
     private static final Logger LOG = LoggerFactory.getLogger(TopologyNodesDM.class);
 
-    private TopologyNode deploymentSolution;
+    private SolutionTopologyNode deploymentSolution;
     private ConcurrentHashMap<TopologyNodeFDN, TopologyNode> nodeSet;
 
     public TopologyNodesDM() {
@@ -50,12 +54,51 @@ public class TopologyNodesDM {
         this.nodeSet = new ConcurrentHashMap<TopologyNodeFDN, TopologyNode>();
     }
 
-    public TopologyNode getDeploymentSolution() {
+    private void insertOrOverwriteTopologyNode(SolutionTopologyNode node){
+        boolean found=false;
+        if(nodeSet.containsKey(node.getNodeFDN())){
+            nodeSet.remove(node.getNodeFDN());
+        } else {
+            Enumeration<TopologyNodeFDN> nodeEnumeration = nodeSet.keys();
+            while (nodeEnumeration.hasMoreElements()) {
+                TopologyNodeFDN currentNodeFDN = nodeEnumeration.nextElement();
+                TopologyNode currentNode = nodeSet.get(currentNodeFDN);
+                if (currentNode.getNodeFDN().equals(node.getNodeFDN())) {
+                    nodeSet.remove(currentNodeFDN);
+                    break;
+                }
+            }
+        }
+        nodeSet.put(node.getNodeFDN(), node);
+    }
+
+    public SolutionTopologyNode getDeploymentSolution() {
         return deploymentSolution;
     }
 
-    public void setDeploymentSolution(TopologyNode deploymentSolution) {
+    public void setDeploymentSolution(SolutionTopologyNode deploymentSolution) {
         this.deploymentSolution = deploymentSolution;
+        insertOrOverwriteTopologyNode(deploymentSolution);
+    }
+
+    @Override
+    public String getSystemName() {
+        return (getDeploymentSolution().getNodeFDN().extractRDNForNodeType(TopologyNodeTypeEnum.SOLUTION).getNodeName());
+    }
+
+    @Override
+    public String getSystemVersion() {
+        return (getDeploymentSolution().getNodeFDN().extractRDNForNodeType(TopologyNodeTypeEnum.SOLUTION).getNodeVersion());
+    }
+
+    @Override
+    public FDNToken getSystemIdentifier() {
+        return (getDeploymentSolution().getNodeFDN().toTypeBasedFDN().getToken());
+    }
+
+    @Override
+    public String getSystemOwnerName() {
+        return (getDeploymentSolution().getSystemOwner());
     }
 
     /**
@@ -92,10 +135,12 @@ public class TopologyNodesDM {
             }
         }
         if (elementFound) {
+            this.nodeSet.remove(currentNodeID);
             this.nodeSet.put(currentNodeID, newElement);
         } else {
             this.nodeSet.put(newElement.getNodeFDN(), newElement);
         }
+        LOG.debug(".addTopologyNode(): Exit");
     }
 
     /**
@@ -185,15 +230,32 @@ public class TopologyNodesDM {
     }
 
     public List<TopologyNode> nodeSearch(TopologyNodeTypeEnum nodeType, String nodeName, String nodeVersion){
+        LOG.debug(".nodeSearch(): Entry, nodeType->{}, nodeName->{}, nodeVersion->{}", nodeType, nodeName, nodeVersion);
         ArrayList<TopologyNode> nodeList = new ArrayList<>();
         for(TopologyNode currentNode: nodeSet.values()){
+            if(LOG.isTraceEnabled()){
+                LOG.trace(".nodeSearch(): Search Cache Entry : nodeRDN->{}, nodeComponentType->{}", currentNode.getNodeRDN(), currentNode.getComponentType());
+            }
             boolean nodeTypeMatches = nodeType.equals(currentNode.getComponentType());
             boolean nodeNameMatches = nodeName.contentEquals(currentNode.getNodeRDN().getNodeName());
-            boolean nodeVersionMatches = nodeName.contentEquals(currentNode.getNodeRDN().getNodeVersion());
+            boolean nodeVersionMatches = nodeVersion.contentEquals(currentNode.getNodeRDN().getNodeVersion());
             if(nodeTypeMatches && nodeNameMatches && nodeVersionMatches){
+                LOG.trace(".nodeSearch(): Node found!!! Adding to search result!");
                 nodeList.add(currentNode);
             }
         }
         return(nodeList);
+    }
+
+    public NetworkSecurityZoneEnum getDeploymentNetworkSecurityZone(String nodeName){
+        Collection<TopologyNode> nodeCollection = nodeSet.values();
+        for(TopologyNode currentNode: nodeCollection){
+            boolean nameSame = currentNode.getNodeRDN().getNodeName().contentEquals(nodeName);
+            boolean isProcessingPlant = currentNode.getComponentType().equals(TopologyNodeTypeEnum.PROCESSING_PLANT);
+            if(nameSame && isProcessingPlant){
+                return(currentNode.getSecurityZone());
+            }
+        }
+        return(NetworkSecurityZoneEnum.ZONE_PUBLIC_INTERNET);
     }
 }

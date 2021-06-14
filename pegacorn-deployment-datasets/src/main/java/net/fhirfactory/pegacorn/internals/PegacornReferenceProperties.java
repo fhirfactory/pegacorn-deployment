@@ -23,7 +23,8 @@
 package net.fhirfactory.pegacorn.internals;
 
 import net.fhirfactory.pegacorn.common.model.generalid.FDN;
-import net.fhirfactory.pegacorn.deployment.topology.model.common.SystemIdentificationInterface;
+import net.fhirfactory.pegacorn.deployment.properties.codebased.DeploymentSystemIdentificationInterface;
+
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -36,7 +37,7 @@ import javax.inject.Inject;
 public class PegacornReferenceProperties {
 
     @Inject
-    private SystemIdentificationInterface systemIdentification;
+    private DeploymentSystemIdentificationInterface systemIdentification;
 
     public FDN getSystemDeploymentInstanceFDN(){
         FDN systemFDN = new FDN(systemIdentification.getSystemIdentifier());
@@ -46,6 +47,8 @@ public class PegacornReferenceProperties {
     private static final String PEGACORN_INTERNAL_FHIR_RESOURCE_R4_PATH = "/pegacorn/internal/fhir/r4";
     private static final String PEGACORN_EXPOSED_FHIR_RESOURCE_R4_PATH = "/fhir/r4";
     private static final String PEGACORN_PETASOS_STATUS_PATH = "/pegacorn/internal/petasos/status";
+    private static final String PEGACORN_PETASOS_REPLICATION_PATH = "/pegacorn/internal/petasos/replication";
+    private static final String PEGACORN_PETASOS_IPC_PATH = "/pegacorn/internal/petasos/ipc";
     private static final String PEGACORN_RESOURCE_DIRECTORY_R1_PATH = "/pegacorn/operations/directory/r1";
     private static final String PEGACORN_COMMUNICATE_DIRECTORY_R1_PATH = "/pegacorn/communicate/directory/r1";
 
@@ -62,10 +65,10 @@ public class PegacornReferenceProperties {
     }
 
     public String getPegacornCodeSystemSite(){
-        return("http://pegacorn.fhirfactory.net/fhir/code-systems");
+        return("http://ontology.fhirfactory.net/fhir/code-systems");
     }
 
-    public String getContainmentSeperator(){
+    public String getContainmentSeparator(){
         return("+");
     }
 
@@ -82,4 +85,17 @@ public class PegacornReferenceProperties {
     public static String getPegacornCommunicateDirectoryR1Path() {
         return PEGACORN_COMMUNICATE_DIRECTORY_R1_PATH;
     }
+
+    public static String getPegacornPetasosReplicationPath() {
+        return PEGACORN_PETASOS_REPLICATION_PATH;
+    }
+
+    public static String getPegacornPetasosIPCPath() {
+        return PEGACORN_PETASOS_IPC_PATH;
+    }
+
+    public String getLocalCodeSystemPath(){
+        return("/local/fhir/code-systems");
+    }
+
 }

@@ -1,21 +1,19 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.nodes;
 
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeRDN;
-import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCEndpoint;
+import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
+import net.fhirfactory.pegacorn.deployment.topology.model.nodes.common.EndpointProviderInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
 
-public class ClusterServiceTopologyNode extends TopologyNode {
+public class ClusterServiceTopologyNode extends TopologyNode implements EndpointProviderInterface {
     private static final Logger LOG = LoggerFactory.getLogger(ClusterServiceTopologyNode.class);
 
-    private ConcurrentHashMap<TopologyNodeRDN, PlatformNode> platformNodes;
+    private ArrayList<TopologyNodeFDN> platformNodes;
     private Integer platformNodeCount;
-    private ConcurrentHashMap<TopologyNodeRDN, IPCEndpoint> clusterServiceServerEndpoints;
+    private ArrayList<TopologyNodeFDN> serviceEndpoints;
     private String defaultDNSName;
     private boolean internalTrafficEncrypted;
 
@@ -24,28 +22,26 @@ public class ClusterServiceTopologyNode extends TopologyNode {
         return (LOG);
     }
 
-    public Map<TopologyNodeRDN, PlatformNode> getPlatformNodes() {
+    public ClusterServiceTopologyNode(){
+        super();
+        this.platformNodes = new ArrayList<>();
+        this.serviceEndpoints = new ArrayList<>();
+    }
+
+    public ArrayList<TopologyNodeFDN> getPlatformNodes() {
         return platformNodes;
     }
 
-    public void setPlatformNodes(Map<TopologyNodeRDN, PlatformNode> platformNodes) {
-        this.platformNodes = new ConcurrentHashMap<>();
-        Set<TopologyNodeRDN> plantNames = platformNodes.keySet();
-        for(TopologyNodeRDN name: plantNames){
-            this.platformNodes.putIfAbsent(name, platformNodes.get(name));
-        }
+    public void setPlatformNodes(ArrayList<TopologyNodeFDN> platformNodes) {
+        this.platformNodes = platformNodes;
     }
 
-    public Map<TopologyNodeRDN, IPCEndpoint> getClusterServiceServerEndpoints() {
-        return clusterServiceServerEndpoints;
+    public ArrayList<TopologyNodeFDN> getServiceEndpoints() {
+        return serviceEndpoints;
     }
 
-    public void setClusterServiceServerEndpoints(Map<TopologyNodeRDN, IPCEndpoint> clusterServiceServerEndpoints) {
-        this.clusterServiceServerEndpoints = new ConcurrentHashMap<>();
-        Set<TopologyNodeRDN> serverEndpointNames = clusterServiceServerEndpoints.keySet();
-        for(TopologyNodeRDN name: serverEndpointNames){
-            this.clusterServiceServerEndpoints.putIfAbsent(name, clusterServiceServerEndpoints.get(name));
-        }
+    public void setServiceEndpoints(ArrayList<TopologyNodeFDN> serviceEndpoints) {
+        this.serviceEndpoints = serviceEndpoints;
     }
 
     public String getDefaultDNSName() {
@@ -70,5 +66,11 @@ public class ClusterServiceTopologyNode extends TopologyNode {
 
     public void setPlatformNodeCount(Integer platformNodeCount) {
         this.platformNodeCount = platformNodeCount;
+    }
+
+    @Override
+    public void addEndpoint(TopologyNodeFDN endpointFDN) {
+        LOG.debug(".addEndpoint(): Entry, endpointFDN->{}", endpointFDN);
+        serviceEndpoints.add(endpointFDN);
     }
 }

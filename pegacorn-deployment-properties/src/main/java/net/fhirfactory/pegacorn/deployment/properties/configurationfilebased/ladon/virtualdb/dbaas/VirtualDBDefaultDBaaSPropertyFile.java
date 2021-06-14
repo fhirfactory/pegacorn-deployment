@@ -1,7 +1,7 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.ladon.virtualdb.dbaas;
 
-import net.fhirfactory.pegacorn.deployment.names.subsystems.common.FHIRDBaaSSubsystemComponentNames;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes.DBaaSSubSystemPropertyFile;
 
 
-public class VirtualDBDefaultDBaaSPropertyFile extends FHIRDBaaSSubsystemComponentNames {
+public class VirtualDBDefaultDBaaSPropertyFile extends DBaaSSubSystemPropertyFile {
 }

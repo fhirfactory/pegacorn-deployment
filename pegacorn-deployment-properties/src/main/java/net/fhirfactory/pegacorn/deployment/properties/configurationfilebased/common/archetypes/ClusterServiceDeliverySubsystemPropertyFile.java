@@ -28,22 +28,22 @@ public abstract class ClusterServiceDeliverySubsystemPropertyFile extends BaseSu
 
     private Integer defaultServicePortLowerBound;
 
-    private LoadBalancerProperties loadBalancer;
-    private VolumeMountProperties volumeMounts;
-    private ApplicationDebugProperties debugProperties;
-    private SecurityCredential hapiAPIKey;
+    private LoadBalancerSegment loadBalancer;
+    private VolumeMountSegment volumeMounts;
+    private ApplicationDebugSegment debugProperties;
+    private SecurityCredentialSegment hapiAPIKey;
 
-    private JavaDeploymentParameters javaDeploymentParameters;
+    private JavaDeploymentSegment javaDeploymentParameters;
 
     public ClusterServiceDeliverySubsystemPropertyFile(){
 
-        loadBalancer = new LoadBalancerProperties();
-        volumeMounts = new VolumeMountProperties();
-        debugProperties = new ApplicationDebugProperties();
+        loadBalancer = new LoadBalancerSegment();
+        volumeMounts = new VolumeMountSegment();
+        debugProperties = new ApplicationDebugSegment();
 
-        hapiAPIKey = new SecurityCredential();
+        hapiAPIKey = new SecurityCredentialSegment();
 
-        javaDeploymentParameters = new JavaDeploymentParameters();
+        javaDeploymentParameters = new JavaDeploymentSegment();
     }
     public Integer getDefaultServicePortLowerBound() {
         return defaultServicePortLowerBound;
@@ -53,43 +53,56 @@ public abstract class ClusterServiceDeliverySubsystemPropertyFile extends BaseSu
         this.defaultServicePortLowerBound = defaultServicePortLowerBound;
     }
 
-    public LoadBalancerProperties getLoadBalancer() {
+    public LoadBalancerSegment getLoadBalancer() {
         return loadBalancer;
     }
 
-    public void setLoadBalancer(LoadBalancerProperties loadBalancer) {
+    public void setLoadBalancer(LoadBalancerSegment loadBalancer) {
         this.loadBalancer = loadBalancer;
     }
 
-    public VolumeMountProperties getVolumeMounts() {
+    public VolumeMountSegment getVolumeMounts() {
         return volumeMounts;
     }
 
-    public void setVolumeMounts(VolumeMountProperties volumeMounts) {
+    public void setVolumeMounts(VolumeMountSegment volumeMounts) {
         this.volumeMounts = volumeMounts;
     }
 
-    public ApplicationDebugProperties getDebugProperties() {
+    public ApplicationDebugSegment getDebugProperties() {
         return debugProperties;
     }
 
-    public void setDebugProperties(ApplicationDebugProperties debugProperties) {
+    public void setDebugProperties(ApplicationDebugSegment debugProperties) {
         this.debugProperties = debugProperties;
     }
 
-    public SecurityCredential getHapiAPIKey() {
+    public SecurityCredentialSegment getHapiAPIKey() {
         return hapiAPIKey;
     }
 
-    public void setHapiAPIKey(SecurityCredential hapiAPIKey) {
+    public void setHapiAPIKey(SecurityCredentialSegment hapiAPIKey) {
         this.hapiAPIKey = hapiAPIKey;
     }
 
-    public JavaDeploymentParameters getJavaDeploymentParameters() {
+    public JavaDeploymentSegment getJavaDeploymentParameters() {
         return javaDeploymentParameters;
     }
 
-    public void setJavaDeploymentParameters(JavaDeploymentParameters javaDeploymentParameters) {
+    public void setJavaDeploymentParameters(JavaDeploymentSegment javaDeploymentParameters) {
         this.javaDeploymentParameters = javaDeploymentParameters;
+    }
+
+    @Override
+    public String toString() {
+        return "ClusterServiceDeliverySubsystemPropertyFile{" +
+                "defaultServicePortLowerBound=" + defaultServicePortLowerBound +
+                ", loadBalancer=" + loadBalancer +
+                ", volumeMounts=" + volumeMounts +
+                ", debugProperties=" + debugProperties +
+                ", hapiAPIKey=" + hapiAPIKey +
+                ", javaDeploymentParameters=" + javaDeploymentParameters +
+                "," + super.toString() +
+                '}';
     }
 }

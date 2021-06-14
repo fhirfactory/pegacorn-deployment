@@ -21,14 +21,11 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.petasos;
 
-import javax.enterprise.context.ApplicationScoped;
-
 /**
  *
  * @author Mark A. Hunter
  */
 
-@ApplicationScoped
 public class PetasosProperties {
     
     // For assisting in monitoring expected end time in parcels, this period in milliseconds

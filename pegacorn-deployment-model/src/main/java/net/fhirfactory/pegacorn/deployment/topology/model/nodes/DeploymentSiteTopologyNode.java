@@ -1,35 +1,34 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.nodes;
 
+import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeRDN;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
 
 public class DeploymentSiteTopologyNode extends TopologyNode {
     private static final Logger LOG = LoggerFactory.getLogger(DeploymentSiteTopologyNode.class);
 
-    private ConcurrentHashMap<TopologyNodeRDN, ClusterServiceTopologyNode> clusterServices;
+    private ArrayList<TopologyNodeFDN> clusterServices;
     private Integer instanceCount;
+
+    public DeploymentSiteTopologyNode(){
+        super();
+        this.clusterServices = new ArrayList<>();
+    }
 
     @Override
     protected Logger getLogger() {
-        return null;
+        return (LOG);
     }
 
-    public Map<TopologyNodeRDN, ClusterServiceTopologyNode> getClusterServices() {
+    public ArrayList<TopologyNodeFDN> getClusterServices() {
         return clusterServices;
     }
 
-    public void setClusterServices(Map<TopologyNodeRDN, ClusterServiceTopologyNode> clusterServices) {
-        this.clusterServices = new ConcurrentHashMap<>();
-        Set<TopologyNodeRDN> serviceNames = clusterServices.keySet();
-        for(TopologyNodeRDN name: serviceNames){
-            this.clusterServices.putIfAbsent(name, clusterServices.get(name));
-        }
+    public void setClusterServices(ArrayList<TopologyNodeFDN> clusterServices) {
+        this.clusterServices = clusterServices;
     }
 
     public Integer getInstanceCount() {

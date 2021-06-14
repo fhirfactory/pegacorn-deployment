@@ -21,6 +21,7 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.model.common;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFunctionFDN;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeRDN;
@@ -35,9 +36,10 @@ public abstract class TopologyNode {
     private TopologyNodeFDN nodeFDN;
     private TopologyNodeFunctionFDN nodeFunctionFDN;
     private TopologyNodeTypeEnum componentType;
-    private TopologyNode containingComponent;
+    private TopologyNodeFDN containingNodeFDN;
     private ConcurrencyModeEnum concurrencyMode;
     private ResilienceModeEnum resilienceMode;
+    private NetworkSecurityZoneEnum securityZone;
 
     public TopologyNode(){
         this.nodeRDN = null;
@@ -71,27 +73,32 @@ public abstract class TopologyNode {
         this.componentType = componentType;
     }
 
-    public TopologyNode getContainingComponent() {
-        return containingComponent;
+    public TopologyNodeFDN getContainingNodeFDN() {
+        return containingNodeFDN;
     }
 
-    public void setContainingComponent(TopologyNode containingComponent) {
-        this.containingComponent = containingComponent;
+    public void setContainingNodeFDN(TopologyNodeFDN containingNodeFDN) {
+        this.containingNodeFDN = containingNodeFDN;
     }
 
+    @JsonIgnore
     public void constructFDN(TopologyNodeFDN parentNodeFDN, TopologyNodeRDN nodeRDN){
-        getLogger().debug(".constructIdentifier(): Entry");
+        getLogger().debug(".constructFDN(): Entry, parentNodeFDN->{}, nodeRDN->{}", parentNodeFDN, nodeRDN);
         if(parentNodeFDN == null || nodeRDN.getNodeType().equals(TopologyNodeTypeEnum.SOLUTION)){
+            getLogger().trace(".constructFDN(): Is a Solution Node");
             TopologyNodeFDN solutionFDN = new TopologyNodeFDN();
             solutionFDN.appendTopologyNodeRDN(nodeRDN);
             this.nodeFDN = solutionFDN;
         } else {
+            getLogger().trace(".constructFDN(): Is not a Solution Node");
             TopologyNodeFDN newFDN = new TopologyNodeFDN(parentNodeFDN);
-            newFDN.appendTopologyNodeFDN(nodeFDN);
+            getLogger().trace(".constructFDN(): newFDN Created");
             newFDN.appendTopologyNodeRDN(nodeRDN);
+            getLogger().trace(".constructFDN(): nodeRDN appended");
             this.nodeFDN = newFDN;
+            getLogger().trace(".constructFDN(): this.nodeFDN assigned->{}", this.getNodeFDN());
         }
-        getLogger().debug(".constructIdentifier(): Exit, created Identifier --> {}", this.getNodeFDN());
+        getLogger().debug(".constructFDN(): Exit, nodeFDN->{}", this.getNodeFDN());
     }
 
     public TopologyNodeFunctionFDN getNodeFunctionFDN() {
@@ -102,17 +109,20 @@ public abstract class TopologyNode {
         this.nodeFunctionFDN = nodeFunctionFDN;
     }
 
+    @JsonIgnore
     public void constructFunctionFDN(TopologyNodeFunctionFDN parentFunctionFDN, TopologyNodeRDN nodeRDN){
-        getLogger().debug(".constructFunctionIdentifier(): Entry");
+        getLogger().debug(".constructFunctionFDN(): Entry");
         switch(nodeRDN.getNodeType()){
             case SOLUTION: {
                 TopologyNodeFunctionFDN solutionFDN = new TopologyNodeFunctionFDN();
                 solutionFDN.appendTopologyNodeRDN(nodeRDN);
                 this.nodeFunctionFDN = solutionFDN;
+                break;
             }
             case SITE:
             case PLATFORM:{
                 this.nodeFunctionFDN = parentFunctionFDN;
+                break;
             }
             default:{
                 TopologyNodeFunctionFDN newFunctionFDN = new TopologyNodeFunctionFDN(parentFunctionFDN);
@@ -120,6 +130,7 @@ public abstract class TopologyNode {
                 this.nodeFunctionFDN = newFunctionFDN;
             }
         }
+        getLogger().debug(".constructFunctionFDN(): Exit, nodeFunctionFDN->{}", this.getNodeFunctionFDN());
     }
 
     public ConcurrencyModeEnum getConcurrencyMode() {
@@ -138,6 +149,15 @@ public abstract class TopologyNode {
         this.resilienceMode = resilienceMode;
     }
 
+    public NetworkSecurityZoneEnum getSecurityZone() {
+        return securityZone;
+    }
+
+    public void setSecurityZone(NetworkSecurityZoneEnum securityZone) {
+        this.securityZone = securityZone;
+    }
+
+    @JsonIgnore
     public boolean isKubernetesDeployed(){
         switch(getResilienceMode()){
             case RESILIENCE_MODE_KUBERNETES_CLUSTERED:
@@ -152,5 +172,19 @@ public abstract class TopologyNode {
             default:
                 return(false);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "TopologyNode{" +
+                "nodeRDN=" + nodeRDN +
+                ", nodeFDN=" + nodeFDN +
+                ", nodeFunctionFDN=" + nodeFunctionFDN +
+                ", componentType=" + componentType +
+                ", containingComponent=" + containingNodeFDN +
+                ", concurrencyMode=" + concurrencyMode +
+                ", resilienceMode=" + resilienceMode +
+                ", securityZone=" + securityZone +
+                '}';
     }
 }

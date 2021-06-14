@@ -30,8 +30,11 @@ public abstract class SubsystemBaseNames {
     public String getFunctionNameJolokia(){return("KubernetesSystemJolokia");}
     public String getFunctionNameKubeReadiness(){return("KubernetesSystemReadiness");}
     public String getFunctionNameKubeLiveliness(){return("KubernetesSystemLiveliness");}
-
-
+    public String getFunctionNameJGroupsIPC(){return("IPCJGroups");}
+    public String getFunctionNameEdgeReceive(){return("EdgeReceive");}
+    public String getFunctionNameEdgeForward(){return("EdgeForward");}
+    public String getFunctionNameEdgeAnswer(){return("EdgeAnswer");}
+    public String getFunctionNameEdgeAsk(){return("EdgeAsk");}
     //
     // Default ProcessorPlant Interface Binding
     //

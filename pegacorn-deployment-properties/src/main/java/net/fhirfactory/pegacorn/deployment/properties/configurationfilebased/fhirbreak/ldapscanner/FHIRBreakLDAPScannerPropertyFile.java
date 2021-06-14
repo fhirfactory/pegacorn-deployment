@@ -1,26 +1,26 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.fhirbreak.ldapscanner;
 
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.PegacornClusterServiceInteractPort;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.ClusterServiceInteractPortSegment;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.fhirbreak.common.FHIRBreakSubsystemPropertyFile;
 
 public class FHIRBreakLDAPScannerPropertyFile extends FHIRBreakSubsystemPropertyFile {
 
-    private PegacornClusterServiceInteractPort ldapProxy;
-    private PegacornClusterServiceInteractPort ldapServer;
+    private ClusterServiceInteractPortSegment ldapProxy;
+    private ClusterServiceInteractPortSegment ldapServer;
 
-    public PegacornClusterServiceInteractPort getLdapProxy() {
+    public ClusterServiceInteractPortSegment getLdapProxy() {
         return ldapProxy;
     }
 
-    public void setLdapProxy(PegacornClusterServiceInteractPort ldapProxy) {
+    public void setLdapProxy(ClusterServiceInteractPortSegment ldapProxy) {
         this.ldapProxy = ldapProxy;
     }
 
-    public PegacornClusterServiceInteractPort getLdapServer() {
+    public ClusterServiceInteractPortSegment getLdapServer() {
         return ldapServer;
     }
 
-    public void setLdapServer(PegacornClusterServiceInteractPort ldapServer) {
+    public void setLdapServer(ClusterServiceInteractPortSegment ldapServer) {
         this.ldapServer = ldapServer;
     }
 

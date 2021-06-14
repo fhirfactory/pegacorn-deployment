@@ -1,22 +1,23 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.common;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.fhirfactory.pegacorn.deployment.topology.model.mode.ResilienceModeEnum;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class IPCInterface {
-    private TopologyNode enablingTopologyEndpoint;
-    private String instanceName;
+    private IPCTopologyEndpoint enablingTopologyEndpoint;
+    private String targetName;
+    private String groupName;
     private ArrayList<ResilienceModeEnum> supportedDeploymentModes;
     private ArrayList<IPCInterfaceDefinition> supportedInterfaceDefinitions;
 
-    public String getInstanceName() {
-        return instanceName;
+    public IPCInterface(){
+        supportedDeploymentModes = new ArrayList<>();
+        supportedInterfaceDefinitions = new ArrayList<>();
     }
 
-    public void setInstanceName(String instanceName) {
-        this.instanceName = instanceName;
-    }
 
     public ArrayList<ResilienceModeEnum> getSupportedDeploymentModes() {
         return supportedDeploymentModes;
@@ -26,53 +27,42 @@ public class IPCInterface {
         this.supportedDeploymentModes = supportedDeploymentModes;
     }
 
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof IPCInterface)) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         IPCInterface that = (IPCInterface) o;
-        if(getSupportedDeploymentModes().size() != that.getSupportedDeploymentModes().size()){
-            return(false);
-        }
-        if(getEnablingTopologyEndpoint() == null && that.getEnablingTopologyEndpoint() != null){
-            return(false);
-        }
-        if(getEnablingTopologyEndpoint() != null && that.getEnablingTopologyEndpoint() == null){
-            return(false);
-        }
-        if(!getEnablingTopologyEndpoint().equals(that.getEnablingTopologyEndpoint())){
-            return(false);
-        }
-        if(!(getEnablingTopologyEndpoint().getNodeFDN().toString().contentEquals((that.getEnablingTopologyEndpoint().getNodeFDN().toString())))){
-            return(false);
-        }
-        boolean nameSame = getInstanceName().contentEquals(that.getInstanceName());
-        boolean modesSame = true;
-        for(ResilienceModeEnum currentMode: getSupportedDeploymentModes()){
-            boolean isInOther = false;
-            for(ResilienceModeEnum currentOtherMode: that.getSupportedDeploymentModes()){
-                if(currentMode.equals(currentOtherMode)){
-                    isInOther = true;
-                    break;
-                }
-            }
-            if(!isInOther){
-                return(false);
-            }
-        }
-        return(true);
+        return Objects.equals(getEnablingTopologyEndpoint(), that.getEnablingTopologyEndpoint()) && getInstanceName().equals(that.getInstanceName()) && Objects.equals(getTargetName(), that.getTargetName()) && Objects.equals(groupName, that.groupName) && Objects.equals(getSupportedDeploymentModes(), that.getSupportedDeploymentModes()) && Objects.equals(getSupportedInterfaceDefinitions(), that.getSupportedInterfaceDefinitions());
     }
 
-    public TopologyNode getEnablingTopologyEndpoint() {
+    @Override
+    public int hashCode() {
+        return Objects.hash(getEnablingTopologyEndpoint(), getInstanceName(), getTargetName(), groupName, getSupportedDeploymentModes(), getSupportedInterfaceDefinitions());
+    }
+
+    @JsonIgnore
+    public String getInstanceName(){
+        return(getEnablingTopologyEndpoint().getNodeRDN().getNodeName());
+    }
+
+    @JsonIgnore
+    public String getInstanceVersion(){
+        return(getEnablingTopologyEndpoint().getNodeRDN().getNodeVersion());
+    }
+
+    public String getTargetName() {
+        return targetName;
+    }
+
+    public void setTargetName(String targetName) {
+        this.targetName = targetName;
+    }
+
+    public IPCTopologyEndpoint getEnablingTopologyEndpoint() {
         return enablingTopologyEndpoint;
     }
 
-    public void setEnablingTopologyEndpoint(TopologyNode enablingTopologyEndpoint) {
+    public void setEnablingTopologyEndpoint(IPCTopologyEndpoint enablingTopologyEndpoint) {
         this.enablingTopologyEndpoint = enablingTopologyEndpoint;
     }
 
@@ -99,5 +89,24 @@ public class IPCInterface {
             }
         }
         return(false);
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    @Override
+    public String toString() {
+        return "IPCInterface{" +
+                "enablingTopologyEndpoint=" + enablingTopologyEndpoint +
+                ", targetName='" + targetName + '\'' +
+                ", groupName='" + groupName + '\'' +
+                ", supportedDeploymentModes=" + supportedDeploymentModes +
+                ", supportedInterfaceDefinitions=" + supportedInterfaceDefinitions +
+                '}';
     }
 }

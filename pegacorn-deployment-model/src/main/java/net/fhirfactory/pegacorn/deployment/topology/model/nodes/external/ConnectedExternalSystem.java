@@ -1,6 +1,6 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.nodes.external;
 
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.external.ConnectedExternalSystemEndpoint;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.external.ConnectedExternalSystemTopologyEndpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +15,7 @@ public class ConnectedExternalSystem {
     private String subsystemVersion;
     private String externalisedServiceName;
     private String externalisedServiceEndpointName;
-    private ConcurrentHashMap<Integer, ConnectedExternalSystemEndpoint> targetPorts;
+    private ConcurrentHashMap<Integer, ConnectedExternalSystemTopologyEndpoint> targetPorts;
 
     public String getOwningOrganizationName() {
         return owningOrganizationName;
@@ -65,11 +65,11 @@ public class ConnectedExternalSystem {
         this.externalisedServiceEndpointName = externalisedServiceEndpointName;
     }
 
-    public ConcurrentHashMap<Integer, ConnectedExternalSystemEndpoint> getTargetPorts() {
+    public ConcurrentHashMap<Integer, ConnectedExternalSystemTopologyEndpoint> getTargetPorts() {
         return targetPorts;
     }
 
-    public void setTargetPorts(ConcurrentHashMap<Integer, ConnectedExternalSystemEndpoint> targetPorts) {
+    public void setTargetPorts(ConcurrentHashMap<Integer, ConnectedExternalSystemTopologyEndpoint> targetPorts) {
         this.targetPorts = targetPorts;
     }
 }

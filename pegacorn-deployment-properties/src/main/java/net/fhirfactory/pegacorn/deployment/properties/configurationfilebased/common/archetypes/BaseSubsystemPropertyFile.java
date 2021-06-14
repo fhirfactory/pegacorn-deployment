@@ -22,110 +22,133 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes;
 
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.*;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.StandardProcessingPlantPort;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.standard.HTTPProcessingPlantPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.HTTPIPCPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.JGroupsIPCPortSegment;
+import org.slf4j.Logger;
 
 public class BaseSubsystemPropertyFile {
-    private SubsystemInstanceDetails subsystemInstant;
-    private DeploymentModeProperties deploymentMode;
-    private DeploymentSiteProperties deploymentSites;
-    private StandardProcessingPlantPort kubeReadinessProbe;
-    private StandardProcessingPlantPort kubeLivelinessProbe;
-    private StandardProcessingPlantPort prometheusPort;
-    private StandardProcessingPlantPort jolokiaPort;
-    private SubsystemImageProperties subsystemImageProperties;
-    private SecurityCredential trustStorePassword;
-    private SecurityCredential keyPassword;
+
+    private SubsystemInstanceSegment subsystemInstant;
+    private DeploymentModeSegment deploymentMode;
+    private DeploymentSiteSegment deploymentSites;
+    private HTTPProcessingPlantPortSegment kubeReadinessProbe;
+    private HTTPProcessingPlantPortSegment kubeLivelinessProbe;
+    private HTTPProcessingPlantPortSegment prometheusPort;
+    private HTTPProcessingPlantPortSegment jolokiaPort;
+
+    private SubsystemImageSegment subsystemImageProperties;
+    private SecurityCredentialSegment trustStorePassword;
+    private SecurityCredentialSegment keyPassword;
 
     public BaseSubsystemPropertyFile() {
-        subsystemInstant = new SubsystemInstanceDetails();
-        deploymentMode = new DeploymentModeProperties();
-        deploymentSites = new DeploymentSiteProperties();
-        kubeLivelinessProbe = new StandardProcessingPlantPort();
-        kubeReadinessProbe = new StandardProcessingPlantPort();
-        subsystemImageProperties = new SubsystemImageProperties();
-        trustStorePassword = new SecurityCredential();
-        keyPassword = new SecurityCredential();
-        jolokiaPort = new StandardProcessingPlantPort();
-        prometheusPort = new StandardProcessingPlantPort();
+        subsystemInstant = new SubsystemInstanceSegment();
+        deploymentMode = new DeploymentModeSegment();
+        deploymentSites = new DeploymentSiteSegment();
+        kubeLivelinessProbe = new HTTPProcessingPlantPortSegment();
+        kubeReadinessProbe = new HTTPProcessingPlantPortSegment();
+        subsystemImageProperties = new SubsystemImageSegment();
+        trustStorePassword = new SecurityCredentialSegment();
+        keyPassword = new SecurityCredentialSegment();
+        jolokiaPort = new HTTPProcessingPlantPortSegment();
+        prometheusPort = new HTTPProcessingPlantPortSegment();
     }
 
-    public StandardProcessingPlantPort getPrometheusPort() {
-        return prometheusPort;
-    }
-
-    public void setPrometheusPort(StandardProcessingPlantPort prometheusPort) {
-        this.prometheusPort = prometheusPort;
-    }
-
-    public StandardProcessingPlantPort getJolokiaPort() {
-        return jolokiaPort;
-    }
-
-    public void setJolokiaPort(StandardProcessingPlantPort jolokiaPort) {
-        this.jolokiaPort = jolokiaPort;
-    }
-
-    public SubsystemInstanceDetails getSubsystemInstant() {
-        return subsystemInstant;
-    }
-
-    public void setSubsystemInstant(SubsystemInstanceDetails subsystemInstant) {
-        this.subsystemInstant = subsystemInstant;
-    }
-
-    public DeploymentModeProperties getDeploymentMode() {
-        return deploymentMode;
-    }
-
-    public void setDeploymentMode(DeploymentModeProperties deploymentMode) {
-        this.deploymentMode = deploymentMode;
-    }
-
-    public DeploymentSiteProperties getDeploymentSites() {
-        return deploymentSites;
-    }
-
-    public void setDeploymentSites(DeploymentSiteProperties deploymentSites) {
-        this.deploymentSites = deploymentSites;
-    }
-
-    public StandardProcessingPlantPort getKubeReadinessProbe() {
+    public HTTPProcessingPlantPortSegment getKubeReadinessProbe() {
         return kubeReadinessProbe;
     }
 
-    public void setKubeReadinessProbe(StandardProcessingPlantPort kubeReadinessProbe) {
+    public void setKubeReadinessProbe(HTTPProcessingPlantPortSegment kubeReadinessProbe) {
         this.kubeReadinessProbe = kubeReadinessProbe;
     }
 
-    public StandardProcessingPlantPort getKubeLivelinessProbe() {
+    public HTTPProcessingPlantPortSegment getKubeLivelinessProbe() {
         return kubeLivelinessProbe;
     }
 
-    public void setKubeLivelinessProbe(StandardProcessingPlantPort kubeLivelinessProbe) {
+    public void setKubeLivelinessProbe(HTTPProcessingPlantPortSegment kubeLivelinessProbe) {
         this.kubeLivelinessProbe = kubeLivelinessProbe;
     }
 
-    public SubsystemImageProperties getSubsystemImageProperties() {
+    public HTTPProcessingPlantPortSegment getPrometheusPort() {
+        return prometheusPort;
+    }
+
+    public void setPrometheusPort(HTTPProcessingPlantPortSegment prometheusPort) {
+        this.prometheusPort = prometheusPort;
+    }
+
+    public HTTPProcessingPlantPortSegment getJolokiaPort() {
+        return jolokiaPort;
+    }
+
+    public void setJolokiaPort(HTTPProcessingPlantPortSegment jolokiaPort) {
+        this.jolokiaPort = jolokiaPort;
+    }
+
+    public SubsystemInstanceSegment getSubsystemInstant() {
+        return subsystemInstant;
+    }
+
+    public void setSubsystemInstant(SubsystemInstanceSegment subsystemInstant) {
+        this.subsystemInstant = subsystemInstant;
+    }
+
+    public DeploymentModeSegment getDeploymentMode() {
+        return deploymentMode;
+    }
+
+    public void setDeploymentMode(DeploymentModeSegment deploymentMode) {
+        this.deploymentMode = deploymentMode;
+    }
+
+    public DeploymentSiteSegment getDeploymentSites() {
+        return deploymentSites;
+    }
+
+    public void setDeploymentSites(DeploymentSiteSegment deploymentSites) {
+        this.deploymentSites = deploymentSites;
+    }
+
+
+    public SubsystemImageSegment getSubsystemImageProperties() {
         return subsystemImageProperties;
     }
 
-    public void setSubsystemImageProperties(SubsystemImageProperties subsystemImageProperties) {
+    public void setSubsystemImageProperties(SubsystemImageSegment subsystemImageProperties) {
         this.subsystemImageProperties = subsystemImageProperties;
     }
 
-    public SecurityCredential getTrustStorePassword() {
+    public SecurityCredentialSegment getTrustStorePassword() {
         return trustStorePassword;
     }
 
-    public void setTrustStorePassword(SecurityCredential trustStorePassword) {
+    public void setTrustStorePassword(SecurityCredentialSegment trustStorePassword) {
         this.trustStorePassword = trustStorePassword;
     }
 
-    public SecurityCredential getKeyPassword() {
+    public SecurityCredentialSegment getKeyPassword() {
         return keyPassword;
     }
 
-    public void setKeyPassword(SecurityCredential keyPassword) {
+    public void setKeyPassword(SecurityCredentialSegment keyPassword) {
         this.keyPassword = keyPassword;
+    }
+
+    @Override
+    public String toString() {
+        return "BaseSubsystemPropertyFile{" +
+                "subsystemInstant=" + subsystemInstant +
+                ", deploymentMode=" + deploymentMode +
+                ", deploymentSites=" + deploymentSites +
+                ", kubeReadinessProbe=" + kubeReadinessProbe +
+                ", kubeLivelinessProbe=" + kubeLivelinessProbe +
+                ", prometheusPort=" + prometheusPort +
+                ", jolokiaPort=" + jolokiaPort +
+                ", subsystemImageProperties=" + subsystemImageProperties +
+                ", trustStorePassword=" + trustStorePassword +
+                ", keyPassword=" + keyPassword +
+                "," + super.toString() +
+                '}';
     }
 }

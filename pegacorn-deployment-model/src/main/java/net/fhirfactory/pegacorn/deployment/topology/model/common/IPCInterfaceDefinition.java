@@ -21,6 +21,8 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.model.common;
 
+import java.util.Objects;
+
 public class IPCInterfaceDefinition {
     private String interfaceFormalName;
     private String interfaceFormalVersion;
@@ -51,4 +53,24 @@ public class IPCInterfaceDefinition {
         return(newTag);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        IPCInterfaceDefinition that = (IPCInterfaceDefinition) o;
+        return Objects.equals(getInterfaceFormalName(), that.getInterfaceFormalName()) && Objects.equals(getInterfaceFormalVersion(), that.getInterfaceFormalVersion());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getInterfaceFormalName(), getInterfaceFormalVersion());
+    }
+
+    @Override
+    public String toString() {
+        return "IPCInterfaceDefinition{" +
+                "interfaceFormalName='" + interfaceFormalName + '\'' +
+                ", interfaceFormalVersion='" + interfaceFormalVersion + '\'' +
+                '}';
+    }
 }

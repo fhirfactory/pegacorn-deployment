@@ -22,12 +22,30 @@
 package net.fhirfactory.pegacorn.deployment.names.subsystems;
 
 import net.fhirfactory.pegacorn.deployment.names.petasosenabled.PetasosComponentNames;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.common.InterfaceDefinitionSegment;
+import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCInterfaceDefinition;
 
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class CommunicateIrisComponentNames extends PetasosComponentNames {
-    public String getFunctionNameInteractMatrixApplicationServices(){return("Interact-Matrix-ApplicationServices");}
-    public String getFunctionNameInteractPegacornVoIPServices(){return("Interact-Pegacorn-VoIPServices");}
+    public String getFunctionNameInteractMatrixClientServices(){return("Interact-Matrix-ApplicationServices");}
+    public String getVersionInteractMatrixClientServices(){return("0.6.1");}
 
+    public String getFunctionNameInteractMatrixApplicationServices(){return("Matrix Application Service API");}
+    public String getVersionInteractMatrixApplicationServices(){return("0.1.2");}
+
+    public IPCInterfaceDefinition getMatrixClientServicesPortDefinition(){
+        IPCInterfaceDefinition appServersPort = new IPCInterfaceDefinition();
+        appServersPort.setInterfaceFormalName(getFunctionNameInteractMatrixClientServices());
+        appServersPort.setInterfaceFormalVersion(getVersionInteractMatrixClientServices());
+        return(appServersPort);
+    }
+
+    public IPCInterfaceDefinition getMatrixApplicationServicesPortDefinition(){
+        IPCInterfaceDefinition appServersPort = new IPCInterfaceDefinition();
+        appServersPort.setInterfaceFormalName(getFunctionNameInteractMatrixApplicationServices());
+        appServersPort.setInterfaceFormalVersion(getVersionInteractMatrixApplicationServices());
+        return(appServersPort);
+    }
 }
