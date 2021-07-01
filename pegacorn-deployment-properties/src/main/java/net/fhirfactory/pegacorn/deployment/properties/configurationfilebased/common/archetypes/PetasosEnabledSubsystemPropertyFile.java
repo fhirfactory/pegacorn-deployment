@@ -1,73 +1,66 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes;
 
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.HTTPIPCPortSegment;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.JGroupsIPCPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.HTTPIPCServerPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.JGroupsIPCServerPortSegment;
 
 public class PetasosEnabledSubsystemPropertyFile extends ClusterServiceDeliverySubsystemPropertyFile{
-    private JGroupsIPCPortSegment edgeIPCJGroups;
-    private HTTPIPCPortSegment edgeAnswer;
-    private HTTPIPCPortSegment edgeReceive;
-    private HTTPIPCPortSegment petasosReplication;
-    private HTTPIPCPortSegment petasosStatus;
+    private JGroupsIPCServerPortSegment interZoneIPC;
+    private JGroupsIPCServerPortSegment intraZoneIPC;
+    private HTTPIPCServerPortSegment edgeAnswer;
 
     public PetasosEnabledSubsystemPropertyFile(){
         super();
-        edgeAnswer = new HTTPIPCPortSegment();
-        edgeReceive = new HTTPIPCPortSegment();
-        petasosReplication = new HTTPIPCPortSegment();
-        petasosStatus = new HTTPIPCPortSegment();
-        edgeIPCJGroups = new  JGroupsIPCPortSegment();
+        edgeAnswer = new HTTPIPCServerPortSegment();
+        interZoneIPC = new JGroupsIPCServerPortSegment();
+        intraZoneIPC = new JGroupsIPCServerPortSegment();
     }
 
-    public JGroupsIPCPortSegment getEdgeIPCJGroups() {
-        return edgeIPCJGroups;
+    public JGroupsIPCServerPortSegment getInterZoneIPC() {
+        return interZoneIPC;
     }
 
-    public void setEdgeIPCJGroups(JGroupsIPCPortSegment edgeIPCJGroups) {
-        this.edgeIPCJGroups = edgeIPCJGroups;
+    public void setInterZoneIPC(JGroupsIPCServerPortSegment interZoneIPC) {
+        this.interZoneIPC = interZoneIPC;
     }
 
-    public HTTPIPCPortSegment getEdgeAnswer() {
+    public HTTPIPCServerPortSegment getEdgeAnswer() {
         return edgeAnswer;
     }
 
-    public void setEdgeAnswer(HTTPIPCPortSegment edgeAnswer) {
+    public void setEdgeAnswer(HTTPIPCServerPortSegment edgeAnswer) {
         this.edgeAnswer = edgeAnswer;
     }
 
-    public HTTPIPCPortSegment getEdgeReceive() {
-        return edgeReceive;
+    public JGroupsIPCServerPortSegment getIntraZoneIPC() {
+        return intraZoneIPC;
     }
 
-    public void setEdgeReceive(HTTPIPCPortSegment edgeReceive) {
-        this.edgeReceive = edgeReceive;
-    }
-
-    public HTTPIPCPortSegment getPetasosReplication() {
-        return petasosReplication;
-    }
-
-    public void setPetasosReplication(HTTPIPCPortSegment petasosReplication) {
-        this.petasosReplication = petasosReplication;
-    }
-
-    public HTTPIPCPortSegment getPetasosStatus() {
-        return petasosStatus;
-    }
-
-    public void setPetasosStatus(HTTPIPCPortSegment petasosStatus) {
-        this.petasosStatus = petasosStatus;
+    public void setIntraZoneIPC(JGroupsIPCServerPortSegment intraZoneIPC) {
+        this.intraZoneIPC = intraZoneIPC;
     }
 
     @Override
     public String toString() {
         return "PetasosEnabledSubsystemPropertyFile{" +
-                "edgeIPCJGroups=" + edgeIPCJGroups +
-                ", edgeAnswer=" + edgeAnswer +
-                ", edgeReceive=" + edgeReceive +
-                ", petasosReplication=" + petasosReplication +
-                ", petasosStatus=" + petasosStatus +
-                "," + super.toString() +
+                "defaultServicePortLowerBound=" + getDefaultServicePortLowerBound() +
+                ", loadBalancer=" + getLoadBalancer() +
+                ", volumeMounts=" + getVolumeMounts() +
+                ", debugProperties=" + getDebugProperties() +
+                ", hapiAPIKey=" + getHapiAPIKey() +
+                ", javaDeploymentParameters=" + getJavaDeploymentParameters() +
+                ", subsystemInstant=" + getSubsystemInstant() +
+                ", deploymentMode=" + getDeploymentMode() +
+                ", deploymentSites=" + getDeploymentSites() +
+                ", kubeReadinessProbe=" + getKubeReadinessProbe() +
+                ", kubeLivelinessProbe=" + getKubeLivelinessProbe() +
+                ", prometheusPort=" + getPrometheusPort() +
+                ", jolokiaPort=" + getJolokiaPort() +
+                ", subsystemImageProperties=" + getSubsystemImageProperties() +
+                ", trustStorePassword=" + getTrustStorePassword() +
+                ", keyPassword=" + getKeyPassword() +
+                ", interZoneIPC=" + getInterZoneIPC() +
+                ", intraZoneIPC=" + getIntraZoneIPC() +
+                ", edgeAnswer=" + getEdgeAnswer() +
                 '}';
     }
 }

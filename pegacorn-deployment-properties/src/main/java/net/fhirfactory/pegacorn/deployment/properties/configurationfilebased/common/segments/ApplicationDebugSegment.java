@@ -30,6 +30,10 @@ public class ApplicationDebugSegment {
     private String aetherLogCategory;
     private String javaxNetDebug;
 
+    public ApplicationDebugSegment(){
+        super();
+    }
+
     public String getWildflyLogLevel() {
         return wildflyLogLevel;
     }

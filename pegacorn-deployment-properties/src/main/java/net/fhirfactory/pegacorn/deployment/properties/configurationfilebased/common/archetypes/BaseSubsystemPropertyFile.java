@@ -22,20 +22,18 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes;
 
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.*;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.standard.HTTPProcessingPlantPortSegment;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.HTTPIPCPortSegment;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.JGroupsIPCPortSegment;
-import org.slf4j.Logger;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.standard.HTTPProcessingPlantServerPortSegment;
 
 public class BaseSubsystemPropertyFile {
 
     private SubsystemInstanceSegment subsystemInstant;
     private DeploymentModeSegment deploymentMode;
     private DeploymentSiteSegment deploymentSites;
-    private HTTPProcessingPlantPortSegment kubeReadinessProbe;
-    private HTTPProcessingPlantPortSegment kubeLivelinessProbe;
-    private HTTPProcessingPlantPortSegment prometheusPort;
-    private HTTPProcessingPlantPortSegment jolokiaPort;
+    private DeploymentZoneSegment deploymentZone;
+    private HTTPProcessingPlantServerPortSegment kubeReadinessProbe;
+    private HTTPProcessingPlantServerPortSegment kubeLivelinessProbe;
+    private HTTPProcessingPlantServerPortSegment prometheusPort;
+    private HTTPProcessingPlantServerPortSegment jolokiaPort;
 
     private SubsystemImageSegment subsystemImageProperties;
     private SecurityCredentialSegment trustStorePassword;
@@ -45,44 +43,45 @@ public class BaseSubsystemPropertyFile {
         subsystemInstant = new SubsystemInstanceSegment();
         deploymentMode = new DeploymentModeSegment();
         deploymentSites = new DeploymentSiteSegment();
-        kubeLivelinessProbe = new HTTPProcessingPlantPortSegment();
-        kubeReadinessProbe = new HTTPProcessingPlantPortSegment();
+        kubeLivelinessProbe = new HTTPProcessingPlantServerPortSegment();
+        kubeReadinessProbe = new HTTPProcessingPlantServerPortSegment();
         subsystemImageProperties = new SubsystemImageSegment();
         trustStorePassword = new SecurityCredentialSegment();
         keyPassword = new SecurityCredentialSegment();
-        jolokiaPort = new HTTPProcessingPlantPortSegment();
-        prometheusPort = new HTTPProcessingPlantPortSegment();
+        jolokiaPort = new HTTPProcessingPlantServerPortSegment();
+        prometheusPort = new HTTPProcessingPlantServerPortSegment();
+        deploymentZone = new DeploymentZoneSegment();
     }
 
-    public HTTPProcessingPlantPortSegment getKubeReadinessProbe() {
+    public HTTPProcessingPlantServerPortSegment getKubeReadinessProbe() {
         return kubeReadinessProbe;
     }
 
-    public void setKubeReadinessProbe(HTTPProcessingPlantPortSegment kubeReadinessProbe) {
+    public void setKubeReadinessProbe(HTTPProcessingPlantServerPortSegment kubeReadinessProbe) {
         this.kubeReadinessProbe = kubeReadinessProbe;
     }
 
-    public HTTPProcessingPlantPortSegment getKubeLivelinessProbe() {
+    public HTTPProcessingPlantServerPortSegment getKubeLivelinessProbe() {
         return kubeLivelinessProbe;
     }
 
-    public void setKubeLivelinessProbe(HTTPProcessingPlantPortSegment kubeLivelinessProbe) {
+    public void setKubeLivelinessProbe(HTTPProcessingPlantServerPortSegment kubeLivelinessProbe) {
         this.kubeLivelinessProbe = kubeLivelinessProbe;
     }
 
-    public HTTPProcessingPlantPortSegment getPrometheusPort() {
+    public HTTPProcessingPlantServerPortSegment getPrometheusPort() {
         return prometheusPort;
     }
 
-    public void setPrometheusPort(HTTPProcessingPlantPortSegment prometheusPort) {
+    public void setPrometheusPort(HTTPProcessingPlantServerPortSegment prometheusPort) {
         this.prometheusPort = prometheusPort;
     }
 
-    public HTTPProcessingPlantPortSegment getJolokiaPort() {
+    public HTTPProcessingPlantServerPortSegment getJolokiaPort() {
         return jolokiaPort;
     }
 
-    public void setJolokiaPort(HTTPProcessingPlantPortSegment jolokiaPort) {
+    public void setJolokiaPort(HTTPProcessingPlantServerPortSegment jolokiaPort) {
         this.jolokiaPort = jolokiaPort;
     }
 
@@ -135,6 +134,14 @@ public class BaseSubsystemPropertyFile {
         this.keyPassword = keyPassword;
     }
 
+    public DeploymentZoneSegment getDeploymentZone() {
+        return deploymentZone;
+    }
+
+    public void setDeploymentZone(DeploymentZoneSegment deploymentZone) {
+        this.deploymentZone = deploymentZone;
+    }
+
     @Override
     public String toString() {
         return "BaseSubsystemPropertyFile{" +
@@ -148,6 +155,7 @@ public class BaseSubsystemPropertyFile {
                 ", subsystemImageProperties=" + subsystemImageProperties +
                 ", trustStorePassword=" + trustStorePassword +
                 ", keyPassword=" + keyPassword +
+                ", deploymentZone=" + deploymentZone +
                 "," + super.toString() +
                 '}';
     }

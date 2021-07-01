@@ -21,10 +21,11 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common;
 
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge.StandardEdgeIPCEndpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class IPCClusterServiceTopologyEndpointPort extends IPCProcessingPlantTopologyEndpointPort {
+public class IPCClusterServiceTopologyEndpointPort extends StandardEdgeIPCEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(IPCClusterServiceTopologyEndpointPort.class);
     private Integer servicePortValue;
     private String servicePortName;

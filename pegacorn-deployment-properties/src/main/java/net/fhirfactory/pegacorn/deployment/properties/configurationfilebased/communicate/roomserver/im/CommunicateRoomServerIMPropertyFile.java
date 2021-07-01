@@ -1,17 +1,17 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.communicate.roomserver.im;
 
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.standard.HTTPClusteredServicePortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.standard.HTTPClusteredServiceServerPortSegment;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.communicate.common.CommunicateSubsystemPropertyFile;
 
 public abstract class CommunicateRoomServerIMPropertyFile extends CommunicateSubsystemPropertyFile {
 
-    private HTTPClusteredServicePortSegment matrixClientServicesAPI;
+    private HTTPClusteredServiceServerPortSegment matrixClientServicesAPI;
 
-    public HTTPClusteredServicePortSegment getMatrixClientServicesAPI() {
+    public HTTPClusteredServiceServerPortSegment getMatrixClientServicesAPI() {
         return matrixClientServicesAPI;
     }
 
-    public void setMatrixClientServicesAPI(HTTPClusteredServicePortSegment matrixClientServicesAPI) {
+    public void setMatrixClientServicesAPI(HTTPClusteredServiceServerPortSegment matrixClientServicesAPI) {
         this.matrixClientServicesAPI = matrixClientServicesAPI;
     }
 }

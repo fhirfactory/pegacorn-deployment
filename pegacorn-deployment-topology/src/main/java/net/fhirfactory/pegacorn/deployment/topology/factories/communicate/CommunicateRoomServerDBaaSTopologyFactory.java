@@ -23,11 +23,10 @@ package net.fhirfactory.pegacorn.deployment.topology.factories.communicate;
 
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeRDN;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeTypeEnum;
-import net.fhirfactory.pegacorn.deployment.names.common.SubsystemBaseNames;
-import net.fhirfactory.pegacorn.deployment.names.subsystems.CommunicateRoomServerComponentNames;
+import net.fhirfactory.pegacorn.deployment.names.functionality.subsystem.CommunicateRoomServerComponentNames;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes.DBaaSSubSystemPropertyFile;
-import net.fhirfactory.pegacorn.deployment.topology.factories.common.archetypes.common.PegacornTopologyFactoryBase;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.IPCProcessingPlantTopologyEndpointPort;
+import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.common.PegacornTopologyFactoryBase;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge.StandardEdgeIPCEndpoint;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.TopologyEndpointTypeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.ProcessingPlantTopologyNode;
 import org.slf4j.Logger;
@@ -42,18 +41,13 @@ public abstract class CommunicateRoomServerDBaaSTopologyFactory extends Pegacorn
     private CommunicateRoomServerComponentNames roomServerComponentNames;
 
     @Override
-    protected SubsystemBaseNames specifySubsystemBaseNames() {
-        return (roomServerComponentNames);
-    }
-
-    @Override
     protected Logger getLogger() {
         return (LOG);
     }
 
     public void buildProcessingPlantEndpoints(DBaaSSubSystemPropertyFile propertyFile, ProcessingPlantTopologyNode processingPlantNode) {
         LOG.debug(".buildProcessingPlantEndpoints(): Entry");
-        IPCProcessingPlantTopologyEndpointPort roomServerPostgreSQLServer = new IPCProcessingPlantTopologyEndpointPort();
+        StandardEdgeIPCEndpoint roomServerPostgreSQLServer = new StandardEdgeIPCEndpoint();
         String appServicesName = roomServerComponentNames.getEndpointServerName(roomServerComponentNames.getFunctionNameDBaaSPostgreSQL());
         roomServerPostgreSQLServer.setaServer(true);
         roomServerPostgreSQLServer.setEncrypted(propertyFile.getDeploymentMode().isUsingInternalEncryption());

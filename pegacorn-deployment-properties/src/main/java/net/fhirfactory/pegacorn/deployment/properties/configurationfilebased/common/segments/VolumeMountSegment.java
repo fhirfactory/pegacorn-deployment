@@ -22,10 +22,10 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments;
 
 public class VolumeMountSegment {
-    String volumeMountName;
-    String volumeMountPath;
-    String volumeName;
-    String volumeHostPath;
+    private String volumeMountName;
+    private String volumeMountPath;
+    private String volumeName;
+    private String volumeHostPath;
 
     public String getVolumeMountName() {
         return volumeMountName;

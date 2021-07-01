@@ -21,16 +21,16 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes;
 
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.standard.ProcessingPlantPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.standard.ProcessingPlantServerPortSegment;
 
 public abstract class DBaaSSubSystemPropertyFile extends BaseSubsystemPropertyFile{
-    ProcessingPlantPortSegment sqlServerPort;
+    ProcessingPlantServerPortSegment sqlServerPort;
 
-    public ProcessingPlantPortSegment getSqlServerPort() {
+    public ProcessingPlantServerPortSegment getSqlServerPort() {
         return sqlServerPort;
     }
 
-    public void setSqlServerPort(ProcessingPlantPortSegment sqlServerPort) {
+    public void setSqlServerPort(ProcessingPlantServerPortSegment sqlServerPort) {
         this.sqlServerPort = sqlServerPort;
     }
 }

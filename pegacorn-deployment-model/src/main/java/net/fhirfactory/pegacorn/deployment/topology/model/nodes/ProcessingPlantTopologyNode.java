@@ -14,6 +14,7 @@ public class ProcessingPlantTopologyNode extends TopologyNode implements Endpoin
     private ArrayList<TopologyNodeFDN> workshops;
     private ArrayList<TopologyNodeFDN> endpoints;
     private ArrayList<TopologyNodeFDN> connections;
+    private String nameSpace;
 
     private String defaultDNSName;
     private boolean internalTrafficEncrypted;
@@ -29,8 +30,9 @@ public class ProcessingPlantTopologyNode extends TopologyNode implements Endpoin
         this.endpoints = new ArrayList<>();
         this.connections = new ArrayList<>();
 
+        this.nameSpace = null;
         this.defaultDNSName = null;
-        internalTrafficEncrypted = false;
+        this.internalTrafficEncrypted = false;
     }
 
     public boolean isInternalTrafficEncrypted() {
@@ -79,6 +81,14 @@ public class ProcessingPlantTopologyNode extends TopologyNode implements Endpoin
 
     public void setInstanceCount(Integer instanceCount) {
         this.instanceCount = instanceCount;
+    }
+
+    public String getNameSpace() {
+        return nameSpace;
+    }
+
+    public void setNameSpace(String nameSpace) {
+        this.nameSpace = nameSpace;
     }
 
     @Override

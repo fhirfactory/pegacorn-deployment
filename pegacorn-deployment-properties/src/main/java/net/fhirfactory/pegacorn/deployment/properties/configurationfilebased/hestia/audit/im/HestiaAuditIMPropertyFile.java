@@ -22,64 +22,64 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.hestia.audit.im;
 
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes.ClusterServiceDeliverySubsystemPropertyFile;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.HTTPIPCPortSegment;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.common.StandardPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.HTTPIPCServerPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.StandardServerPortSegment;
 
 
 public abstract class HestiaAuditIMPropertyFile extends ClusterServiceDeliverySubsystemPropertyFile {
 
-    private HTTPIPCPortSegment edgeAnswer;
-    private StandardPortSegment edgeReceiveAuditEventLadonNexusIM;
-    private StandardPortSegment edgeReceiveAuditEventCommunicateIrisIM;
-    private StandardPortSegment edgeReceiveAuditEventFHIRBreakLDAPScanner;
-    private StandardPortSegment edgeReceiveAuditEventFHIRBreakEmailGateway;
-    private StandardPortSegment edgeReceiveAuditEventMITaFSMSGateway;
+    private HTTPIPCServerPortSegment edgeAnswer;
+    private StandardServerPortSegment edgeReceiveAuditEventLadonNexusIM;
+    private StandardServerPortSegment edgeReceiveAuditEventCommunicateIrisIM;
+    private StandardServerPortSegment edgeReceiveAuditEventFHIRBreakLDAPScanner;
+    private StandardServerPortSegment edgeReceiveAuditEventFHIRBreakEmailGateway;
+    private StandardServerPortSegment edgeReceiveAuditEventMITaFSMSGateway;
 
-    public HTTPIPCPortSegment getEdgeAnswer() {
+    public HTTPIPCServerPortSegment getEdgeAnswer() {
         return edgeAnswer;
     }
 
-    public void setEdgeAnswer(HTTPIPCPortSegment edgeAnswer) {
+    public void setEdgeAnswer(HTTPIPCServerPortSegment edgeAnswer) {
         this.edgeAnswer = edgeAnswer;
     }
 
-    public StandardPortSegment getEdgeReceiveAuditEventLadonNexusIM() {
+    public StandardServerPortSegment getEdgeReceiveAuditEventLadonNexusIM() {
         return edgeReceiveAuditEventLadonNexusIM;
     }
 
-    public void setEdgeReceiveAuditEventLadonNexusIM(StandardPortSegment edgeReceiveAuditEventLadonNexusIM) {
+    public void setEdgeReceiveAuditEventLadonNexusIM(StandardServerPortSegment edgeReceiveAuditEventLadonNexusIM) {
         this.edgeReceiveAuditEventLadonNexusIM = edgeReceiveAuditEventLadonNexusIM;
     }
 
-    public StandardPortSegment getEdgeReceiveAuditEventCommunicateIrisIM() {
+    public StandardServerPortSegment getEdgeReceiveAuditEventCommunicateIrisIM() {
         return edgeReceiveAuditEventCommunicateIrisIM;
     }
 
-    public void setEdgeReceiveAuditEventCommunicateIrisIM(StandardPortSegment edgeReceiveAuditEventCommunicateIrisIM) {
+    public void setEdgeReceiveAuditEventCommunicateIrisIM(StandardServerPortSegment edgeReceiveAuditEventCommunicateIrisIM) {
         this.edgeReceiveAuditEventCommunicateIrisIM = edgeReceiveAuditEventCommunicateIrisIM;
     }
 
-    public StandardPortSegment getEdgeReceiveAuditEventFHIRBreakLDAPScanner() {
+    public StandardServerPortSegment getEdgeReceiveAuditEventFHIRBreakLDAPScanner() {
         return edgeReceiveAuditEventFHIRBreakLDAPScanner;
     }
 
-    public void setEdgeReceiveAuditEventFHIRBreakLDAPScanner(StandardPortSegment edgeReceiveAuditEventFHIRBreakLDAPScanner) {
+    public void setEdgeReceiveAuditEventFHIRBreakLDAPScanner(StandardServerPortSegment edgeReceiveAuditEventFHIRBreakLDAPScanner) {
         this.edgeReceiveAuditEventFHIRBreakLDAPScanner = edgeReceiveAuditEventFHIRBreakLDAPScanner;
     }
 
-    public StandardPortSegment getEdgeReceiveAuditEventFHIRBreakEmailGateway() {
+    public StandardServerPortSegment getEdgeReceiveAuditEventFHIRBreakEmailGateway() {
         return edgeReceiveAuditEventFHIRBreakEmailGateway;
     }
 
-    public void setEdgeReceiveAuditEventFHIRBreakEmailGateway(StandardPortSegment edgeReceiveAuditEventFHIRBreakEmailGateway) {
+    public void setEdgeReceiveAuditEventFHIRBreakEmailGateway(StandardServerPortSegment edgeReceiveAuditEventFHIRBreakEmailGateway) {
         this.edgeReceiveAuditEventFHIRBreakEmailGateway = edgeReceiveAuditEventFHIRBreakEmailGateway;
     }
 
-    public StandardPortSegment getEdgeReceiveAuditEventMITaFSMSGateway() {
+    public StandardServerPortSegment getEdgeReceiveAuditEventMITaFSMSGateway() {
         return edgeReceiveAuditEventMITaFSMSGateway;
     }
 
-    public void setEdgeReceiveAuditEventMITaFSMSGateway(StandardPortSegment edgeReceiveAuditEventMITaFSMSGateway) {
+    public void setEdgeReceiveAuditEventMITaFSMSGateway(StandardServerPortSegment edgeReceiveAuditEventMITaFSMSGateway) {
         this.edgeReceiveAuditEventMITaFSMSGateway = edgeReceiveAuditEventMITaFSMSGateway;
     }
 }

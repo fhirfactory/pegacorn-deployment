@@ -23,7 +23,7 @@ package net.fhirfactory.pegacorn.deployment.topology.manager.cache;
 
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeTypeEnum;
 import net.fhirfactory.pegacorn.common.model.generalid.FDNToken;
-import net.fhirfactory.pegacorn.deployment.topology.model.common.NetworkSecurityZoneEnum;
+import net.fhirfactory.pegacorn.deployment.topology.model.common.valuesets.NetworkSecurityZoneEnum;
 import net.fhirfactory.pegacorn.deployment.properties.codebased.DeploymentSystemIdentificationInterface;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
@@ -49,7 +49,7 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
     private ConcurrentHashMap<TopologyNodeFDN, TopologyNode> nodeSet;
 
     public TopologyNodesDM() {
-        LOG.info(".TopologyDM(): Constructor initialisation");
+        LOG.debug(".TopologyDM(): Constructor initialisation");
         this.deploymentSolution = null;
         this.nodeSet = new ConcurrentHashMap<TopologyNodeFDN, TopologyNode>();
     }

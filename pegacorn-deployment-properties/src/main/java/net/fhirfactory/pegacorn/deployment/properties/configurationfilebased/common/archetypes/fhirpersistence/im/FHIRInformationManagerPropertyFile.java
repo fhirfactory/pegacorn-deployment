@@ -1,170 +1,170 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes.fhirpersistence.im;
 
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes.ClusterServiceDeliverySubsystemPropertyFile;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.HTTPIPCPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.HTTPIPCServerPortSegment;
 
 public abstract class FHIRInformationManagerPropertyFile extends ClusterServiceDeliverySubsystemPropertyFile {
 
-    HTTPIPCPortSegment edgeAnswerConformance;
-    HTTPIPCPortSegment edgeAnswerTerminology;
-    HTTPIPCPortSegment edgeAnswerSecurity;
-    HTTPIPCPortSegment edgeAnswerDocuments;
-    HTTPIPCPortSegment edgeAnswerOther;
-    HTTPIPCPortSegment edgeAnswerIndividuals;
-    HTTPIPCPortSegment edgeAnswerEntities;
-    HTTPIPCPortSegment edgeAnswerWorkflow;
-    HTTPIPCPortSegment edgeAnswerManagement;
-    HTTPIPCPortSegment edgeAnswerSummary;
-    HTTPIPCPortSegment edgeAnswerDiagnostics;
-    HTTPIPCPortSegment edgeAnswerMedications;
-    HTTPIPCPortSegment edgeAnswerCareProvision;
-    HTTPIPCPortSegment edgeAnswerRequestAndResponse;
-    HTTPIPCPortSegment edgeAnswerSupport;
-    HTTPIPCPortSegment edgeAnswerBilling;
-    HTTPIPCPortSegment edgeAnswerPayment;
-    HTTPIPCPortSegment edgeAnswerGeneral;
+    HTTPIPCServerPortSegment edgeAnswerConformance;
+    HTTPIPCServerPortSegment edgeAnswerTerminology;
+    HTTPIPCServerPortSegment edgeAnswerSecurity;
+    HTTPIPCServerPortSegment edgeAnswerDocuments;
+    HTTPIPCServerPortSegment edgeAnswerOther;
+    HTTPIPCServerPortSegment edgeAnswerIndividuals;
+    HTTPIPCServerPortSegment edgeAnswerEntities;
+    HTTPIPCServerPortSegment edgeAnswerWorkflow;
+    HTTPIPCServerPortSegment edgeAnswerManagement;
+    HTTPIPCServerPortSegment edgeAnswerSummary;
+    HTTPIPCServerPortSegment edgeAnswerDiagnostics;
+    HTTPIPCServerPortSegment edgeAnswerMedications;
+    HTTPIPCServerPortSegment edgeAnswerCareProvision;
+    HTTPIPCServerPortSegment edgeAnswerRequestAndResponse;
+    HTTPIPCServerPortSegment edgeAnswerSupport;
+    HTTPIPCServerPortSegment edgeAnswerBilling;
+    HTTPIPCServerPortSegment edgeAnswerPayment;
+    HTTPIPCServerPortSegment edgeAnswerGeneral;
 
-    public HTTPIPCPortSegment getEdgeAnswerConformance() {
+    public HTTPIPCServerPortSegment getEdgeAnswerConformance() {
         return edgeAnswerConformance;
     }
 
-    public void setEdgeAnswerConformance(HTTPIPCPortSegment edgeAnswerConformance) {
+    public void setEdgeAnswerConformance(HTTPIPCServerPortSegment edgeAnswerConformance) {
         this.edgeAnswerConformance = edgeAnswerConformance;
     }
 
-    public HTTPIPCPortSegment getEdgeAnswerTerminology() {
+    public HTTPIPCServerPortSegment getEdgeAnswerTerminology() {
         return edgeAnswerTerminology;
     }
 
-    public void setEdgeAnswerTerminology(HTTPIPCPortSegment edgeAnswerTerminology) {
+    public void setEdgeAnswerTerminology(HTTPIPCServerPortSegment edgeAnswerTerminology) {
         this.edgeAnswerTerminology = edgeAnswerTerminology;
     }
 
-    public HTTPIPCPortSegment getEdgeAnswerSecurity() {
+    public HTTPIPCServerPortSegment getEdgeAnswerSecurity() {
         return edgeAnswerSecurity;
     }
 
-    public void setEdgeAnswerSecurity(HTTPIPCPortSegment edgeAnswerSecurity) {
+    public void setEdgeAnswerSecurity(HTTPIPCServerPortSegment edgeAnswerSecurity) {
         this.edgeAnswerSecurity = edgeAnswerSecurity;
     }
 
-    public HTTPIPCPortSegment getEdgeAnswerDocuments() {
+    public HTTPIPCServerPortSegment getEdgeAnswerDocuments() {
         return edgeAnswerDocuments;
     }
 
-    public void setEdgeAnswerDocuments(HTTPIPCPortSegment edgeAnswerDocuments) {
+    public void setEdgeAnswerDocuments(HTTPIPCServerPortSegment edgeAnswerDocuments) {
         this.edgeAnswerDocuments = edgeAnswerDocuments;
     }
 
-    public HTTPIPCPortSegment getEdgeAnswerOther() {
+    public HTTPIPCServerPortSegment getEdgeAnswerOther() {
         return edgeAnswerOther;
     }
 
-    public void setEdgeAnswerOther(HTTPIPCPortSegment edgeAnswerOther) {
+    public void setEdgeAnswerOther(HTTPIPCServerPortSegment edgeAnswerOther) {
         this.edgeAnswerOther = edgeAnswerOther;
     }
 
-    public HTTPIPCPortSegment getEdgeAnswerIndividuals() {
+    public HTTPIPCServerPortSegment getEdgeAnswerIndividuals() {
         return edgeAnswerIndividuals;
     }
 
-    public void setEdgeAnswerIndividuals(HTTPIPCPortSegment edgeAnswerIndividuals) {
+    public void setEdgeAnswerIndividuals(HTTPIPCServerPortSegment edgeAnswerIndividuals) {
         this.edgeAnswerIndividuals = edgeAnswerIndividuals;
     }
 
-    public HTTPIPCPortSegment getEdgeAnswerEntities() {
+    public HTTPIPCServerPortSegment getEdgeAnswerEntities() {
         return edgeAnswerEntities;
     }
 
-    public void setEdgeAnswerEntities(HTTPIPCPortSegment edgeAnswerEntities) {
+    public void setEdgeAnswerEntities(HTTPIPCServerPortSegment edgeAnswerEntities) {
         this.edgeAnswerEntities = edgeAnswerEntities;
     }
 
-    public HTTPIPCPortSegment getEdgeAnswerWorkflow() {
+    public HTTPIPCServerPortSegment getEdgeAnswerWorkflow() {
         return edgeAnswerWorkflow;
     }
 
-    public void setEdgeAnswerWorkflow(HTTPIPCPortSegment edgeAnswerWorkflow) {
+    public void setEdgeAnswerWorkflow(HTTPIPCServerPortSegment edgeAnswerWorkflow) {
         this.edgeAnswerWorkflow = edgeAnswerWorkflow;
     }
 
-    public HTTPIPCPortSegment getEdgeAnswerManagement() {
+    public HTTPIPCServerPortSegment getEdgeAnswerManagement() {
         return edgeAnswerManagement;
     }
 
-    public void setEdgeAnswerManagement(HTTPIPCPortSegment edgeAnswerManagement) {
+    public void setEdgeAnswerManagement(HTTPIPCServerPortSegment edgeAnswerManagement) {
         this.edgeAnswerManagement = edgeAnswerManagement;
     }
 
-    public HTTPIPCPortSegment getEdgeAnswerSummary() {
+    public HTTPIPCServerPortSegment getEdgeAnswerSummary() {
         return edgeAnswerSummary;
     }
 
-    public void setEdgeAnswerSummary(HTTPIPCPortSegment edgeAnswerSummary) {
+    public void setEdgeAnswerSummary(HTTPIPCServerPortSegment edgeAnswerSummary) {
         this.edgeAnswerSummary = edgeAnswerSummary;
     }
 
-    public HTTPIPCPortSegment getEdgeAnswerDiagnostics() {
+    public HTTPIPCServerPortSegment getEdgeAnswerDiagnostics() {
         return edgeAnswerDiagnostics;
     }
 
-    public void setEdgeAnswerDiagnostics(HTTPIPCPortSegment edgeAnswerDiagnostics) {
+    public void setEdgeAnswerDiagnostics(HTTPIPCServerPortSegment edgeAnswerDiagnostics) {
         this.edgeAnswerDiagnostics = edgeAnswerDiagnostics;
     }
 
-    public HTTPIPCPortSegment getEdgeAnswerMedications() {
+    public HTTPIPCServerPortSegment getEdgeAnswerMedications() {
         return edgeAnswerMedications;
     }
 
-    public void setEdgeAnswerMedications(HTTPIPCPortSegment edgeAnswerMedications) {
+    public void setEdgeAnswerMedications(HTTPIPCServerPortSegment edgeAnswerMedications) {
         this.edgeAnswerMedications = edgeAnswerMedications;
     }
 
-    public HTTPIPCPortSegment getEdgeAnswerCareProvision() {
+    public HTTPIPCServerPortSegment getEdgeAnswerCareProvision() {
         return edgeAnswerCareProvision;
     }
 
-    public void setEdgeAnswerCareProvision(HTTPIPCPortSegment edgeAnswerCareProvision) {
+    public void setEdgeAnswerCareProvision(HTTPIPCServerPortSegment edgeAnswerCareProvision) {
         this.edgeAnswerCareProvision = edgeAnswerCareProvision;
     }
 
-    public HTTPIPCPortSegment getEdgeAnswerRequestAndResponse() {
+    public HTTPIPCServerPortSegment getEdgeAnswerRequestAndResponse() {
         return edgeAnswerRequestAndResponse;
     }
 
-    public void setEdgeAnswerRequestAndResponse(HTTPIPCPortSegment edgeAnswerRequestAndResponse) {
+    public void setEdgeAnswerRequestAndResponse(HTTPIPCServerPortSegment edgeAnswerRequestAndResponse) {
         this.edgeAnswerRequestAndResponse = edgeAnswerRequestAndResponse;
     }
 
-    public HTTPIPCPortSegment getEdgeAnswerSupport() {
+    public HTTPIPCServerPortSegment getEdgeAnswerSupport() {
         return edgeAnswerSupport;
     }
 
-    public void setEdgeAnswerSupport(HTTPIPCPortSegment edgeAnswerSupport) {
+    public void setEdgeAnswerSupport(HTTPIPCServerPortSegment edgeAnswerSupport) {
         this.edgeAnswerSupport = edgeAnswerSupport;
     }
 
-    public HTTPIPCPortSegment getEdgeAnswerBilling() {
+    public HTTPIPCServerPortSegment getEdgeAnswerBilling() {
         return edgeAnswerBilling;
     }
 
-    public void setEdgeAnswerBilling(HTTPIPCPortSegment edgeAnswerBilling) {
+    public void setEdgeAnswerBilling(HTTPIPCServerPortSegment edgeAnswerBilling) {
         this.edgeAnswerBilling = edgeAnswerBilling;
     }
 
-    public HTTPIPCPortSegment getEdgeAnswerPayment() {
+    public HTTPIPCServerPortSegment getEdgeAnswerPayment() {
         return edgeAnswerPayment;
     }
 
-    public void setEdgeAnswerPayment(HTTPIPCPortSegment edgeAnswerPayment) {
+    public void setEdgeAnswerPayment(HTTPIPCServerPortSegment edgeAnswerPayment) {
         this.edgeAnswerPayment = edgeAnswerPayment;
     }
 
-    public HTTPIPCPortSegment getEdgeAnswerGeneral() {
+    public HTTPIPCServerPortSegment getEdgeAnswerGeneral() {
         return edgeAnswerGeneral;
     }
 
-    public void setEdgeAnswerGeneral(HTTPIPCPortSegment edgeAnswerGeneral) {
+    public void setEdgeAnswerGeneral(HTTPIPCServerPortSegment edgeAnswerGeneral) {
         this.edgeAnswerGeneral = edgeAnswerGeneral;
     }
 }

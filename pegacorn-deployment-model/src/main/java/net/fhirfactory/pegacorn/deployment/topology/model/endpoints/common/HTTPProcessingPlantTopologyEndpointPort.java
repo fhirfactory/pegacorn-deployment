@@ -21,10 +21,12 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common;
 
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.IPCServerTopologyEndpoint;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge.StandardEdgeIPCEndpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class HTTPProcessingPlantTopologyEndpointPort extends IPCProcessingPlantTopologyEndpointPort {
+public class HTTPProcessingPlantTopologyEndpointPort extends IPCServerTopologyEndpoint {
     private String basePath;
 
     public String getBasePath() {

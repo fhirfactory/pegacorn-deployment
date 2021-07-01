@@ -23,12 +23,11 @@ package net.fhirfactory.pegacorn.deployment.topology.factories.communicate;
 
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeRDN;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeTypeEnum;
-import net.fhirfactory.pegacorn.deployment.names.common.SubsystemBaseNames;
-import net.fhirfactory.pegacorn.deployment.names.subsystems.CommunicateIrisComponentNames;
-import net.fhirfactory.pegacorn.deployment.names.subsystems.CommunicateRoomServerComponentNames;
+import net.fhirfactory.pegacorn.deployment.names.functionality.subsystem.CommunicateIrisSubsystemFunctionalityNames;
+import net.fhirfactory.pegacorn.deployment.names.functionality.subsystem.CommunicateRoomServerComponentNames;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.communicate.roomserver.im.CommunicateRoomServerIMPropertyFile;
-import net.fhirfactory.pegacorn.deployment.topology.factories.common.archetypes.common.PetasosEnabledSubsystemTopologyFactory;
-import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCTopologyEndpoint;
+import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.common.PetasosEnabledSubsystemTopologyFactory;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.IPCClusteredServerTopologyEndpoint;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.HTTPProcessingPlantTopologyEndpointPort;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.TopologyEndpointTypeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.ClusterServiceTopologyNode;
@@ -44,13 +43,8 @@ public abstract class CommunicateRoomServerIMTopologyFactory extends PetasosEnab
     @Inject
     private CommunicateRoomServerComponentNames roomServerComponentNames;
 
-    @Override
-    protected SubsystemBaseNames specifySubsystemBaseNames() {
-        return (roomServerComponentNames);
-    }
-
     @Inject
-    private CommunicateIrisComponentNames communicateIrisComponentNames;
+    private CommunicateIrisSubsystemFunctionalityNames communicateIrisComponentNames;
 
     @Override
     protected Logger getLogger() {
@@ -59,7 +53,7 @@ public abstract class CommunicateRoomServerIMTopologyFactory extends PetasosEnab
 
     public void buildClusterServiceEndpoints(CommunicateRoomServerIMPropertyFile propertyFile, ClusterServiceTopologyNode serviceNode) {
         LOG.debug(".buildClusterServiceEndpoints(): Entry");
-        IPCTopologyEndpoint matrixClientServicesServer = new IPCTopologyEndpoint();
+        IPCClusteredServerTopologyEndpoint matrixClientServicesServer = new IPCClusteredServerTopologyEndpoint();
         String name = roomServerComponentNames.getEndpointServerName(roomServerComponentNames.getFunctionNameMatrixClientServices());
         TopologyNodeRDN serverRDN = createNodeRDN(name, propertyFile.getSubsystemInstant().getProcessingPlantVersion(), TopologyNodeTypeEnum.ENDPOINT);
         matrixClientServicesServer.constructFDN(serviceNode.getNodeFDN(),serverRDN);

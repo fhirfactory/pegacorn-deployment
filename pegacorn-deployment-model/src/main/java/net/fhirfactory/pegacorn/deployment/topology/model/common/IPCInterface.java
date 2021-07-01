@@ -1,13 +1,16 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.common;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.IPCClusteredServerTopologyEndpoint;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.IPCTopologyEndpoint;
 import net.fhirfactory.pegacorn.deployment.topology.model.mode.ResilienceModeEnum;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class IPCInterface {
-    private IPCTopologyEndpoint enablingTopologyEndpoint;
+    private TopologyNodeFDN enablingTopologyEndpoint;
     private String targetName;
     private String groupName;
     private ArrayList<ResilienceModeEnum> supportedDeploymentModes;
@@ -42,12 +45,12 @@ public class IPCInterface {
 
     @JsonIgnore
     public String getInstanceName(){
-        return(getEnablingTopologyEndpoint().getNodeRDN().getNodeName());
+        return(getEnablingTopologyEndpoint().getLeafRDN().getNodeName());
     }
 
     @JsonIgnore
     public String getInstanceVersion(){
-        return(getEnablingTopologyEndpoint().getNodeRDN().getNodeVersion());
+        return(getEnablingTopologyEndpoint().getLeafRDN().getNodeVersion());
     }
 
     public String getTargetName() {
@@ -58,11 +61,11 @@ public class IPCInterface {
         this.targetName = targetName;
     }
 
-    public IPCTopologyEndpoint getEnablingTopologyEndpoint() {
+    public TopologyNodeFDN getEnablingTopologyEndpoint() {
         return enablingTopologyEndpoint;
     }
 
-    public void setEnablingTopologyEndpoint(IPCTopologyEndpoint enablingTopologyEndpoint) {
+    public void setEnablingTopologyEndpoint(TopologyNodeFDN enablingTopologyEndpoint) {
         this.enablingTopologyEndpoint = enablingTopologyEndpoint;
     }
 

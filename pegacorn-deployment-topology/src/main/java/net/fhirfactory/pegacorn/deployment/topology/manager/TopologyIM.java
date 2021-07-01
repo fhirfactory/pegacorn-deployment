@@ -24,10 +24,11 @@ package net.fhirfactory.pegacorn.deployment.topology.manager;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDNToken;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeTypeEnum;
+import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.interfaces.SolutionNodeFactoryInterface;
 import net.fhirfactory.pegacorn.deployment.topology.manager.cache.TopologyNodesDM;
-import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCTopologyEndpoint;
-import net.fhirfactory.pegacorn.deployment.topology.model.common.NetworkSecurityZoneEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
+import net.fhirfactory.pegacorn.deployment.topology.model.common.valuesets.NetworkSecurityZoneEnum;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.IPCTopologyEndpoint;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,9 +51,14 @@ public class TopologyIM {
     @Inject
     private TopologyNodesDM topologyDataManager;
 
+    @Inject
+    private SolutionNodeFactoryInterface solutionNodeFactory;
+
     @PostConstruct
     public void initialise(){
-
+        solutionNodeFactory.initialise();
+        SolutionTopologyNode solutionNode = solutionNodeFactory.getSolutionTopologyNode();
+        setDeploymentSolution(solutionNode);
     }
 
     public void setDeploymentSolution(SolutionTopologyNode solution){

@@ -21,23 +21,37 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.environmentlookupbased;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.enterprise.context.ApplicationScoped;
 
-//@ApplicationScoped
+@ApplicationScoped
 public class PlatformEnvironmentLookup {
+    private static final Logger LOG = LoggerFactory.getLogger(PlatformEnvironmentLookup.class);
+
+    private static String POD_NAME_ENVIRONMENT_VARIABLE_NAME = "MY_POD_NAME";
 
     public String getPlatformName(boolean isKubernetesDeployed){
+        LOG.debug(".getPlatformName(): Entry, isKubernetesDeployed->{}", isKubernetesDeployed);
         String platformName;
         if(isKubernetesDeployed) {
             platformName = getPODName();
         } else {
             platformName = getHostName();
         }
+        LOG.debug(".getPlatformName(): Exit, platformName->{}", platformName);
         return(platformName);
     }
 
     public String getPODName(){
-        String podName = "";
+        LOG.debug(".getPODName(): Entry");
+        String podName = System.getProperty(POD_NAME_ENVIRONMENT_VARIABLE_NAME);
+        if(StringUtils.isBlank(podName)){
+            LOG.error(".getPODName(): Could not resolve POD name (using environment variable->{}!", POD_NAME_ENVIRONMENT_VARIABLE_NAME);
+        }
+        LOG.debug(".getPODName(): Exit, podName->{}", podName);
         return(podName);
     }
 

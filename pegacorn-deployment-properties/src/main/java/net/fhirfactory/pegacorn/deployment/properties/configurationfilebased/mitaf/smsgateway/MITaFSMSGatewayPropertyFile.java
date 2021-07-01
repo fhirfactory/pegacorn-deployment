@@ -1,28 +1,28 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.mitaf.smsgateway;
 
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.common.StandardPortSegment;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.StandardInteractPortSegment;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.mitaf.common.MITaFSubsystemPropertyFile;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.StandardServerPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.StandardInteractServerPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.mitaf.MITaFSubsystemPropertyFile;
 
 public class MITaFSMSGatewayPropertyFile extends MITaFSubsystemPropertyFile {
 
-    private StandardInteractPortSegment smsGateway;
+    private StandardInteractServerPortSegment smsGateway;
 
-    private StandardPortSegment edgeReceiveCommunication;
+    private StandardServerPortSegment edgeReceiveCommunication;
 
-    public StandardInteractPortSegment getSmsGateway() {
+    public StandardInteractServerPortSegment getSmsGateway() {
         return smsGateway;
     }
 
-    public void setSmsGateway(StandardInteractPortSegment smsGateway) {
+    public void setSmsGateway(StandardInteractServerPortSegment smsGateway) {
         this.smsGateway = smsGateway;
     }
 
-    public StandardPortSegment getEdgeReceiveCommunication() {
+    public StandardServerPortSegment getEdgeReceiveCommunication() {
         return edgeReceiveCommunication;
     }
 
-    public void setEdgeReceiveCommunication(StandardPortSegment edgeReceiveCommunication) {
+    public void setEdgeReceiveCommunication(StandardServerPortSegment edgeReceiveCommunication) {
         this.edgeReceiveCommunication = edgeReceiveCommunication;
     }
 }

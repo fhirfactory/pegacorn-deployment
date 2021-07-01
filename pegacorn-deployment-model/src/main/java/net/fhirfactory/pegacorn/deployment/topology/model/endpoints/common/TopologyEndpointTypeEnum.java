@@ -22,11 +22,14 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common;
 
 public enum TopologyEndpointTypeEnum {
-    PEGACORN_IPC_MESSAGING_SERVICE("endpoint.ipc_messaging_service"),
+    JGROUPS_INTRAZONE_IPC_MESSAGING_SERVICE("endpoint.ipc_messaging.jgroups_intrazone"),
+    JGROUPS_INTERZONE_IPC_MESSAGING_SERVICE("endpoint.ipc_messaging.jgroups_interzone"),
+    MLLP_SERVER("endpoint.mllp_server"),
+    MLLP_CLIENT("endpoint.mllp_client"),
     HTTP_API_SERVER("endpoint.http_api_server"),
     HTTP_API_CLIENT("endpoint.http_api_client"),
-    SQL_SERVER("SQLServer"),
-    SQL_CLIENT("SQLClient"),
+    SQL_SERVER("endpoint.sql_server"),
+    SQL_CLIENT("endpoint.sql_client"),
     OTHER_API_SERVER("endpoint.other_type_of_server"),
     OTHER_API_CLIENT("endpoint.other_type_of_client"),
     OTHER("endpoint.other");

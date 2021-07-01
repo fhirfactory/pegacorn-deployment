@@ -21,18 +21,20 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems;
 
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.InterfaceDefinitionSegment;
+
 public class ConnectedSystemPort {
-    private String targetPortType;
+    private InterfaceDefinitionSegment targetInterfaceDefinition;
     private Boolean encryptionRequired;
     private Integer targetPortValue;
     private String targetPortDNSName;
 
-    public String getTargetPortType() {
-        return targetPortType;
+    public InterfaceDefinitionSegment getTargetInterfaceDefinition() {
+        return targetInterfaceDefinition;
     }
 
-    public void setTargetPortType(String targetPortType) {
-        this.targetPortType = targetPortType;
+    public void setTargetInterfaceDefinition(InterfaceDefinitionSegment targetInterfaceDefinition) {
+        this.targetInterfaceDefinition = targetInterfaceDefinition;
     }
 
     public Boolean getEncryptionRequired() {
@@ -57,5 +59,15 @@ public class ConnectedSystemPort {
 
     public void setTargetPortDNSName(String targetPortDNSName) {
         this.targetPortDNSName = targetPortDNSName;
+    }
+
+    @Override
+    public String toString() {
+        return "ConnectedSystemPort{" +
+                "targetInterfaceDefinition=" + targetInterfaceDefinition +
+                ", encryptionRequired=" + encryptionRequired +
+                ", targetPortValue=" + targetPortValue +
+                ", targetPortDNSName='" + targetPortDNSName + '\'' +
+                '}';
     }
 }

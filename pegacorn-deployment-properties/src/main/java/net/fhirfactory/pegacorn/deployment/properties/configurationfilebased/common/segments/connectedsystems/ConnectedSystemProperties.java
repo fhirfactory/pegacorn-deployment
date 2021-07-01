@@ -103,4 +103,19 @@ public class ConnectedSystemProperties {
     public void setExternalisedServiceEndpointName(String externalisedServiceEndpointName) {
         this.externalisedServiceEndpointName = externalisedServiceEndpointName;
     }
+
+    @Override
+    public String toString() {
+        return "ConnectedSystemProperties{" +
+                "owningOrganizationName='" + owningOrganizationName + '\'' +
+                ", solutionName='" + solutionName + '\'' +
+                ", subsystemName='" + subsystemName + '\'' +
+                ", subsystemVersion='" + subsystemVersion + '\'' +
+                ", externalisedServiceName='" + externalisedServiceName + '\'' +
+                ", externalisedServiceEndpointName='" + externalisedServiceEndpointName + '\'' +
+                ", targetPort1=" + targetPort1 +
+                ", targetPort2=" + targetPort2 +
+                ", targetPort3=" + targetPort3 +
+                '}';
+    }
 }

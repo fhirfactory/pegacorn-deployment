@@ -23,18 +23,16 @@ package net.fhirfactory.pegacorn.deployment.topology.factories.communicate;
 
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeRDN;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeTypeEnum;
-import net.fhirfactory.pegacorn.deployment.names.common.SubsystemBaseNames;
-import net.fhirfactory.pegacorn.deployment.names.subsystems.CommunicateIrisComponentNames;
-import net.fhirfactory.pegacorn.deployment.names.subsystems.CommunicateRoomServerComponentNames;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.common.InterfaceDefinitionSegment;
+import net.fhirfactory.pegacorn.deployment.names.functionality.subsystem.CommunicateIrisSubsystemFunctionalityNames;
+import net.fhirfactory.pegacorn.deployment.names.functionality.subsystem.CommunicateRoomServerComponentNames;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.InterfaceDefinitionSegment;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.communicate.iris.im.CommunicateIrisIMPropertyFile;
-import net.fhirfactory.pegacorn.deployment.topology.factories.common.archetypes.common.PetasosEnabledSubsystemTopologyFactory;
+import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.common.PetasosEnabledSubsystemTopologyFactory;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCInterface;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCInterfaceDefinition;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.HTTPProcessingPlantTopologyEndpointPort;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.HTTPServerClusterServiceTopologyEndpointPort;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.TopologyEndpointTypeEnum;
-import net.fhirfactory.pegacorn.deployment.topology.model.nodes.*;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.common.EndpointProviderInterface;
 
 import javax.inject.Inject;
@@ -50,13 +48,8 @@ public abstract class CommunicateIrisIMTopologyFactory extends PetasosEnabledSub
         return((CommunicateIrisIMPropertyFile)getPropertyFile());
     }
 
-    @Override
-    protected SubsystemBaseNames specifySubsystemBaseNames() {
-        return (communicateIrisComponentNames);
-    }
-
     @Inject
-    private CommunicateIrisComponentNames communicateIrisComponentNames;
+    private CommunicateIrisSubsystemFunctionalityNames communicateIrisComponentNames;
 
     @Inject
     private CommunicateRoomServerComponentNames communicateRoomServerComponentNames;
@@ -84,7 +77,7 @@ public abstract class CommunicateIrisIMTopologyFactory extends PetasosEnabledSub
         matrixApplicationServicesServer.setServicePortValue(portValue);
         matrixApplicationServicesServer.setEncrypted(getCommunicateIrisPropertyFile().getDeploymentMode().isUsingInternalEncryption());
         IPCInterface ipcInterface = new IPCInterface();
-        ipcInterface.setEnablingTopologyEndpoint(matrixApplicationServicesServer);
+        ipcInterface.setEnablingTopologyEndpoint(matrixApplicationServicesServer.getNodeFDN());
         ipcInterface.setGroupName(name);
         for(InterfaceDefinitionSegment currentInterface: getCommunicateIrisPropertyFile().getInteractMatrixApplicationServicesServer().getSupportedInterfaceProfiles()){
             IPCInterfaceDefinition interfaceDef = new IPCInterfaceDefinition();
@@ -122,7 +115,7 @@ public abstract class CommunicateIrisIMTopologyFactory extends PetasosEnabledSub
     //
     // Populate Base SubSystem Topology
     //
-
+/*
     public void populateSubsystemTopology( ){
         SolutionTopologyNode solutionNode = getTopologyIM().getSolutionTopology();
         CommunicateIrisIMPropertyFile propertyFile = (CommunicateIrisIMPropertyFile)getPropertyFile();
@@ -147,4 +140,6 @@ public abstract class CommunicateIrisIMTopologyFactory extends PetasosEnabledSub
         this.addPetasosStatusPort( processingPlantNode);
         this.addApplicationServicesServerEndpoint( processingPlantNode);
     }
+
+ */
 }

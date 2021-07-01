@@ -22,10 +22,11 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments;
 
 public class DeploymentModeSegment {
-    boolean kubernetes;
-    Integer processingPlantReplicationCount;
-    boolean concurrent;
-    boolean usingInternalEncryption;
+    private boolean kubernetes;
+    private Integer processingPlantReplicationCount;
+    private boolean concurrent;
+    private boolean usingInternalEncryption;
+
 
     public DeploymentModeSegment(){
         kubernetes = false;

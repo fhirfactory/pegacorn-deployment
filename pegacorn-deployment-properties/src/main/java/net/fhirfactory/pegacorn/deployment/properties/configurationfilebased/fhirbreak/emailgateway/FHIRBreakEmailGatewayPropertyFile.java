@@ -1,37 +1,37 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.fhirbreak.emailgateway;
 
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.ClusterServiceInteractPortSegment;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.common.StandardPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.ClusterServiceInteractServerPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.StandardServerPortSegment;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.fhirbreak.common.FHIRBreakSubsystemPropertyFile;
 
 public class FHIRBreakEmailGatewayPropertyFile extends FHIRBreakSubsystemPropertyFile {
 
-    private ClusterServiceInteractPortSegment smtpGateway;
-    private ClusterServiceInteractPortSegment imapGateway;
+    private ClusterServiceInteractServerPortSegment smtpGateway;
+    private ClusterServiceInteractServerPortSegment imapGateway;
 
-    private StandardPortSegment edgeReceiveCommunication;
+    private StandardServerPortSegment edgeReceiveCommunication;
 
-    public ClusterServiceInteractPortSegment getSmtpGateway() {
+    public ClusterServiceInteractServerPortSegment getSmtpGateway() {
         return smtpGateway;
     }
 
-    public void setSmtpGateway(ClusterServiceInteractPortSegment smtpGateway) {
+    public void setSmtpGateway(ClusterServiceInteractServerPortSegment smtpGateway) {
         this.smtpGateway = smtpGateway;
     }
 
-    public ClusterServiceInteractPortSegment getImapGateway() {
+    public ClusterServiceInteractServerPortSegment getImapGateway() {
         return imapGateway;
     }
 
-    public void setImapGateway(ClusterServiceInteractPortSegment imapGateway) {
+    public void setImapGateway(ClusterServiceInteractServerPortSegment imapGateway) {
         this.imapGateway = imapGateway;
     }
 
-    public StandardPortSegment getEdgeReceiveCommunication() {
+    public StandardServerPortSegment getEdgeReceiveCommunication() {
         return edgeReceiveCommunication;
     }
 
-    public void setEdgeReceiveCommunication(StandardPortSegment edgeReceiveCommunication) {
+    public void setEdgeReceiveCommunication(StandardServerPortSegment edgeReceiveCommunication) {
         this.edgeReceiveCommunication = edgeReceiveCommunication;
     }
 }

@@ -25,26 +25,22 @@ import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.com
 
 public abstract class ClusterServiceDeliverySubsystemPropertyFile extends BaseSubsystemPropertyFile{
 
-
     private Integer defaultServicePortLowerBound;
-
     private LoadBalancerSegment loadBalancer;
     private VolumeMountSegment volumeMounts;
     private ApplicationDebugSegment debugProperties;
     private SecurityCredentialSegment hapiAPIKey;
-
     private JavaDeploymentSegment javaDeploymentParameters;
 
     public ClusterServiceDeliverySubsystemPropertyFile(){
-
+        super();
         loadBalancer = new LoadBalancerSegment();
         volumeMounts = new VolumeMountSegment();
         debugProperties = new ApplicationDebugSegment();
-
         hapiAPIKey = new SecurityCredentialSegment();
-
         javaDeploymentParameters = new JavaDeploymentSegment();
     }
+
     public Integer getDefaultServicePortLowerBound() {
         return defaultServicePortLowerBound;
     }
@@ -102,7 +98,16 @@ public abstract class ClusterServiceDeliverySubsystemPropertyFile extends BaseSu
                 ", debugProperties=" + debugProperties +
                 ", hapiAPIKey=" + hapiAPIKey +
                 ", javaDeploymentParameters=" + javaDeploymentParameters +
-                "," + super.toString() +
+                ", subsystemInstant=" + getSubsystemInstant() +
+                ", deploymentMode=" + getDeploymentMode() +
+                ", deploymentSites=" + getDeploymentSites() +
+                ", kubeReadinessProbe=" + getKubeReadinessProbe() +
+                ", kubeLivelinessProbe=" + getKubeLivelinessProbe() +
+                ", prometheusPort=" + getPrometheusPort() +
+                ", jolokiaPort=" + getJolokiaPort() +
+                ", subsystemImageProperties=" + getSubsystemImageProperties() +
+                ", trustStorePassword=" + getTrustStorePassword() +
+                ", keyPassword=" + getKeyPassword() +
                 '}';
     }
 }

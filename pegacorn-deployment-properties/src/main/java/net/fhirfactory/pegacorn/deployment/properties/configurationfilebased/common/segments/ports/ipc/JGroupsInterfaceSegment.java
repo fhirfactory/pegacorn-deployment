@@ -21,7 +21,7 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc;
 
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.common.InterfaceDefinitionSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.InterfaceDefinitionSegment;
 
 import java.util.ArrayList;
 
@@ -29,6 +29,10 @@ public class JGroupsInterfaceSegment {
     private String interfaceName;
     private String interfaceNameUniqueSuffix;
     private ArrayList<InterfaceDefinitionSegment> supportedInterfaceProfiles;
+
+    public JGroupsInterfaceSegment(){
+        this.supportedInterfaceProfiles = new ArrayList<>();
+    }
 
     public String getInterfaceName() {
         return interfaceName;

@@ -1,36 +1,36 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.communicate.iris.im;
 
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.SecurityCredentialSegment;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.HTTPClusteredServiceInteractPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.HTTPClusteredServiceInteractServerPortSegment;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.communicate.common.CommunicateSubsystemPropertyFile;
 
 public class CommunicateIrisIMPropertyFile extends CommunicateSubsystemPropertyFile {
 
 
-    private HTTPClusteredServiceInteractPortSegment interactMatrixApplicationServicesServer;
-    private HTTPClusteredServiceInteractPortSegment interactPegacornVoIPServicesServer;
+    private HTTPClusteredServiceInteractServerPortSegment interactMatrixApplicationServicesServer;
+    private HTTPClusteredServiceInteractServerPortSegment interactPegacornVoIPServicesServer;
     private SecurityCredentialSegment wildflyUser;
 
     public CommunicateIrisIMPropertyFile(){
         super();
         wildflyUser = new SecurityCredentialSegment();
-        interactMatrixApplicationServicesServer = new HTTPClusteredServiceInteractPortSegment();
-        interactPegacornVoIPServicesServer = new HTTPClusteredServiceInteractPortSegment();
+        interactMatrixApplicationServicesServer = new HTTPClusteredServiceInteractServerPortSegment();
+        interactPegacornVoIPServicesServer = new HTTPClusteredServiceInteractServerPortSegment();
     }
 
-    public HTTPClusteredServiceInteractPortSegment getInteractMatrixApplicationServicesServer() {
+    public HTTPClusteredServiceInteractServerPortSegment getInteractMatrixApplicationServicesServer() {
         return interactMatrixApplicationServicesServer;
     }
 
-    public void setInteractMatrixApplicationServicesServer(HTTPClusteredServiceInteractPortSegment interactMatrixApplicationServicesServer) {
+    public void setInteractMatrixApplicationServicesServer(HTTPClusteredServiceInteractServerPortSegment interactMatrixApplicationServicesServer) {
         this.interactMatrixApplicationServicesServer = interactMatrixApplicationServicesServer;
     }
 
-    public HTTPClusteredServiceInteractPortSegment getInteractPegacornVoIPServicesServer() {
+    public HTTPClusteredServiceInteractServerPortSegment getInteractPegacornVoIPServicesServer() {
         return interactPegacornVoIPServicesServer;
     }
 
-    public void setInteractPegacornVoIPServicesServer(HTTPClusteredServiceInteractPortSegment interactPegacornVoIPServicesServer) {
+    public void setInteractPegacornVoIPServicesServer(HTTPClusteredServiceInteractServerPortSegment interactPegacornVoIPServicesServer) {
         this.interactPegacornVoIPServicesServer = interactPegacornVoIPServicesServer;
     }
 

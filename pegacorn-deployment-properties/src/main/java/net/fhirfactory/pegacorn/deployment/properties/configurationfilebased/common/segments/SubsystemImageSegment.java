@@ -22,10 +22,10 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments;
 
 public class SubsystemImageSegment {
-    String repository;
-    String imageName;
-    String imageVersion;
-    String pullPolicy;
+    private String repository;
+    private String imageName;
+    private String imageVersion;
+    private String pullPolicy;
 
     public String getRepository() {
         return repository;

@@ -26,14 +26,18 @@ import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFunctionFDN;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeRDN;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeTypeEnum;
+import net.fhirfactory.pegacorn.deployment.topology.model.common.valuesets.NetworkSecurityZoneEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.mode.ConcurrencyModeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.mode.ResilienceModeEnum;
 import org.slf4j.Logger;
+
+import java.util.UUID;
 
 public abstract class TopologyNode {
     abstract protected Logger getLogger();
     private TopologyNodeRDN nodeRDN;
     private TopologyNodeFDN nodeFDN;
+    private String nodeKey;
     private TopologyNodeFunctionFDN nodeFunctionFDN;
     private TopologyNodeTypeEnum componentType;
     private TopologyNodeFDN containingNodeFDN;
@@ -47,6 +51,7 @@ public abstract class TopologyNode {
         this.nodeFunctionFDN = null;
         this.concurrencyMode = null;
         this.resilienceMode = null;
+        this.nodeKey = null;
     }
 
     public TopologyNodeRDN getNodeRDN() {
@@ -55,6 +60,7 @@ public abstract class TopologyNode {
 
     public void setNodeRDN(TopologyNodeRDN nodeRDN) {
         this.nodeRDN = nodeRDN;
+        constructNodeKey();
     }
 
     public TopologyNodeFDN getNodeFDN() {
@@ -63,6 +69,8 @@ public abstract class TopologyNode {
 
     public void setNodeFDN(TopologyNodeFDN nodeFDN) {
         this.nodeFDN = nodeFDN;
+        setNodeRDN(nodeFDN.getLeafRDN());
+        constructNodeKey();
     }
 
     public TopologyNodeTypeEnum getComponentType() {
@@ -98,7 +106,22 @@ public abstract class TopologyNode {
             this.nodeFDN = newFDN;
             getLogger().trace(".constructFDN(): this.nodeFDN assigned->{}", this.getNodeFDN());
         }
+        setNodeRDN(nodeRDN);
+        constructNodeKey();
         getLogger().debug(".constructFDN(): Exit, nodeFDN->{}", this.getNodeFDN());
+    }
+
+    public void constructNodeKey(){
+        String fdnValue = getNodeRDN().getNodeName() + "-" + UUID.randomUUID().toString();
+        setNodeKey(fdnValue);
+    }
+
+    public String getNodeKey() {
+        return nodeKey;
+    }
+
+    public void setNodeKey(String nodeKey) {
+        this.nodeKey = nodeKey;
     }
 
     public TopologyNodeFunctionFDN getNodeFunctionFDN() {
@@ -130,6 +153,8 @@ public abstract class TopologyNode {
                 this.nodeFunctionFDN = newFunctionFDN;
             }
         }
+        setNodeRDN(nodeRDN);
+        constructNodeKey();
         getLogger().debug(".constructFunctionFDN(): Exit, nodeFunctionFDN->{}", this.getNodeFunctionFDN());
     }
 
@@ -159,6 +184,9 @@ public abstract class TopologyNode {
 
     @JsonIgnore
     public boolean isKubernetesDeployed(){
+        if(getResilienceMode() == null){
+            return(false);
+        }
         switch(getResilienceMode()){
             case RESILIENCE_MODE_KUBERNETES_CLUSTERED:
             case RESILIENCE_MODE_KUBERNETES_MULTISITE:

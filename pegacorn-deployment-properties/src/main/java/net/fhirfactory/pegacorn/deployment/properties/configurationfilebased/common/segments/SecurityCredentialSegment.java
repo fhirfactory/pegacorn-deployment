@@ -22,10 +22,10 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments;
 
 public class SecurityCredentialSegment {
-    String credentialName;
-    String credentialPassword;
-    String credentialReferenceName;
-    String credentialReferenceKey;
+    private String credentialName;
+    private String credentialPassword;
+    private String credentialReferenceName;
+    private String credentialReferenceKey;
 
     public String getCredentialName() {
         return credentialName;

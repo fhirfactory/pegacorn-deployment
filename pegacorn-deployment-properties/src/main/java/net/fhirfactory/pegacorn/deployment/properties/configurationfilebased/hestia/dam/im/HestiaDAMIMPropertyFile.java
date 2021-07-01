@@ -22,68 +22,68 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.hestia.dam.im;
 
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes.ClusterServiceDeliverySubsystemPropertyFile;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.HTTPIPCPortSegment;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.common.StandardPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.HTTPIPCServerPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.StandardServerPortSegment;
 
 public class HestiaDAMIMPropertyFile extends ClusterServiceDeliverySubsystemPropertyFile {
     //
     // Edge :: Answer (FHIR API Server)
     //
-    private HTTPIPCPortSegment edgeAnswer;
+    private HTTPIPCServerPortSegment edgeAnswer;
     //
     // Edge :: Receive (FHIR::Media Receivers)
     //
-    private StandardPortSegment edgeReceiveMediaLadonNexusIM;
-    private StandardPortSegment edgeReceiveMediaCommunicateIrisIM;
-    private StandardPortSegment edgeReceiveMediaFHIRBreakLDAPScanner;
-    private StandardPortSegment edgeReceiveMediaFHIRBreakEmailGateway;
-    private StandardPortSegment edgeReceiveMediaMITaFSMSGateway;
+    private StandardServerPortSegment edgeReceiveMediaLadonNexusIM;
+    private StandardServerPortSegment edgeReceiveMediaCommunicateIrisIM;
+    private StandardServerPortSegment edgeReceiveMediaFHIRBreakLDAPScanner;
+    private StandardServerPortSegment edgeReceiveMediaFHIRBreakEmailGateway;
+    private StandardServerPortSegment edgeReceiveMediaMITaFSMSGateway;
 
-    public HTTPIPCPortSegment getEdgeAnswer() {
+    public HTTPIPCServerPortSegment getEdgeAnswer() {
         return edgeAnswer;
     }
 
-    public void setEdgeAnswer(HTTPIPCPortSegment edgeAnswer) {
+    public void setEdgeAnswer(HTTPIPCServerPortSegment edgeAnswer) {
         this.edgeAnswer = edgeAnswer;
     }
 
-    public StandardPortSegment getEdgeReceiveMediaLadonNexusIM() {
+    public StandardServerPortSegment getEdgeReceiveMediaLadonNexusIM() {
         return edgeReceiveMediaLadonNexusIM;
     }
 
-    public void setEdgeReceiveMediaLadonNexusIM(StandardPortSegment edgeReceiveMediaLadonNexusIM) {
+    public void setEdgeReceiveMediaLadonNexusIM(StandardServerPortSegment edgeReceiveMediaLadonNexusIM) {
         this.edgeReceiveMediaLadonNexusIM = edgeReceiveMediaLadonNexusIM;
     }
 
-    public StandardPortSegment getEdgeReceiveMediaCommunicateIrisIM() {
+    public StandardServerPortSegment getEdgeReceiveMediaCommunicateIrisIM() {
         return edgeReceiveMediaCommunicateIrisIM;
     }
 
-    public void setEdgeReceiveMediaCommunicateIrisIM(StandardPortSegment edgeReceiveMediaCommunicateIrisIM) {
+    public void setEdgeReceiveMediaCommunicateIrisIM(StandardServerPortSegment edgeReceiveMediaCommunicateIrisIM) {
         this.edgeReceiveMediaCommunicateIrisIM = edgeReceiveMediaCommunicateIrisIM;
     }
 
-    public StandardPortSegment getEdgeReceiveMediaFHIRBreakLDAPScanner() {
+    public StandardServerPortSegment getEdgeReceiveMediaFHIRBreakLDAPScanner() {
         return edgeReceiveMediaFHIRBreakLDAPScanner;
     }
 
-    public void setEdgeReceiveMediaFHIRBreakLDAPScanner(StandardPortSegment edgeReceiveMediaFHIRBreakLDAPScanner) {
+    public void setEdgeReceiveMediaFHIRBreakLDAPScanner(StandardServerPortSegment edgeReceiveMediaFHIRBreakLDAPScanner) {
         this.edgeReceiveMediaFHIRBreakLDAPScanner = edgeReceiveMediaFHIRBreakLDAPScanner;
     }
 
-    public StandardPortSegment getEdgeReceiveMediaFHIRBreakEmailGateway() {
+    public StandardServerPortSegment getEdgeReceiveMediaFHIRBreakEmailGateway() {
         return edgeReceiveMediaFHIRBreakEmailGateway;
     }
 
-    public void setEdgeReceiveMediaFHIRBreakEmailGateway(StandardPortSegment edgeReceiveMediaFHIRBreakEmailGateway) {
+    public void setEdgeReceiveMediaFHIRBreakEmailGateway(StandardServerPortSegment edgeReceiveMediaFHIRBreakEmailGateway) {
         this.edgeReceiveMediaFHIRBreakEmailGateway = edgeReceiveMediaFHIRBreakEmailGateway;
     }
 
-    public StandardPortSegment getEdgeReceiveMediaMITaFSMSGateway() {
+    public StandardServerPortSegment getEdgeReceiveMediaMITaFSMSGateway() {
         return edgeReceiveMediaMITaFSMSGateway;
     }
 
-    public void setEdgeReceiveMediaMITaFSMSGateway(StandardPortSegment edgeReceiveMediaMITaFSMSGateway) {
+    public void setEdgeReceiveMediaMITaFSMSGateway(StandardServerPortSegment edgeReceiveMediaMITaFSMSGateway) {
         this.edgeReceiveMediaMITaFSMSGateway = edgeReceiveMediaMITaFSMSGateway;
     }
 }
