@@ -34,7 +34,4 @@ public interface DeploymentSystemIdentificationInterface {
     public FDNToken getSystemIdentifier();
 
     public String getSystemOwnerName();
-
-//    public ConcurrencyModeEnum getDefaultSubsystemConcurrencyMode();
-//    public ResilienceModeEnum getDefaultSubsystemResilienceMode();
 }
