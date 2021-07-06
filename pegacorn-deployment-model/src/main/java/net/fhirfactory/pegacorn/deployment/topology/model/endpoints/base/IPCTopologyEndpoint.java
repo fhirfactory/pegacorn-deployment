@@ -16,6 +16,7 @@ public class IPCTopologyEndpoint extends TopologyNode {
     private String name;
     private TopologyEndpointTypeEnum endpointType;
     private Map<AdditionalParametersListEnum, String> additionalParameters;
+    private String connectedSystemName;
 
     public IPCTopologyEndpoint(){
         super();
@@ -28,6 +29,14 @@ public class IPCTopologyEndpoint extends TopologyNode {
 
     public void setAdditionalParameters(Map<AdditionalParametersListEnum, String> additionalParameters) {
         this.additionalParameters = additionalParameters;
+    }
+
+    public String getConnectedSystemName() {
+        return connectedSystemName;
+    }
+
+    public void setConnectedSystemName(String connectedSystemName) {
+        this.connectedSystemName = connectedSystemName;
     }
 
     public String getName() {
@@ -76,6 +85,7 @@ public class IPCTopologyEndpoint extends TopologyNode {
                 ", name='" + name + '\'' +
                 ", endpointType=" + endpointType +
                 ", additionalParameters=" + additionalParameters +
+                ", connectedSystemName='" + connectedSystemName + '\'' +
                 '}';
     }
 }

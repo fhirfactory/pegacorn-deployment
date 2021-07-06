@@ -336,6 +336,8 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         workshop.constructFDN(processingPlant.getNodeFDN(), nodeRDN);
         workshop.constructFunctionFDN(processingPlant.getNodeFunctionFDN(), nodeRDN);
         workshop.setComponentType(nodeType);
+        workshop.setResilienceMode(getResilienceMode());
+        workshop.setConcurrencyMode(getConcurrenceMode());
         workshop.setContainingNodeFDN(processingPlant.getNodeFDN());
         processingPlant.getWorkshops().add(workshop.getNodeFDN());
         getLogger().trace(".addWorkshop(): Add the Workshop to the Topology Cache");
@@ -360,6 +362,8 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         wup.constructFunctionFDN(workshop.getNodeFunctionFDN(), nodeRDN);
         wup.setContainingNodeFDN(workshop.getNodeFDN());
         wup.setComponentType(nodeType);
+        wup.setConcurrencyMode(getConcurrenceMode());
+        wup.setResilienceMode(getResilienceMode());
         workshop.getWupSet().add(wup.getNodeFDN());
         getLogger().trace(".addWorkUnitProcessor(): Add the WorkUnitProcessor to the Topology Cache");
         getTopologyIM().addTopologyNode(workshop.getNodeFDN(), wup);
@@ -383,6 +387,8 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         wupComponent.setNodeRDN(nodeRDN);
         wupComponent.setComponentType(topologyType);
         wupComponent.setContainingNodeFDN(wup.getNodeFDN());
+        wupComponent.setConcurrencyMode(getConcurrenceMode());
+        wupComponent.setResilienceMode(getResilienceMode());
         wup.getWupComponents().add(wupComponent.getNodeFDN());
         getLogger().trace(".addWorkUnitProcessorComponent(): Add the WorkUnitProcessor Component to the Topology Cache");
         getTopologyIM().addTopologyNode(wup.getNodeFDN(), wupComponent);
@@ -406,6 +412,8 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         wupInterchangeComponent.setNodeRDN(nodeRDN);
         wupInterchangeComponent.setComponentType(topologyNodeType);
         wupInterchangeComponent.setContainingNodeFDN(wup.getNodeFDN());
+        wupInterchangeComponent.setConcurrencyMode(getConcurrenceMode());
+        wupInterchangeComponent.setResilienceMode(getResilienceMode());
         wup.getWupInterchangeComponents().add(wupInterchangeComponent.getNodeFDN());
         getLogger().trace(".addWorkUnitProcessorComponent(): Add the WorkUnitProcessor Interchange Component to the Topology Cache");
         getTopologyIM().addTopologyNode(wup.getNodeFDN(), wupInterchangeComponent);

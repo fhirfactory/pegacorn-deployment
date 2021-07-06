@@ -21,6 +21,7 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base;
 
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemProperties;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -39,12 +40,16 @@ public abstract class StandardServerPortSegment {
     private Boolean isEncrypted;
     private String hostDNSEntry;
     private ArrayList<InterfaceDefinitionSegment> supportedInterfaceProfiles;
+    private int startupDelay;
+    private String name;
 
     public StandardServerPortSegment(){
         super();
-        supportedInterfaceProfiles = new ArrayList<>();
+        this.supportedInterfaceProfiles = new ArrayList<>();
         this.isEncrypted = false;
         this.isServer = false;
+        this.startupDelay = 0;
+        this.name = null;
     }
     public int getPortValue() {
         return portValue;
@@ -102,15 +107,37 @@ public abstract class StandardServerPortSegment {
         this.hostDNSEntry = hostDNSEntry;
     }
 
+    public int getStartupDelay() {
+        return startupDelay;
+    }
+
+    public void setStartupDelay(int startupDelay) {
+        this.startupDelay = startupDelay;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString() {
-        return "StandardPortSegment{" +
+        return "StandardServerPortSegment{" +
                 "portValue=" + portValue +
                 ", portType='" + portType + '\'' +
                 ", isServer=" + isServer +
                 ", isEncrypted=" + isEncrypted +
                 ", hostDNSEntry='" + hostDNSEntry + '\'' +
                 ", supportedInterfaceProfiles=" + supportedInterfaceProfiles +
+                ", startupDelay=" + startupDelay +
+                ", name='" + name + '\'' +
+                ", server=" + getServer() +
+                ", server=" + isServer() +
+                ", encrypted=" + getEncrypted() +
+                ", encrypted=" + isEncrypted() +
                 '}';
     }
 }

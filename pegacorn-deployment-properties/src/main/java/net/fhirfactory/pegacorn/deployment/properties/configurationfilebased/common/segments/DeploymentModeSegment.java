@@ -26,6 +26,7 @@ public class DeploymentModeSegment {
     private Integer processingPlantReplicationCount;
     private boolean concurrent;
     private boolean usingInternalEncryption;
+    private String deploymentConfig;
 
 
     public DeploymentModeSegment(){
@@ -33,6 +34,15 @@ public class DeploymentModeSegment {
         processingPlantReplicationCount = 0;
         concurrent = false;
         usingInternalEncryption = false;
+        deploymentConfig = null;
+    }
+
+    public String getDeploymentConfig() {
+        return deploymentConfig;
+    }
+
+    public void setDeploymentConfig(String deploymentConfig) {
+        this.deploymentConfig = deploymentConfig;
     }
 
     public boolean isKubernetes() {
@@ -74,6 +84,7 @@ public class DeploymentModeSegment {
                 ", processingPlantReplicationCount=" + processingPlantReplicationCount +
                 ", concurrent=" + concurrent +
                 ", usingInternalEncryption=" + usingInternalEncryption +
+                ", deploymentConfig='" + deploymentConfig + '\'' +
                 '}';
     }
 }

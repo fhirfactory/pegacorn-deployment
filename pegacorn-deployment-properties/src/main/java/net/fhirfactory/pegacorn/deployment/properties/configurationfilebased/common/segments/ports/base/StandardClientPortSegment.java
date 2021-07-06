@@ -38,10 +38,14 @@ public abstract class StandardClientPortSegment {
     private int defaultRetryWait;
     private int defaultTimeout;
     private ConnectedSystemProperties connectedSystem;
+    private String name;
 
     public StandardClientPortSegment(){
         super();
-        connectedSystem = new ConnectedSystemProperties();
+        this.connectedSystem = new ConnectedSystemProperties();
+        this.name = null;
+        this.portType = null;
+        this.portParameters = null;
     }
 
     public String getPortType() {
@@ -92,6 +96,14 @@ public abstract class StandardClientPortSegment {
         this.defaultTimeout = defaultTimeout;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString() {
         return "StandardClientPortSegment{" +
@@ -101,6 +113,7 @@ public abstract class StandardClientPortSegment {
                 ", defaultRetryWait='" + defaultRetryWait + '\'' +
                 ", defaultTimeout='" + defaultTimeout + '\'' +
                 ", connectedSystem=" + connectedSystem +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

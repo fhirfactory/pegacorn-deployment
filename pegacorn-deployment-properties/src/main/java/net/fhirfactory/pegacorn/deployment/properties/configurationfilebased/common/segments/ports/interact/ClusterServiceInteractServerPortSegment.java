@@ -21,26 +21,71 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact;
 
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemProperties;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.standard.ClusteredServiceServerPortSegment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ClusterServiceInteractServerPortSegment extends ClusteredServiceServerPortSegment {
+public class ClusterServiceInteractServerPortSegment extends StandardInteractServerPortSegment {
     private static Logger LOG = LoggerFactory.getLogger(ClusterServiceInteractServerPortSegment.class);
+
+    private Integer servicePortValue;
+    private String servicePortName;
+    private String serviceDNSEntry;
+    private Integer clusterServicePortOffsetValue;
 
     @Override
     protected Logger specifyLogger(){
         return(LOG);
     }
 
-    public ConnectedSystemProperties getTargetSystem() {
-        return targetSystem;
+    public Integer getServicePortValue() {
+        return servicePortValue;
     }
 
-    public void setTargetSystem(ConnectedSystemProperties targetSystem) {
-        this.targetSystem = targetSystem;
+    public void setServicePortValue(Integer servicePortValue) {
+        this.servicePortValue = servicePortValue;
     }
 
-    private ConnectedSystemProperties targetSystem;
+    public String getServicePortName() {
+        return servicePortName;
+    }
+
+    public void setServicePortName(String servicePortName) {
+        this.servicePortName = servicePortName;
+    }
+
+    public String getServiceDNSEntry() {
+        return serviceDNSEntry;
+    }
+
+    public void setServiceDNSEntry(String serviceDNSEntry) {
+        this.serviceDNSEntry = serviceDNSEntry;
+    }
+
+    public Integer getClusterServicePortOffsetValue() {
+        return clusterServicePortOffsetValue;
+    }
+
+    public void setClusterServicePortOffsetValue(Integer clusterServicePortOffsetValue) {
+        this.clusterServicePortOffsetValue = clusterServicePortOffsetValue;
+    }
+
+    @Override
+    public String toString() {
+        return "ClusterServiceInteractServerPortSegment{" +
+                "servicePortValue=" + servicePortValue +
+                ", servicePortName='" + servicePortName + '\'' +
+                ", serviceDNSEntry='" + serviceDNSEntry + '\'' +
+                ", clusterServicePortOffsetValue=" + clusterServicePortOffsetValue +
+                ", portType='" + getPortType() + '\'' +
+                ", connectedSystem=" + getConnectedSystem() +
+                ", startupDelay=" + getStartupDelay() +
+                ", name='" + getName() + '\'' +
+                ", server=" + isServer() +
+                ", hostDNSEntry='" + getHostDNSEntry() + '\'' +
+                ", supportedInterfaceProfiles=" + getSupportedInterfaceProfiles() +
+                ", startupDelay=" + getStartupDelay() +
+                ", portValue=" + getPortValue() +
+                ", encrypted=" + isEncrypted() +
+                '}';
+    }
 }

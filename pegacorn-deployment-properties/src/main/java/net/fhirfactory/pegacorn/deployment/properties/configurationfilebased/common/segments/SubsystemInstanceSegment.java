@@ -29,11 +29,16 @@ public class SubsystemInstanceSegment {
     private String externalisedServiceName;
     private String externalisedServiceDNSName;
     private String externalisedServiceEndpointName;
+    private String externalisedServiceHost;
     private String clusterServiceName;
     private String clusterServiceDNSName;
     private String processingPlantName;
     private String processingPlantDNSName;
     private String processingPlantVersion;
+    private String solutionGroup;
+    private String solutionDescription;
+
+    /* an update */
 
     public SubsystemInstanceSegment(){
         owningOrganizationName = null;
@@ -46,6 +51,9 @@ public class SubsystemInstanceSegment {
         clusterServiceName = null;
         processingPlantName = null;
         processingPlantVersion = null;
+        solutionGroup = null;
+        solutionDescription = null;
+        externalisedServiceHost = null;
     }
 
     public String getOwningOrganizationName() {
@@ -54,6 +62,14 @@ public class SubsystemInstanceSegment {
 
     public void setOwningOrganizationName(String owningOrganizationName) {
         this.owningOrganizationName = owningOrganizationName;
+    }
+
+    public String getSolutionGroup() {
+        return solutionGroup;
+    }
+
+    public void setSolutionGroup(String solutionGroup) {
+        this.solutionGroup = solutionGroup;
     }
 
     public String getSolutionName() {
@@ -144,6 +160,22 @@ public class SubsystemInstanceSegment {
         this.processingPlantVersion = processingPlantVersion;
     }
 
+    public String getSolutionDescription() {
+        return solutionDescription;
+    }
+
+    public void setSolutionDescription(String solutionDescription) {
+        this.solutionDescription = solutionDescription;
+    }
+
+    public String getExternalisedServiceHost() {
+        return externalisedServiceHost;
+    }
+
+    public void setExternalisedServiceHost(String externalisedServiceHost) {
+        this.externalisedServiceHost = externalisedServiceHost;
+    }
+
     @Override
     public String toString() {
         return "SubsystemInstanceSegment{" +
@@ -154,11 +186,14 @@ public class SubsystemInstanceSegment {
                 ", externalisedServiceName='" + externalisedServiceName + '\'' +
                 ", externalisedServiceDNSName='" + externalisedServiceDNSName + '\'' +
                 ", externalisedServiceEndpointName='" + externalisedServiceEndpointName + '\'' +
+                ", externalisedServiceHost='" + externalisedServiceHost + '\'' +
                 ", clusterServiceName='" + clusterServiceName + '\'' +
                 ", clusterServiceDNSName='" + clusterServiceDNSName + '\'' +
                 ", processingPlantName='" + processingPlantName + '\'' +
                 ", processingPlantDNSName='" + processingPlantDNSName + '\'' +
                 ", processingPlantVersion='" + processingPlantVersion + '\'' +
+                ", solutionGroup='" + solutionGroup + '\'' +
+                ", solutionDescription='" + solutionDescription + '\'' +
                 '}';
     }
 }
