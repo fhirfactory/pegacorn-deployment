@@ -1,18 +1,10 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCInterface;
-import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
-import net.fhirfactory.pegacorn.deployment.topology.model.common.valuesets.AdditionalParametersListEnum;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.TopologyEndpointTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class IPCServerTopologyEndpoint extends IPCTopologyEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(IPCServerTopologyEndpoint.class);
@@ -21,7 +13,8 @@ public class IPCServerTopologyEndpoint extends IPCTopologyEndpoint {
     private String portType;
     private Boolean aServer;
     private Boolean encrypted;
-    private String interfaceDNSName;
+    private String hostDNSName;
+
 
 
     private ArrayList<IPCInterface> supportedInterfaceSet;
@@ -87,12 +80,12 @@ public class IPCServerTopologyEndpoint extends IPCTopologyEndpoint {
         this.encrypted = encrypted;
     }
 
-    public String getInterfaceDNSName() {
-        return interfaceDNSName;
+    public String getHostDNSName() {
+        return hostDNSName;
     }
 
-    public void setInterfaceDNSName(String interfaceDNSName) {
-        this.interfaceDNSName = interfaceDNSName;
+    public void setHostDNSName(String interfaceDNSName) {
+        this.hostDNSName = interfaceDNSName;
     }
 
     @Override
@@ -112,9 +105,10 @@ public class IPCServerTopologyEndpoint extends IPCTopologyEndpoint {
                 ", portType='" + portType + '\'' +
                 ", aServer=" + aServer +
                 ", encrypted=" + encrypted +
-                ", interfaceDNSName='" + interfaceDNSName + '\'' +
+                ", interfaceDNSName='" + hostDNSName + '\'' +
                 ", supportedInterfaceSet=" + supportedInterfaceSet +
                 ", additionalParameters=" + getAdditionalParameters() +
+                ", connectedSystemName='" + getConnectedSystemName() + '\'' +
                 ", name='" + getName() + '\'' +
                 ", endpointType=" + getEndpointType() +
                 '}';

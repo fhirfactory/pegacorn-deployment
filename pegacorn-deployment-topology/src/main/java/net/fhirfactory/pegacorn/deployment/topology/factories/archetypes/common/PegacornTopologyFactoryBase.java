@@ -41,6 +41,7 @@ import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.Topol
 import net.fhirfactory.pegacorn.deployment.topology.model.mode.ConcurrencyModeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.mode.ResilienceModeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.*;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
 import javax.annotation.PostConstruct;
@@ -354,7 +355,10 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
      */
     @Override
     public WorkUnitProcessorTopologyNode createWorkUnitProcessor(String name, String version, WorkshopTopologyNode workshop, TopologyNodeTypeEnum nodeType){
-        getLogger().debug(".addWorkUnitProcessor(): Entry");
+        getLogger().info(".addWorkUnitProcessor(): Entry, name->{}, version->{}", name, version);
+        if(StringUtils.isEmpty(name) || StringUtils.isEmpty(version)){
+            getLogger().error(".createWorkUnitProcessor(): name or version are emtpy!!!!");
+        }
         WorkUnitProcessorTopologyNode wup = new WorkUnitProcessorTopologyNode();
         TopologyNodeRDN nodeRDN = createNodeRDN(name, version, nodeType);
         wup.setNodeRDN(nodeRDN);
@@ -365,9 +369,9 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         wup.setConcurrencyMode(getConcurrenceMode());
         wup.setResilienceMode(getResilienceMode());
         workshop.getWupSet().add(wup.getNodeFDN());
-        getLogger().trace(".addWorkUnitProcessor(): Add the WorkUnitProcessor to the Topology Cache");
+        getLogger().info(".addWorkUnitProcessor(): Add the WorkUnitProcessor to the Topology Cache");
         getTopologyIM().addTopologyNode(workshop.getNodeFDN(), wup);
-        getLogger().debug(".addWorkUnitProcessor(): Exit");
+        getLogger().info(".addWorkUnitProcessor(): Exit");
         return(wup);
     }
 

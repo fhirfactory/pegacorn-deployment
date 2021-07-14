@@ -29,11 +29,12 @@ import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeTypeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.valuesets.NetworkSecurityZoneEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.mode.ConcurrencyModeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.mode.ResilienceModeEnum;
+import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 
 import java.util.UUID;
 
-public abstract class TopologyNode {
+public abstract class TopologyNode{
     abstract protected Logger getLogger();
     private TopologyNodeRDN nodeRDN;
     private TopologyNodeFDN nodeFDN;
@@ -99,7 +100,7 @@ public abstract class TopologyNode {
             this.nodeFDN = solutionFDN;
         } else {
             getLogger().trace(".constructFDN(): Is not a Solution Node");
-            TopologyNodeFDN newFDN = new TopologyNodeFDN(parentNodeFDN);
+            TopologyNodeFDN newFDN = (TopologyNodeFDN)SerializationUtils.clone(parentNodeFDN);
             getLogger().trace(".constructFDN(): newFDN Created");
             newFDN.appendTopologyNodeRDN(nodeRDN);
             getLogger().trace(".constructFDN(): nodeRDN appended");
@@ -148,7 +149,7 @@ public abstract class TopologyNode {
                 break;
             }
             default:{
-                TopologyNodeFunctionFDN newFunctionFDN = new TopologyNodeFunctionFDN(parentFunctionFDN);
+                TopologyNodeFunctionFDN newFunctionFDN = (TopologyNodeFunctionFDN)SerializationUtils.clone(parentFunctionFDN);
                 newFunctionFDN.appendTopologyNodeRDN(nodeRDN);
                 this.nodeFunctionFDN = newFunctionFDN;
             }

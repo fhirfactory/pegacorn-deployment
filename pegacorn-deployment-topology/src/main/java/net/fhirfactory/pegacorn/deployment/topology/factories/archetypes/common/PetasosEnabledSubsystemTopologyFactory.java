@@ -9,14 +9,12 @@ import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.com
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.JGroupsInitialHostSegment;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCInterface;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCInterfaceDefinition;
-import net.fhirfactory.pegacorn.deployment.topology.model.common.valuesets.AdditionalParametersListEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.valuesets.NetworkSecurityZoneEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.HTTPServerClusterServiceTopologyEndpointPort;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge.InitialHostSpecification;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge.StandardEdgeIPCEndpoint;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.TopologyEndpointTypeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.mode.ResilienceModeEnum;
-import net.fhirfactory.pegacorn.deployment.topology.model.nodes.ProcessingPlantTopologyNode;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.common.EndpointProviderInterface;
 import net.fhirfactory.pegacorn.internals.PegacornReferenceProperties;
 
@@ -80,7 +78,7 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
         interZoneIPC.setNodeRDN(nodeRDN);
         interZoneIPC.constructFDN(endpointProvider.getNodeFDN(), nodeRDN);
         interZoneIPC.setPortType(port.getPortType());
-        interZoneIPC.setInterfaceDNSName(port.getHostDNSEntry());
+        interZoneIPC.setHostDNSName(port.getHostDNSEntry());
         interZoneIPC.setEndpointType(TopologyEndpointTypeEnum.JGROUPS_INTERZONE_IPC_MESSAGING_SERVICE);
         interZoneIPC.setSecurityZone(NetworkSecurityZoneEnum.fromSecurityZoneString(getPropertyFile().getDeploymentZone().getSecurityZoneName()));
         interZoneIPC.setPortValue(port.getPortValue());
@@ -132,7 +130,7 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
         TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), TopologyNodeTypeEnum.ENDPOINT);
         intraZoneIPC.setName(getInterfaceNames().getFunctionNameIntraZoneJGroupsIPC());
         intraZoneIPC.setNodeRDN(nodeRDN);
-        intraZoneIPC.setInterfaceDNSName(port.getHostDNSEntry());
+        intraZoneIPC.setHostDNSName(port.getHostDNSEntry());
         intraZoneIPC.constructFDN(endpointProvider.getNodeFDN(), nodeRDN);
         intraZoneIPC.setPortType(port.getPortType());
         intraZoneIPC.setEndpointType(TopologyEndpointTypeEnum.JGROUPS_INTRAZONE_IPC_MESSAGING_SERVICE);

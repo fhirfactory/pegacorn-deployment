@@ -203,7 +203,7 @@ public class TopologyIM {
     }
 
     public TopologyNode getNode(TopologyNodeFDNToken nodeFDNToken){
-        LOG.debug(".getNode(): Entry, nodeFDNToken --> {}", nodeFDNToken);
+        LOG.info(".getNode(): Entry, nodeFDNToken --> {}", nodeFDNToken);
         TopologyNodeFDN nodeFDN = new TopologyNodeFDN(nodeFDNToken);
         TopologyNode retrievedNode = getNode(nodeFDN);
         LOG.debug(".getNode(): Exit, retrievedNode --> {}", retrievedNode);

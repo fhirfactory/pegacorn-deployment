@@ -1,18 +1,8 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCInterface;
-import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
-import net.fhirfactory.pegacorn.deployment.topology.model.common.valuesets.AdditionalParametersListEnum;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.TopologyEndpointTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class IPCClusteredServerTopologyEndpoint extends IPCServerTopologyEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(IPCClusteredServerTopologyEndpoint.class);
@@ -91,7 +81,7 @@ public class IPCClusteredServerTopologyEndpoint extends IPCServerTopologyEndpoin
                 ", portType='" + getPortType() + '\'' +
                 ", aServer=" + getaServer() +
                 ", encrypted=" + getEncrypted() +
-                ", interfaceDNSName='" + getInterfaceDNSName() + '\'' +
+                ", interfaceDNSName='" + getHostDNSName() + '\'' +
                 ", name='" + getName() + '\'' +
                 ", additionalParameters=" + getAdditionalParameters() +
                 '}';

@@ -79,7 +79,7 @@ public class StandardEdgeIPCEndpoint extends IPCServerTopologyEndpoint {
                 ", portType='" + getPortType() + '\'' +
                 ", aServer=" + getaServer() +
                 ", encrypted=" + getEncrypted() +
-                ", interfaceDNSName='" + getInterfaceDNSName() + '\'' +
+                ", interfaceDNSName='" + getHostDNSName() + '\'' +
                 ", additionalParameters=" + getAdditionalParameters() +
                 ", name='" + getName() + '\'' +
                 ", endpointType=" + getEndpointType() +

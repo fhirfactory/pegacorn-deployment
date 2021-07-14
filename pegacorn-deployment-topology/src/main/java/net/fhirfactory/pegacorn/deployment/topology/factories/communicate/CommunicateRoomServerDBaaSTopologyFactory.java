@@ -56,7 +56,7 @@ public abstract class CommunicateRoomServerDBaaSTopologyFactory extends Pegacorn
         TopologyNodeRDN appServerRDN = createNodeRDN(appServicesName, propertyFile.getSubsystemInstant().getProcessingPlantVersion(), TopologyNodeTypeEnum.ENDPOINT);
         roomServerPostgreSQLServer.constructFDN(processingPlantNode.getNodeFDN(),appServerRDN);
         roomServerPostgreSQLServer.constructFunctionFDN(processingPlantNode.getNodeFunctionFDN(),appServerRDN);
-        roomServerPostgreSQLServer.setInterfaceDNSName(roomServerComponentNames.getDefaultInterfaceNameForBinding());
+        roomServerPostgreSQLServer.setHostDNSName(roomServerComponentNames.getDefaultInterfaceNameForBinding());
         roomServerPostgreSQLServer.setPortValue(propertyFile.getSqlServerPort().getPortValue());
         processingPlantNode.getEndpoints().add(roomServerPostgreSQLServer.getNodeFDN());
         LOG.debug(".buildProcessingPlantEndpoints(): Exit");

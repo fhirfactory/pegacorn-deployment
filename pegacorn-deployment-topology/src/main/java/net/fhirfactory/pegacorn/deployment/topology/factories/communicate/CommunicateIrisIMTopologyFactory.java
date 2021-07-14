@@ -65,9 +65,9 @@ public abstract class CommunicateIrisIMTopologyFactory extends PetasosEnabledSub
         matrixApplicationServicesServer.setEndpointType(TopologyEndpointTypeEnum.HTTP_API_SERVER);
         matrixApplicationServicesServer.setaServer(true);
         if(endpointProvider.getComponentType().equals(TopologyNodeTypeEnum.CLUSTER_SERVICE)) {
-            matrixApplicationServicesServer.setInterfaceDNSName(getCommunicateIrisPropertyFile().getInteractMatrixApplicationServicesServer().getServiceDNSEntry());
+            matrixApplicationServicesServer.setHostDNSName(getCommunicateIrisPropertyFile().getInteractMatrixApplicationServicesServer().getServiceDNSEntry());
         } else {
-            matrixApplicationServicesServer.setInterfaceDNSName(getCommunicateIrisPropertyFile().getInteractMatrixApplicationServicesServer().getHostDNSEntry());
+            matrixApplicationServicesServer.setHostDNSName(getCommunicateIrisPropertyFile().getInteractMatrixApplicationServicesServer().getHostDNSEntry());
         }
         matrixApplicationServicesServer.setPortType("HTTPS");
         matrixApplicationServicesServer.setServicePortOffset(getCommunicateIrisPropertyFile().getInteractMatrixApplicationServicesServer().getClusterServicePortOffsetValue());

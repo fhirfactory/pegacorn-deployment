@@ -61,7 +61,7 @@ public abstract class CommunicateRoomServerIMTopologyFactory extends PetasosEnab
         matrixClientServicesServer.setNodeRDN(serverRDN);
         matrixClientServicesServer.setEndpointType(TopologyEndpointTypeEnum.HTTP_API_SERVER);
         matrixClientServicesServer.setaServer(true);
-        matrixClientServicesServer.setInterfaceDNSName(propertyFile.getMatrixClientServicesAPI().getServiceDNSEntry());
+        matrixClientServicesServer.setHostDNSName(propertyFile.getMatrixClientServicesAPI().getServiceDNSEntry());
         matrixClientServicesServer.setPortType("HTTPS");
         matrixClientServicesServer.setServicePortOffset(propertyFile.getDefaultServicePortLowerBound());
         matrixClientServicesServer.setPortValue(propertyFile.getMatrixClientServicesAPI().getPortValue());
@@ -94,7 +94,7 @@ public abstract class CommunicateRoomServerIMTopologyFactory extends PetasosEnab
         matrixClientServicesServer.constructFDN(processingPlantNode.getNodeFDN(),clientRDN);
         matrixClientServicesServer.constructFunctionFDN(processingPlantNode.getNodeFunctionFDN(),clientRDN);
         matrixClientServicesServer.setNodeRDN(clientRDN);
-        matrixClientServicesServer.setInterfaceDNSName(roomServerComponentNames.getDefaultInterfaceNameForBinding());
+        matrixClientServicesServer.setHostDNSName(roomServerComponentNames.getDefaultInterfaceNameForBinding());
         matrixClientServicesServer.setPortValue(propertyFile.getMatrixClientServicesAPI().getPortValue());
         processingPlantNode.getEndpoints().add(matrixClientServicesServer.getNodeFDN());
         LOG.debug(".buildProcessingPlantEndpoints(): Exit");

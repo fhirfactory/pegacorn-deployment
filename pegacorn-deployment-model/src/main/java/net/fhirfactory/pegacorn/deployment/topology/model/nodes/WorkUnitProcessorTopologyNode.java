@@ -1,6 +1,9 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.nodes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
+import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeRDN;
+import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeTypeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,4 +41,5 @@ public class WorkUnitProcessorTopologyNode extends TopologyNode {
     public void setWupInterchangeComponents(ArrayList<TopologyNodeFDN> wupInterchangeComponents) {
         this.wupInterchangeComponents = wupInterchangeComponents;
     }
+
 }
