@@ -73,6 +73,7 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
         mllpServerTopologyNode.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
         mllpServerTopologyNode.setNodeRDN(nodeRDN);
         mllpServerTopologyNode.setaServer(true);
+        mllpServerTopologyNode.setHostDNSName(mllpServerPort.getHostDNSEntry());
         mllpServerTopologyNode.setConnectedSystemName(mllpServerPort.getConnectedSystem().getSubsystemName());
         mllpServerTopologyNode.setContainingNodeFDN(endpointProvider.getNodeFDN());
         for(InterfaceDefinitionSegment currentSegment: mllpServerPort.getSupportedInterfaceProfiles()) {
