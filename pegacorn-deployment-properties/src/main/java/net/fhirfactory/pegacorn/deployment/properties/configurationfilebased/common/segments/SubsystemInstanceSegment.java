@@ -21,6 +21,8 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class SubsystemInstanceSegment {
     private String owningOrganizationName;
     private String solutionName;
@@ -29,7 +31,6 @@ public class SubsystemInstanceSegment {
     private String externalisedServiceName;
     private String externalisedServiceDNSName;
     private String externalisedServiceEndpointName;
-    private String externalisedServiceHost;
     private String clusterServiceName;
     private String clusterServiceDNSName;
     private String processingPlantName;
@@ -49,11 +50,128 @@ public class SubsystemInstanceSegment {
         externalisedServiceEndpointName = null;
         externalisedServiceDNSName = null;
         clusterServiceName = null;
+        clusterServiceDNSName = null;
         processingPlantName = null;
         processingPlantVersion = null;
+        processingPlantDNSName = null;
         solutionGroup = null;
         solutionDescription = null;
-        externalisedServiceHost = null;
+    }
+
+    public void mergeOverrides(SubsystemInstanceSegment overrides){
+        if (overrides.hasOwningOrganizationName()) {
+            setOwningOrganizationName(overrides.getOwningOrganizationName());
+        }
+        if (overrides.hasSolutionName()) {
+            setSolutionName(overrides.getSolutionName());
+        }
+        if (overrides.hasSolutionGroup()) {
+            setSolutionGroup(overrides.getSolutionGroup());
+        }
+        if(overrides.hasSolutionDescription()){
+            setSolutionDescription(overrides.getSolutionDescription());
+        }
+        if (overrides.hasSubsystemName()) {
+            setSubsystemName(overrides.getSubsystemName());
+        }
+        if (overrides.hasSubsystemVersion()) {
+            setSubsystemVersion(overrides.getSubsystemVersion());
+        }
+        if (overrides.hasExternalisedServiceName()) {
+            setExternalisedServiceName(overrides.getExternalisedServiceName());
+        }
+        if (overrides.hasExternalisedServiceEndpointName()) {
+            setExternalisedServiceEndpointName(overrides.getExternalisedServiceEndpointName());
+        }
+        if (overrides.hasExternalisedServiceDNSName()) {
+            setExternalisedServiceDNSName(overrides.getExternalisedServiceDNSName());
+        }
+        if (overrides.hasClusterServiceName()) {
+            setClusterServiceName(overrides.getClusterServiceName());
+        }
+        if (overrides.hasClusterServiceDNSName()) {
+            setClusterServiceDNSName(overrides.getClusterServiceDNSName());
+        }
+        if (overrides.hasProcessingPlantName()) {
+            setProcessingPlantName(overrides.getProcessingPlantName());
+        }
+        if (overrides.hasProcessingPlantVersion()) {
+            setProcessingPlantVersion(overrides.getProcessingPlantVersion());
+        }
+        if (overrides.hasProcessingPlantDNSName()) {
+            setProcessingPlantDNSName(overrides.getProcessingPlantDNSName());
+        }
+    }
+
+
+    public boolean hasProcessingPlantDNSName(){
+        boolean has = !(StringUtils.isEmpty(this.processingPlantDNSName));
+        return(has);
+    }
+
+    public boolean hasClusterServiceDNSName(){
+        boolean has = !(StringUtils.isEmpty(clusterServiceDNSName));
+        return(has);
+    }
+
+    public boolean hasSolutionDescription(){
+        boolean has = !(StringUtils.isEmpty(solutionDescription));
+        return(has);
+    }
+
+    public boolean hasSolutionGroup(){
+        boolean has = !(StringUtils.isEmpty(solutionGroup));
+        return(has);
+    }
+
+    public boolean hasProcessingPlantVersion(){
+        boolean has = !(StringUtils.isEmpty(processingPlantVersion));
+        return(has);
+    }
+
+    public boolean hasProcessingPlantName(){
+        boolean has = !(StringUtils.isEmpty(processingPlantName));
+        return(has);
+    }
+
+    public boolean hasClusterServiceName(){
+        boolean has = !(StringUtils.isEmpty(clusterServiceName));
+        return(has);
+    }
+
+    public boolean hasExternalisedServiceDNSName(){
+        boolean has = !(StringUtils.isEmpty(externalisedServiceDNSName));
+        return(has);
+    }
+
+    public boolean hasExternalisedServiceEndpointName(){
+        boolean has = !(StringUtils.isEmpty(externalisedServiceEndpointName));
+        return(has);
+    }
+
+    public boolean hasExternalisedServiceName(){
+        boolean has = !(StringUtils.isEmpty(externalisedServiceName));
+        return(has);
+    }
+
+    public boolean hasSubsystemName(){
+        boolean has = !(StringUtils.isEmpty(this.subsystemName));
+        return(has);
+    }
+
+    public boolean hasSolutionName(){
+        boolean has = !(StringUtils.isEmpty(this.solutionName));
+        return(has);
+    }
+
+    public boolean hasOwningOrganizationName(){
+        boolean has = !(StringUtils.isEmpty(this.owningOrganizationName));
+        return(has);
+    }
+
+    public boolean hasSubsystemVersion(){
+        boolean has = !(StringUtils.isEmpty(this.subsystemVersion));
+        return(has);
     }
 
     public String getOwningOrganizationName() {
@@ -168,14 +286,6 @@ public class SubsystemInstanceSegment {
         this.solutionDescription = solutionDescription;
     }
 
-    public String getExternalisedServiceHost() {
-        return externalisedServiceHost;
-    }
-
-    public void setExternalisedServiceHost(String externalisedServiceHost) {
-        this.externalisedServiceHost = externalisedServiceHost;
-    }
-
     @Override
     public String toString() {
         return "SubsystemInstanceSegment{" +
@@ -186,7 +296,6 @@ public class SubsystemInstanceSegment {
                 ", externalisedServiceName='" + externalisedServiceName + '\'' +
                 ", externalisedServiceDNSName='" + externalisedServiceDNSName + '\'' +
                 ", externalisedServiceEndpointName='" + externalisedServiceEndpointName + '\'' +
-                ", externalisedServiceHost='" + externalisedServiceHost + '\'' +
                 ", clusterServiceName='" + clusterServiceName + '\'' +
                 ", clusterServiceDNSName='" + clusterServiceDNSName + '\'' +
                 ", processingPlantName='" + processingPlantName + '\'' +

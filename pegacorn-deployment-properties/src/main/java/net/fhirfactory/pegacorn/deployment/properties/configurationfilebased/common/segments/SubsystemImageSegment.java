@@ -21,11 +21,55 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class SubsystemImageSegment {
     private String repository;
     private String imageName;
     private String imageVersion;
     private String pullPolicy;
+
+    public SubsystemImageSegment(){
+        setRepository(null);
+        setImageName(null);
+        setImageVersion(null);
+        setPullPolicy(null);
+    }
+
+    public void mergeOverrides(SubsystemImageSegment overrides){
+        if(overrides.hasImageName()){
+            setImageName(overrides.getImageName());
+        }
+        if (overrides.hasRepository()) {
+            setRepository(overrides.getRepository());
+        }
+        if (overrides.hasImageVersion()) {
+            setImageVersion(overrides.imageVersion);
+        }
+        if (overrides.hasPullPolicy()) {
+            setPullPolicy(overrides.getPullPolicy());
+        }
+    }
+
+    public boolean hasRepository(){
+        boolean has = !(StringUtils.isEmpty(this.repository));
+        return(has);
+    }
+
+    public boolean hasImageName(){
+        boolean has = !(StringUtils.isEmpty(this.imageName));
+        return(has);
+    }
+
+    public boolean hasImageVersion(){
+        boolean has = !(StringUtils.isEmpty(this.imageVersion));
+        return(has);
+    }
+
+    public boolean hasPullPolicy(){
+        boolean has = !(StringUtils.isEmpty(this.pullPolicy));
+        return(has);
+    }
 
     public String getRepository() {
         return repository;

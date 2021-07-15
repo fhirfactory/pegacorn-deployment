@@ -21,12 +21,34 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class DeploymentZoneSegment {
     private String securityZoneName;
     private String nameSpace;
 
     public DeploymentZoneSegment(){
-        securityZoneName = null;
+        this.securityZoneName = null;
+        this.nameSpace = null;
+    }
+
+    public void mergeOverrides(DeploymentZoneSegment overrides){
+        if(overrides.hasNameSpace()){
+            this.setNameSpace(overrides.getNameSpace());
+        }
+        if(overrides.hasSecurityZoneName()){
+            this.setSecurityZoneName(overrides.getSecurityZoneName());
+        }
+    }
+
+    public boolean hasSecurityZoneName(){
+        boolean has = !(StringUtils.isEmpty(this.securityZoneName));
+        return(has);
+    }
+
+    public boolean hasNameSpace(){
+        boolean has = !(StringUtils.isEmpty(this.nameSpace));
+        return(has);
     }
 
     public String getSecurityZoneName() {

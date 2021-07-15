@@ -21,11 +21,55 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class VolumeMountSegment {
     private String volumeMountName;
     private String volumeMountPath;
     private String volumeName;
     private String volumeHostPath;
+
+    public VolumeMountSegment(){
+        setVolumeHostPath(null);
+        setVolumeMountName(null);
+        setVolumeName(null);
+        setVolumeMountPath(null);
+    }
+
+    public void mergeOverrides(VolumeMountSegment overrides){
+        if (overrides.hasVolumeMountName()) {
+            setVolumeMountName(overrides.getVolumeMountName());
+        }
+        if (overrides.hasVolumeName()) {
+            setVolumeName(overrides.getVolumeName());
+        }
+        if (overrides.hasVolumeMountPath()) {
+            setVolumeMountPath(overrides.getVolumeMountPath());
+        }
+        if(overrides.hasVolumeHostPath()){
+            setVolumeHostPath(overrides.getVolumeHostPath());
+        }
+    }
+
+    public boolean hasVolumeMountPath(){
+        boolean has = !(StringUtils.isEmpty(volumeMountPath));
+        return(has);
+    }
+
+    public boolean hasVolumeName(){
+        boolean has = !(StringUtils.isEmpty(volumeName));
+        return(has);
+    }
+
+    public boolean hasVolumeMountName(){
+        boolean has = !(StringUtils.isEmpty(volumeMountName));
+        return(has);
+    }
+
+    public boolean hasVolumeHostPath(){
+        boolean has = !(StringUtils.isEmpty(volumeHostPath));
+        return(has);
+    }
 
     public String getVolumeMountName() {
         return volumeMountName;

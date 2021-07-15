@@ -39,6 +39,12 @@ public abstract class ClusterServiceDeliverySubsystemPropertyFile extends BaseSu
         debugProperties = new ApplicationDebugSegment();
         hapiAPIKey = new SecurityCredentialSegment();
         javaDeploymentParameters = new JavaDeploymentSegment();
+        defaultServicePortLowerBound = null;
+    }
+
+    boolean hasDefaultServicePortLowerBound(){
+        boolean has = defaultServicePortLowerBound != null;
+        return(has);
     }
 
     public Integer getDefaultServicePortLowerBound() {

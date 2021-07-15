@@ -21,6 +21,8 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class ApplicationDebugSegment {
     private String wildflyLogLevel;
     private String wildflyLogEnable;
@@ -102,4 +104,64 @@ public class ApplicationDebugSegment {
                 ", javaxNetDebug='" + javaxNetDebug + '\'' +
                 '}';
     }
+
+    public boolean hasWildflyLogLevel(){
+        boolean has = !(StringUtils.isEmpty(this.wildflyLogLevel));
+        return(has);
+    }
+
+    public boolean hasWildflyLogEnable(){
+        boolean has = !(StringUtils.isEmpty(this.wildflyLogEnable));
+        return(has);
+    }
+
+    public boolean hasPegacornLogLevel(){
+        boolean has = !(StringUtils.isEmpty(this.pegacornLogLevel));
+        return(has);
+    }
+
+    public boolean hasPegacornLogCategory(){
+        boolean has = !(StringUtils.isEmpty(this.pegacornLogCategory));
+        return(has);
+    }
+
+    public boolean hasAetherLogLevel(){
+        boolean has = !(StringUtils.isEmpty(this.aetherLogLevel));
+        return(has);
+    }
+
+    public boolean hasAetherLogCategory(){
+        boolean has = !(StringUtils.isEmpty(this.aetherLogCategory));
+        return(has);
+    }
+
+    public boolean hasJavaxNetDebug(){
+        boolean has = !(StringUtils.isEmpty(this.javaxNetDebug));
+        return(has);
+    }
+
+    public void mergeOverrides( ApplicationDebugSegment override ){
+        if(override.hasWildflyLogLevel()){
+            this.setWildflyLogLevel(override.getWildflyLogLevel());
+        }
+        if(override.hasWildflyLogEnable()){
+            this.setWildflyLogEnable(override.getWildflyLogEnable());
+        }
+        if(override.hasPegacornLogLevel()){
+            this.setPegacornLogCategory(override.getPegacornLogLevel());
+        }
+        if(override.hasPegacornLogCategory()){
+            this.setPegacornLogCategory(override.getPegacornLogCategory());
+        }
+        if(override.hasAetherLogLevel()){
+            this.setAetherLogLevel(override.getWildflyLogLevel());
+        }
+        if (override.hasAetherLogCategory()) {
+            this.setAetherLogCategory(override.getAetherLogCategory());
+        }
+        if(override.hasJavaxNetDebug()){
+            this.setJavaxNetDebug(override.getJavaxNetDebug());
+        }
+    }
+
 }

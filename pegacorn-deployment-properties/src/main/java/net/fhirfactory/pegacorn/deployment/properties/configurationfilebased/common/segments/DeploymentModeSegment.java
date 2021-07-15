@@ -21,6 +21,8 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class DeploymentModeSegment {
     private boolean kubernetes;
     private Integer processingPlantReplicationCount;
@@ -35,6 +37,18 @@ public class DeploymentModeSegment {
         concurrent = false;
         usingInternalEncryption = false;
         deploymentConfig = null;
+    }
+
+    public void mergeOverrides(DeploymentModeSegment overrides){
+        this.kubernetes = overrides.isKubernetes();
+        this.concurrent = overrides.isConcurrent();
+        this.usingInternalEncryption = overrides.isUsingInternalEncryption();
+        if(overrides.getProcessingPlantReplicationCount() > 0){
+            this.processingPlantReplicationCount = overrides.getProcessingPlantReplicationCount();
+        }
+        if(!StringUtils.isEmpty(deploymentConfig)){
+            this.deploymentConfig = overrides.getDeploymentConfig();
+        }
     }
 
     public String getDeploymentConfig() {

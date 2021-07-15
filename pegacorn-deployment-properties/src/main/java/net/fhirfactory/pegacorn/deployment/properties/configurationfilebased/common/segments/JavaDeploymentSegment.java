@@ -21,9 +21,35 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class JavaDeploymentSegment {
-    String jmxMaxHeapSizeMB;
-    String jvmMemSizeMB;
+    private String jmxMaxHeapSizeMB;
+    private String jvmMemSizeMB;
+
+    public JavaDeploymentSegment(){
+        this.jmxMaxHeapSizeMB = null;
+        this.jvmMemSizeMB = null;
+    }
+
+    public void mergeOverrides(JavaDeploymentSegment overrides){
+        if(overrides.hasJmxMaxHeapSizeMB()){
+            setJmxMaxHeapSizeMB(overrides.getJmxMaxHeapSizeMB());
+        }
+        if(overrides.hasJvmMemSizeMB()){
+            setJvmMemSizeMB(overrides.getJvmMemSizeMB());
+        }
+    }
+
+    public boolean hasJmxMaxHeapSizeMB(){
+        boolean has = !(StringUtils.isEmpty(this.jmxMaxHeapSizeMB));
+        return(has);
+    }
+
+    public boolean hasJvmMemSizeMB(){
+        boolean has = !(StringUtils.isEmpty(this.jvmMemSizeMB));
+        return(has);
+    }
 
     public String getJmxMaxHeapSizeMB() {
         return jmxMaxHeapSizeMB;

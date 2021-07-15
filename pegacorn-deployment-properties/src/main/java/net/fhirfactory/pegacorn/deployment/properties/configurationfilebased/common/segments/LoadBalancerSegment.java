@@ -21,9 +21,35 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class LoadBalancerSegment {
     private String type;
     private String ipAddress;
+
+    public LoadBalancerSegment(){
+        setType(null);
+        setIpAddress(null);
+    }
+
+    public void mergeOverrides(LoadBalancerSegment overrides){
+        if(overrides.hasType()){
+            setType(overrides.getType());
+        }
+        if(overrides.hasIpAddress()){
+            setIpAddress(overrides.getIpAddress());
+        }
+    }
+
+    public boolean hasType(){
+        boolean has = !(StringUtils.isEmpty(this.type));
+        return(has);
+    }
+
+    public boolean hasIpAddress(){
+        boolean has = !(StringUtils.isEmpty(this.ipAddress));
+        return(has);
+    }
 
     public String getType() {
         return type;

@@ -21,11 +21,55 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class SecurityCredentialSegment {
     private String credentialName;
     private String credentialPassword;
     private String credentialReferenceName;
     private String credentialReferenceKey;
+
+    public SecurityCredentialSegment(){
+        setCredentialName(null);
+        setCredentialPassword(null);
+        setCredentialReferenceKey(null);
+        setCredentialReferenceName(null);
+    }
+
+    public void mergeOverrides(SecurityCredentialSegment overrides){
+        if (hasCredentialName()) {
+            setCredentialName(overrides.getCredentialName());
+        }
+        if(hasCredentialPassword()){
+            setCredentialPassword(overrides.getCredentialPassword());
+        }
+        if (hasCredentialReferenceKey()) {
+            setCredentialReferenceKey(overrides.getCredentialReferenceKey());
+        }
+        if (hasCredentialReferenceName()) {
+            setCredentialReferenceName(overrides.getCredentialReferenceName());
+        }
+    }
+
+    public boolean hasCredentialName(){
+        boolean has = !(StringUtils.isEmpty(this.credentialName));
+        return(has);
+    }
+
+    public boolean hasCredentialPassword(){
+        boolean has = !(StringUtils.isEmpty(this.credentialPassword));
+        return(has);
+    }
+
+    public boolean hasCredentialReferenceName(){
+        boolean has = !(StringUtils.isEmpty(this.credentialReferenceName));
+        return(has);
+    }
+
+    public boolean hasCredentialReferenceKey(){
+        boolean has = !(StringUtils.isEmpty(this.credentialReferenceKey));
+        return(has);
+    }
 
     public String getCredentialName() {
         return credentialName;

@@ -21,14 +21,49 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class DeploymentSiteSegment {
-    Integer siteCount;
-    String site1Name;
-    String site2Name;
-    String site3Name;
+    private Integer siteCount;
+    private String site1Name;
+    private String site2Name;
+    private String site3Name;
 
     public DeploymentSiteSegment(){
-        siteCount = 0;
+        this.siteCount = 0;
+        this.site1Name = null;
+        this.site2Name = null;
+        this.site3Name = null;
+    }
+
+    public void mergeOverrides(DeploymentSiteSegment overrides){
+        if(overrides.getSiteCount() > 0){
+            this.siteCount = overrides.getSiteCount();
+        }
+        if(overrides.hasSite1Name()){
+            this.site1Name = overrides.getSite1Name();
+        }
+        if(overrides.hasSite2Name()){
+            this.site2Name = overrides.getSite2Name();
+        }
+        if(overrides.hasSite3Name()){
+            this.site3Name = overrides.getSite3Name();
+        }
+    }
+
+    public boolean hasSite1Name(){
+        boolean has = !(StringUtils.isEmpty(this.site1Name));
+        return(has);
+    }
+
+    public boolean hasSite2Name(){
+        boolean has = !(StringUtils.isEmpty(this.site2Name));
+        return(has);
+    }
+
+    public boolean hasSite3Name(){
+        boolean has = !(StringUtils.isEmpty(this.site3Name));
+        return(has);
     }
 
     public Integer getSiteCount() {
