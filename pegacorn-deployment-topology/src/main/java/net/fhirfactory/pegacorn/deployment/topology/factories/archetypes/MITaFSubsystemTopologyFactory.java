@@ -35,7 +35,7 @@ import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.common.
 import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCInterface;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCInterfaceDefinition;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.ExternalSystemIPCEndpoint;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.TopologyEndpointTypeEnum;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.PetasosTopologyEndpointTypeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.interact.ClusteredInteractServerTopologyEndpointPort;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.interact.StandardInteractClientTopologyEndpointPort;
 import net.fhirfactory.pegacorn.deployment.topology.model.mode.ResilienceModeEnum;
@@ -67,7 +67,7 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
         mllpServerTopologyNode.setName(endpointFunctionName);
         mllpServerTopologyNode.constructFDN(endpointProvider.getNodeFDN(), nodeRDN);
         mllpServerTopologyNode.setPortType(mllpServerPort.getPortType());
-        mllpServerTopologyNode.setEndpointType(TopologyEndpointTypeEnum.MLLP_SERVER);
+        mllpServerTopologyNode.setEndpointType(PetasosTopologyEndpointTypeEnum.MLLP_SERVER);
         mllpServerTopologyNode.setComponentType(TopologyNodeTypeEnum.ENDPOINT);
         mllpServerTopologyNode.setPortValue(mllpServerPort.getPortValue());
         mllpServerTopologyNode.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
@@ -115,7 +115,7 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
         mllpClientTopologyNode.setNodeRDN(nodeRDN);
         mllpClientTopologyNode.setName(endpointFunctionName);
         mllpClientTopologyNode.constructFDN(endpointProvider.getNodeFDN(), nodeRDN);
-        mllpClientTopologyNode.setEndpointType(TopologyEndpointTypeEnum.MLLP_CLIENT);
+        mllpClientTopologyNode.setEndpointType(PetasosTopologyEndpointTypeEnum.MLLP_CLIENT);
         mllpClientTopologyNode.setComponentType(TopologyNodeTypeEnum.ENDPOINT);
         mllpClientTopologyNode.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
         mllpClientTopologyNode.setNodeRDN(nodeRDN);

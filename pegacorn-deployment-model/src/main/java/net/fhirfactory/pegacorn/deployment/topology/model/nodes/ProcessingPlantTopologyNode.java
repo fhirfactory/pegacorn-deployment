@@ -18,6 +18,10 @@ public class ProcessingPlantTopologyNode extends TopologyNode implements Endpoin
     private ArrayList<TopologyNodeFDN> endpoints;
     private ArrayList<TopologyNodeFDN> connections;
     private String nameSpace;
+    private String interZoneIPCStackConfigFile;
+    private String interZoneOAMStackConfigFile;
+    private String intraZoneIPCStackConfigFile;
+    private String intraZoneOAMStackConfigFile;
 
     private String defaultDNSName;
     private boolean internalTrafficEncrypted;
@@ -36,6 +40,27 @@ public class ProcessingPlantTopologyNode extends TopologyNode implements Endpoin
         this.nameSpace = null;
         this.defaultDNSName = null;
         this.internalTrafficEncrypted = false;
+
+        this.interZoneIPCStackConfigFile = null;
+        this.interZoneOAMStackConfigFile = null;
+        this.intraZoneIPCStackConfigFile = null;
+        this.intraZoneOAMStackConfigFile = null;
+    }
+
+    public String getInterZoneIPCStackConfigFile() {
+        return interZoneIPCStackConfigFile;
+    }
+
+    public void setInterZoneIPCStackConfigFile(String interZoneIPCStackConfigFile) {
+        this.interZoneIPCStackConfigFile = interZoneIPCStackConfigFile;
+    }
+
+    public String getInterZoneOAMStackConfigFile() {
+        return interZoneOAMStackConfigFile;
+    }
+
+    public void setInterZoneOAMStackConfigFile(String interZoneOAMStackConfigFile) {
+        this.interZoneOAMStackConfigFile = interZoneOAMStackConfigFile;
     }
 
     public boolean isInternalTrafficEncrypted() {
@@ -99,6 +124,22 @@ public class ProcessingPlantTopologyNode extends TopologyNode implements Endpoin
         endpoints.add(endpointFDN);
     }
 
+    public String getIntraZoneIPCStackConfigFile() {
+        return intraZoneIPCStackConfigFile;
+    }
+
+    public void setIntraZoneIPCStackConfigFile(String intraZoneIPCStackConfigFile) {
+        this.intraZoneIPCStackConfigFile = intraZoneIPCStackConfigFile;
+    }
+
+    public String getIntraZoneOAMStackConfigFile() {
+        return intraZoneOAMStackConfigFile;
+    }
+
+    public void setIntraZoneOAMStackConfigFile(String intraZoneOAMStackConfigFile) {
+        this.intraZoneOAMStackConfigFile = intraZoneOAMStackConfigFile;
+    }
+
     @JsonIgnore
     public String getSubsystemName(){
         TopologyNodeFDN nodeFDN = getNodeFDN();
@@ -113,5 +154,34 @@ public class ProcessingPlantTopologyNode extends TopologyNode implements Endpoin
         TopologyNodeRDN subsystemRDN = nodeFDN.extractRDNForNodeType(TopologyNodeTypeEnum.CLUSTER_SERVICE);
         String subsystemName = subsystemRDN.getNodeName();
         return(subsystemName);
+    }
+
+    @Override
+    public String toString() {
+        return "ProcessingPlantTopologyNode{" +
+                "nodeRDN=" + getNodeRDN() +
+                ", nodeFDN=" + getNodeFDN() +
+                ", componentType=" + getComponentType() +
+                ", containingNodeFDN=" + getContainingNodeFDN() +
+                ", nodeKey='" + getNodeKey() + '\'' +
+                ", nodeFunctionFDN=" + getNodeFunctionFDN() +
+                ", concurrencyMode=" + getConcurrencyMode() +
+                ", resilienceMode=" + getResilienceMode() +
+                ", securityZone=" + getSecurityZone() +
+                ", kubernetesDeployed=" + isKubernetesDeployed() +
+                ", workshops=" + workshops +
+                ", endpoints=" + endpoints +
+                ", connections=" + connections +
+                ", nameSpace='" + nameSpace + '\'' +
+                ", interZoneIPCStackConfigFile='" + interZoneIPCStackConfigFile + '\'' +
+                ", interZoneOAMStackConfigFile='" + interZoneOAMStackConfigFile + '\'' +
+                ", intraZoneIPCStackConfigFile='" + intraZoneIPCStackConfigFile + '\'' +
+                ", intraZoneOAMStackConfigFile='" + intraZoneOAMStackConfigFile + '\'' +
+                ", defaultDNSName='" + defaultDNSName + '\'' +
+                ", internalTrafficEncrypted=" + internalTrafficEncrypted +
+                ", instanceCount=" + instanceCount +
+                ", subsystemName='" + getSubsystemName() + '\'' +
+                ", clusterServiceName='" + getClusterServiceName() + '\'' +
+                '}';
     }
 }

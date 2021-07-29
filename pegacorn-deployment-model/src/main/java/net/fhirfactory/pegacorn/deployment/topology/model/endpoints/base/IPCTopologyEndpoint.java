@@ -3,7 +3,7 @@ package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.valuesets.AdditionalParametersListEnum;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.TopologyEndpointTypeEnum;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.PetasosTopologyEndpointTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +14,7 @@ public class IPCTopologyEndpoint extends TopologyNode {
     private static final Logger LOG = LoggerFactory.getLogger(IPCTopologyEndpoint.class);
 
     private String name;
-    private TopologyEndpointTypeEnum endpointType;
+    private PetasosTopologyEndpointTypeEnum endpointType;
     private Map<AdditionalParametersListEnum, String> additionalParameters;
     private String connectedSystemName;
 
@@ -47,11 +47,11 @@ public class IPCTopologyEndpoint extends TopologyNode {
         this.name = name;
     }
 
-    public TopologyEndpointTypeEnum getEndpointType() {
+    public PetasosTopologyEndpointTypeEnum getEndpointType() {
         return endpointType;
     }
 
-    public void setEndpointType(TopologyEndpointTypeEnum endpointType) {
+    public void setEndpointType(PetasosTopologyEndpointTypeEnum endpointType) {
         this.endpointType = endpointType;
     }
 

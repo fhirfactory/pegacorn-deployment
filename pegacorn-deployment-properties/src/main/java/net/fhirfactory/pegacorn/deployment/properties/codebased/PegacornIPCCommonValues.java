@@ -45,6 +45,13 @@ public class PegacornIPCCommonValues {
         return("IntraZoneIPC");
     }
 
+    public String getInterZoneOAMGroupName(){
+        return("InterZoneOAM");
+    }
+    public String getIntraZoneOAMGroupName(){
+        return("IntraZoneOAM");
+    }
+
     public String getIntraZoneIPCReceiverRouteEndpointName(){
         return("direct:IntraZoneIPCReceiver");
     }

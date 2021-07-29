@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Mark A. Hunter
+ * Copyright (c) 2021 Mark A. Hunter (ACT Health)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,26 +21,25 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common;
 
-public enum TopologyEndpointTypeEnum {
-    JGROUPS_INTRAZONE_IPC_MESSAGING_SERVICE("endpoint.ipc_messaging.jgroups_intrazone"),
-    JGROUPS_INTERZONE_IPC_MESSAGING_SERVICE("endpoint.ipc_messaging.jgroups_interzone"),
-    MLLP_SERVER("endpoint.mllp_server"),
-    MLLP_CLIENT("endpoint.mllp_client"),
-    HTTP_API_SERVER("endpoint.http_api_server"),
-    HTTP_API_CLIENT("endpoint.http_api_client"),
-    SQL_SERVER("endpoint.sql_server"),
-    SQL_CLIENT("endpoint.sql_client"),
-    OTHER_API_SERVER("endpoint.other_type_of_server"),
-    OTHER_API_CLIENT("endpoint.other_type_of_client"),
-    OTHER("endpoint.other");
+public enum PetasosEndpointFunctionTypeEnum {
+    PETASOS_INTERACT_ENDPOINT("petasos_endpoint_function.interact", ".Interact"),
+    PETASOS_IPC_ENDPOINT("petasos_endpoint_function.IPC",".IPC"),
+    PETASOS_OAM_PUBSUB_ENDPOINT("petasos_endpoint_function.OAM_PUBSUB", ".OAM.PubSub"),
+    PETASOS_OAM_DISCOVERY_ENDPOINT("petasos_endpoint_function.OAM_DISCOVERY", ".OAM.Discovery");
 
-    private String endpointType;
+    private String functionType;
+    private String functionSuffix;
 
-    private TopologyEndpointTypeEnum(String endpointType){
-        this.endpointType = endpointType;
+    private PetasosEndpointFunctionTypeEnum(String functionType, String functionSuffix ){
+        this.functionType = functionType;
+        this.functionSuffix = functionSuffix;
     }
 
-    public String getEndpointType(){
-        return(this.endpointType);
+    public String getFunctionType(){
+        return(this.functionType);
+    }
+
+    public String getFunctionSuffix(){
+        return(this.functionSuffix);
     }
 }

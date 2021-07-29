@@ -23,13 +23,18 @@ package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.co
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Objects;
+
 public class DeploymentModeSegment {
     private boolean kubernetes;
     private Integer processingPlantReplicationCount;
     private boolean concurrent;
     private boolean usingInternalEncryption;
     private String deploymentConfig;
-
+    private String intraNetworkIPCStackConfigFile;
+    private String intraNetworkOAMStackConfigFile;
+    private String interNetworkIPCStackConfigFile;
+    private String interNetworkOAMStackConfigFile;
 
     public DeploymentModeSegment(){
         kubernetes = false;
@@ -37,6 +42,10 @@ public class DeploymentModeSegment {
         concurrent = false;
         usingInternalEncryption = false;
         deploymentConfig = null;
+        this.intraNetworkIPCStackConfigFile = null;
+        this.intraNetworkOAMStackConfigFile = null;
+        this.interNetworkIPCStackConfigFile = null;
+        this.interNetworkOAMStackConfigFile = null;
     }
 
     public void mergeOverrides(DeploymentModeSegment overrides){
@@ -46,9 +55,53 @@ public class DeploymentModeSegment {
         if(overrides.getProcessingPlantReplicationCount() > 0){
             this.processingPlantReplicationCount = overrides.getProcessingPlantReplicationCount();
         }
-        if(!StringUtils.isEmpty(deploymentConfig)){
+        if(!StringUtils.isEmpty(overrides.getDeploymentConfig())){
             this.deploymentConfig = overrides.getDeploymentConfig();
         }
+        if(!StringUtils.isEmpty(overrides.getInterNetworkIPCStackConfigFile())){
+            this.setInterNetworkIPCStackConfigFile(overrides.getInterNetworkIPCStackConfigFile());
+        }
+        if(!StringUtils.isEmpty(overrides.getInterNetworkOAMStackConfigFile())){
+            this.setInterNetworkOAMStackConfigFile(overrides.getInterNetworkOAMStackConfigFile());
+        }
+        if(!StringUtils.isEmpty(overrides.getIntraNetworkIPCStackConfigFile())){
+            this.setIntraNetworkIPCStackConfigFile(overrides.getIntraNetworkIPCStackConfigFile());
+        }
+        if(!StringUtils.isEmpty(overrides.getIntraNetworkOAMStackConfigFile())){
+            this.setIntraNetworkOAMStackConfigFile(overrides.getIntraNetworkOAMStackConfigFile());
+        }
+    }
+
+    public String getIntraNetworkIPCStackConfigFile() {
+        return intraNetworkIPCStackConfigFile;
+    }
+
+    public void setIntraNetworkIPCStackConfigFile(String intraNetworkIPCStackConfigFile) {
+        this.intraNetworkIPCStackConfigFile = intraNetworkIPCStackConfigFile;
+    }
+
+    public String getIntraNetworkOAMStackConfigFile() {
+        return intraNetworkOAMStackConfigFile;
+    }
+
+    public void setIntraNetworkOAMStackConfigFile(String intraNetworkOAMStackConfigFile) {
+        this.intraNetworkOAMStackConfigFile = intraNetworkOAMStackConfigFile;
+    }
+
+    public String getInterNetworkIPCStackConfigFile() {
+        return interNetworkIPCStackConfigFile;
+    }
+
+    public void setInterNetworkIPCStackConfigFile(String interNetworkIPCStackConfigFile) {
+        this.interNetworkIPCStackConfigFile = interNetworkIPCStackConfigFile;
+    }
+
+    public String getInterNetworkOAMStackConfigFile() {
+        return interNetworkOAMStackConfigFile;
+    }
+
+    public void setInterNetworkOAMStackConfigFile(String interNetworkOAMStackConfigFile) {
+        this.interNetworkOAMStackConfigFile = interNetworkOAMStackConfigFile;
     }
 
     public String getDeploymentConfig() {
@@ -92,6 +145,19 @@ public class DeploymentModeSegment {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DeploymentModeSegment)) return false;
+        DeploymentModeSegment that = (DeploymentModeSegment) o;
+        return isKubernetes() == that.isKubernetes() && isConcurrent() == that.isConcurrent() && isUsingInternalEncryption() == that.isUsingInternalEncryption() && Objects.equals(getProcessingPlantReplicationCount(), that.getProcessingPlantReplicationCount()) && Objects.equals(getDeploymentConfig(), that.getDeploymentConfig()) && Objects.equals(getIntraNetworkIPCStackConfigFile(), that.getIntraNetworkIPCStackConfigFile()) && Objects.equals(getIntraNetworkOAMStackConfigFile(), that.getIntraNetworkOAMStackConfigFile()) && Objects.equals(getInterNetworkIPCStackConfigFile(), that.getInterNetworkIPCStackConfigFile()) && Objects.equals(getInterNetworkOAMStackConfigFile(), that.getInterNetworkOAMStackConfigFile());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(isKubernetes(), getProcessingPlantReplicationCount(), isConcurrent(), isUsingInternalEncryption(), getDeploymentConfig(), getIntraNetworkIPCStackConfigFile(), getIntraNetworkOAMStackConfigFile(), getInterNetworkIPCStackConfigFile(), getInterNetworkOAMStackConfigFile());
+    }
+
+    @Override
     public String toString() {
         return "DeploymentModeSegment{" +
                 "kubernetes=" + kubernetes +
@@ -99,6 +165,10 @@ public class DeploymentModeSegment {
                 ", concurrent=" + concurrent +
                 ", usingInternalEncryption=" + usingInternalEncryption +
                 ", deploymentConfig='" + deploymentConfig + '\'' +
+                ", intraNetworkIPCStackConfigFile='" + intraNetworkIPCStackConfigFile + '\'' +
+                ", intraNetworkOAMStackConfigFile='" + intraNetworkOAMStackConfigFile + '\'' +
+                ", interNetworkIPCStackConfigFile='" + interNetworkIPCStackConfigFile + '\'' +
+                ", interNetworkOAMStackConfigFile='" + interNetworkOAMStackConfigFile + '\'' +
                 '}';
     }
 }

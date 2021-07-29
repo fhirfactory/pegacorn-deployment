@@ -21,6 +21,8 @@
  */
 package net.fhirfactory.pegacorn.deployment.names.functionality.base;
 
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.PetasosTopologyEndpointTypeEnum;
+
 public abstract class PegacornCommonInterfaceNamesBase {
 
     public String getFunctionNamePetasosReplication(){return("PetasosReplication");}
@@ -34,8 +36,10 @@ public abstract class PegacornCommonInterfaceNamesBase {
     public String getFunctionNameJolokia(){return("KubernetesSystemJolokia");}
     public String getFunctionNameKubeReadiness(){return("KubernetesSystemReadiness");}
     public String getFunctionNameKubeLiveliness(){return("KubernetesSystemLiveliness");}
-    public String getFunctionNameIntraZoneJGroupsIPC(){return("intrazone-jgroups-ipc");}
-    public String getFunctionNameInterZoneJGroupsIPC(){return("interzone-jgroups-ipc");}
+    public String getFunctionNameIntraZoneJGroupsIPC(){return("intra-zone-ipc");}
+    public String getFunctionNameInterZoneJGroupsIPC(){return("inter-zone-ipc");}
+    public String getFunctionNameIntraZoneJGroupsOAM(){return("inter-zone-oam");}
+    public String getFunctionNameInterZoneJGroupsOAM(){return("inter-zone-oam");}
     public String getFunctionNameEdgeReceive(){return("EdgeReceive");}
     public String getFunctionNameEdgeForward(){return("EdgeForward");}
     public String getFunctionNameEdgeAnswer(){return("EdgeAnswer");}

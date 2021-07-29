@@ -27,7 +27,7 @@ import net.fhirfactory.pegacorn.deployment.names.functionality.subsystem.Communi
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes.DBaaSSubSystemPropertyFile;
 import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.common.PegacornTopologyFactoryBase;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge.StandardEdgeIPCEndpoint;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.TopologyEndpointTypeEnum;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.PetasosTopologyEndpointTypeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.ProcessingPlantTopologyNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +52,7 @@ public abstract class CommunicateRoomServerDBaaSTopologyFactory extends Pegacorn
         roomServerPostgreSQLServer.setaServer(true);
         roomServerPostgreSQLServer.setEncrypted(propertyFile.getDeploymentMode().isUsingInternalEncryption());
         roomServerPostgreSQLServer.setPortType("SQL");
-        roomServerPostgreSQLServer.setEndpointType(TopologyEndpointTypeEnum.SQL_SERVER);
+        roomServerPostgreSQLServer.setEndpointType(PetasosTopologyEndpointTypeEnum.SQL_SERVER);
         TopologyNodeRDN appServerRDN = createNodeRDN(appServicesName, propertyFile.getSubsystemInstant().getProcessingPlantVersion(), TopologyNodeTypeEnum.ENDPOINT);
         roomServerPostgreSQLServer.constructFDN(processingPlantNode.getNodeFDN(),appServerRDN);
         roomServerPostgreSQLServer.constructFunctionFDN(processingPlantNode.getNodeFunctionFDN(),appServerRDN);

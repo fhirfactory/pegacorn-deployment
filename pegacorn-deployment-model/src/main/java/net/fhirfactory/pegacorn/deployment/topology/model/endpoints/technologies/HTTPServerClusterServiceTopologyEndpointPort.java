@@ -19,14 +19,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common;
+package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.technologies;
 
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.IPCServerTopologyEndpoint;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge.StandardEdgeIPCEndpoint;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.IPCClusteredServerTopologyEndpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class HTTPProcessingPlantTopologyEndpointPort extends IPCServerTopologyEndpoint {
+public class HTTPServerClusterServiceTopologyEndpointPort extends IPCClusteredServerTopologyEndpoint {
+    private static final Logger LOG = LoggerFactory.getLogger(HTTPServerClusterServiceTopologyEndpointPort.class);
+    @Override
+    protected Logger getLogger() {
+        return (LOG);
+    }
+
     private String basePath;
 
     public String getBasePath() {
@@ -35,11 +40,5 @@ public class HTTPProcessingPlantTopologyEndpointPort extends IPCServerTopologyEn
 
     public void setBasePath(String basePath) {
         this.basePath = basePath;
-    }
-
-    private static final Logger LOG = LoggerFactory.getLogger(HTTPProcessingPlantTopologyEndpointPort.class);
-    @Override
-    protected Logger getLogger() {
-        return (LOG);
     }
 }

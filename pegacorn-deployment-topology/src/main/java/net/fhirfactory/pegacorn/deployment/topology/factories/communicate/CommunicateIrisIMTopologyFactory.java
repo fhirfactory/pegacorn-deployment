@@ -30,9 +30,9 @@ import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.com
 import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.common.PetasosEnabledSubsystemTopologyFactory;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCInterface;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCInterfaceDefinition;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.HTTPProcessingPlantTopologyEndpointPort;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.HTTPServerClusterServiceTopologyEndpointPort;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.TopologyEndpointTypeEnum;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.technologies.HTTPProcessingPlantTopologyEndpointPort;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.technologies.HTTPServerClusterServiceTopologyEndpointPort;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.PetasosTopologyEndpointTypeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.common.EndpointProviderInterface;
 
 import javax.inject.Inject;
@@ -62,7 +62,7 @@ public abstract class CommunicateIrisIMTopologyFactory extends PetasosEnabledSub
         matrixApplicationServicesServer.setNodeRDN(nodeRDN);
         matrixApplicationServicesServer.constructFDN(endpointProvider.getNodeFDN(),nodeRDN);
         matrixApplicationServicesServer.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(),nodeRDN);
-        matrixApplicationServicesServer.setEndpointType(TopologyEndpointTypeEnum.HTTP_API_SERVER);
+        matrixApplicationServicesServer.setEndpointType(PetasosTopologyEndpointTypeEnum.HTTP_API_SERVER);
         matrixApplicationServicesServer.setaServer(true);
         if(endpointProvider.getComponentType().equals(TopologyNodeTypeEnum.CLUSTER_SERVICE)) {
             matrixApplicationServicesServer.setHostDNSName(getCommunicateIrisPropertyFile().getInteractMatrixApplicationServicesServer().getServiceDNSEntry());
@@ -102,7 +102,7 @@ public abstract class CommunicateIrisIMTopologyFactory extends PetasosEnabledSub
         matrixClientServicesAPIClient.setNodeRDN(nodeRDN);
         matrixClientServicesAPIClient.constructFDN(endpointProvider.getNodeFDN(),nodeRDN);
         matrixClientServicesAPIClient.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(),nodeRDN);
-        matrixClientServicesAPIClient.setEndpointType(TopologyEndpointTypeEnum.HTTP_API_CLIENT);
+        matrixClientServicesAPIClient.setEndpointType(PetasosTopologyEndpointTypeEnum.HTTP_API_CLIENT);
         matrixClientServicesAPIClient.setaServer(false);
         matrixClientServicesAPIClient.setComponentType(TopologyNodeTypeEnum.ENDPOINT);
         matrixClientServicesAPIClient.setEncrypted(getCommunicateIrisPropertyFile().getDeploymentMode().isUsingInternalEncryption());

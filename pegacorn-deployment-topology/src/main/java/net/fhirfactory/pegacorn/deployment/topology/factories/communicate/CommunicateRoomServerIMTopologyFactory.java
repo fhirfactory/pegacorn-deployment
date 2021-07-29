@@ -28,8 +28,8 @@ import net.fhirfactory.pegacorn.deployment.names.functionality.subsystem.Communi
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.communicate.roomserver.im.CommunicateRoomServerIMPropertyFile;
 import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.common.PetasosEnabledSubsystemTopologyFactory;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.IPCClusteredServerTopologyEndpoint;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.HTTPProcessingPlantTopologyEndpointPort;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.TopologyEndpointTypeEnum;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.technologies.HTTPProcessingPlantTopologyEndpointPort;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.PetasosTopologyEndpointTypeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.ClusterServiceTopologyNode;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.ProcessingPlantTopologyNode;
 import org.slf4j.Logger;
@@ -59,7 +59,7 @@ public abstract class CommunicateRoomServerIMTopologyFactory extends PetasosEnab
         matrixClientServicesServer.constructFDN(serviceNode.getNodeFDN(),serverRDN);
         matrixClientServicesServer.constructFunctionFDN(serviceNode.getNodeFunctionFDN(),serverRDN);
         matrixClientServicesServer.setNodeRDN(serverRDN);
-        matrixClientServicesServer.setEndpointType(TopologyEndpointTypeEnum.HTTP_API_SERVER);
+        matrixClientServicesServer.setEndpointType(PetasosTopologyEndpointTypeEnum.HTTP_API_SERVER);
         matrixClientServicesServer.setaServer(true);
         matrixClientServicesServer.setHostDNSName(propertyFile.getMatrixClientServicesAPI().getServiceDNSEntry());
         matrixClientServicesServer.setPortType("HTTPS");
@@ -79,7 +79,7 @@ public abstract class CommunicateRoomServerIMTopologyFactory extends PetasosEnab
         matrixApplicationServicesClient.constructFDN(processingPlantNode.getNodeFDN(),clientRDN);
         matrixApplicationServicesClient.constructFunctionFDN(processingPlantNode.getNodeFunctionFDN(),clientRDN);
         matrixApplicationServicesClient.setNodeRDN(clientRDN);
-        matrixApplicationServicesClient.setEndpointType(TopologyEndpointTypeEnum.HTTP_API_CLIENT);
+        matrixApplicationServicesClient.setEndpointType(PetasosTopologyEndpointTypeEnum.HTTP_API_CLIENT);
         matrixApplicationServicesClient.setaServer(false);
         matrixApplicationServicesClient.setEncrypted(propertyFile.getDeploymentMode().isUsingInternalEncryption());
         processingPlantNode.getEndpoints().add(matrixApplicationServicesClient.getNodeFDN());
@@ -89,7 +89,7 @@ public abstract class CommunicateRoomServerIMTopologyFactory extends PetasosEnab
         matrixClientServicesServer.setaServer(true);
         matrixClientServicesServer.setEncrypted(propertyFile.getDeploymentMode().isUsingInternalEncryption());
         matrixClientServicesServer.setPortType("HTTPS");
-        matrixClientServicesServer.setEndpointType(TopologyEndpointTypeEnum.HTTP_API_SERVER);
+        matrixClientServicesServer.setEndpointType(PetasosTopologyEndpointTypeEnum.HTTP_API_SERVER);
         TopologyNodeRDN serverRDN = createNodeRDN(appServicesName, propertyFile.getSubsystemInstant().getProcessingPlantVersion(), TopologyNodeTypeEnum.ENDPOINT);
         matrixClientServicesServer.constructFDN(processingPlantNode.getNodeFDN(),clientRDN);
         matrixClientServicesServer.constructFunctionFDN(processingPlantNode.getNodeFunctionFDN(),clientRDN);

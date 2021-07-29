@@ -10,10 +10,10 @@ import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.com
 import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCInterface;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCInterfaceDefinition;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.valuesets.NetworkSecurityZoneEnum;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.HTTPServerClusterServiceTopologyEndpointPort;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.technologies.HTTPServerClusterServiceTopologyEndpointPort;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge.InitialHostSpecification;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge.StandardEdgeIPCEndpoint;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.TopologyEndpointTypeEnum;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.PetasosTopologyEndpointTypeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.mode.ResilienceModeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.common.EndpointProviderInterface;
 import net.fhirfactory.pegacorn.internals.PegacornReferenceProperties;
@@ -49,7 +49,7 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
         edgeAnswerPort.setName(getInterfaceNames().getFunctionNameEdgeAnswer());
         edgeAnswerPort.constructFDN(endpointProvider.getNodeFDN(), nodeRDN);
         edgeAnswerPort.setPortType(port.getPortType());
-        edgeAnswerPort.setEndpointType(TopologyEndpointTypeEnum.HTTP_API_SERVER);
+        edgeAnswerPort.setEndpointType(PetasosTopologyEndpointTypeEnum.HTTP_API_SERVER);
         edgeAnswerPort.setPortValue(port.getPortValue());
         edgeAnswerPort.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
         edgeAnswerPort.setBasePath(pegacornReferenceProperties.getPegacornInternalFhirResourceR4Path());
@@ -79,7 +79,7 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
         interZoneIPC.constructFDN(endpointProvider.getNodeFDN(), nodeRDN);
         interZoneIPC.setPortType(port.getPortType());
         interZoneIPC.setHostDNSName(port.getHostDNSEntry());
-        interZoneIPC.setEndpointType(TopologyEndpointTypeEnum.JGROUPS_INTERZONE_IPC_MESSAGING_SERVICE);
+        interZoneIPC.setEndpointType(PetasosTopologyEndpointTypeEnum.JGROUPS_INTERZONE_SERVICE);
         interZoneIPC.setSecurityZone(NetworkSecurityZoneEnum.fromSecurityZoneString(getPropertyFile().getDeploymentZone().getSecurityZoneName()));
         interZoneIPC.setPortValue(port.getPortValue());
         interZoneIPC.setNameSpace(getPropertyFile().getDeploymentZone().getNameSpace());
@@ -116,6 +116,60 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
         getLogger().debug(".addInterZoneIPCJGroupsPort(): Exit, endpoint added");
     }
 
+    protected void addInterZoneOAMJGroupsPort( EndpointProviderInterface endpointProvider){
+        getLogger().debug(".addInterZoneOAMJGroupsPort(): Entry");
+        PetasosEnabledSubsystemPropertyFile petasosEnabledSubsystemPropertyFile = (PetasosEnabledSubsystemPropertyFile)getPropertyFile();
+        StandardEdgeIPCEndpoint interZoneOAM = new StandardEdgeIPCEndpoint();
+        JGroupsIPCServerPortSegment port = petasosEnabledSubsystemPropertyFile.getInterZoneOAM();
+        if(port == null){
+            getLogger().debug(".addInterZoneOAMJGroupsPort(): Exit, no port to add");
+            return;
+        }
+        interZoneOAM.setEncrypted(petasosEnabledSubsystemPropertyFile.getDeploymentMode().isUsingInternalEncryption());
+        String name = getInterfaceNames().getEndpointServerName(getInterfaceNames().getFunctionNameInterZoneJGroupsIPC());
+        TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), TopologyNodeTypeEnum.ENDPOINT);
+        interZoneOAM.setName(getInterfaceNames().getFunctionNameInterZoneJGroupsIPC());
+        interZoneOAM.setNodeRDN(nodeRDN);
+        interZoneOAM.constructFDN(endpointProvider.getNodeFDN(), nodeRDN);
+        interZoneOAM.setPortType(port.getPortType());
+        interZoneOAM.setHostDNSName(port.getHostDNSEntry());
+        interZoneOAM.setEndpointType(PetasosTopologyEndpointTypeEnum.JGROUPS_INTERZONE_SERVICE);
+        interZoneOAM.setSecurityZone(NetworkSecurityZoneEnum.fromSecurityZoneString(getPropertyFile().getDeploymentZone().getSecurityZoneName()));
+        interZoneOAM.setPortValue(port.getPortValue());
+        interZoneOAM.setNameSpace(getPropertyFile().getDeploymentZone().getNameSpace());
+        interZoneOAM.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
+        for(JGroupsInitialHostSegment currentInitialHostSegment: port.getInitialHosts()) {
+            getLogger().trace("addInterZoneOAMJGroupsPort(): Adding initialHost->{}", currentInitialHostSegment);
+            InitialHostSpecification currentInitialHostSpec = new InitialHostSpecification();
+            currentInitialHostSpec.setHostName(currentInitialHostSegment.getHostName());
+            currentInitialHostSpec.setPort(currentInitialHostSegment.getPortNumber());
+            interZoneOAM.getInitialHosts().add(currentInitialHostSpec);
+        }
+        interZoneOAM.setComponentType(TopologyNodeTypeEnum.ENDPOINT);
+        interZoneOAM.setaServer(true);
+        interZoneOAM.setContainingNodeFDN(endpointProvider.getNodeFDN());
+        for(InterfaceDefinitionSegment currentSegment: port.getSupportedInterfaceProfiles()) {
+            IPCInterface currentInterface = new IPCInterface();
+            IPCInterfaceDefinition currentInterfaceDefinition = new IPCInterfaceDefinition();
+            currentInterfaceDefinition.setInterfaceFormalName(currentSegment.getInterfaceDefinitionName());
+            currentInterfaceDefinition.setInterfaceFormalVersion(currentSegment.getInterfaceDefinitionVersion());
+            currentInterface.getSupportedInterfaceDefinitions().add(currentInterfaceDefinition);
+            currentInterface.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_KUBERNETES_MULTISITE_CLUSTERED);
+            currentInterface.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_KUBERNETES_MULTISITE);
+            currentInterface.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_KUBERNETES_STANDALONE);
+            currentInterface.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_KUBERNETES_CLUSTERED);
+            currentInterface.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_MULTISITE);
+            currentInterface.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_STANDALONE);
+            currentInterface.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_CLUSTERED);
+            currentInterface.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_MULTISITE_CLUSTERED);
+            interZoneOAM.getSupportedInterfaceSet().add(currentInterface);
+        }
+        endpointProvider.addEndpoint(interZoneOAM.getNodeFDN());
+        getLogger().trace(".addInterZoneOAMJGroupsPort(): Add the InterZone JGroups IPC Port to the Topology Cache");
+        getTopologyIM().addTopologyNode(endpointProvider.getNodeFDN(), interZoneOAM);
+        getLogger().debug(".addInterZoneOAMJGroupsPort(): Exit, endpoint added");
+    }
+
     protected void addIntraZoneIPCJGroupsPort( EndpointProviderInterface endpointProvider){
         getLogger().debug(".addInterZoneIPCJGroupsPort(): Entry");
         PetasosEnabledSubsystemPropertyFile petasosEnabledSubsystemPropertyFile = (PetasosEnabledSubsystemPropertyFile)getPropertyFile();
@@ -133,7 +187,7 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
         intraZoneIPC.setHostDNSName(port.getHostDNSEntry());
         intraZoneIPC.constructFDN(endpointProvider.getNodeFDN(), nodeRDN);
         intraZoneIPC.setPortType(port.getPortType());
-        intraZoneIPC.setEndpointType(TopologyEndpointTypeEnum.JGROUPS_INTRAZONE_IPC_MESSAGING_SERVICE);
+        intraZoneIPC.setEndpointType(PetasosTopologyEndpointTypeEnum.JGROUPS_INTRAZONE_SERVICE);
         intraZoneIPC.setPortValue(port.getPortValue());
         intraZoneIPC.setSecurityZone(NetworkSecurityZoneEnum.fromSecurityZoneString(getPropertyFile().getDeploymentZone().getSecurityZoneName()));
         intraZoneIPC.setNameSpace(getPropertyFile().getDeploymentZone().getNameSpace());
@@ -163,6 +217,55 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
         getLogger().trace(".addInterZoneIPCJGroupsPort(): Add the IntraZone JGroups IPC Port to the Topology Cache");
         getTopologyIM().addTopologyNode(endpointProvider.getNodeFDN(), intraZoneIPC);
         getLogger().debug(".addInterZoneIPCJGroupsPort(): Exit, endpoint added");
+    }
+
+    protected void addIntraZoneOAMJGroupsPort( EndpointProviderInterface endpointProvider){
+        getLogger().debug(".addIntraZoneOAMJGroupsPort(): Entry");
+        PetasosEnabledSubsystemPropertyFile petasosEnabledSubsystemPropertyFile = (PetasosEnabledSubsystemPropertyFile)getPropertyFile();
+        StandardEdgeIPCEndpoint intraZoneOAM = new StandardEdgeIPCEndpoint();
+        JGroupsIPCServerPortSegment port = petasosEnabledSubsystemPropertyFile.getIntraZoneOAM();
+        if(port == null){
+            getLogger().debug(".addIntraZoneOAMJGroupsPort(): Exit, no port to add");
+            return;
+        }
+        intraZoneOAM.setEncrypted(petasosEnabledSubsystemPropertyFile.getDeploymentMode().isUsingInternalEncryption());
+        String name = getInterfaceNames().getEndpointServerName(getInterfaceNames().getFunctionNameIntraZoneJGroupsIPC());
+        TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), TopologyNodeTypeEnum.ENDPOINT);
+        intraZoneOAM.setName(getInterfaceNames().getFunctionNameIntraZoneJGroupsIPC());
+        intraZoneOAM.setNodeRDN(nodeRDN);
+        intraZoneOAM.setHostDNSName(port.getHostDNSEntry());
+        intraZoneOAM.constructFDN(endpointProvider.getNodeFDN(), nodeRDN);
+        intraZoneOAM.setPortType(port.getPortType());
+        intraZoneOAM.setEndpointType(PetasosTopologyEndpointTypeEnum.JGROUPS_INTRAZONE_SERVICE);
+        intraZoneOAM.setPortValue(port.getPortValue());
+        intraZoneOAM.setSecurityZone(NetworkSecurityZoneEnum.fromSecurityZoneString(getPropertyFile().getDeploymentZone().getSecurityZoneName()));
+        intraZoneOAM.setNameSpace(getPropertyFile().getDeploymentZone().getNameSpace());
+        intraZoneOAM.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
+        for(JGroupsInitialHostSegment currentInitialHostSegment: port.getInitialHosts()) {
+            InitialHostSpecification currentInitialHostSpec = new InitialHostSpecification();
+            currentInitialHostSpec.setHostName(currentInitialHostSegment.getHostName());
+            currentInitialHostSpec.setPort(currentInitialHostSegment.getPortNumber());
+            intraZoneOAM.getInitialHosts().add(currentInitialHostSpec);
+        }
+        intraZoneOAM.setComponentType(TopologyNodeTypeEnum.ENDPOINT);
+        intraZoneOAM.setaServer(true);
+        intraZoneOAM.setContainingNodeFDN(endpointProvider.getNodeFDN());
+        for(InterfaceDefinitionSegment currentSegment: port.getSupportedInterfaceProfiles()) {
+            IPCInterface currentInterface = new IPCInterface();
+            IPCInterfaceDefinition currentInterfaceDefinition = new IPCInterfaceDefinition();
+            currentInterfaceDefinition.setInterfaceFormalName(currentSegment.getInterfaceDefinitionName());
+            currentInterfaceDefinition.setInterfaceFormalVersion(currentSegment.getInterfaceDefinitionVersion());
+            currentInterface.getSupportedInterfaceDefinitions().add(currentInterfaceDefinition);
+            currentInterface.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_KUBERNETES_MULTISITE_CLUSTERED);
+            currentInterface.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_KUBERNETES_MULTISITE);
+            currentInterface.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_KUBERNETES_STANDALONE);
+            currentInterface.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_KUBERNETES_CLUSTERED);
+            intraZoneOAM.getSupportedInterfaceSet().add(currentInterface);
+        }
+        endpointProvider.addEndpoint(intraZoneOAM.getNodeFDN());
+        getLogger().trace(".addIntraZoneOAMJGroupsPort(): Add the IntraZone JGroups IPC Port to the Topology Cache");
+        getTopologyIM().addTopologyNode(endpointProvider.getNodeFDN(), intraZoneOAM);
+        getLogger().debug(".addIntraZoneOAMJGroupsPort(): Exit, endpoint added");
     }
 
     //
