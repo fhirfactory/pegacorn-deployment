@@ -36,7 +36,7 @@ public class PetasosEndpoint implements Serializable {
     private Endpoint representativeFHIREndpoint;
     private PetasosEndpointStatusEnum endpointStatus;
     private PetasosEndpointFunctionTypeEnum interfaceFunction;
-    private PetasosEndpointScopeEnum endpointScope;
+    private PetasosEndpointChannelScopeEnum endpointScope;
 
     public PetasosEndpoint(){
         this.endpointID = null;
@@ -58,11 +58,11 @@ public class PetasosEndpoint implements Serializable {
         this.setEndpointScope(ori.getEndpointScope());
     }
 
-    public PetasosEndpointScopeEnum getEndpointScope() {
+    public PetasosEndpointChannelScopeEnum getEndpointScope() {
         return endpointScope;
     }
 
-    public void setEndpointScope(PetasosEndpointScopeEnum endpointScope) {
+    public void setEndpointScope(PetasosEndpointChannelScopeEnum endpointScope) {
         this.endpointScope = endpointScope;
     }
 

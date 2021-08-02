@@ -21,18 +21,29 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common;
 
-public enum PetasosEndpointScopeEnum {
-    ENDPOINT_SCOPE_INTERSITE("endpoint.scope.intersite"),
-    ENDPOINT_SCOPE_INTERZONE("endpoint.scope.interzone"),
-    ENDPOINT_SCOPE_INTRAZONE("endpoint.scope.intrazone");
+public enum PetasosEndpointTopologyTypeEnum {
+    JGROUPS_INTRAZONE_SERVICE("endpoint.ipc_messaging.jgroups_intrazone" ),
+    JGROUPS_INTERZONE_SERVICE("endpoint.ipc_messaging.jgroups_interzone"),
+    JGROUPS_INTERSITE_SERVICE("endpoint.ipc_messaging.jgroups_intersite"),
 
-    private String endpointScope;
+    MLLP_SERVER("endpoint.mllp_server"),
+    MLLP_CLIENT("endpoint.mllp_client"),
+    HTTP_API_SERVER("endpoint.http_api_server"),
+    HTTP_API_CLIENT("endpoint.http_api_client"),
+    SQL_SERVER("endpoint.sql_server"),
+    SQL_CLIENT("endpoint.sql_client"),
+    OTHER_API_SERVER("endpoint.other_type_of_server"),
+    OTHER_API_CLIENT("endpoint.other_type_of_client"),
+    OTHER("endpoint.other");
 
-    private PetasosEndpointScopeEnum(String scope){
-        this.endpointScope = scope;
+    private String endpointType;
+
+    private PetasosEndpointTopologyTypeEnum(String endpointType){
+        this.endpointType = endpointType;
     }
 
-    public String getEndpointScope() {
-        return endpointScope;
+    public String getEndpointType(){
+        return(this.endpointType);
     }
+
 }
