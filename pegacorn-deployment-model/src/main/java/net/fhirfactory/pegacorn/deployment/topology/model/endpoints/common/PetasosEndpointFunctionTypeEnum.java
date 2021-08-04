@@ -22,24 +22,24 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common;
 
 public enum PetasosEndpointFunctionTypeEnum {
-    PETASOS_INTERACT_ENDPOINT("petasos_endpoint_function.interact", ".Interact"),
-    PETASOS_IPC_ENDPOINT("petasos_endpoint_function.IPC",".IPC"),
-    PETASOS_OAM_PUBSUB_ENDPOINT("petasos_endpoint_function.OAM_PUBSUB", ".OAM.PubSub"),
-    PETASOS_OAM_DISCOVERY_ENDPOINT("petasos_endpoint_function.OAM_DISCOVERY", ".OAM.Discovery");
+    PETASOS_INTERACT_ENDPOINT("petasos_endpoint_function.interact", "Interact"),
+    PETASOS_IPC_ENDPOINT("petasos_endpoint_function.IPC","IPC"),
+    PETASOS_OAM_PUBSUB_ENDPOINT("petasos_endpoint_function.OAM_PUBSUB", "OAM.PubSub"),
+    PETASOS_OAM_DISCOVERY_ENDPOINT("petasos_endpoint_function.OAM_DISCOVERY", "OAM.Discovery");
 
     private String functionType;
-    private String functionSuffix;
+    private String functionName;
 
-    private PetasosEndpointFunctionTypeEnum(String functionType, String functionSuffix ){
+    private PetasosEndpointFunctionTypeEnum(String functionType, String functionName ){
         this.functionType = functionType;
-        this.functionSuffix = functionSuffix;
+        this.functionName = functionName;
     }
 
     public String getFunctionType(){
         return(this.functionType);
     }
 
-    public String getFunctionSuffix(){
-        return(this.functionSuffix);
+    public String getFunctionName(){
+        return(this.functionName);
     }
 }

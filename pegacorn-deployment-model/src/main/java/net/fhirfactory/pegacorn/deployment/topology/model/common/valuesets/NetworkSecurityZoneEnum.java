@@ -22,24 +22,39 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.common.valuesets;
 
 public enum NetworkSecurityZoneEnum {
-    ZONE_PRIVATE_NETWORK("private-network"),
-    ZONE_PRIVATE_DMZ("private-dmz"),
-    ZONE_PUBLIC_DMZ("public-dmz"),
-    ZONE_PUBLIC_INTERNET("public-internet");
+    ZONE_PRIVATE_NETWORK("private-network", "PrivateNetwork"),
+    ZONE_PRIVATE_DMZ("private-dmz", "PrivateDMZ"),
+    ZONE_PUBLIC_DMZ("public-dmz", "PublicDMZ"),
+    ZONE_PUBLIC_INTERNET("public-internet", "Internet");
 
     private String networkSecurityZone;
+    private String networkSecurityZoneCamelCase;
 
-    private NetworkSecurityZoneEnum(String zone) {
+    private NetworkSecurityZoneEnum(String zone, String camelCase) {
         this.networkSecurityZone = zone;
+        this.networkSecurityZoneCamelCase = camelCase;
     }
 
     public String getNetworkSecurityZone(){
         return(this.networkSecurityZone);
     }
 
-    public static NetworkSecurityZoneEnum fromSecurityZoneString(String userTypeString){
+    public String getNetworkSecurityZoneCamelCase(){
+        return(networkSecurityZoneCamelCase);
+    }
+
+    public static NetworkSecurityZoneEnum fromSecurityZoneString(String zoneString){
         for (NetworkSecurityZoneEnum b : NetworkSecurityZoneEnum.values()) {
-            if (b.getNetworkSecurityZone().equalsIgnoreCase(userTypeString)) {
+            if (b.getNetworkSecurityZone().equalsIgnoreCase(zoneString)) {
+                return b;
+            }
+        }
+        return null;
+    }
+
+    public static NetworkSecurityZoneEnum fromSecurityZoneCamelCaseString(String zoneCamelCaseString){
+        for (NetworkSecurityZoneEnum b : NetworkSecurityZoneEnum.values()) {
+            if (b.getNetworkSecurityZoneCamelCase().equalsIgnoreCase(zoneCamelCaseString)) {
                 return b;
             }
         }

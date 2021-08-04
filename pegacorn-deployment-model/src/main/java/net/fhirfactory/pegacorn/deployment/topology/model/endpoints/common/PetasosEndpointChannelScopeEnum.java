@@ -22,23 +22,23 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common;
 
 public enum PetasosEndpointChannelScopeEnum {
-    ENDPOINT_CHANNEL_SCOPE_INTERSITE("endpoint.channel_scope.intersite", ".InterSite"),
-    ENDPOINT_CHANNEL_SCOPE_INTERZONE("endpoint.channel_scope.interzone", ".IntraZone"),
-    ENDPOINT_CHANNEL_SCOPE_INTRAZONE("endpoint.channel_scope.intrazone", ".InterZone");
+    ENDPOINT_CHANNEL_SCOPE_INTERSITE("endpoint.channel_scope.intersite", "InterSite"),
+    ENDPOINT_CHANNEL_SCOPE_INTERZONE("endpoint.channel_scope.interzone", "InterZone"),
+    ENDPOINT_CHANNEL_SCOPE_INTRAZONE("endpoint.channel_scope.intrazone", "IntraZone");
 
     private String endpointScope;
-    private String endpointNamePrefix;
+    private String endpointScopeName;
 
-    private PetasosEndpointChannelScopeEnum(String scope, String namePrefix) {
+    private PetasosEndpointChannelScopeEnum(String scope, String scopeName) {
         this.endpointScope = scope;
-        this.endpointNamePrefix = name();
+        this.endpointScopeName = scopeName;
     }
 
     public String getEndpointScope() {
         return (this.endpointScope);
     }
 
-    public String getEndpointNamePrefix(){
-        return(this.endpointNamePrefix);
+    public String getEndpointScopeName(){
+        return(this.endpointScopeName);
     }
 }

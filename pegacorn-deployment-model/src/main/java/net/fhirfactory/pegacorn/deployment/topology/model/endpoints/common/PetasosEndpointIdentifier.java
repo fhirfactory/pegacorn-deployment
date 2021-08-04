@@ -28,7 +28,7 @@ import java.util.Objects;
 
 public class PetasosEndpointIdentifier implements Serializable {
     private String endpointName;
-    private String endpointAddressName;
+    private String endpointChannelName;
     private NetworkSecurityZoneEnum endpointZone;
     private String endpointGroup;
     private String endpointSite;
@@ -37,7 +37,7 @@ public class PetasosEndpointIdentifier implements Serializable {
     public PetasosEndpointIdentifier(){
         this.endpointName = null;
         this.endpointGroup = null;
-        this.endpointAddressName = null;
+        this.endpointChannelName = null;
         this.endpointSite = null;
         this.endpointZone = null;
         this.endpointDetailedAddressName = null;
@@ -51,12 +51,12 @@ public class PetasosEndpointIdentifier implements Serializable {
         this.endpointName = endpointName;
     }
 
-    public String getEndpointAddressName() {
-        return endpointAddressName;
+    public String getEndpointChannelName() {
+        return endpointChannelName;
     }
 
-    public void setEndpointAddressName(String endpointAddressName) {
-        this.endpointAddressName = endpointAddressName;
+    public void setEndpointChannelName(String endpointChannelName) {
+        this.endpointChannelName = endpointChannelName;
     }
 
     public NetworkSecurityZoneEnum getEndpointZone() {
@@ -95,7 +95,7 @@ public class PetasosEndpointIdentifier implements Serializable {
     public String toString() {
         return "PetasosEndpointIdentifier{" +
                 "endpointName='" + endpointName + '\'' +
-                ", endpointAddressName='" + endpointAddressName + '\'' +
+                ", endpointChannelName='" + endpointChannelName + '\'' +
                 ", endpointZone=" + endpointZone +
                 ", endpointGroup='" + endpointGroup + '\'' +
                 ", endpointSite='" + endpointSite + '\'' +
@@ -108,11 +108,11 @@ public class PetasosEndpointIdentifier implements Serializable {
         if (this == o) return true;
         if (!(o instanceof PetasosEndpointIdentifier)) return false;
         PetasosEndpointIdentifier that = (PetasosEndpointIdentifier) o;
-        return Objects.equals(getEndpointName(), that.getEndpointName()) && Objects.equals(getEndpointAddressName(), that.getEndpointAddressName()) && getEndpointZone() == that.getEndpointZone() && Objects.equals(getEndpointGroup(), that.getEndpointGroup()) && Objects.equals(getEndpointSite(), that.getEndpointSite()) && Objects.equals(getEndpointDetailedAddressName(), that.getEndpointDetailedAddressName());
+        return Objects.equals(getEndpointName(), that.getEndpointName()) && Objects.equals(getEndpointChannelName(), that.getEndpointChannelName()) && getEndpointZone() == that.getEndpointZone() && Objects.equals(getEndpointGroup(), that.getEndpointGroup()) && Objects.equals(getEndpointSite(), that.getEndpointSite()) && Objects.equals(getEndpointDetailedAddressName(), that.getEndpointDetailedAddressName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getEndpointName(), getEndpointAddressName(), getEndpointZone(), getEndpointGroup(), getEndpointSite(), getEndpointDetailedAddressName());
+        return Objects.hash(getEndpointName(), getEndpointChannelName(), getEndpointZone(), getEndpointGroup(), getEndpointSite(), getEndpointDetailedAddressName());
     }
 }

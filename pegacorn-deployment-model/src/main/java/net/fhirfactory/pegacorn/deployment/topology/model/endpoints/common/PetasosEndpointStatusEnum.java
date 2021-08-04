@@ -22,6 +22,7 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common;
 
 public enum PetasosEndpointStatusEnum {
+    PETASOS_ENDPOINT_STATUS_SAME("petasos_endpoint.status.same"),
     PETASOS_ENDPOINT_STATUS_DETECTED("petasos_endpoint.status.detected"),
     PETASOS_ENDPOINT_STATUS_REACHABLE("petasos_endpoint.status.reachable"),
     PETASOS_ENDPOINT_STATUS_UNREACHABLE("petasos_endpoint.status.unreachable"),
