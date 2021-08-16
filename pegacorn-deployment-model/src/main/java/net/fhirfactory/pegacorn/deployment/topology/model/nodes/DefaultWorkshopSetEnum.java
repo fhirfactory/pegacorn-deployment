@@ -3,7 +3,7 @@ package net.fhirfactory.pegacorn.deployment.topology.model.nodes;
 public enum DefaultWorkshopSetEnum {
     INTERACT_WORKSHOP("Interact"),
     TRANSFORM_WORKSHOP("Transform"),
-    POLICY_ENFORCEMENT_POINT_WORKSHOP("PolicyEnforcementPoint"),
+    POLICY_ENFORCEMENT_WORKSHOP("PolicyEnforcement"),
     EDGE_WORKSHOP("EdgeIPC");
 
     private String workshop;
