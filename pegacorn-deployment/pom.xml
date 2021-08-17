@@ -22,7 +22,7 @@
     <modules>
         <module>../pegacorn-deployment-model</module>
         <module>../pegacorn-deployment-properties</module>
-        <module>../pegacorn-deployment-datasets</module>
+        <module>../pegacorn-deployment-cachemap</module>
         <module>../pegacorn-deployment-topology</module>
     </modules>
 </project>

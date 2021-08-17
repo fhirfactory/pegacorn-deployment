@@ -4,6 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <!--***********************************************************************************-->
+    <!--                                                                                   -->
+    <!-- Project Metadata                                                                  -->
+    <!--                                                                                   -->
+    <!--***********************************************************************************-->
+
     <parent>
         <groupId>net.fhirfactory.pegacorn</groupId>
         <artifactId>pegacorn-deployment</artifactId>
@@ -17,6 +23,12 @@
     <name>Pegacorn :: Deployment :: Model</name>
     <description>The Internal-Only Deployment (network and application) Topology Models of a Pegacorn system</description>
 
+    <!--***********************************************************************************-->
+    <!--                                                                                   -->
+    <!-- Project License                                                                   -->
+    <!--                                                                                   -->
+    <!--***********************************************************************************-->
+
     <licenses>
         <license>
             <name>MIT License</name>
@@ -25,56 +37,118 @@
         </license>
     </licenses>
 
+    <!--***********************************************************************************-->
+    <!--                                                                                   -->
+    <!-- Project Prerequisites                                                             -->
+    <!--                                                                                   -->
+    <!--***********************************************************************************-->
+
     <prerequisites>
         <maven>3.5.0</maven>
     </prerequisites>
 
+    <!--***********************************************************************************-->
+    <!--                                                                                   -->
+    <!-- Project Developers                                                                -->
+    <!--                                                                                   -->
+    <!--***********************************************************************************-->
+
     <developers>
         <developer>
             <id>mahunter</id>
+            <email>m.a.hunter@outlook.com</email>
         </developer>
         <developer>
             <id>jrschremmer</id>
         </developer>
     </developers>
 
+    <!--***********************************************************************************-->
+    <!--                                                                                   -->
+    <!-- Project Properties                                                                -->
+    <!--                                                                                   -->
+    <!--***********************************************************************************-->
+
     <properties>
         <JBOSS_HOME>${project.basedir}/target/wildfly-${version-org.wildfly}</JBOSS_HOME>
     </properties>
 
+    <!--***********************************************************************************-->
+    <!--                                                                                   -->
+    <!-- Project Dependency Management                                                     -->
+    <!--                                                                                   -->
+    <!--***********************************************************************************-->
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${version-org.junit}</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wildfly.bom</groupId>
+                <artifactId>wildfly-jakartaee8-with-tools</artifactId>
+                <version>${version-org.wildfly}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-parent</artifactId>
+                <version>${version-org.apache.camel}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian</groupId>
+                <artifactId>arquillian-bom</artifactId>
+                <version>${version-org.arquillian}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!--***********************************************************************************-->
+    <!--                                                                                   -->
+    <!-- Project Dependencies                                                              -->
+    <!--                                                                                   -->
+    <!--***********************************************************************************-->
+
     <dependencies>
+
+        <!--*******************************************************************************-->
+        <!-- JakartaEE (Wildfly) Libraries                                                 -->
+        <!--*******************************************************************************-->
+
         <dependency>
             <groupId>javax.enterprise</groupId>
             <artifactId>cdi-api</artifactId>
             <version>${version-javax.enterprise-cdi-api}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.jboss.spec.javax.ejb</groupId>
-            <artifactId>jboss-ejb-api_3.2_spec</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.spec.javax.jms</groupId>
-            <artifactId>jboss-jms-api_2.0_spec</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.spec.javax.servlet</groupId>
-            <artifactId>jboss-servlet-api_4.0_spec</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.spec.javax.ws.rs</groupId>
-            <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
-            <scope>provided</scope>
-        </dependency>
+
         <dependency>
             <groupId>org.jboss.spec.javax.annotation</groupId>
             <artifactId>jboss-annotations-api_1.3_spec</artifactId>
             <scope>provided</scope>
         </dependency>
 
+        <!--*******************************************************************************-->
+        <!-- EJB (Wildfly) Libraries                                                       -->
+        <!--*******************************************************************************-->
+
+        <dependency>
+            <groupId>org.jboss.spec.javax.ejb</groupId>
+            <artifactId>jboss-ejb-api_3.2_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!--*******************************************************************************-->
+        <!-- Apache Commons Libraries                                                      -->
+        <!--*******************************************************************************-->
 
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -82,6 +156,9 @@
             <version>${version-org.apache.commons-lang3}</version>
         </dependency>
 
+        <!--*******************************************************************************-->
+        <!-- JSON Manipulation Libraries                                                   -->
+        <!--*******************************************************************************-->
 
         <dependency>
             <groupId>org.json</groupId>
@@ -95,6 +172,11 @@
             <artifactId>jackson-core</artifactId>
             <version>${version-com.fasterxml.jackson.core-jackson-core}</version>
         </dependency>
+
+        <!--*******************************************************************************-->
+        <!-- XML Manipulation Libraries                                                    -->
+        <!--*******************************************************************************-->
+
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
@@ -102,7 +184,10 @@
         </dependency>
 
 
-        <!-- Pegacorn Common Code -->
+        <!--*******************************************************************************-->
+        <!-- Pegacorn (Platform) Libraries                                                 -->
+        <!--*******************************************************************************-->
+
         <dependency>
             <groupId>net.fhirfactory.pegacorn</groupId>
             <artifactId>pegacorn-platform-commoncode</artifactId>
@@ -111,35 +196,64 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- Infinispan -->
+        <!--*******************************************************************************-->
+        <!-- Test (JUnit Jupiter) Libraries                                                -->
+        <!--*******************************************************************************-->
+
         <dependency>
-            <groupId>org.infinispan</groupId>
-            <artifactId>infinispan-core</artifactId>
-            <scope>compile</scope>
-            <version>${version-org.infinispan}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.infinispan</groupId>
-            <artifactId>infinispan-commons</artifactId>
-            <scope>compile</scope>
-            <version>${version-org.infinispan}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jgroups</groupId>
-            <artifactId>jgroups</artifactId>
-            <scope>compile</scope>
-            <version>${version-org.jgroups-jgroups}</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${version-org.junit5}</version>
+            <scope>test</scope>
         </dependency>
 
-        <!--         -->
-        <!-- Logging -->
-        <!--         -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!--*******************************************************************************-->
+        <!-- Test (Arquillian) Libraries                                                   -->
+        <!--*******************************************************************************-->
+
+        <dependency>
+            <groupId>org.jboss.arquillian.junit</groupId>
+            <artifactId>arquillian-junit-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.arquillian.junit</groupId>
+            <artifactId>arquillian-junit-container</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wildfly.arquillian</groupId>
+            <artifactId>wildfly-arquillian-container-managed</artifactId>
+            <scope>test</scope>
+            <version>${version-org.wildfly.arquillian-wildfly-arquillian-container-managed}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.shrinkwrap.resolver</groupId>
+            <artifactId>shrinkwrap-resolver-depchain</artifactId>
+            <type>pom</type>
+            <scope>test</scope>
+        </dependency>
+
+        <!--*******************************************************************************-->
+        <!-- Logging (SLF4J) Libraries                                                     -->
+        <!--*******************************************************************************-->
+
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${version-ch.qos.logback-classic}</version>
             <scope>compile</scope>
         </dependency>
+
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
@@ -147,58 +261,13 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- Testing -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-         <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.arquillian.junit</groupId>
-            <artifactId>arquillian-junit-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.arquillian.junit</groupId>
-            <artifactId>arquillian-junit-container</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.wildfly.arquillian</groupId>
-            <artifactId>wildfly-arquillian-container-managed</artifactId>
-            <scope>test</scope>
-            <version>${version-org.wildfly.arquillian-wildfly-arquillian-container-managed}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.shrinkwrap.resolver</groupId>
-            <artifactId>shrinkwrap-resolver-depchain</artifactId>
-            <type>pom</type>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <version>${version-org.apache.maven-surefire-plugin}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven.surefire</groupId>
-            <artifactId>surefire-logger-api</artifactId>
-            <version>${version-org.apache.maven-surefire-plugin}</version>
-            <scope>test</scope>
-            <optional>true</optional>
-        </dependency>
     </dependencies>
+
+    <!--***********************************************************************************-->
+    <!--                                                                                   -->
+    <!-- Project Build                                                                     -->
+    <!--                                                                                   -->
+    <!--***********************************************************************************-->
 
     <build>
         <plugins>
@@ -232,6 +301,12 @@
             </plugin>
         </plugins>
     </build>
+
+    <!--***********************************************************************************-->
+    <!--                                                                                   -->
+    <!-- Project Profiles                                                                  -->
+    <!--                                                                                   -->
+    <!--***********************************************************************************-->
 
     <profiles>
         <profile>
