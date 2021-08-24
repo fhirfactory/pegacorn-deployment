@@ -1,6 +1,6 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.nodes;
 
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
+import net.fhirfactory.pegacorn.common.model.componentid.PetasosNodeFDN;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.common.EndpointProviderInterface;
 import org.slf4j.Logger;
@@ -11,9 +11,9 @@ import java.util.ArrayList;
 public class ClusterServiceTopologyNode extends TopologyNode implements EndpointProviderInterface {
     private static final Logger LOG = LoggerFactory.getLogger(ClusterServiceTopologyNode.class);
 
-    private ArrayList<TopologyNodeFDN> platformNodes;
+    private ArrayList<PetasosNodeFDN> platformNodes;
     private Integer platformNodeCount;
-    private ArrayList<TopologyNodeFDN> serviceEndpoints;
+    private ArrayList<PetasosNodeFDN> serviceEndpoints;
     private String defaultDNSName;
     private boolean internalTrafficEncrypted;
 
@@ -28,19 +28,19 @@ public class ClusterServiceTopologyNode extends TopologyNode implements Endpoint
         this.serviceEndpoints = new ArrayList<>();
     }
 
-    public ArrayList<TopologyNodeFDN> getPlatformNodes() {
+    public ArrayList<PetasosNodeFDN> getPlatformNodes() {
         return platformNodes;
     }
 
-    public void setPlatformNodes(ArrayList<TopologyNodeFDN> platformNodes) {
+    public void setPlatformNodes(ArrayList<PetasosNodeFDN> platformNodes) {
         this.platformNodes = platformNodes;
     }
 
-    public ArrayList<TopologyNodeFDN> getServiceEndpoints() {
+    public ArrayList<PetasosNodeFDN> getServiceEndpoints() {
         return serviceEndpoints;
     }
 
-    public void setServiceEndpoints(ArrayList<TopologyNodeFDN> serviceEndpoints) {
+    public void setServiceEndpoints(ArrayList<PetasosNodeFDN> serviceEndpoints) {
         this.serviceEndpoints = serviceEndpoints;
     }
 
@@ -69,7 +69,7 @@ public class ClusterServiceTopologyNode extends TopologyNode implements Endpoint
     }
 
     @Override
-    public void addEndpoint(TopologyNodeFDN endpointFDN) {
+    public void addEndpoint(PetasosNodeFDN endpointFDN) {
         LOG.debug(".addEndpoint(): Entry, endpointFDN->{}", endpointFDN);
         serviceEndpoints.add(endpointFDN);
     }

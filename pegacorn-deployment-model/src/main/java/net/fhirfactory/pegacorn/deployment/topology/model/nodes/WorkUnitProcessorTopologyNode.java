@@ -1,9 +1,6 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.nodes;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeRDN;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeTypeEnum;
+import net.fhirfactory.pegacorn.common.model.componentid.PetasosNodeFDN;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,8 +10,8 @@ import java.util.ArrayList;
 public class WorkUnitProcessorTopologyNode extends TopologyNode {
     private static final Logger LOG = LoggerFactory.getLogger(WorkUnitProcessorTopologyNode.class);
 
-    private ArrayList<TopologyNodeFDN> wupComponents;
-    private ArrayList<TopologyNodeFDN> wupInterchangeComponents;
+    private ArrayList<PetasosNodeFDN> wupComponents;
+    private ArrayList<PetasosNodeFDN> wupInterchangeComponents;
 
     public WorkUnitProcessorTopologyNode(){
         this.wupComponents = new ArrayList<>();
@@ -26,19 +23,19 @@ public class WorkUnitProcessorTopologyNode extends TopologyNode {
         return (LOG);
     }
 
-    public ArrayList<TopologyNodeFDN> getWupComponents() {
+    public ArrayList<PetasosNodeFDN> getWupComponents() {
         return wupComponents;
     }
 
-    public void setWupComponents(ArrayList<TopologyNodeFDN> wupComponents) {
+    public void setWupComponents(ArrayList<PetasosNodeFDN> wupComponents) {
         this.wupComponents = wupComponents;
     }
 
-    public ArrayList<TopologyNodeFDN> getWupInterchangeComponents() {
+    public ArrayList<PetasosNodeFDN> getWupInterchangeComponents() {
         return wupInterchangeComponents;
     }
 
-    public void setWupInterchangeComponents(ArrayList<TopologyNodeFDN> wupInterchangeComponents) {
+    public void setWupInterchangeComponents(ArrayList<PetasosNodeFDN> wupInterchangeComponents) {
         this.wupInterchangeComponents = wupInterchangeComponents;
     }
 

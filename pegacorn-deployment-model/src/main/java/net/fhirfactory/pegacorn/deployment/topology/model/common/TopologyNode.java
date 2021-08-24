@@ -22,26 +22,27 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.common;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFunctionFDN;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeRDN;
+import net.fhirfactory.pegacorn.common.model.componentid.PetasosNodeFDN;
+import net.fhirfactory.pegacorn.common.model.componentid.PetasosNodeFunctionFDN;
+import net.fhirfactory.pegacorn.common.model.componentid.PetasosNodeRDN;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeTypeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.valuesets.NetworkSecurityZoneEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.mode.ConcurrencyModeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.mode.ResilienceModeEnum;
 import org.apache.commons.lang3.SerializationUtils;
+import org.hl7.fhir.r4.model.Device;
 import org.slf4j.Logger;
 
 import java.util.UUID;
 
-public abstract class TopologyNode{
+public abstract class TopologyNode extends Device {
     abstract protected Logger getLogger();
-    private TopologyNodeRDN nodeRDN;
-    private TopologyNodeFDN nodeFDN;
+    private PetasosNodeRDN nodeRDN;
+    private PetasosNodeFDN nodeFDN;
     private String nodeKey;
-    private TopologyNodeFunctionFDN nodeFunctionFDN;
+    private PetasosNodeFunctionFDN nodeFunctionFDN;
     private TopologyNodeTypeEnum componentType;
-    private TopologyNodeFDN containingNodeFDN;
+    private PetasosNodeFDN containingNodeFDN;
     private ConcurrencyModeEnum concurrencyMode;
     private ResilienceModeEnum resilienceMode;
     private NetworkSecurityZoneEnum securityZone;
@@ -55,20 +56,20 @@ public abstract class TopologyNode{
         this.nodeKey = null;
     }
 
-    public TopologyNodeRDN getNodeRDN() {
+    public PetasosNodeRDN getNodeRDN() {
         return nodeRDN;
     }
 
-    public void setNodeRDN(TopologyNodeRDN nodeRDN) {
+    public void setNodeRDN(PetasosNodeRDN nodeRDN) {
         this.nodeRDN = nodeRDN;
         constructNodeKey();
     }
 
-    public TopologyNodeFDN getNodeFDN() {
+    public PetasosNodeFDN getNodeFDN() {
         return nodeFDN;
     }
 
-    public void setNodeFDN(TopologyNodeFDN nodeFDN) {
+    public void setNodeFDN(PetasosNodeFDN nodeFDN) {
         this.nodeFDN = nodeFDN;
         setNodeRDN(nodeFDN.getLeafRDN());
         constructNodeKey();
@@ -82,25 +83,25 @@ public abstract class TopologyNode{
         this.componentType = componentType;
     }
 
-    public TopologyNodeFDN getContainingNodeFDN() {
+    public PetasosNodeFDN getContainingNodeFDN() {
         return containingNodeFDN;
     }
 
-    public void setContainingNodeFDN(TopologyNodeFDN containingNodeFDN) {
+    public void setContainingNodeFDN(PetasosNodeFDN containingNodeFDN) {
         this.containingNodeFDN = containingNodeFDN;
     }
 
     @JsonIgnore
-    public void constructFDN(TopologyNodeFDN parentNodeFDN, TopologyNodeRDN nodeRDN){
+    public void constructFDN(PetasosNodeFDN parentNodeFDN, PetasosNodeRDN nodeRDN){
         getLogger().debug(".constructFDN(): Entry, parentNodeFDN->{}, nodeRDN->{}", parentNodeFDN, nodeRDN);
         if(parentNodeFDN == null || nodeRDN.getNodeType().equals(TopologyNodeTypeEnum.SOLUTION)){
             getLogger().trace(".constructFDN(): Is a Solution Node");
-            TopologyNodeFDN solutionFDN = new TopologyNodeFDN();
+            PetasosNodeFDN solutionFDN = new PetasosNodeFDN();
             solutionFDN.appendTopologyNodeRDN(nodeRDN);
             this.nodeFDN = solutionFDN;
         } else {
             getLogger().trace(".constructFDN(): Is not a Solution Node");
-            TopologyNodeFDN newFDN = (TopologyNodeFDN)SerializationUtils.clone(parentNodeFDN);
+            PetasosNodeFDN newFDN = (PetasosNodeFDN)SerializationUtils.clone(parentNodeFDN);
             getLogger().trace(".constructFDN(): newFDN Created");
             newFDN.appendTopologyNodeRDN(nodeRDN);
             getLogger().trace(".constructFDN(): nodeRDN appended");
@@ -125,20 +126,20 @@ public abstract class TopologyNode{
         this.nodeKey = nodeKey;
     }
 
-    public TopologyNodeFunctionFDN getNodeFunctionFDN() {
+    public PetasosNodeFunctionFDN getNodeFunctionFDN() {
         return nodeFunctionFDN;
     }
 
-    public void setNodeFunctionFDN(TopologyNodeFunctionFDN nodeFunctionFDN) {
+    public void setNodeFunctionFDN(PetasosNodeFunctionFDN nodeFunctionFDN) {
         this.nodeFunctionFDN = nodeFunctionFDN;
     }
 
     @JsonIgnore
-    public void constructFunctionFDN(TopologyNodeFunctionFDN parentFunctionFDN, TopologyNodeRDN nodeRDN){
+    public void constructFunctionFDN(PetasosNodeFunctionFDN parentFunctionFDN, PetasosNodeRDN nodeRDN){
         getLogger().debug(".constructFunctionFDN(): Entry");
         switch(nodeRDN.getNodeType()){
             case SOLUTION: {
-                TopologyNodeFunctionFDN solutionFDN = new TopologyNodeFunctionFDN();
+                PetasosNodeFunctionFDN solutionFDN = new PetasosNodeFunctionFDN();
                 solutionFDN.appendTopologyNodeRDN(nodeRDN);
                 this.nodeFunctionFDN = solutionFDN;
                 break;
@@ -149,7 +150,7 @@ public abstract class TopologyNode{
                 break;
             }
             default:{
-                TopologyNodeFunctionFDN newFunctionFDN = (TopologyNodeFunctionFDN)SerializationUtils.clone(parentFunctionFDN);
+                PetasosNodeFunctionFDN newFunctionFDN = (PetasosNodeFunctionFDN)SerializationUtils.clone(parentFunctionFDN);
                 newFunctionFDN.appendTopologyNodeRDN(nodeRDN);
                 this.nodeFunctionFDN = newFunctionFDN;
             }

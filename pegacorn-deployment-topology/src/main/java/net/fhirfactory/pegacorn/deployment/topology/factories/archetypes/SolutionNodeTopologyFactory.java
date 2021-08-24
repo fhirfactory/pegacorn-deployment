@@ -23,8 +23,8 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.factories.archetypes;
 
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeRDN;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeTypeEnum;
+import net.fhirfactory.pegacorn.petasos.core.resources.component.datatypes.PetasosNodeRDN;
+import net.fhirfactory.pegacorn.petasos.core.resources.component.valuesets.PetasosComponentTypeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.interfaces.SolutionNodeFactoryInterface;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.SolutionTopologyNode;
 import org.slf4j.Logger;
@@ -102,11 +102,11 @@ public abstract class SolutionNodeTopologyFactory implements SolutionNodeFactory
     public SolutionTopologyNode newSolutionNode(){
         getLogger().debug(".buildSolutionNode(): Entry");
         SolutionTopologyNode solution = new SolutionTopologyNode();
-        TopologyNodeRDN nodeRDN = new TopologyNodeRDN(TopologyNodeTypeEnum.SOLUTION, specifySystemName(), specifySystemVersion() );
+        PetasosNodeRDN nodeRDN = new PetasosNodeRDN(PetasosComponentTypeEnum.SOLUTION, specifySystemName(), specifySystemVersion() );
         solution.constructFDN(null, nodeRDN);
         solution.constructFunctionFDN(null,nodeRDN );
         solution.setNodeRDN(nodeRDN);
-        solution.setComponentType(TopologyNodeTypeEnum.SOLUTION);
+        solution.setComponentType(PetasosComponentTypeEnum.SOLUTION);
         getLogger().debug(".buildSolutionNode(): Exit, solution ->{}", solution);
         return(solution);
     }

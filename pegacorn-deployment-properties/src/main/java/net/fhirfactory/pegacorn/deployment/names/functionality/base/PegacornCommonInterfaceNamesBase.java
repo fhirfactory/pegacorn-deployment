@@ -21,8 +21,6 @@
  */
 package net.fhirfactory.pegacorn.deployment.names.functionality.base;
 
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.PetasosTopologyEndpointTypeEnum;
-
 public abstract class PegacornCommonInterfaceNamesBase {
 
     public String getFunctionNamePetasosReplication(){return("PetasosReplication");}

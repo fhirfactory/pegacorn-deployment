@@ -21,12 +21,12 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.manager.cache;
 
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeTypeEnum;
+import net.fhirfactory.pegacorn.petasos.core.resources.component.valuesets.PetasosComponentTypeEnum;
 import net.fhirfactory.pegacorn.common.model.generalid.FDNToken;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.valuesets.NetworkSecurityZoneEnum;
 import net.fhirfactory.pegacorn.deployment.properties.codebased.DeploymentSystemIdentificationInterface;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
+import net.fhirfactory.pegacorn.petasos.core.resources.component.datatypes.PetasosNodeFDN;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.SolutionTopologyNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,12 +46,12 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
     private static final Logger LOG = LoggerFactory.getLogger(TopologyNodesDM.class);
 
     private SolutionTopologyNode deploymentSolution;
-    private ConcurrentHashMap<TopologyNodeFDN, TopologyNode> nodeSet;
+    private ConcurrentHashMap<PetasosNodeFDN, TopologyNode> nodeSet;
 
     public TopologyNodesDM() {
         LOG.debug(".TopologyDM(): Constructor initialisation");
         this.deploymentSolution = null;
-        this.nodeSet = new ConcurrentHashMap<TopologyNodeFDN, TopologyNode>();
+        this.nodeSet = new ConcurrentHashMap<PetasosNodeFDN, TopologyNode>();
     }
 
     private void insertOrOverwriteTopologyNode(SolutionTopologyNode node){
@@ -59,9 +59,9 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
         if(nodeSet.containsKey(node.getNodeFDN())){
             nodeSet.remove(node.getNodeFDN());
         } else {
-            Enumeration<TopologyNodeFDN> nodeEnumeration = nodeSet.keys();
+            Enumeration<PetasosNodeFDN> nodeEnumeration = nodeSet.keys();
             while (nodeEnumeration.hasMoreElements()) {
-                TopologyNodeFDN currentNodeFDN = nodeEnumeration.nextElement();
+                PetasosNodeFDN currentNodeFDN = nodeEnumeration.nextElement();
                 TopologyNode currentNode = nodeSet.get(currentNodeFDN);
                 if (currentNode.getNodeFDN().equals(node.getNodeFDN())) {
                     nodeSet.remove(currentNodeFDN);
@@ -83,12 +83,12 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
 
     @Override
     public String getSystemName() {
-        return (getDeploymentSolution().getNodeFDN().extractRDNForNodeType(TopologyNodeTypeEnum.SOLUTION).getNodeName());
+        return (getDeploymentSolution().getNodeFDN().extractRDNForNodeType(PetasosComponentTypeEnum.SOLUTION).getNodeName());
     }
 
     @Override
     public String getSystemVersion() {
-        return (getDeploymentSolution().getNodeFDN().extractRDNForNodeType(TopologyNodeTypeEnum.SOLUTION).getNodeVersion());
+        return (getDeploymentSolution().getNodeFDN().extractRDNForNodeType(PetasosComponentTypeEnum.SOLUTION).getNodeVersion());
     }
 
     @Override
@@ -121,8 +121,8 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
             throw (new IllegalArgumentException(".addTopologyNode(): bad elementID within newElement"));
         }
         boolean elementFound = false;
-        Enumeration<TopologyNodeFDN> elementIdentifiers = this.nodeSet.keys();
-        TopologyNodeFDN currentNodeID = null;
+        Enumeration<PetasosNodeFDN> elementIdentifiers = this.nodeSet.keys();
+        PetasosNodeFDN currentNodeID = null;
         while (elementIdentifiers.hasMoreElements()) {
             currentNodeID = elementIdentifiers.nextElement();
             if (LOG.isTraceEnabled()) {
@@ -147,15 +147,15 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
      *
      * @param elementID
      */
-    public void deleteTopologyNode(TopologyNodeFDN elementID) {
+    public void deleteTopologyNode(PetasosNodeFDN elementID) {
         LOG.debug(".deleteTopologyNode(): Entry, elementID --> {}", elementID);
         if (elementID == null) {
             throw (new IllegalArgumentException(".removeNode(): elementID is null"));
         }
         boolean elementFound = false;
-        Enumeration<TopologyNodeFDN> list = this.nodeSet.keys();
+        Enumeration<PetasosNodeFDN> list = this.nodeSet.keys();
         while (list.hasMoreElements()) {
-            TopologyNodeFDN currentNodeID = list.nextElement();
+            PetasosNodeFDN currentNodeID = list.nextElement();
             if (LOG.isTraceEnabled()) {
                 LOG.trace(".deleteTopologyNode(): Cache Entry --> {}", currentNodeID.toTag());
             }
@@ -194,15 +194,15 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
      * @param nodeID
      * @return
      */
-    public TopologyNode nodeSearch(TopologyNodeFDN nodeID) {
+    public TopologyNode nodeSearch(PetasosNodeFDN nodeID) {
         LOG.debug(".getTopologyNode(): Entry, nodeID --> {}", nodeID);
         if (nodeID == null) {
             LOG.debug(".getTopologyNode(): Exit, provided a null nodeID , so returning null");
             return (null);
         }
-        Enumeration<TopologyNodeFDN> list = this.nodeSet.keys();
+        Enumeration<PetasosNodeFDN> list = this.nodeSet.keys();
         while (list.hasMoreElements()) {
-            TopologyNodeFDN currentNodeID = list.nextElement();
+            PetasosNodeFDN currentNodeID = list.nextElement();
             if (LOG.isTraceEnabled()) {
                 LOG.trace(".getTopologyNode(): Cache Entry --> {}", currentNodeID.toTag());
             }
@@ -229,7 +229,7 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
         return(stringsAreEqual);
     }
 
-    public List<TopologyNode> nodeSearch(TopologyNodeTypeEnum nodeType, String nodeName, String nodeVersion){
+    public List<TopologyNode> nodeSearch(PetasosComponentTypeEnum nodeType, String nodeName, String nodeVersion){
         LOG.debug(".nodeSearch(): Entry, nodeType->{}, nodeName->{}, nodeVersion->{}", nodeType, nodeName, nodeVersion);
         ArrayList<TopologyNode> nodeList = new ArrayList<>();
         for(TopologyNode currentNode: nodeSet.values()){
@@ -251,7 +251,7 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
         Collection<TopologyNode> nodeCollection = nodeSet.values();
         for(TopologyNode currentNode: nodeCollection){
             boolean nameSame = currentNode.getNodeRDN().getNodeName().contentEquals(nodeName);
-            boolean isProcessingPlant = currentNode.getComponentType().equals(TopologyNodeTypeEnum.PROCESSING_PLANT);
+            boolean isProcessingPlant = currentNode.getComponentType().equals(PetasosComponentTypeEnum.PROCESSING_PLANT);
             if(nameSame && isProcessingPlant){
                 return(currentNode.getSecurityZone());
             }

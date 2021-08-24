@@ -1,16 +1,14 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.common;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.IPCClusteredServerTopologyEndpoint;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.IPCTopologyEndpoint;
+import net.fhirfactory.pegacorn.common.model.componentid.PetasosNodeFDN;
 import net.fhirfactory.pegacorn.deployment.topology.model.mode.ResilienceModeEnum;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class IPCInterface {
-    private TopologyNodeFDN enablingTopologyEndpoint;
+    private PetasosNodeFDN enablingTopologyEndpoint;
     private String targetName;
     private String groupName;
     private ArrayList<ResilienceModeEnum> supportedDeploymentModes;
@@ -61,11 +59,11 @@ public class IPCInterface {
         this.targetName = targetName;
     }
 
-    public TopologyNodeFDN getEnablingTopologyEndpoint() {
+    public PetasosNodeFDN getEnablingTopologyEndpoint() {
         return enablingTopologyEndpoint;
     }
 
-    public void setEnablingTopologyEndpoint(TopologyNodeFDN enablingTopologyEndpoint) {
+    public void setEnablingTopologyEndpoint(PetasosNodeFDN enablingTopologyEndpoint) {
         this.enablingTopologyEndpoint = enablingTopologyEndpoint;
     }
 

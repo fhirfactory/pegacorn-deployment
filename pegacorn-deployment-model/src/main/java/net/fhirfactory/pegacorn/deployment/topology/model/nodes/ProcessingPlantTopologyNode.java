@@ -1,8 +1,8 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.nodes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeRDN;
+import net.fhirfactory.pegacorn.common.model.componentid.PetasosNodeFDN;
+import net.fhirfactory.pegacorn.common.model.componentid.PetasosNodeRDN;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeTypeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.common.EndpointProviderInterface;
@@ -14,9 +14,9 @@ import java.util.ArrayList;
 public class ProcessingPlantTopologyNode extends TopologyNode implements EndpointProviderInterface {
     private static final Logger LOG = LoggerFactory.getLogger(ProcessingPlantTopologyNode.class);
 
-    private ArrayList<TopologyNodeFDN> workshops;
-    private ArrayList<TopologyNodeFDN> endpoints;
-    private ArrayList<TopologyNodeFDN> connections;
+    private ArrayList<PetasosNodeFDN> workshops;
+    private ArrayList<PetasosNodeFDN> endpoints;
+    private ArrayList<PetasosNodeFDN> connections;
     private String nameSpace;
     private String interZoneIPCStackConfigFile;
     private String interZoneOAMStackConfigFile;
@@ -71,27 +71,27 @@ public class ProcessingPlantTopologyNode extends TopologyNode implements Endpoin
         this.internalTrafficEncrypted = internalTrafficEncrypted;
     }
 
-    public ArrayList<TopologyNodeFDN> getWorkshops() {
+    public ArrayList<PetasosNodeFDN> getWorkshops() {
         return workshops;
     }
 
-    public void setWorkshops(ArrayList<TopologyNodeFDN> workshops) {
+    public void setWorkshops(ArrayList<PetasosNodeFDN> workshops) {
         this.workshops = workshops;
     }
 
-    public ArrayList<TopologyNodeFDN> getEndpoints() {
+    public ArrayList<PetasosNodeFDN> getEndpoints() {
         return endpoints;
     }
 
-    public void setEndpoints(ArrayList<TopologyNodeFDN> endpoints) {
+    public void setEndpoints(ArrayList<PetasosNodeFDN> endpoints) {
         this.endpoints = endpoints;
     }
 
-    public ArrayList<TopologyNodeFDN> getConnections() {
+    public ArrayList<PetasosNodeFDN> getConnections() {
         return connections;
     }
 
-    public void setConnections(ArrayList<TopologyNodeFDN> connections) {
+    public void setConnections(ArrayList<PetasosNodeFDN> connections) {
         this.connections = connections;
     }
 
@@ -120,7 +120,7 @@ public class ProcessingPlantTopologyNode extends TopologyNode implements Endpoin
     }
 
     @Override
-    public void addEndpoint(TopologyNodeFDN endpointFDN) {
+    public void addEndpoint(PetasosNodeFDN endpointFDN) {
         endpoints.add(endpointFDN);
     }
 
@@ -142,16 +142,16 @@ public class ProcessingPlantTopologyNode extends TopologyNode implements Endpoin
 
     @JsonIgnore
     public String getSubsystemName(){
-        TopologyNodeFDN nodeFDN = getNodeFDN();
-        TopologyNodeRDN subsystemRDN = nodeFDN.extractRDNForNodeType(TopologyNodeTypeEnum.SUBSYSTEM);
+        PetasosNodeFDN nodeFDN = getNodeFDN();
+        PetasosNodeRDN subsystemRDN = nodeFDN.extractRDNForNodeType(TopologyNodeTypeEnum.SUBSYSTEM);
         String subsystemName = subsystemRDN.getNodeName();
         return(subsystemName);
     }
 
     @JsonIgnore
     public String getClusterServiceName(){
-        TopologyNodeFDN nodeFDN = getNodeFDN();
-        TopologyNodeRDN subsystemRDN = nodeFDN.extractRDNForNodeType(TopologyNodeTypeEnum.CLUSTER_SERVICE);
+        PetasosNodeFDN nodeFDN = getNodeFDN();
+        PetasosNodeRDN subsystemRDN = nodeFDN.extractRDNForNodeType(TopologyNodeTypeEnum.CLUSTER_SERVICE);
         String subsystemName = subsystemRDN.getNodeName();
         return(subsystemName);
     }

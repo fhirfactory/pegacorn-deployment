@@ -21,9 +21,9 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.manager;
 
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDNToken;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeTypeEnum;
+import net.fhirfactory.pegacorn.petasos.core.resources.component.datatypes.PetasosNodeFDN;
+import net.fhirfactory.pegacorn.petasos.core.resources.component.datatypes.PetasosComponentIdentifierToken;
+import net.fhirfactory.pegacorn.petasos.core.resources.component.valuesets.PetasosComponentTypeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.interfaces.SolutionNodeFactoryInterface;
 import net.fhirfactory.pegacorn.deployment.topology.manager.cache.TopologyNodesDM;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
@@ -72,7 +72,7 @@ public class TopologyIM {
         return(solution);
     }
 
-    public void addTopologyNode(TopologyNodeFDN parentNodeFDN, TopologyNode newNodeElement) {
+    public void addTopologyNode(PetasosNodeFDN parentNodeFDN, TopologyNode newNodeElement) {
         LOG.debug(".addTopologyNode(): Entry, parentNodeFDN->{}, newElement->{}", parentNodeFDN, newNodeElement);
 
         newNodeElement.setContainingNodeFDN(parentNodeFDN);
@@ -83,7 +83,7 @@ public class TopologyIM {
                 SolutionTopologyNode solution = (SolutionTopologyNode) parentNodeElement;
                 LOG.trace(".addTopologyNode(): Adding a Subsystem, parent Solution->{}", solution);
                 SubsystemTopologyNode subsystem = (SubsystemTopologyNode) newNodeElement;
-                TopologyNodeFDN newNodeFDN = subsystem.getNodeFDN();
+                PetasosNodeFDN newNodeFDN = subsystem.getNodeFDN();
                 solution.getSubsystemList().add(newNodeFDN);
                 break;
             }
@@ -129,8 +129,8 @@ public class TopologyIM {
                 workshop.getWupSet().add(wup.getNodeFDN());
                 WorkUnitProcessorComponentTopologyNode wupCore =  new WorkUnitProcessorComponentTopologyNode();
                 wupCore.setContainingNodeFDN(workshop.getNodeFDN());
-                wupCore.setComponentType(TopologyNodeTypeEnum.WUP_CORE);
-                TopologyNodeFDN newFDN = new TopologyNodeFDN(wup.getNodeFDN());
+                wupCore.setComponentType(PetasosComponentTypeEnum.WUP_CORE);
+                PetasosNodeFDN newFDN = new PetasosNodeFDN(wup.getNodeFDN());
                 newFDN.appendTopologyNodeRDN(wup.getNodeRDN());
                 wupCore.setNodeFDN(newFDN);
                 wupCore.constructFunctionFDN(wup.getNodeFunctionFDN(), wup.getNodeRDN());
@@ -185,7 +185,7 @@ public class TopologyIM {
         }
     }
 
-    public void removeNode(TopologyNodeFDN elementID) {
+    public void removeNode(PetasosNodeFDN elementID) {
         LOG.debug(".unregisterNode(): Entry, elementID --> {}", elementID);
         topologyDataManager.deleteTopologyNode(elementID);
     }
@@ -195,22 +195,22 @@ public class TopologyIM {
         return (topologyDataManager.getTopologyNodeSet());
     }
 
-    public TopologyNode getNode(TopologyNodeFDN nodeID) {
+    public TopologyNode getNode(PetasosNodeFDN nodeID) {
         LOG.debug(".getNode(): Entry, nodeID --> {}", nodeID);
         TopologyNode retrievedNode = topologyDataManager.nodeSearch(nodeID);
         LOG.debug(".getNode(): Exit, retrievedNode --> {}", retrievedNode);
         return (retrievedNode);
     }
 
-    public TopologyNode getNode(TopologyNodeFDNToken nodeFDNToken){
+    public TopologyNode getNode(PetasosComponentIdentifierToken nodeFDNToken){
         LOG.debug(".getNode(): Entry, nodeFDNToken --> {}", nodeFDNToken);
-        TopologyNodeFDN nodeFDN = new TopologyNodeFDN(nodeFDNToken);
+        PetasosNodeFDN nodeFDN = new PetasosNodeFDN(nodeFDNToken);
         TopologyNode retrievedNode = getNode(nodeFDN);
         LOG.debug(".getNode(): Exit, retrievedNode --> {}", retrievedNode);
         return(retrievedNode);
     }
 
-    public List<TopologyNode> nodeSearch(TopologyNodeTypeEnum nodeType, String nodeName,  String nodeVersion ){
+    public List<TopologyNode> nodeSearch(PetasosComponentTypeEnum nodeType, String nodeName, String nodeVersion ){
         List<TopologyNode> nodeList = topologyDataManager.nodeSearch(nodeType, nodeName, nodeVersion);
         return(nodeList);
     }

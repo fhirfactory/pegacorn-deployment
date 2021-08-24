@@ -1,6 +1,6 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.nodes;
 
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
+import net.fhirfactory.pegacorn.common.model.componentid.PetasosNodeFDN;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class SubsystemTopologyNode extends TopologyNode {
     private static final Logger LOG = LoggerFactory.getLogger(SubsystemTopologyNode.class);
 
-    private ArrayList<TopologyNodeFDN> businessServices;
+    private ArrayList<PetasosNodeFDN> businessServices;
     private Integer siteCount;
 
     public SubsystemTopologyNode(){
@@ -22,11 +22,11 @@ public class SubsystemTopologyNode extends TopologyNode {
         return (LOG);
     }
 
-    public ArrayList<TopologyNodeFDN> getBusinessServices() {
+    public ArrayList<PetasosNodeFDN> getBusinessServices() {
         return businessServices;
     }
 
-    public void setBusinessServices(ArrayList<TopologyNodeFDN> businessServices) {
+    public void setBusinessServices(ArrayList<PetasosNodeFDN> businessServices) {
         this.businessServices = businessServices;
     }
 

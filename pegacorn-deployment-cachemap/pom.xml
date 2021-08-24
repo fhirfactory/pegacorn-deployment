@@ -211,26 +211,6 @@
         </dependency>
 
         <!--*******************************************************************************-->
-        <!-- Pegacorn (Petasos) Libraries                                                  -->
-        <!--*******************************************************************************-->
-
-        <dependency>
-            <groupId>net.fhirfactory.pegacorn</groupId>
-            <artifactId>pegacorn-petasos-caches</artifactId>
-            <version>${project.version}</version>
-            <type>jar</type>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>net.fhirfactory.pegacorn</groupId>
-            <artifactId>pegacorn-petasos-model</artifactId>
-            <version>${project.version}</version>
-            <type>jar</type>
-            <scope>compile</scope>
-        </dependency>
-
-        <!--*******************************************************************************-->
         <!-- Test (JUnit Jupiter) Libraries                                                -->
         <!--*******************************************************************************-->
 
