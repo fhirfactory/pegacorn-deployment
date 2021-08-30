@@ -33,6 +33,7 @@ import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class TopologyNode{
     abstract protected Logger getLogger();
@@ -45,6 +46,7 @@ public abstract class TopologyNode{
     private ConcurrencyModeEnum concurrencyMode;
     private ResilienceModeEnum resilienceMode;
     private NetworkSecurityZoneEnum securityZone;
+    private ConcurrentHashMap<String, String> otherConfigurationParameters;
 
     public TopologyNode(){
         this.nodeRDN = null;
@@ -53,6 +55,7 @@ public abstract class TopologyNode{
         this.concurrencyMode = null;
         this.resilienceMode = null;
         this.nodeKey = null;
+        this.otherConfigurationParameters = new ConcurrentHashMap<>();
     }
 
     public TopologyNodeRDN getNodeRDN() {
@@ -215,5 +218,28 @@ public abstract class TopologyNode{
                 ", resilienceMode=" + resilienceMode +
                 ", securityZone=" + securityZone +
                 '}';
+    }
+
+    public ConcurrentHashMap<String, String> getOtherConfigurationParameters() {
+        return otherConfigurationParameters;
+    }
+
+    public void setOtherConfigurationParameters(ConcurrentHashMap<String, String> otherConfigurationParameters) {
+        this.otherConfigurationParameters = otherConfigurationParameters;
+    }
+
+    public void addOtherConfigurationParameter(String key, String value){
+        if(this.otherConfigurationParameters.containsKey(key)){
+            this.otherConfigurationParameters.remove(key);
+        }
+        this.otherConfigurationParameters.put(key,value);
+    }
+
+    public String getOtherConfigurationParameter(String key){
+        if(this.otherConfigurationParameters.containsKey(key)){
+            String value = this.otherConfigurationParameters.get(key);
+            return(value);
+        }
+        return(null);
     }
 }

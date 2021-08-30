@@ -4,6 +4,7 @@ public enum DefaultWorkshopSetEnum {
     INTERACT_WORKSHOP("Interact"),
     TRANSFORM_WORKSHOP("Transform"),
     POLICY_ENFORCEMENT_WORKSHOP("PolicyEnforcement"),
+    AUDIT_SERVICES_WORKSHOP("Audit"),
     EDGE_WORKSHOP("EdgeIPC");
 
     private String workshop;

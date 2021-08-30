@@ -49,6 +49,7 @@ import javax.inject.Inject;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFactoryInterface {
 
@@ -320,6 +321,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         processingPlant.setContainingNodeFDN(node.getNodeFDN());
         processingPlant.setSecurityZone(NetworkSecurityZoneEnum.fromSecurityZoneString(getPropertyFile().getDeploymentZone().getSecurityZoneName()));
         node.getProcessingPlants().add(processingPlant.getNodeFDN());
+        populateOtherDeploymentProperties(processingPlant, getPropertyFile().getDeploymentMode().getOtherDeploymentFlags());
         getLogger().trace(".addPegacornProcessingPlant(): Add the ProcessingPlant to the Topology Cache");
         getTopologyIM().addTopologyNode(node.getNodeFDN(), processingPlant);
         getLogger().debug(".addPegacornProcessingPlant(): Exit");
@@ -692,5 +694,26 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
 
     public void setProcessingPlantNode(ProcessingPlantTopologyNode processingPlantNode) {
         this.processingPlantNode = processingPlantNode;
+    }
+
+    public void populateOtherDeploymentProperties(ProcessingPlantTopologyNode node, String otherDeploymentPropertiesString){
+        ConcurrentHashMap<String, String> propertiesMap = new ConcurrentHashMap<>();
+        if(StringUtils.isEmpty(otherDeploymentPropertiesString)){
+            node.setOtherConfigurationParameters(propertiesMap);
+            return;
+        }
+        String[] properties = otherDeploymentPropertiesString.split(",");
+        if(properties.length <= 0){
+            node.setOtherConfigurationParameters(propertiesMap);
+            return;
+        }
+        for(int counter = 0; counter < properties.length; counter += 1){
+            String currentProperty = properties[counter];
+            String[] currentPropertyPair = currentProperty.split("=");
+            if(currentPropertyPair.length == 2){
+                propertiesMap.put(currentPropertyPair[0], currentPropertyPair[1]);
+            }
+        }
+        node.setOtherConfigurationParameters(propertiesMap);
     }
 }

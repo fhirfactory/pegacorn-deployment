@@ -35,6 +35,7 @@ public class DeploymentModeSegment {
     private String intraNetworkOAMStackConfigFile;
     private String interNetworkIPCStackConfigFile;
     private String interNetworkOAMStackConfigFile;
+    private String otherDeploymentFlags;
 
     public DeploymentModeSegment(){
         kubernetes = false;
@@ -42,6 +43,7 @@ public class DeploymentModeSegment {
         concurrent = false;
         usingInternalEncryption = false;
         deploymentConfig = null;
+        this.otherDeploymentFlags = null;
         this.intraNetworkIPCStackConfigFile = null;
         this.intraNetworkOAMStackConfigFile = null;
         this.interNetworkIPCStackConfigFile = null;
@@ -70,6 +72,17 @@ public class DeploymentModeSegment {
         if(!StringUtils.isEmpty(overrides.getIntraNetworkOAMStackConfigFile())){
             this.setIntraNetworkOAMStackConfigFile(overrides.getIntraNetworkOAMStackConfigFile());
         }
+        if(!StringUtils.isEmpty(overrides.getOtherDeploymentFlags())){
+            this.setOtherDeploymentFlags(overrides.getOtherDeploymentFlags());
+        }
+    }
+
+    public String getOtherDeploymentFlags() {
+        return otherDeploymentFlags;
+    }
+
+    public void setOtherDeploymentFlags(String otherDeploymentFlags) {
+        this.otherDeploymentFlags = otherDeploymentFlags;
     }
 
     public String getIntraNetworkIPCStackConfigFile() {
@@ -165,6 +178,7 @@ public class DeploymentModeSegment {
                 ", concurrent=" + concurrent +
                 ", usingInternalEncryption=" + usingInternalEncryption +
                 ", deploymentConfig='" + deploymentConfig + '\'' +
+                ", otherDeploymentFlags='" + otherDeploymentFlags + '\'' +
                 ", intraNetworkIPCStackConfigFile='" + intraNetworkIPCStackConfigFile + '\'' +
                 ", intraNetworkOAMStackConfigFile='" + intraNetworkOAMStackConfigFile + '\'' +
                 ", interNetworkIPCStackConfigFile='" + interNetworkIPCStackConfigFile + '\'' +
