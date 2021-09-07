@@ -21,20 +21,7 @@
  */
 package net.fhirfactory.pegacorn.deployment.communicate.matrix;
 
-public abstract class CommunicateConfiguration implements SynapseServerConfigurationInterface, CommunicateConfigurationInterface{
-
-    @Override
-    public String getSynapseServerAdminUserName()
-    {
-        return("CommunicateSynapseAdmin");
-        // TODO read from environment variable
-    }
-
-    @Override
-    public String getSynapseServerAdminPassword(){
-        return("ClaudeAndClara01");
-        // TODO read from environment variable
-    }
+public abstract class CommunicateSubsystemIntegrationConfigurationCode implements SynapseServerIntegrationConfigurationInterface, MatrixIntegrationConfigurationInterface {
 
     @Override
     public String getSynapseDefaultRoomVersion(){
@@ -46,13 +33,4 @@ public abstract class CommunicateConfiguration implements SynapseServerConfigura
         return("5");
     }
 
-    @Override
-    public String getEmailAddressDomainName() {
-        return "act.gov.au";
-    }
-
-    @Override
-    public String getSynapseServerName() {
-        return "lingo.aether.health.gov.au";
-    }
 }

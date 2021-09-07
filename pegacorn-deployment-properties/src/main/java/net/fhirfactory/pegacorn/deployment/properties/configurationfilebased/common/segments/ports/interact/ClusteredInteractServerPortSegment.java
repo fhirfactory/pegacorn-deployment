@@ -24,8 +24,8 @@ package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.co
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ClusterServiceInteractServerPortSegment extends StandardInteractServerPortSegment {
-    private static Logger LOG = LoggerFactory.getLogger(ClusterServiceInteractServerPortSegment.class);
+public class ClusteredInteractServerPortSegment extends StandardInteractServerPortSegment {
+    private static Logger LOG = LoggerFactory.getLogger(ClusteredInteractServerPortSegment.class);
 
     private Integer servicePortValue;
     private String servicePortName;
@@ -71,7 +71,7 @@ public class ClusterServiceInteractServerPortSegment extends StandardInteractSer
 
     @Override
     public String toString() {
-        return "ClusterServiceInteractServerPortSegment{" +
+        return "ClusteredInteractServerPortSegment{" +
                 "servicePortValue=" + servicePortValue +
                 ", servicePortName='" + servicePortName + '\'' +
                 ", serviceDNSEntry='" + serviceDNSEntry + '\'' +

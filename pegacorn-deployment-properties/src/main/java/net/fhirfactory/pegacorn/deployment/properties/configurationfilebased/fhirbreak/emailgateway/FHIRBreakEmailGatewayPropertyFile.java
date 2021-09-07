@@ -1,29 +1,29 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.fhirbreak.emailgateway;
 
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.ClusterServiceInteractServerPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.ClusteredInteractServerPortSegment;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.StandardServerPortSegment;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.fhirbreak.common.FHIRBreakSubsystemPropertyFile;
 
 public class FHIRBreakEmailGatewayPropertyFile extends FHIRBreakSubsystemPropertyFile {
 
-    private ClusterServiceInteractServerPortSegment smtpGateway;
-    private ClusterServiceInteractServerPortSegment imapGateway;
+    private ClusteredInteractServerPortSegment smtpGateway;
+    private ClusteredInteractServerPortSegment imapGateway;
 
     private StandardServerPortSegment edgeReceiveCommunication;
 
-    public ClusterServiceInteractServerPortSegment getSmtpGateway() {
+    public ClusteredInteractServerPortSegment getSmtpGateway() {
         return smtpGateway;
     }
 
-    public void setSmtpGateway(ClusterServiceInteractServerPortSegment smtpGateway) {
+    public void setSmtpGateway(ClusteredInteractServerPortSegment smtpGateway) {
         this.smtpGateway = smtpGateway;
     }
 
-    public ClusterServiceInteractServerPortSegment getImapGateway() {
+    public ClusteredInteractServerPortSegment getImapGateway() {
         return imapGateway;
     }
 
-    public void setImapGateway(ClusterServiceInteractServerPortSegment imapGateway) {
+    public void setImapGateway(ClusteredInteractServerPortSegment imapGateway) {
         this.imapGateway = imapGateway;
     }
 

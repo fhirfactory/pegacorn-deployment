@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Mark A. Hunter (ACT Health)
+ * Copyright (c) 2021 Mark A. Hunter (ACT Health)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,13 +19,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.communicate.matrix;
+package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact;
 
-public interface SynapseServerConfigurationInterface {
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.StandardServerPortSegment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-    public String getSynapseServerName();
-    public String getSynapseServerAdminUserName();
-    public String getSynapseServerAdminPassword();
-    public String getSynapseDefaultRoomVersion();
-    public String getSynapsePreferredRoomVersion();
+public class StandardInteractHTTPServerPortSegment extends StandardInteractServerPortSegment {
+    private static Logger LOG = LoggerFactory.getLogger(StandardInteractHTTPServerPortSegment.class);
+
+    private String webServicePath;
+
+    public StandardInteractHTTPServerPortSegment(){
+        super();
+    }
+
+    @Override
+    protected Logger specifyLogger() {
+        return (LOG);
+    }
+
+    public String getWebServicePath() {
+        return webServicePath;
+    }
+
+    public void setWebServicePath(String webServicePath) {
+        this.webServicePath = webServicePath;
+    }
 }

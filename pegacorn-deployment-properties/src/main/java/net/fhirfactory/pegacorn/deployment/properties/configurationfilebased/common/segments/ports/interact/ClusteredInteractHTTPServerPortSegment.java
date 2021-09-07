@@ -22,12 +22,13 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact;
 
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemProperties;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.standard.HTTPClusteredServiceServerPortSegment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class HTTPClusteredServiceInteractServerPortSegment extends HTTPClusteredServiceServerPortSegment {
-    private static Logger LOG = LoggerFactory.getLogger(HTTPClusteredServiceInteractServerPortSegment.class);
+public class ClusteredInteractHTTPServerPortSegment extends ClusteredInteractServerPortSegment {
+    private static Logger LOG = LoggerFactory.getLogger(ClusteredInteractHTTPServerPortSegment.class);
+
+    private String webServicePath;
 
     @Override
     protected Logger specifyLogger(){
@@ -43,6 +44,14 @@ public class HTTPClusteredServiceInteractServerPortSegment extends HTTPClustered
     }
 
     private ConnectedSystemProperties targetSystem;
+
+    public String getWebServicePath() {
+        return webServicePath;
+    }
+
+    public void setWebServicePath(String webServicePath) {
+        this.webServicePath = webServicePath;
+    }
 
     @Override
     public String toString() {
