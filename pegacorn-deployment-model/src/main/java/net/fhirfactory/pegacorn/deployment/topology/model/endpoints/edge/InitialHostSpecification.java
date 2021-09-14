@@ -21,7 +21,9 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge;
 
-public class InitialHostSpecification {
+import java.io.Serializable;
+
+public class InitialHostSpecification implements Serializable {
     private String hostName;
     private String port;
 

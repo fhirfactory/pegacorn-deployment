@@ -6,10 +6,11 @@ import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.IPCClus
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.IPCTopologyEndpoint;
 import net.fhirfactory.pegacorn.deployment.topology.model.mode.ResilienceModeEnum;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class IPCInterface {
+public class IPCInterface implements Serializable {
     private TopologyNodeFDN enablingTopologyEndpoint;
     private String targetName;
     private String groupName;

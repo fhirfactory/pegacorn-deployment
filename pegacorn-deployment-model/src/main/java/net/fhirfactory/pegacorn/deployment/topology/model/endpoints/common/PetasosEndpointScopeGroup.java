@@ -1,6 +1,8 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common;
 
-public class PetasosEndpointScopeGroup {
+import java.io.Serializable;
+
+public class PetasosEndpointScopeGroup implements Serializable {
     PetasosEndpointChannelScopeEnum endpointScope;
     PetasosEndpoint ipcEndpoint;
     PetasosEndpoint oamDiscoveryEndpoint;

@@ -4,10 +4,11 @@ import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.Externa
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConnectedExternalSystemTopologyNode {
+public class ConnectedExternalSystemTopologyNode implements Serializable {
     private static final Logger LOG = LoggerFactory.getLogger(ConnectedExternalSystemTopologyNode.class);
 
     private String owningOrganizationName;

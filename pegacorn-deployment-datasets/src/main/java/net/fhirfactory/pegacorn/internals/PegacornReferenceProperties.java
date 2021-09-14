@@ -98,4 +98,8 @@ public class PegacornReferenceProperties {
         return("/local/fhir/code-systems");
     }
 
+    public String getITOpsContextPath(){
+        return("/pegacorn/internal/itops/r1");
+    }
+
 }

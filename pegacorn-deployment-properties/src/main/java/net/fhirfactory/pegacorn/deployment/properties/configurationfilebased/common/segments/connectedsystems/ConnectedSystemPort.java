@@ -28,6 +28,7 @@ public class ConnectedSystemPort {
     private Boolean encryptionRequired;
     private Integer targetPortValue;
     private String targetPortDNSName;
+    private String targetPath;
 
     public InterfaceDefinitionSegment getTargetInterfaceDefinition() {
         return targetInterfaceDefinition;
@@ -61,6 +62,14 @@ public class ConnectedSystemPort {
         this.targetPortDNSName = targetPortDNSName;
     }
 
+    public String getTargetPath() {
+        return targetPath;
+    }
+
+    public void setTargetPath(String targetPath) {
+        this.targetPath = targetPath;
+    }
+
     @Override
     public String toString() {
         return "ConnectedSystemPort{" +
@@ -68,6 +77,7 @@ public class ConnectedSystemPort {
                 ", encryptionRequired=" + encryptionRequired +
                 ", targetPortValue=" + targetPortValue +
                 ", targetPortDNSName='" + targetPortDNSName + '\'' +
+                ", targetPath='" + targetPath + '\'' +
                 '}';
     }
 }

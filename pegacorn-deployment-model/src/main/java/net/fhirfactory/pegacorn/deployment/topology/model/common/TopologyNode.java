@@ -32,10 +32,11 @@ import net.fhirfactory.pegacorn.deployment.topology.model.mode.ResilienceModeEnu
 import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 
+import java.io.Serializable;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class TopologyNode{
+public abstract class TopologyNode implements Serializable {
     abstract protected Logger getLogger();
     private TopologyNodeRDN nodeRDN;
     private TopologyNodeFDN nodeFDN;
@@ -115,6 +116,7 @@ public abstract class TopologyNode{
         getLogger().debug(".constructFDN(): Exit, nodeFDN->{}", this.getNodeFDN());
     }
 
+    @JsonIgnore
     public void constructNodeKey(){
         String fdnValue = getNodeRDN().getNodeName() + "-" + UUID.randomUUID().toString();
         setNodeKey(fdnValue);
@@ -228,6 +230,7 @@ public abstract class TopologyNode{
         this.otherConfigurationParameters = otherConfigurationParameters;
     }
 
+    @JsonIgnore
     public void addOtherConfigurationParameter(String key, String value){
         if(this.otherConfigurationParameters.containsKey(key)){
             this.otherConfigurationParameters.remove(key);

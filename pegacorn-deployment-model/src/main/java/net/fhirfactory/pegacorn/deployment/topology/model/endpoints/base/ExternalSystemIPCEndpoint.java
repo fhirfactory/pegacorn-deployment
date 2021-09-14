@@ -25,13 +25,16 @@ import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCInterfaceDef
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ExternalSystemIPCEndpoint {
+import java.io.Serializable;
+
+public class ExternalSystemIPCEndpoint implements Serializable {
     private static final Logger LOG = LoggerFactory.getLogger(ExternalSystemIPCEndpoint.class);
 
     private IPCInterfaceDefinition supportedInterfaceDefinition;
     private Boolean encryptionRequired;
     private Integer targetPortValue;
     private String targetPortDNSName;
+    private String targetPath;
 
     public IPCInterfaceDefinition getSupportedInterfaceDefinition() {
         return supportedInterfaceDefinition;
@@ -65,13 +68,22 @@ public class ExternalSystemIPCEndpoint {
         this.targetPortDNSName = targetPortDNSName;
     }
 
+    public String getTargetPath() {
+        return targetPath;
+    }
+
+    public void setTargetPath(String targetPath) {
+        this.targetPath = targetPath;
+    }
+
     @Override
     public String toString() {
-        return "ConnectedExternalSystemTopologyEndpoint{" +
+        return "ExternalSystemIPCEndpoint{" +
                 "supportedInterfaceDefinition=" + supportedInterfaceDefinition +
                 ", encryptionRequired=" + encryptionRequired +
                 ", targetPortValue=" + targetPortValue +
                 ", targetPortDNSName='" + targetPortDNSName + '\'' +
+                ", targetPath='" + targetPath + '\'' +
                 '}';
     }
 }

@@ -21,9 +21,10 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.model.common;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class IPCInterfaceDefinition {
+public class IPCInterfaceDefinition implements Serializable {
     private String interfaceFormalName;
     private String interfaceFormalVersion;
 

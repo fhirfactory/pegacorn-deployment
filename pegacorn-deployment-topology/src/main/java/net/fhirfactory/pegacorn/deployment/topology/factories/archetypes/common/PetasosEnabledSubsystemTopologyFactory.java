@@ -433,6 +433,7 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
         systemEndpointPort.setEncryptionRequired(connectedSystemPort.getEncryptionRequired());
         systemEndpointPort.setTargetPortDNSName(connectedSystemPort.getTargetPortDNSName());
         systemEndpointPort.setTargetPortValue(connectedSystemPort.getTargetPortValue());
+        systemEndpointPort.setTargetPath(connectedSystemPort.getTargetPath());
         IPCInterfaceDefinition currentInterfaceDefinition = new IPCInterfaceDefinition();
         currentInterfaceDefinition.setInterfaceFormalName(connectedSystemPort.getTargetInterfaceDefinition().getInterfaceDefinitionName());
         currentInterfaceDefinition.setInterfaceFormalVersion(connectedSystemPort.getTargetInterfaceDefinition().getInterfaceDefinitionVersion());
@@ -451,13 +452,13 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
             getLogger().debug(".newHTTPServer(): Exit, no port to add");
             return(null);
         }
-        // Unfortunately, the two different HTTP endpoints does inherent from the same superclass until way up in
+        // Unfortunately, the two different HTTP endpoints don't inherent from the same superclass until way up in
         // the chain - so we need to explicitly separate the creation/assignment of parameters... :(
         if(httpServerPort instanceof ClusteredInteractHTTPServerPortSegment) {
             ClusteredInteractHTTPServerPortSegment endpoint = (ClusteredInteractHTTPServerPortSegment) httpServerPort;
             String serverPath = endpoint.getWebServicePath();
             HTTPServerClusterServiceTopologyEndpointPort httpServer = new HTTPServerClusterServiceTopologyEndpointPort();
-            httpServer.setEncrypted(getPropertyFile().getDeploymentMode().isUsingInternalEncryption());
+            httpServer.setEncrypted(endpoint.isEncrypted());
             String name = getInterfaceNames().getEndpointServerName(endpointFunctionName);
             TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), TopologyNodeTypeEnum.ENDPOINT);
             httpServer.setNodeRDN(nodeRDN);
