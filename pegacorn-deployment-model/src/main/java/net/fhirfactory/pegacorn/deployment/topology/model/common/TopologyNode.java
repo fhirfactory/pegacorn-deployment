@@ -48,6 +48,8 @@ public abstract class TopologyNode implements Serializable {
     private ResilienceModeEnum resilienceMode;
     private NetworkSecurityZoneEnum securityZone;
     private ConcurrentHashMap<String, String> otherConfigurationParameters;
+    private String actualHostIP;
+    private String actualPodIP;
 
     public TopologyNode(){
         this.nodeRDN = null;
@@ -57,6 +59,22 @@ public abstract class TopologyNode implements Serializable {
         this.resilienceMode = null;
         this.nodeKey = null;
         this.otherConfigurationParameters = new ConcurrentHashMap<>();
+    }
+
+    public String getActualHostIP() {
+        return actualHostIP;
+    }
+
+    public void setActualHostIP(String actualHostIP) {
+        this.actualHostIP = actualHostIP;
+    }
+
+    public String getActualPodIP() {
+        return actualPodIP;
+    }
+
+    public void setActualPodIP(String actualPodIP) {
+        this.actualPodIP = actualPodIP;
     }
 
     public TopologyNodeRDN getNodeRDN() {
@@ -118,7 +136,7 @@ public abstract class TopologyNode implements Serializable {
 
     @JsonIgnore
     public void constructNodeKey(){
-        String fdnValue = getNodeRDN().getNodeName() + "-" + UUID.randomUUID().toString();
+        String fdnValue = getNodeRDN().getNodeName() + "::" + Long.toHexString(UUID.randomUUID().getLeastSignificantBits());
         setNodeKey(fdnValue);
     }
 

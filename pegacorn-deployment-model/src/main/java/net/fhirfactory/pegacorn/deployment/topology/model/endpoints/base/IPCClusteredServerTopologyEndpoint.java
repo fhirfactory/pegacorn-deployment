@@ -80,7 +80,7 @@ public class IPCClusteredServerTopologyEndpoint extends IPCServerTopologyEndpoin
                 ", portValue=" + getPortValue() +
                 ", portType='" + getPortType() + '\'' +
                 ", aServer=" + getaServer() +
-                ", encrypted=" + getEncrypted() +
+                ", encrypted=" + isEncrypted() +
                 ", interfaceDNSName='" + getHostDNSName() + '\'' +
                 ", name='" + getName() + '\'' +
                 ", additionalParameters=" + getAdditionalParameters() +

@@ -21,7 +21,7 @@
  */
 package net.fhirfactory.pegacorn.deployment.names.functionality.base;
 
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.PetasosTopologyEndpointTypeEnum;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.PetasosEndpointTopologyTypeEnum;
 
 public abstract class PegacornCommonInterfaceNamesBase {
 
@@ -53,12 +53,17 @@ public abstract class PegacornCommonInterfaceNamesBase {
     // Endpoint Name Builder
     //
     public String getEndpointServerName(String endpointFunction){
-        String endpointServerName = "IPCEndpoint:Server."+endpointFunction;
+        String endpointServerName = "IPCEndpoint:Server("+endpointFunction+")";
         return(endpointServerName);
     }
 
     public String getEndpointClientName(String endpointFunction){
-        String endpointClientName = "IPCEndpoint:Client."+endpointFunction;
+        String endpointClientName = "IPCEndpoint:Client("+endpointFunction+")";
+        return(endpointClientName);
+    }
+
+    public String getEndpointName(PetasosEndpointTopologyTypeEnum endpointType, String endpointFunction){
+        String endpointClientName = endpointType.getDisplayName() + "::"+ endpointFunction;
         return(endpointClientName);
     }
 

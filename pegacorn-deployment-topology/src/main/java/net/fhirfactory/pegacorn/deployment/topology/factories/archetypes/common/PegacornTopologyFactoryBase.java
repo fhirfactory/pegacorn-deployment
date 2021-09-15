@@ -36,11 +36,13 @@ import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.com
 import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.interfaces.SolutionNodeFactoryInterface;
 import net.fhirfactory.pegacorn.deployment.topology.manager.TopologyIM;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.valuesets.NetworkSecurityZoneEnum;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.PetasosEndpointTopologyTypeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.technologies.HTTPProcessingPlantTopologyEndpointPort;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.PetasosTopologyEndpointTypeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.mode.ConcurrencyModeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.mode.ResilienceModeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.*;
+import net.fhirfactory.pegacorn.internals.PegacornReferenceProperties;
+import net.fhirfactory.pegacorn.util.PegacornProperties;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
@@ -70,6 +72,9 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
 
     @Inject
     private PegacornCommonInterfaceNames interfaceNames;
+
+    @Inject
+    private PegacornProperties pegacornProperties;
 
     //
     // Default Constructor
@@ -136,6 +141,17 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
     //
     // Node Builders
     //
+
+    protected String getActualHostIP(){
+        String actualHostIP = pegacornProperties.getProperty("MY_HOST_IP", "Unknown");
+        return(actualHostIP);
+    }
+
+    protected String getActualPodIP(){
+        String actualHostIP = pegacornProperties.getProperty("MY_POD_IP", "Unknown");
+        return(actualHostIP);
+    }
+
 
     @Override
     public TopologyNodeRDN createNodeRDN(String nodeName, String nodeVersion, TopologyNodeTypeEnum nodeType){
@@ -278,9 +294,12 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
     public PlatformTopologyNode addPlatformNode(ClusterServiceTopologyNode clusterService){
         getLogger().debug(".addPlatformNode(): Entry");
         PlatformTopologyNode node = new PlatformTopologyNode();
-        String nodeName = "PlatformNode0"; // TODO Fix This --> lookup node namde for kubernets or do a reverse lookup DNS
-        TopologyNodeRDN nodeRDN = createNodeRDN(nodeName, getPropertyFile().getSubsystemInstant().getProcessingPlantVersion(), TopologyNodeTypeEnum.PLATFORM);
+        String hostName = pegacornProperties.getProperty("MY_POD_NAME", "PlatformNode0");
+//      TODO Fix This --> lookup POD Name or DNS Name
+        TopologyNodeRDN nodeRDN = createNodeRDN(hostName, getPropertyFile().getSubsystemInstant().getProcessingPlantVersion(), TopologyNodeTypeEnum.PLATFORM);
         node.constructFDN(clusterService.getNodeFDN(), nodeRDN);
+        node.setActualHostIP(getActualHostIP());
+        node.setActualPodIP(getActualPodIP());
         node.setComponentType(TopologyNodeTypeEnum.PLATFORM);
         node.constructFunctionFDN(clusterService.getNodeFunctionFDN(), nodeRDN);
         node.setNodeRDN(nodeRDN);
@@ -305,6 +324,8 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         String version = getPropertyFile().getSubsystemInstant().getProcessingPlantVersion();
         TopologyNodeRDN nodeRDN = createNodeRDN(name, version, TopologyNodeTypeEnum.PROCESSING_PLANT);
         processingPlant.setNodeRDN(nodeRDN);
+        processingPlant.setActualHostIP(getActualHostIP());
+        processingPlant.setActualPodIP(getActualPodIP());
         processingPlant.constructFDN(node.getNodeFDN(), nodeRDN);
         processingPlant.constructFunctionFDN(node.getNodeFunctionFDN(), nodeRDN);
         processingPlant.setResilienceMode(getResilienceMode());
@@ -466,7 +487,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         prometheusPort.setName(interfaceNames.getFunctionNamePrometheus());
         prometheusPort.constructFDN(processingPlant.getNodeFDN(), nodeRDN);
         prometheusPort.setPortType(port.getPortType());
-        prometheusPort.setEndpointType(PetasosTopologyEndpointTypeEnum.HTTP_API_SERVER);
+        prometheusPort.setEndpointType(PetasosEndpointTopologyTypeEnum.HTTP_API_SERVER);
         prometheusPort.setComponentType(TopologyNodeTypeEnum.ENDPOINT);
         prometheusPort.setPortValue(port.getPortValue());
         prometheusPort.constructFunctionFDN(processingPlant.getNodeFunctionFDN(), nodeRDN );
@@ -498,7 +519,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         jolokiaPort.setName(interfaceNames.getFunctionNameJolokia());
         jolokiaPort.constructFDN(processingPlant.getNodeFDN(), nodeRDN);
         jolokiaPort.setPortType(port.getPortType());
-        jolokiaPort.setEndpointType(PetasosTopologyEndpointTypeEnum.HTTP_API_SERVER);
+        jolokiaPort.setEndpointType(PetasosEndpointTopologyTypeEnum.HTTP_API_SERVER);
         jolokiaPort.setComponentType(TopologyNodeTypeEnum.ENDPOINT);
         jolokiaPort.setPortValue(port.getPortValue());
         jolokiaPort.constructFunctionFDN(processingPlant.getNodeFunctionFDN(), nodeRDN );
@@ -530,7 +551,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         kubeLivelinessPort.setName(interfaceNames.getFunctionNameKubeLiveliness());
         kubeLivelinessPort.constructFDN(processingPlant.getNodeFDN(), nodeRDN);
         kubeLivelinessPort.setPortType(port.getPortType());
-        kubeLivelinessPort.setEndpointType(PetasosTopologyEndpointTypeEnum.HTTP_API_SERVER);
+        kubeLivelinessPort.setEndpointType(PetasosEndpointTopologyTypeEnum.HTTP_API_SERVER);
         kubeLivelinessPort.setComponentType(TopologyNodeTypeEnum.ENDPOINT);
         kubeLivelinessPort.setPortValue(port.getPortValue());
         kubeLivelinessPort.constructFunctionFDN(processingPlant.getNodeFunctionFDN(), nodeRDN );
@@ -562,7 +583,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         kubeReadinessPort.setName(interfaceNames.getFunctionNameKubeReadiness());
         kubeReadinessPort.constructFDN(processingPlant.getNodeFDN(), nodeRDN);
         kubeReadinessPort.setPortType(port.getPortType());
-        kubeReadinessPort.setEndpointType(PetasosTopologyEndpointTypeEnum.HTTP_API_SERVER);
+        kubeReadinessPort.setEndpointType(PetasosEndpointTopologyTypeEnum.HTTP_API_SERVER);
         kubeReadinessPort.setComponentType(TopologyNodeTypeEnum.ENDPOINT);
         kubeReadinessPort.setPortValue(port.getPortValue());
         kubeReadinessPort.constructFunctionFDN(processingPlant.getNodeFunctionFDN(), nodeRDN );

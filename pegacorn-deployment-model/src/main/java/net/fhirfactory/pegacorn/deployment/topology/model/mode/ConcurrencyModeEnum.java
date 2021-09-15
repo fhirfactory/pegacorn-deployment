@@ -27,17 +27,23 @@ package net.fhirfactory.pegacorn.deployment.topology.model.mode;
  * @author Mark A. Hunter
  */
 public enum ConcurrencyModeEnum {
-    CONCURRENCY_MODE_STANDALONE("pegacorn.platform.petasos.concurrency_mode.standalone"),
-    CONCURRENCY_MODE_ONDEMAND("pegacorn.platform.petasos.concurrency_mode.ondemand"),
-    CONCURRENCY_MODE_CONCURRENT("pegacorn.platform.petasos.concurrency_mode.concurrent");
+    CONCURRENCY_MODE_STANDALONE("Standalone", "pegacorn.platform.petasos.concurrency_mode.standalone"),
+    CONCURRENCY_MODE_ONDEMAND("OnDemand", "pegacorn.platform.petasos.concurrency_mode.ondemand"),
+    CONCURRENCY_MODE_CONCURRENT("Concurrent", "pegacorn.platform.petasos.concurrency_mode.concurrent");
 
     private String petasosModuleMode;
+    private String displayName;
 
-    private ConcurrencyModeEnum(String moduleMode){
+    private ConcurrencyModeEnum(String displayName, String moduleMode){
         this.petasosModuleMode = moduleMode;
+        this.displayName = displayName;
     }
 
     public String getConcurrencyMode(){
         return(this.petasosModuleMode);
+    }
+
+    public String getDisplayName(){
+        return(this.displayName);
     }
 }

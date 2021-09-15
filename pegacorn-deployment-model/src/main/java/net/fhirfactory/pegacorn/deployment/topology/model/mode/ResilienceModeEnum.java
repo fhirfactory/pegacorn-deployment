@@ -23,22 +23,28 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.mode;
 
 public enum ResilienceModeEnum {
-    RESILIENCE_MODE_STANDALONE("pegacorn.platform.petasos.resilience_mode.standalone"),
-    RESILIENCE_MODE_KUBERNETES_STANDALONE("pegacorn.platform.petasos.resilience_mode.kubernetes_standalone"),
-    RESILIENCE_MODE_CLUSTERED("pegacorn.platform.petasos.resilience_mode.clustered"),
-    RESILIENCE_MODE_KUBERNETES_CLUSTERED("pegacorn.platform.petasos.resilience_mode.kubernetes_clustered"),
-    RESILIENCE_MODE_MULTISITE("pegacorn.platform.petasos.resileince_mode.multisite"),
-    RESILIENCE_MODE_MULTISITE_CLUSTERED("pegacorn.platform.petasos.resilience_mode.clustered_multisite"),
-    RESILIENCE_MODE_KUBERNETES_MULTISITE("pegacorn.platform.petasos.resilience_mode.kubernetes_multisite"),
-    RESILIENCE_MODE_KUBERNETES_MULTISITE_CLUSTERED("pegacorn.platform.petasos.resilience_mode.kubernetes_multisite_clustered");
+    RESILIENCE_MODE_STANDALONE("StandAlone", "pegacorn.platform.petasos.resilience_mode.standalone"),
+    RESILIENCE_MODE_KUBERNETES_STANDALONE("Kubenetes-SinglePod", "pegacorn.platform.petasos.resilience_mode.kubernetes_standalone"),
+    RESILIENCE_MODE_CLUSTERED("Clustered", "pegacorn.platform.petasos.resilience_mode.clustered"),
+    RESILIENCE_MODE_KUBERNETES_CLUSTERED("Kubernetes-Clustered", "pegacorn.platform.petasos.resilience_mode.kubernetes_clustered"),
+    RESILIENCE_MODE_MULTISITE("Multisite", "pegacorn.platform.petasos.resileince_mode.multisite"),
+    RESILIENCE_MODE_MULTISITE_CLUSTERED("Multisite-Clustered","pegacorn.platform.petasos.resilience_mode.clustered_multisite"),
+    RESILIENCE_MODE_KUBERNETES_MULTISITE("Multisite-Kubernetes-SinglePod", "pegacorn.platform.petasos.resilience_mode.kubernetes_multisite"),
+    RESILIENCE_MODE_KUBERNETES_MULTISITE_CLUSTERED("Multisite-Kubernetes-Clustered","pegacorn.platform.petasos.resilience_mode.kubernetes_multisite_clustered");
 
     private String petasosNodeMode;
+    private String displayName;
 
-    private ResilienceModeEnum(String nodeMode){
+    private ResilienceModeEnum(String nodeModeDisplayName, String nodeMode){
         this.petasosNodeMode = nodeMode;
+        this.displayName = nodeModeDisplayName;
     }
 
     public String getResilienceMode(){
         return(this.petasosNodeMode);
+    }
+
+    public String getDisplayName(){
+        return(this.displayName);
     }
 }

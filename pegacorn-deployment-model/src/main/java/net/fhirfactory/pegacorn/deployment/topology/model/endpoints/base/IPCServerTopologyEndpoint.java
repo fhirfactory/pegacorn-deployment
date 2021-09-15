@@ -12,10 +12,7 @@ public class IPCServerTopologyEndpoint extends IPCTopologyEndpoint {
     private int portValue;
     private String portType;
     private Boolean aServer;
-    private Boolean encrypted;
     private String hostDNSName;
-
-
 
     private ArrayList<IPCInterface> supportedInterfaceSet;
 
@@ -26,7 +23,6 @@ public class IPCServerTopologyEndpoint extends IPCTopologyEndpoint {
 
     public IPCServerTopologyEndpoint(){
         super();
-        encrypted = false;
         this.supportedInterfaceSet = new ArrayList<>();
     }
 
@@ -38,14 +34,6 @@ public class IPCServerTopologyEndpoint extends IPCTopologyEndpoint {
         ArrayList<IPCInterface> newSet = new ArrayList<>();
         newSet.addAll(supportedInterfaceSet);
         this.supportedInterfaceSet = newSet;
-    }
-
-    public boolean isEncrypted() {
-        return encrypted;
-    }
-
-    public void setEncrypted(boolean encrypted) {
-        this.encrypted = encrypted;
     }
 
     public int getPortValue() {
@@ -72,14 +60,6 @@ public class IPCServerTopologyEndpoint extends IPCTopologyEndpoint {
         this.aServer = aServer;
     }
 
-    public Boolean getEncrypted() {
-        return encrypted;
-    }
-
-    public void setEncrypted(Boolean encrypted) {
-        this.encrypted = encrypted;
-    }
-
     public String getHostDNSName() {
         return hostDNSName;
     }
@@ -104,7 +84,7 @@ public class IPCServerTopologyEndpoint extends IPCTopologyEndpoint {
                 ", portValue=" + portValue +
                 ", portType='" + portType + '\'' +
                 ", aServer=" + aServer +
-                ", encrypted=" + encrypted +
+                ", encrypted=" + isEncrypted() +
                 ", interfaceDNSName='" + hostDNSName + '\'' +
                 ", supportedInterfaceSet=" + supportedInterfaceSet +
                 ", additionalParameters=" + getAdditionalParameters() +

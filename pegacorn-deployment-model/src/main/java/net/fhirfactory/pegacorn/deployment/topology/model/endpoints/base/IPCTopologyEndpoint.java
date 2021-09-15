@@ -1,9 +1,10 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.valuesets.AdditionalParametersListEnum;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.PetasosTopologyEndpointTypeEnum;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.PetasosEndpointTopologyTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,13 +15,32 @@ public class IPCTopologyEndpoint extends TopologyNode {
     private static final Logger LOG = LoggerFactory.getLogger(IPCTopologyEndpoint.class);
 
     private String name;
-    private PetasosTopologyEndpointTypeEnum endpointType;
+    private PetasosEndpointTopologyTypeEnum endpointType;
     private Map<AdditionalParametersListEnum, String> additionalParameters;
     private String connectedSystemName;
+    private Boolean encrypted;
+    private TopologyNodeFDN implementingWUP;
 
     public IPCTopologyEndpoint(){
         super();
+        encrypted = false;
         this.additionalParameters = new HashMap<>();
+    }
+
+    public TopologyNodeFDN getImplementingWUP() {
+        return implementingWUP;
+    }
+
+    public void setImplementingWUP(TopologyNodeFDN implementingWUP) {
+        this.implementingWUP = implementingWUP;
+    }
+
+    public boolean isEncrypted() {
+        return encrypted;
+    }
+
+    public void setEncrypted(boolean encrypted) {
+        this.encrypted = encrypted;
     }
 
     public Map<AdditionalParametersListEnum, String> getAdditionalParameters() {
@@ -47,11 +67,11 @@ public class IPCTopologyEndpoint extends TopologyNode {
         this.name = name;
     }
 
-    public PetasosTopologyEndpointTypeEnum getEndpointType() {
+    public PetasosEndpointTopologyTypeEnum getEndpointType() {
         return endpointType;
     }
 
-    public void setEndpointType(PetasosTopologyEndpointTypeEnum endpointType) {
+    public void setEndpointType(PetasosEndpointTopologyTypeEnum endpointType) {
         this.endpointType = endpointType;
     }
 
@@ -82,10 +102,14 @@ public class IPCTopologyEndpoint extends TopologyNode {
                 ", resilienceMode=" + getResilienceMode() +
                 ", securityZone=" + getSecurityZone() +
                 ", kubernetesDeployed=" + isKubernetesDeployed() +
+                ", otherConfigurationParameters=" + getOtherConfigurationParameters() +
                 ", name='" + name + '\'' +
                 ", endpointType=" + endpointType +
                 ", additionalParameters=" + additionalParameters +
                 ", connectedSystemName='" + connectedSystemName + '\'' +
+                ", encrypted=" + encrypted +
+                ", implementingWUP=" + implementingWUP +
+                ", actualHostIP='" + getActualHostIP() + '\'' +
                 '}';
     }
 }

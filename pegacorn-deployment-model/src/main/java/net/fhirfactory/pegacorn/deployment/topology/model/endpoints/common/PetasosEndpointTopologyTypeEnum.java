@@ -22,28 +22,36 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common;
 
 public enum PetasosEndpointTopologyTypeEnum {
-    JGROUPS_INTRAZONE_SERVICE("endpoint.ipc_messaging.jgroups_intrazone" ),
-    JGROUPS_INTERZONE_SERVICE("endpoint.ipc_messaging.jgroups_interzone"),
-    JGROUPS_INTERSITE_SERVICE("endpoint.ipc_messaging.jgroups_intersite"),
-
-    MLLP_SERVER("endpoint.mllp_server"),
-    MLLP_CLIENT("endpoint.mllp_client"),
-    HTTP_API_SERVER("endpoint.http_api_server"),
-    HTTP_API_CLIENT("endpoint.http_api_client"),
-    SQL_SERVER("endpoint.sql_server"),
-    SQL_CLIENT("endpoint.sql_client"),
-    OTHER_API_SERVER("endpoint.other_type_of_server"),
-    OTHER_API_CLIENT("endpoint.other_type_of_client"),
-    OTHER("endpoint.other");
+    JGROUPS_INTRAZONE_SERVICE("JGroups.IntraZone","endpoint.ipc_messaging.jgroups_intrazone" ),
+    JGROUPS_INTERZONE_SERVICE("JGroups.InterZone", "endpoint.ipc_messaging.jgroups_interzone"),
+    JGROUPS_INTERSITE_SERVICE("JGroups.InterSite", "endpoint.ipc_messaging.jgroups_intersite"),
+    MLLP_SERVER("MLLP.Server","endpoint.mllp_server"),
+    MLLP_CLIENT("MLLP.Client","endpoint.mllp_client"),
+    HTTP_API_SERVER("HTTP.Server", "endpoint.http_api_server"),
+    HTTP_API_CLIENT("HTTP.Client", "endpoint.http_api_client"),
+    SQL_SERVER("SQL.Server", "endpoint.sql_server"),
+    SQL_CLIENT("SQL.Client", "endpoint.sql_client"),
+    LDAP_SERVER("LDAP.Server", "endpoint.ldap_server"),
+    LDAP_CLIENT("LDAP.Client", "endpoint.ldap_client"),
+    OTHER_API_SERVER("API.Server", "endpoint.other_type_of_server"),
+    OTHER_API_CLIENT("API.Client", "endpoint.other_type_of_client"),
+    OTHER_SERVER("Other.Server", "endpoint.other_server"),
+    OTHER_CLIENT("Other.Client", "endpoint.other_client");
 
     private String endpointType;
+    private String displayName;
 
-    private PetasosEndpointTopologyTypeEnum(String endpointType){
+    private PetasosEndpointTopologyTypeEnum(String displayName, String endpointType){
         this.endpointType = endpointType;
+        this.displayName = displayName;
     }
 
     public String getEndpointType(){
         return(this.endpointType);
+    }
+
+    public String getDisplayName(){
+        return(this.displayName);
     }
 
 }

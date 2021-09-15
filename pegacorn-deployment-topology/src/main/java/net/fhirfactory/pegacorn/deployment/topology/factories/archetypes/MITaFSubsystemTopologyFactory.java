@@ -35,7 +35,7 @@ import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.common.
 import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCInterface;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCInterfaceDefinition;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.ExternalSystemIPCEndpoint;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.PetasosTopologyEndpointTypeEnum;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.PetasosEndpointTopologyTypeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.interact.ClusteredInteractServerTopologyEndpointPort;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.interact.StandardInteractClientTopologyEndpointPort;
 import net.fhirfactory.pegacorn.deployment.topology.model.mode.ResilienceModeEnum;
@@ -61,13 +61,15 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
             return(null);
         }
         mllpServerTopologyNode.setEncrypted(mllpServerPort.isEncrypted());
-        String name = getInterfaceNames().getEndpointServerName(endpointFunctionName);
+        String name = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.MLLP_SERVER, endpointFunctionName);
         TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), TopologyNodeTypeEnum.ENDPOINT);
         mllpServerTopologyNode.setNodeRDN(nodeRDN);
+        mllpServerTopologyNode.setActualHostIP(getActualHostIP());
+        mllpServerTopologyNode.setActualPodIP(getActualPodIP());
         mllpServerTopologyNode.setName(endpointFunctionName);
         mllpServerTopologyNode.constructFDN(endpointProvider.getNodeFDN(), nodeRDN);
         mllpServerTopologyNode.setPortType(mllpServerPort.getPortType());
-        mllpServerTopologyNode.setEndpointType(PetasosTopologyEndpointTypeEnum.MLLP_SERVER);
+        mllpServerTopologyNode.setEndpointType(PetasosEndpointTopologyTypeEnum.MLLP_SERVER);
         mllpServerTopologyNode.setComponentType(TopologyNodeTypeEnum.ENDPOINT);
         mllpServerTopologyNode.setPortValue(mllpServerPort.getPortValue());
         mllpServerTopologyNode.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
@@ -110,17 +112,20 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
             getLogger().debug(".newMLLPClientEndpoint(): Exit, no port to add");
             return(null);
         }
-        String name = getInterfaceNames().getEndpointServerName(endpointFunctionName);
+        String name = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.MLLP_CLIENT, endpointFunctionName);
         TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), TopologyNodeTypeEnum.ENDPOINT);
         mllpClientTopologyNode.setNodeRDN(nodeRDN);
+        mllpClientTopologyNode.setActualPodIP(getActualPodIP());
+        mllpClientTopologyNode.setActualHostIP(getActualHostIP());
         mllpClientTopologyNode.setName(endpointFunctionName);
         mllpClientTopologyNode.constructFDN(endpointProvider.getNodeFDN(), nodeRDN);
-        mllpClientTopologyNode.setEndpointType(PetasosTopologyEndpointTypeEnum.MLLP_CLIENT);
+        mllpClientTopologyNode.setEndpointType(PetasosEndpointTopologyTypeEnum.MLLP_CLIENT);
         mllpClientTopologyNode.setComponentType(TopologyNodeTypeEnum.ENDPOINT);
         mllpClientTopologyNode.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
         mllpClientTopologyNode.setNodeRDN(nodeRDN);
         mllpClientTopologyNode.setContainingNodeFDN(endpointProvider.getNodeFDN());
         ConnectedSystemProperties connectedSystem = mllpClientPort.getConnectedSystem();
+        mllpClientTopologyNode.setConnectedSystemName(connectedSystem.getSubsystemName());
         ConnectedExternalSystemTopologyNode externalSystem = new ConnectedExternalSystemTopologyNode();
         externalSystem.setSubsystemName(connectedSystem.getSubsystemName());
         ConnectedSystemPort targetPort1 = connectedSystem.getTargetPort1();
