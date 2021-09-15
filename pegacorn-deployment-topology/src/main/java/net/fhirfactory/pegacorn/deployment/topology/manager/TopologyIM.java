@@ -84,64 +84,83 @@ public class TopologyIM {
                 LOG.trace(".addTopologyNode(): Adding a Subsystem, parent Solution->{}", solution);
                 SubsystemTopologyNode subsystem = (SubsystemTopologyNode) newNodeElement;
                 TopologyNodeFDN newNodeFDN = subsystem.getNodeFDN();
-                solution.getSubsystemList().add(newNodeFDN);
+                if(!solution.getSubsystemList().contains(newNodeFDN)) {
+                    solution.getSubsystemList().add(newNodeFDN);
+                }
                 break;
             }
             case EXTERNALISED_SERVICE: {
                 SubsystemTopologyNode subsystem = (SubsystemTopologyNode) parentNodeElement;
                 BusinessServiceTopologyNode businessService = (BusinessServiceTopologyNode) newNodeElement;
-                subsystem.getBusinessServices().add(businessService.getNodeFDN());
+                if(!subsystem.getBusinessServices().contains(businessService.getNodeFDN())) {
+                    subsystem.getBusinessServices().add(businessService.getNodeFDN());
+                }
                 break;
             }
             case SITE: {
                 BusinessServiceTopologyNode businessService = (BusinessServiceTopologyNode) parentNodeElement;
                 DeploymentSiteTopologyNode deploymentSite = (DeploymentSiteTopologyNode) newNodeElement;
-                businessService.getDeploymentSites().add(deploymentSite.getNodeFDN());
+                if(!businessService.getDeploymentSites().contains(deploymentSite.getNodeFDN())) {
+                    businessService.getDeploymentSites().add(deploymentSite.getNodeFDN());
+                }
                 break;
             }
             case CLUSTER_SERVICE:{
                 DeploymentSiteTopologyNode deploymentSite = (DeploymentSiteTopologyNode) parentNodeElement;
                 ClusterServiceTopologyNode clusterService = (ClusterServiceTopologyNode) newNodeElement;
-                deploymentSite.getClusterServices().add(clusterService.getNodeFDN());
+                if(!deploymentSite.getClusterServices().contains(clusterService.getNodeFDN())) {
+                    deploymentSite.getClusterServices().add(clusterService.getNodeFDN());
+                }
                 break;
             }
             case PLATFORM:{
                 ClusterServiceTopologyNode clusterService = (ClusterServiceTopologyNode) parentNodeElement;
                 PlatformTopologyNode platformTopologyNode = (PlatformTopologyNode) newNodeElement;
-                clusterService.getPlatformNodes().add(platformTopologyNode.getNodeFDN());
+                if(!clusterService.getPlatformNodes().contains(platformTopologyNode.getNodeFDN())) {
+                    clusterService.getPlatformNodes().add(platformTopologyNode.getNodeFDN());
+                }
                 break;
             }
             case PROCESSING_PLANT:{
                 PlatformTopologyNode platformTopologyNode = (PlatformTopologyNode) parentNodeElement;
                 ProcessingPlantTopologyNode processingPlant = (ProcessingPlantTopologyNode) newNodeElement;
-                platformTopologyNode.getProcessingPlants().add(processingPlant.getNodeFDN());
+                if(!platformTopologyNode.getProcessingPlants().contains(processingPlant.getNodeFDN())) {
+                    platformTopologyNode.getProcessingPlants().add(processingPlant.getNodeFDN());
+                }
                 break;
             }
             case WORKSHOP:{
                 ProcessingPlantTopologyNode processingPlant = (ProcessingPlantTopologyNode) parentNodeElement;
                 WorkshopTopologyNode workshop = (WorkshopTopologyNode) newNodeElement;
-                processingPlant.getWorkshops().add(workshop.getNodeFDN());
+                if(!processingPlant.getWorkshops().contains(workshop.getNodeFDN())) {
+                    processingPlant.getWorkshops().add(workshop.getNodeFDN());
+                }
                 break;
             }
             case WUP:{
                 WorkshopTopologyNode workshop = (WorkshopTopologyNode) parentNodeElement;
                 WorkUnitProcessorTopologyNode wup = (WorkUnitProcessorTopologyNode) newNodeElement;
-                workshop.getWupSet().add(wup.getNodeFDN());
-                WorkUnitProcessorComponentTopologyNode wupCore =  new WorkUnitProcessorComponentTopologyNode();
-                wupCore.setContainingNodeFDN(workshop.getNodeFDN());
-                wupCore.setComponentType(TopologyNodeTypeEnum.WUP_CORE);
-                TopologyNodeFDN newFDN = new TopologyNodeFDN(wup.getNodeFDN());
-                newFDN.appendTopologyNodeRDN(wup.getNodeRDN());
-                wupCore.setNodeFDN(newFDN);
-                wupCore.constructFunctionFDN(wup.getNodeFunctionFDN(), wup.getNodeRDN());
-                topologyDataManager.addTopologyNode(wupCore);
+                if(!workshop.getWupSet().contains(wup.getNodeFDN())) {
+                    workshop.getWupSet().add(wup.getNodeFDN());
+                    WorkUnitProcessorComponentTopologyNode wupCore = new WorkUnitProcessorComponentTopologyNode();
+                    wupCore.setContainingNodeFDN(workshop.getNodeFDN());
+                    wupCore.setComponentType(TopologyNodeTypeEnum.WUP_CORE);
+                    TopologyNodeFDN newFDN = new TopologyNodeFDN(wup.getNodeFDN());
+                    newFDN.appendTopologyNodeRDN(wup.getNodeRDN());
+                    wupCore.setNodeFDN(newFDN);
+                    wupCore.constructFunctionFDN(wup.getNodeFunctionFDN(), wup.getNodeRDN());
+                    topologyDataManager.addTopologyNode(wupCore);
+                }
                 break;
             }
             case WUP_INTERCHANGE_ROUTER:
             case WUP_INTERCHANGE_PAYLOAD_TRANSFORMER:{
                 WorkUnitProcessorTopologyNode wup = (WorkUnitProcessorTopologyNode) parentNodeElement;
                 WorkUnitProcessorInterchangeComponentTopologyNode wupInterchangeComponent = (WorkUnitProcessorInterchangeComponentTopologyNode) newNodeElement;
-                wup.getWupInterchangeComponents().add(wupInterchangeComponent.getNodeFDN());
+                if(!wup.getWupInterchangeComponents().contains(wupInterchangeComponent.getNodeFDN())) {
+                    wup.getWupInterchangeComponents().add(wupInterchangeComponent.getNodeFDN());
+                }
+                break;
             }
             case WUP_CORE:
             case WUP_CONTAINER_EGRESS_CONDUIT:
@@ -152,26 +171,43 @@ public class TopologyIM {
             case WUP_CONTAINER_INGRES_GATEKEEPER:{
                 WorkUnitProcessorTopologyNode wup = (WorkUnitProcessorTopologyNode) parentNodeElement;
                 WorkUnitProcessorComponentTopologyNode wupComponent = (WorkUnitProcessorComponentTopologyNode) newNodeElement;
-                wup.getWupComponents().add(wupComponent.getNodeFDN());
+                if(!wup.getWupInterchangeComponents().contains(wupComponent.getNodeFDN())) {
+                    wup.getWupComponents().add(wupComponent.getNodeFDN());
+                }
+                break;
             }
             case ENDPOINT:{
                 switch(parentNodeElement.getComponentType()){
                     case EXTERNALISED_SERVICE:{
                         BusinessServiceTopologyNode businessService = (BusinessServiceTopologyNode) parentNodeElement;
                         IPCTopologyEndpoint endpoint = (IPCTopologyEndpoint) newNodeElement;
-                        businessService.getExternalisedServices().add(endpoint.getNodeFDN());
+                        if(!businessService.getExternalisedServices().contains(endpoint.getNodeFDN())) {
+                            businessService.getExternalisedServices().add(endpoint.getNodeFDN());
+                        }
                         break;
                     }
                     case CLUSTER_SERVICE:{
                         ClusterServiceTopologyNode clusterService = (ClusterServiceTopologyNode) parentNodeElement;
                         IPCTopologyEndpoint endpoint = (IPCTopologyEndpoint) newNodeElement;
-                        clusterService.getServiceEndpoints().add(endpoint.getNodeFDN() );
+                        if(!clusterService.getServiceEndpoints().contains(endpoint.getNodeFDN())) {
+                            clusterService.getServiceEndpoints().add(endpoint.getNodeFDN());
+                        }
                         break;
                     }
                     case PROCESSING_PLANT:{
                         ProcessingPlantTopologyNode processingPlant = (ProcessingPlantTopologyNode) parentNodeElement;
                         IPCTopologyEndpoint endpoint = (IPCTopologyEndpoint) newNodeElement;
-                        processingPlant.getEndpoints().add(endpoint.getNodeFDN());
+                        if(!processingPlant.getEndpoints().contains(endpoint.getNodeFDN())) {
+                            processingPlant.getEndpoints().add(endpoint.getNodeFDN());
+                        }
+                        break;
+                    }
+                    case WUP:{
+                        WorkUnitProcessorTopologyNode wup = (WorkUnitProcessorTopologyNode) parentNodeElement;
+                        IPCTopologyEndpoint endpoint = (IPCTopologyEndpoint) newNodeElement;
+                        if(!wup.getEndpoints().contains(endpoint.getNodeFDN())) {
+                            wup.getEndpoints().add(endpoint.getNodeFDN());
+                        }
                         break;
                     }
                     default:
