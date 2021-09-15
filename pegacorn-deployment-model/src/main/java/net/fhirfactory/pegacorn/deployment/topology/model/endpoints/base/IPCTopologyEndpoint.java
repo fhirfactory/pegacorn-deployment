@@ -96,7 +96,7 @@ public class IPCTopologyEndpoint extends TopologyNode {
                 ", nodeFDN=" + getNodeFDN() +
                 ", componentType=" + getComponentType() +
                 ", containingNodeFDN=" + getContainingNodeFDN() +
-                ", nodeKey='" + getNodeKey() + '\'' +
+                ", componentId='" + getComponentId() + '\'' +
                 ", nodeFunctionFDN=" + getNodeFunctionFDN() +
                 ", concurrencyMode=" + getConcurrencyMode() +
                 ", resilienceMode=" + getResilienceMode() +

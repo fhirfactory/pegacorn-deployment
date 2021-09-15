@@ -184,7 +184,7 @@ public class ProcessingPlantTopologyNode extends TopologyNode implements Endpoin
                 ", nodeFDN=" + getNodeFDN() +
                 ", componentType=" + getComponentType() +
                 ", containingNodeFDN=" + getContainingNodeFDN() +
-                ", nodeKey='" + getNodeKey() + '\'' +
+                ", componentId='" + getComponentId() + '\'' +
                 ", nodeFunctionFDN=" + getNodeFunctionFDN() +
                 ", concurrencyMode=" + getConcurrencyMode() +
                 ", resilienceMode=" + getResilienceMode() +
