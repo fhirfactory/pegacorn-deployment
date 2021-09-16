@@ -40,7 +40,7 @@ public abstract class TopologyNode implements Serializable {
     abstract protected Logger getLogger();
     private TopologyNodeRDN nodeRDN;
     private TopologyNodeFDN nodeFDN;
-    private String componentId;
+    private String nodeKey;
     private TopologyNodeFunctionFDN nodeFunctionFDN;
     private TopologyNodeTypeEnum componentType;
     private TopologyNodeFDN containingNodeFDN;
@@ -57,7 +57,7 @@ public abstract class TopologyNode implements Serializable {
         this.nodeFunctionFDN = null;
         this.concurrencyMode = null;
         this.resilienceMode = null;
-        this.componentId = null;
+        this.nodeKey = null;
         this.otherConfigurationParameters = new ConcurrentHashMap<>();
     }
 
@@ -83,7 +83,7 @@ public abstract class TopologyNode implements Serializable {
 
     public void setNodeRDN(TopologyNodeRDN nodeRDN) {
         this.nodeRDN = nodeRDN;
-        constructComponentId();
+        constructNodeKey();
     }
 
     public TopologyNodeFDN getNodeFDN() {
@@ -93,7 +93,7 @@ public abstract class TopologyNode implements Serializable {
     public void setNodeFDN(TopologyNodeFDN nodeFDN) {
         this.nodeFDN = nodeFDN;
         setNodeRDN(nodeFDN.getLeafRDN());
-        constructComponentId();
+        constructNodeKey();
     }
 
     public TopologyNodeTypeEnum getComponentType() {
@@ -130,22 +130,22 @@ public abstract class TopologyNode implements Serializable {
             getLogger().trace(".constructFDN(): this.nodeFDN assigned->{}", this.getNodeFDN());
         }
         setNodeRDN(nodeRDN);
-        constructComponentId();
+        constructNodeKey();
         getLogger().debug(".constructFDN(): Exit, nodeFDN->{}", this.getNodeFDN());
     }
 
     @JsonIgnore
-    public void constructComponentId(){
+    public void constructNodeKey(){
         String fdnValue = getNodeRDN().getNodeName() + "::" + Long.toHexString(UUID.randomUUID().getLeastSignificantBits());
-        setComponentId(fdnValue);
+        setNodeKey(fdnValue);
     }
 
-    public String getComponentId() {
-        return componentId;
+    public String getNodeKey() {
+        return nodeKey;
     }
 
-    public void setComponentId(String componentId) {
-        this.componentId = componentId;
+    public void setNodeKey(String nodeKey) {
+        this.nodeKey = nodeKey;
     }
 
     public TopologyNodeFunctionFDN getNodeFunctionFDN() {
@@ -178,7 +178,7 @@ public abstract class TopologyNode implements Serializable {
             }
         }
         setNodeRDN(nodeRDN);
-        constructComponentId();
+        constructNodeKey();
         getLogger().debug(".constructFunctionFDN(): Exit, nodeFunctionFDN->{}", this.getNodeFunctionFDN());
     }
 

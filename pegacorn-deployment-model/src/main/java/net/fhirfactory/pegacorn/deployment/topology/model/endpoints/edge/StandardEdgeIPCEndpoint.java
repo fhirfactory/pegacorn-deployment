@@ -67,7 +67,7 @@ public class StandardEdgeIPCEndpoint extends IPCServerTopologyEndpoint {
                 ", nodeFDN=" + getNodeFDN() +
                 ", componentType=" + getComponentType() +
                 ", containingNodeFDN=" + getContainingNodeFDN() +
-                ", componentId='" + getComponentId() + '\'' +
+                ", nodeKey='" + getNodeKey() + '\'' +
                 ", nodeFunctionFDN=" + getNodeFunctionFDN() +
                 ", concurrencyMode=" + getConcurrencyMode() +
                 ", resilienceMode=" + getResilienceMode() +
