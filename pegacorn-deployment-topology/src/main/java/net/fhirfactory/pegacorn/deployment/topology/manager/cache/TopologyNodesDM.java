@@ -47,29 +47,24 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
 
     private SolutionTopologyNode deploymentSolution;
     private ConcurrentHashMap<TopologyNodeFDN, TopologyNode> nodeSet;
+    private Object nodeSetLock;
 
     public TopologyNodesDM() {
         LOG.debug(".TopologyDM(): Constructor initialisation");
         this.deploymentSolution = null;
         this.nodeSet = new ConcurrentHashMap<TopologyNodeFDN, TopologyNode>();
+        this.nodeSetLock = new Object();
     }
 
     private void insertOrOverwriteTopologyNode(SolutionTopologyNode node){
-        boolean found=false;
-        if(nodeSet.containsKey(node.getNodeFDN())){
-            nodeSet.remove(node.getNodeFDN());
-        } else {
-            Enumeration<TopologyNodeFDN> nodeEnumeration = nodeSet.keys();
-            while (nodeEnumeration.hasMoreElements()) {
-                TopologyNodeFDN currentNodeFDN = nodeEnumeration.nextElement();
-                TopologyNode currentNode = nodeSet.get(currentNodeFDN);
-                if (currentNode.getNodeFDN().equals(node.getNodeFDN())) {
-                    nodeSet.remove(currentNodeFDN);
-                    break;
-                }
+        LOG.debug(".insertOrOverwriteTopologyNode(): Entry");
+        synchronized (nodeSetLock) {
+            if (nodeSet.containsKey(node.getNodeFDN())) {
+                nodeSet.remove(node.getNodeFDN());
             }
+            nodeSet.put(node.getNodeFDN(), node);
         }
-        nodeSet.put(node.getNodeFDN(), node);
+        LOG.debug(".insertOrOverwriteTopologyNode(): Exit");
     }
 
     public SolutionTopologyNode getDeploymentSolution() {
@@ -77,8 +72,10 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
     }
 
     public void setDeploymentSolution(SolutionTopologyNode deploymentSolution) {
+        LOG.debug(".setDeploymentSolution(): Entry");
         this.deploymentSolution = deploymentSolution;
         insertOrOverwriteTopologyNode(deploymentSolution);
+        LOG.debug(".setDeploymentSolution(): Exit");
     }
 
     @Override
@@ -120,24 +117,12 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
         if (newElement.getNodeFDN() == null) {
             throw (new IllegalArgumentException(".addTopologyNode(): bad elementID within newElement"));
         }
-        boolean elementFound = false;
-        Enumeration<TopologyNodeFDN> elementIdentifiers = this.nodeSet.keys();
-        TopologyNodeFDN currentNodeID = null;
-        while (elementIdentifiers.hasMoreElements()) {
-            currentNodeID = elementIdentifiers.nextElement();
-            if (LOG.isTraceEnabled()) {
-                LOG.trace(".addTopologyNode(): Cache Entry --> {}", currentNodeID.toTag());
+        synchronized (nodeSetLock) {
+            Enumeration<TopologyNodeFDN> elementIdentifiers = this.nodeSet.keys();
+            if(this.nodeSet.containsKey(newElement.getNodeFDN())){
+                this.nodeSet.remove(newElement.getNodeFDN());
+
             }
-            if (currentNodeID.equals(newElement.getNodeFDN())){
-                LOG.trace(".addTopologyNode(): Element already in Cache");
-                elementFound = true;
-                break;
-            }
-        }
-        if (elementFound) {
-            this.nodeSet.remove(currentNodeID);
-            this.nodeSet.put(currentNodeID, newElement);
-        } else {
             this.nodeSet.put(newElement.getNodeFDN(), newElement);
         }
         LOG.debug(".addTopologyNode(): Exit");
@@ -152,21 +137,10 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
         if (elementID == null) {
             throw (new IllegalArgumentException(".removeNode(): elementID is null"));
         }
-        boolean elementFound = false;
-        Enumeration<TopologyNodeFDN> list = this.nodeSet.keys();
-        while (list.hasMoreElements()) {
-            TopologyNodeFDN currentNodeID = list.nextElement();
-            if (LOG.isTraceEnabled()) {
-                LOG.trace(".deleteTopologyNode(): Cache Entry --> {}", currentNodeID.toTag());
-            }
-            if (currentNodeID.equals(elementID)) {
-                LOG.trace(".deleteTopologyNode(): Element found, now removing it...");
+        synchronized (nodeSetLock){
+            if(this.nodeSet.containsKey(elementID)){
                 this.nodeSet.remove(elementID);
-                elementFound = true;
             }
-        }
-        if(!elementFound){
-            LOG.trace(".deleteTopologyNode(): No element with that elementID is in the map");
         }
         LOG.debug(".deleteTopologyNode(): Exit");
     }
@@ -182,7 +156,9 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
             LOG.debug(".getTopologyNodeSet(): Exit, The module map is empty, returning null");
             return (null);
         }
-        elementSet.addAll(this.nodeSet.values());
+        synchronized (nodeSetLock) {
+            elementSet.addAll(this.nodeSet.values());
+        }
         if (LOG.isDebugEnabled()) {
             LOG.debug(".getTopologyNodeSet(): Exit, returning an element set, size --> {}", elementSet.size());
         }
@@ -200,21 +176,24 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
             LOG.debug(".getTopologyNode(): Exit, provided a null nodeID , so returning null");
             return (null);
         }
-        Enumeration<TopologyNodeFDN> list = this.nodeSet.keys();
-        while (list.hasMoreElements()) {
-            TopologyNodeFDN currentNodeID = list.nextElement();
-            if (LOG.isTraceEnabled()) {
-                LOG.trace(".getTopologyNode(): Cache Entry --> {}", currentNodeID.toTag());
-            }
-            if (currentNodeID.equals(nodeID)) {
-                LOG.trace(".getTopologyNode(): Node found!!! WooHoo!");
-                TopologyNode retrievedNode = this.nodeSet.get(currentNodeID);
-                LOG.debug(".getTopologyNode(): Exit, returning Endpoint --> {}", retrievedNode);
-                return (retrievedNode);
+        TopologyNode retrievedNode = null;
+        synchronized (nodeSetLock) {
+            Enumeration<TopologyNodeFDN> list = this.nodeSet.keys();
+            while (list.hasMoreElements()) {
+                TopologyNodeFDN currentNodeID = list.nextElement();
+                if (LOG.isTraceEnabled()) {
+                    LOG.trace(".getTopologyNode(): Cache Entry --> {}", currentNodeID.toTag());
+                }
+                if (currentNodeID.equals(nodeID)) {
+                    LOG.trace(".getTopologyNode(): Node found!!! WooHoo!");
+                    retrievedNode = this.nodeSet.get(currentNodeID);
+                    LOG.debug(".getTopologyNode(): Exit, returning Endpoint --> {}", retrievedNode);
+                    break;
+                }
             }
         }
-        LOG.debug(".getNode(): Exit, returning null as an element with the specified ID was not in the map");
-        return (null);
+        LOG.debug(".getNode(): Exit, retrievedNode->{}", retrievedNode);
+        return (retrievedNode);
     }
 
 
@@ -232,14 +211,18 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
     public List<TopologyNode> nodeSearch(TopologyNodeTypeEnum nodeType, String nodeName, String nodeVersion){
         LOG.debug(".nodeSearch(): Entry, nodeType->{}, nodeName->{}, nodeVersion->{}", nodeType, nodeName, nodeVersion);
         ArrayList<TopologyNode> nodeList = new ArrayList<>();
-        for(TopologyNode currentNode: nodeSet.values()){
-            if(LOG.isTraceEnabled()){
+        Collection<TopologyNode> topologyNodes= null;
+        synchronized (nodeSetLock) {
+            topologyNodes = nodeSet.values();
+        }
+        for (TopologyNode currentNode: topologyNodes) {
+            if (LOG.isTraceEnabled()) {
                 LOG.trace(".nodeSearch(): Search Cache Entry : nodeRDN->{}, nodeComponentType->{}", currentNode.getNodeRDN(), currentNode.getComponentType());
             }
             boolean nodeTypeMatches = nodeType.equals(currentNode.getComponentType());
             boolean nodeNameMatches = nodeName.contentEquals(currentNode.getNodeRDN().getNodeName());
             boolean nodeVersionMatches = nodeVersion.contentEquals(currentNode.getNodeRDN().getNodeVersion());
-            if(nodeTypeMatches && nodeNameMatches && nodeVersionMatches){
+            if (nodeTypeMatches && nodeNameMatches && nodeVersionMatches) {
                 LOG.trace(".nodeSearch(): Node found!!! Adding to search result!");
                 nodeList.add(currentNode);
             }
@@ -248,7 +231,10 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
     }
 
     public NetworkSecurityZoneEnum getDeploymentNetworkSecurityZone(String nodeName){
-        Collection<TopologyNode> nodeCollection = nodeSet.values();
+        Collection<TopologyNode> nodeCollection = null;
+        synchronized (nodeSetLock) {
+            nodeCollection = nodeSet.values();
+        }
         for(TopologyNode currentNode: nodeCollection){
             boolean nameSame = currentNode.getNodeRDN().getNodeName().contentEquals(nodeName);
             boolean isProcessingPlant = currentNode.getComponentType().equals(TopologyNodeTypeEnum.PROCESSING_PLANT);

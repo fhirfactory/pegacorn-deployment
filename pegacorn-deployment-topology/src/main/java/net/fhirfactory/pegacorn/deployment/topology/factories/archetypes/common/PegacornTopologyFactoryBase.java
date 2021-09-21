@@ -101,11 +101,20 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
     public void initialise(){
         getLogger().debug(".initialise(): Entry");
         if(!initialised) {
-            getLogger().debug(".initialise(): Loading file!");
+            getLogger().info(".initialise(): Initalising......");
+            getLogger().info(".initialise(): [Solution Node Factory Initialisation]: Start");
             this.solutionNodeInterface.initialise();
+            getLogger().info(".initialise(): [Solution Node Factory Initialisation]: Finish");
+            getLogger().info(".initialise(): [Property File Loading]: Start");
             this.propertyFile = readPropertyFile();
+            getLogger().info(".initialise(): [Property File Loading]: Finish");
+            getLogger().info(".initialise(): [Subsystem Topology Building]: Start");
             this.processingPlantNode = buildSubsystemTopology();
+            getLogger().info(".initialise(): [Subsystem Topology Building]: Finish");
             this.initialised = true;
+            getLogger().info(".initialise(): Done.");
+        } else {
+            getLogger().info(".initialise(): Already initialised, nothing to do....");
         }
         getLogger().debug(".initialise(): Exit");
     }

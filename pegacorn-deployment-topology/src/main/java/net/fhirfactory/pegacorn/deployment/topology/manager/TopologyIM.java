@@ -47,6 +47,7 @@ import java.util.Set;
 public class TopologyIM {
 
     private static final Logger LOG = LoggerFactory.getLogger(TopologyIM.class);
+    private boolean initialised;
 
     @Inject
     private TopologyNodesDM topologyDataManager;
@@ -54,11 +55,30 @@ public class TopologyIM {
     @Inject
     private SolutionNodeFactoryInterface solutionNodeFactory;
 
+    public TopologyIM(){
+        this.initialised = false;
+    }
+
     @PostConstruct
     public void initialise(){
-        solutionNodeFactory.initialise();
-        SolutionTopologyNode solutionNode = solutionNodeFactory.getSolutionTopologyNode();
-        setDeploymentSolution(solutionNode);
+        LOG.debug(".initialise(): Entry");
+        if(!this.initialised) {
+            LOG.info(".initialise(): Initalising......");
+            LOG.info(".initialise(): [Solution Node Factory Initialisation]: Start");
+            solutionNodeFactory.initialise();
+            LOG.info(".initialise(): [Solution Node Factory Initialisation]: Finish");
+            LOG.info(".initialise(): [Solution Node Resolution]: Start");
+            SolutionTopologyNode solutionNode = solutionNodeFactory.getSolutionTopologyNode();
+            LOG.info(".initialise(): [Solution Node Resolution]: Finish");
+            LOG.info(".initialise(): [Solution Node Assignment]: Start");
+            setDeploymentSolution(solutionNode);
+            LOG.info(".initialise(): [Solution Node Assignment]: Finish");
+            this.initialised = true;
+            LOG.info(".initialise(): Done.");
+        } else {
+            LOG.debug(".initialise(): Already initialised, nothing to do....");
+        }
+        LOG.debug(".initialise(): Exit");
     }
 
     public void setDeploymentSolution(SolutionTopologyNode solution){
@@ -227,8 +247,10 @@ public class TopologyIM {
     }
 
     public Set<TopologyNode> getNodeElementSet() {
-        LOG.debug(".getNodeSet(): Entry");
-        return (topologyDataManager.getTopologyNodeSet());
+        LOG.debug(".getNodeElementSet(): Entry");
+        Set<TopologyNode> topologyNodeSet = topologyDataManager.getTopologyNodeSet();
+        LOG.debug(".getNodeElementSet(): Exit");
+        return (topologyNodeSet);
     }
 
     public TopologyNode getNode(TopologyNodeFDN nodeID) {

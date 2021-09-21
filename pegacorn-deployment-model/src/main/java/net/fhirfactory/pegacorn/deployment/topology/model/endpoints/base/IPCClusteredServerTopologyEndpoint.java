@@ -63,7 +63,7 @@ public class IPCClusteredServerTopologyEndpoint extends IPCServerTopologyEndpoin
                 ", nodeFDN=" + getNodeFDN() +
                 ", componentType=" + getComponentType() +
                 ", containingNodeFDN=" + getContainingNodeFDN() +
-                ", nodeKey='" + getNodeKey() + '\'' +
+                ", nodeKey='" + getComponentID() + '\'' +
                 ", nodeFunctionFDN=" + getNodeFunctionFDN() +
                 ", concurrencyMode=" + getConcurrencyMode() +
                 ", resilienceMode=" + getResilienceMode() +

@@ -33,6 +33,8 @@ public class PetasosEndpointIdentifier implements Serializable {
     private String endpointGroup;
     private String endpointSite;
     private String endpointDetailedAddressName;
+    private String endpointComponentID;
+    private String processingPlantComponentID;
 
     public PetasosEndpointIdentifier(){
         this.endpointName = null;
@@ -41,6 +43,8 @@ public class PetasosEndpointIdentifier implements Serializable {
         this.endpointSite = null;
         this.endpointZone = null;
         this.endpointDetailedAddressName = null;
+        this.endpointComponentID = null;
+        this.processingPlantComponentID = null;
     }
 
     public String getEndpointName() {
@@ -91,6 +95,35 @@ public class PetasosEndpointIdentifier implements Serializable {
         this.endpointDetailedAddressName = endpointDetailedAddressName;
     }
 
+    public String getEndpointComponentID() {
+        return endpointComponentID;
+    }
+
+    public void setEndpointComponentID(String endpointComponentID) {
+        this.endpointComponentID = endpointComponentID;
+    }
+
+    public String getProcessingPlantComponentID() {
+        return processingPlantComponentID;
+    }
+
+    public void setProcessingPlantComponentID(String processingPlantComponentID) {
+        this.processingPlantComponentID = processingPlantComponentID;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PetasosEndpointIdentifier)) return false;
+        PetasosEndpointIdentifier that = (PetasosEndpointIdentifier) o;
+        return Objects.equals(getEndpointName(), that.getEndpointName()) && Objects.equals(getEndpointChannelName(), that.getEndpointChannelName()) && getEndpointZone() == that.getEndpointZone() && Objects.equals(getEndpointGroup(), that.getEndpointGroup()) && Objects.equals(getEndpointSite(), that.getEndpointSite()) && Objects.equals(getEndpointDetailedAddressName(), that.getEndpointDetailedAddressName()) && Objects.equals(getEndpointComponentID(), that.getEndpointComponentID()) && Objects.equals(getProcessingPlantComponentID(), that.getProcessingPlantComponentID());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getEndpointName(), getEndpointChannelName(), getEndpointZone(), getEndpointGroup(), getEndpointSite(), getEndpointDetailedAddressName(), getEndpointComponentID(), getProcessingPlantComponentID());
+    }
+
     @Override
     public String toString() {
         return "PetasosEndpointIdentifier{" +
@@ -100,19 +133,8 @@ public class PetasosEndpointIdentifier implements Serializable {
                 ", endpointGroup='" + endpointGroup + '\'' +
                 ", endpointSite='" + endpointSite + '\'' +
                 ", endpointDetailedAddressName='" + endpointDetailedAddressName + '\'' +
+                ", endpointComponentID='" + endpointComponentID + '\'' +
+                ", processingPlantComponentID='" + processingPlantComponentID + '\'' +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof PetasosEndpointIdentifier)) return false;
-        PetasosEndpointIdentifier that = (PetasosEndpointIdentifier) o;
-        return Objects.equals(getEndpointName(), that.getEndpointName()) && Objects.equals(getEndpointChannelName(), that.getEndpointChannelName()) && getEndpointZone() == that.getEndpointZone() && Objects.equals(getEndpointGroup(), that.getEndpointGroup()) && Objects.equals(getEndpointSite(), that.getEndpointSite()) && Objects.equals(getEndpointDetailedAddressName(), that.getEndpointDetailedAddressName());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getEndpointName(), getEndpointChannelName(), getEndpointZone(), getEndpointGroup(), getEndpointSite(), getEndpointDetailedAddressName());
     }
 }
