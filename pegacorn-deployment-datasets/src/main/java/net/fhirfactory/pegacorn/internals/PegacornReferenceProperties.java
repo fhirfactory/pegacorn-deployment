@@ -102,4 +102,7 @@ public class PegacornReferenceProperties {
         return("/pegacorn/internal/itops/r1");
     }
 
+    public String getAuditDMContextPath(){
+        return("/pegacorn/hestia/audit-event");
+    }
 }
