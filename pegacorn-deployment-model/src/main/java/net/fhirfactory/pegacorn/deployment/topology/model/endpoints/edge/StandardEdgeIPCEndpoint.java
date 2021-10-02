@@ -67,7 +67,7 @@ public class StandardEdgeIPCEndpoint extends IPCServerTopologyEndpoint {
                 ", nodeFDN=" + getNodeFDN() +
                 ", componentType=" + getComponentType() +
                 ", containingNodeFDN=" + getContainingNodeFDN() +
-                ", nodeKey='" + getComponentID() + '\'' +
+                ", nodeKey=" + getComponentID() +
                 ", nodeFunctionFDN=" + getNodeFunctionFDN() +
                 ", concurrencyMode=" + getConcurrencyMode() +
                 ", resilienceMode=" + getResilienceMode() +
@@ -76,15 +76,15 @@ public class StandardEdgeIPCEndpoint extends IPCServerTopologyEndpoint {
                 ", supportedInterfaceSet=" + getSupportedInterfaceSet() +
                 ", encrypted=" + isEncrypted() +
                 ", portValue=" + getPortValue() +
-                ", portType='" + getPortType() + '\'' +
+                ", portType=" + getPortType() +
                 ", aServer=" + getaServer() +
                 ", encrypted=" + isEncrypted() +
-                ", interfaceDNSName='" + getHostDNSName() + '\'' +
+                ", interfaceDNSName=" + getHostDNSName() +
                 ", additionalParameters=" + getAdditionalParameters() +
-                ", name='" + getName() + '\'' +
+                ", name=" + getName() +
                 ", endpointType=" + getEndpointType() +
                 ", initialHosts=" + initialHosts +
-                ", nameSpace='" + nameSpace + '\'' +
+                ", nameSpace=" + nameSpace +
                 '}';
     }
 }

@@ -77,14 +77,14 @@ public abstract class StandardClusterServiceServerPortSegment extends StandardSe
     public String toString() {
         return "StandardClusterServicePortSegment{" +
                 "portValue=" + getPortValue() +
-                ", portType='" + getPortType() + '\'' +
+                ", portType=" + getPortType() +
                 ", isServer=" + isServer() +
                 ", isEncrypted=" + isEncrypted() +
-                ", hostDNSEntry='" + getHostDNSEntry() + '\'' +
+                ", hostDNSEntry=" + getHostDNSEntry() +
                 ", supportedInterfaceProfiles=" + getSupportedInterfaceProfiles() +
                 ", servicePortValue=" + servicePortValue +
-                ", servicePortName='" + servicePortName + '\'' +
-                ", serviceDNSEntry='" + serviceDNSEntry + '\'' +
+                ", servicePortName=" + servicePortName +
+                ", serviceDNSEntry=" + serviceDNSEntry +
                 ", clusterServicePortOffsetValue=" + clusterServicePortOffsetValue +
                 '}';
     }

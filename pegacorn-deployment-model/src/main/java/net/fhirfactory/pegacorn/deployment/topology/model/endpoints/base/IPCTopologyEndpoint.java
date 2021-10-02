@@ -96,20 +96,20 @@ public class IPCTopologyEndpoint extends TopologyNode {
                 ", nodeFDN=" + getNodeFDN() +
                 ", componentType=" + getComponentType() +
                 ", containingNodeFDN=" + getContainingNodeFDN() +
-                ", nodeKey='" + getComponentID() + '\'' +
+                ", nodeKey=" + getComponentID() +
                 ", nodeFunctionFDN=" + getNodeFunctionFDN() +
                 ", concurrencyMode=" + getConcurrencyMode() +
                 ", resilienceMode=" + getResilienceMode() +
                 ", securityZone=" + getSecurityZone() +
                 ", kubernetesDeployed=" + isKubernetesDeployed() +
                 ", otherConfigurationParameters=" + getOtherConfigurationParameters() +
-                ", name='" + name + '\'' +
+                ", name=" + name +
                 ", endpointType=" + endpointType +
                 ", additionalParameters=" + additionalParameters +
-                ", connectedSystemName='" + connectedSystemName + '\'' +
+                ", connectedSystemName=" + connectedSystemName +
                 ", encrypted=" + encrypted +
                 ", implementingWUP=" + implementingWUP +
-                ", actualHostIP='" + getActualHostIP() + '\'' +
+                ", actualHostIP=" + getActualHostIP() +
                 '}';
     }
 }

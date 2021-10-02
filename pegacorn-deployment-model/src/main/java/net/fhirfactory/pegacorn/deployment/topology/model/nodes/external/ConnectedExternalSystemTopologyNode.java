@@ -83,12 +83,12 @@ public class ConnectedExternalSystemTopologyNode implements Serializable {
     @Override
     public String toString() {
         return "ConnectedExternalSystemTopologyNode{" +
-                "owningOrganizationName='" + owningOrganizationName + '\'' +
-                ", solutionName='" + solutionName + '\'' +
-                ", subsystemName='" + subsystemName + '\'' +
-                ", subsystemVersion='" + subsystemVersion + '\'' +
-                ", externalisedServiceName='" + externalisedServiceName + '\'' +
-                ", externalisedServiceEndpointName='" + externalisedServiceEndpointName + '\'' +
+                "owningOrganizationName=" + owningOrganizationName +
+                ", solutionName=" + solutionName +
+                ", subsystemName=" + subsystemName +
+                ", subsystemVersion=" + subsystemVersion +
+                ", externalisedServiceName=" + externalisedServiceName +
+                ", externalisedServiceEndpointName=" + externalisedServiceEndpointName +
                 ", targetPorts=" + targetPorts +
                 '}';
     }

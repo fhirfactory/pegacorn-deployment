@@ -73,15 +73,15 @@ public class ClusteredInteractServerPortSegment extends StandardInteractServerPo
     public String toString() {
         return "ClusteredInteractServerPortSegment{" +
                 "servicePortValue=" + servicePortValue +
-                ", servicePortName='" + servicePortName + '\'' +
-                ", serviceDNSEntry='" + serviceDNSEntry + '\'' +
+                ", servicePortName=" + servicePortName +
+                ", serviceDNSEntry=" + serviceDNSEntry +
                 ", clusterServicePortOffsetValue=" + clusterServicePortOffsetValue +
-                ", portType='" + getPortType() + '\'' +
+                ", portType=" + getPortType() +
                 ", connectedSystem=" + getConnectedSystem() +
                 ", startupDelay=" + getStartupDelay() +
-                ", name='" + getName() + '\'' +
+                ", name=" + getName() +
                 ", server=" + isServer() +
-                ", hostDNSEntry='" + getHostDNSEntry() + '\'' +
+                ", hostDNSEntry=" + getHostDNSEntry() +
                 ", supportedInterfaceProfiles=" + getSupportedInterfaceProfiles() +
                 ", startupDelay=" + getStartupDelay() +
                 ", portValue=" + getPortValue() +

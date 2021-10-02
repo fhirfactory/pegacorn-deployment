@@ -46,8 +46,8 @@ public class InitialHostSpecification implements Serializable {
     @Override
     public String toString() {
         return "InitialHostSpecification{" +
-                "hostName='" + hostName + '\'' +
-                ", port='" + port + '\'' +
+                "hostName=" + hostName +
+                ", port=" + port +
                 '}';
     }
 }

@@ -53,12 +53,12 @@ public class JGroupsIPCServerPortSegment extends StandardServerPortSegment {
     public String toString() {
         return "JGroupsIPCPortSegment{" +
                 "portValue=" + getPortValue() +
-                ", portType='" + getPortType() + '\'' +
+                ", portType=" + getPortType() +
                 ", server=" + isServer() +
                 ", encrypted=" + isEncrypted() +
                 ", supportedInterfaceProfiles=" + getSupportedInterfaceProfiles() +
-                ", hostDNSEntry='" + getHostDNSEntry() + '\'' +
-                ", initialHosts='" + initialHosts + '\'' +
+                ", hostDNSEntry=" + getHostDNSEntry() +
+                ", initialHosts=" + initialHosts +
                 '}';
     }
 }

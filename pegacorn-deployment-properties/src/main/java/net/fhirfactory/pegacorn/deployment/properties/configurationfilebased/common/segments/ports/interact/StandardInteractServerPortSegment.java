@@ -84,12 +84,12 @@ public class StandardInteractServerPortSegment extends StandardExternalFacingPor
     @Override
     public String toString() {
         return "StandardInteractServerPortSegment{" +
-                "portType='" + getPortType() + '\'' +
+                "portType=" + getPortType() +
                 ", connectedSystem=" + getConnectedSystem() +
-                ", name='" + getName() + '\'' +
+                ", name=" + getName() +
                 ", server=" + isServer() +
                 ", portValue=" + portValue +
-                ", hostDNSEntry='" + hostDNSEntry + '\'' +
+                ", hostDNSEntry=" + hostDNSEntry +
                 ", supportedInterfaceProfiles=" + supportedInterfaceProfiles +
                 ", startupDelay=" + startupDelay +
                 ", encrypted=" + encrypted +

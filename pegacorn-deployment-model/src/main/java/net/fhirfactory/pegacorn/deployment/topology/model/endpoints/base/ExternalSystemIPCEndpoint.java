@@ -82,8 +82,8 @@ public class ExternalSystemIPCEndpoint implements Serializable {
                 "supportedInterfaceDefinition=" + supportedInterfaceDefinition +
                 ", encryptionRequired=" + encryptionRequired +
                 ", targetPortValue=" + targetPortValue +
-                ", targetPortDNSName='" + targetPortDNSName + '\'' +
-                ", targetPath='" + targetPath + '\'' +
+                ", targetPortDNSName=" + targetPortDNSName +
+                ", targetPath=" + targetPath +
                 '}';
     }
 }

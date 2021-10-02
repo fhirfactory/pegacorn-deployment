@@ -52,7 +52,7 @@ public abstract class CommunicateRoomServerIMTopologyFactory extends PetasosEnab
     }
 
     public void buildClusterServiceEndpoints(CommunicateRoomServerIMPropertyFile propertyFile, ClusterServiceTopologyNode serviceNode) {
-        LOG.debug(".buildClusterServiceEndpoints(): Entry");
+        getLogger().debug(".buildClusterServiceEndpoints(): Entry");
         IPCClusteredServerTopologyEndpoint matrixClientServicesServer = new IPCClusteredServerTopologyEndpoint();
         String name = roomServerComponentNames.getEndpointServerName(roomServerComponentNames.getFunctionNameMatrixClientServices());
         TopologyNodeRDN serverRDN = createNodeRDN(name, propertyFile.getSubsystemInstant().getProcessingPlantVersion(), TopologyNodeTypeEnum.ENDPOINT);
@@ -68,11 +68,11 @@ public abstract class CommunicateRoomServerIMTopologyFactory extends PetasosEnab
         matrixClientServicesServer.setServicePortValue(propertyFile.getMatrixClientServicesAPI().getServicePortValue());
         matrixClientServicesServer.setEncrypted(propertyFile.getDeploymentMode().isUsingInternalEncryption());
         serviceNode.getServiceEndpoints().add(matrixClientServicesServer.getNodeFDN());
-        LOG.debug(".buildClusterServiceEndpoints(): Exit");
+        getLogger().debug(".buildClusterServiceEndpoints(): Exit");
     }
 
     public void buildProcessingPlantEndpoints(CommunicateRoomServerIMPropertyFile propertyFile, ProcessingPlantTopologyNode processingPlantNode) {
-        LOG.debug(".buildProcessingPlantEndpoints(): Entry");
+        getLogger().debug(".buildProcessingPlantEndpoints(): Entry");
         HTTPProcessingPlantTopologyEndpointPort matrixApplicationServicesClient = new HTTPProcessingPlantTopologyEndpointPort();
         String clientName = communicateIrisComponentNames.getEndpointClientName(communicateIrisComponentNames.getFunctionNameInteractMatrixApplicationServices());
         TopologyNodeRDN clientRDN = createNodeRDN(clientName, propertyFile.getSubsystemInstant().getProcessingPlantVersion(), TopologyNodeTypeEnum.ENDPOINT);
@@ -97,6 +97,6 @@ public abstract class CommunicateRoomServerIMTopologyFactory extends PetasosEnab
         matrixClientServicesServer.setHostDNSName(roomServerComponentNames.getDefaultInterfaceNameForBinding());
         matrixClientServicesServer.setPortValue(propertyFile.getMatrixClientServicesAPI().getPortValue());
         processingPlantNode.getEndpoints().add(matrixClientServicesServer.getNodeFDN());
-        LOG.debug(".buildProcessingPlantEndpoints(): Exit");
+        getLogger().debug(".buildProcessingPlantEndpoints(): Exit");
     }
 }

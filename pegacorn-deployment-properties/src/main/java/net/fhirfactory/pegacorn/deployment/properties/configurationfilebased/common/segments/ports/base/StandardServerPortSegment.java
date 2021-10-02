@@ -21,7 +21,6 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base;
 
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemProperties;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -127,13 +126,13 @@ public abstract class StandardServerPortSegment {
     public String toString() {
         return "StandardServerPortSegment{" +
                 "portValue=" + portValue +
-                ", portType='" + portType + '\'' +
+                ", portType=" + portType +
                 ", isServer=" + isServer +
                 ", isEncrypted=" + isEncrypted +
-                ", hostDNSEntry='" + hostDNSEntry + '\'' +
+                ", hostDNSEntry=" + hostDNSEntry +
                 ", supportedInterfaceProfiles=" + supportedInterfaceProfiles +
                 ", startupDelay=" + startupDelay +
-                ", name='" + name + '\'' +
+                ", name=" + name +
                 ", server=" + getServer() +
                 ", server=" + isServer() +
                 ", encrypted=" + getEncrypted() +

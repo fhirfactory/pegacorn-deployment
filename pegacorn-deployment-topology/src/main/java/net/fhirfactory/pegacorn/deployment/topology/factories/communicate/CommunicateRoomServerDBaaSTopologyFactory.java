@@ -46,7 +46,7 @@ public abstract class CommunicateRoomServerDBaaSTopologyFactory extends Pegacorn
     }
 
     public void buildProcessingPlantEndpoints(DBaaSSubSystemPropertyFile propertyFile, ProcessingPlantTopologyNode processingPlantNode) {
-        LOG.debug(".buildProcessingPlantEndpoints(): Entry");
+        getLogger().debug(".buildProcessingPlantEndpoints(): Entry");
         StandardEdgeIPCEndpoint roomServerPostgreSQLServer = new StandardEdgeIPCEndpoint();
         String appServicesName = roomServerComponentNames.getEndpointServerName(roomServerComponentNames.getFunctionNameDBaaSPostgreSQL());
         roomServerPostgreSQLServer.setaServer(true);
@@ -59,6 +59,6 @@ public abstract class CommunicateRoomServerDBaaSTopologyFactory extends Pegacorn
         roomServerPostgreSQLServer.setHostDNSName(roomServerComponentNames.getDefaultInterfaceNameForBinding());
         roomServerPostgreSQLServer.setPortValue(propertyFile.getSqlServerPort().getPortValue());
         processingPlantNode.getEndpoints().add(roomServerPostgreSQLServer.getNodeFDN());
-        LOG.debug(".buildProcessingPlantEndpoints(): Exit");
+        getLogger().debug(".buildProcessingPlantEndpoints(): Exit");
     }
 }
