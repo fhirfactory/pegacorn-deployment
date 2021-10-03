@@ -30,52 +30,6 @@ import java.util.ArrayList;
 public class StandardInteractServerPortSegment extends StandardExternalFacingPort {
     private static Logger LOG = LoggerFactory.getLogger(StandardInteractServerPortSegment.class);
 
-    private int portValue;
-    private String hostDNSEntry;
-    private ArrayList<InterfaceDefinitionSegment> supportedInterfaceProfiles;
-    private int startupDelay;
-    private boolean encrypted;
-
-    public String getHostDNSEntry() {
-        return hostDNSEntry;
-    }
-
-    public void setHostDNSEntry(String hostDNSEntry) {
-        this.hostDNSEntry = hostDNSEntry;
-    }
-
-    public ArrayList<InterfaceDefinitionSegment> getSupportedInterfaceProfiles() {
-        return supportedInterfaceProfiles;
-    }
-
-    public void setSupportedInterfaceProfiles(ArrayList<InterfaceDefinitionSegment> supportedInterfaceProfiles) {
-        this.supportedInterfaceProfiles = supportedInterfaceProfiles;
-    }
-
-    public int getStartupDelay() {
-        return startupDelay;
-    }
-
-    public void setStartupDelay(int startupDelay) {
-        this.startupDelay = startupDelay;
-    }
-
-    public int getPortValue() {
-        return portValue;
-    }
-
-    public void setPortValue(int portValue) {
-        this.portValue = portValue;
-    }
-
-    public boolean isEncrypted() {
-        return encrypted;
-    }
-
-    public void setEncrypted(boolean encrypted) {
-        this.encrypted = encrypted;
-    }
-
     @Override
     protected Logger specifyLogger() {
         return (LOG);
@@ -88,11 +42,11 @@ public class StandardInteractServerPortSegment extends StandardExternalFacingPor
                 ", connectedSystem=" + getConnectedSystem() +
                 ", name=" + getName() +
                 ", server=" + isServer() +
-                ", portValue=" + portValue +
-                ", hostDNSEntry=" + hostDNSEntry +
-                ", supportedInterfaceProfiles=" + supportedInterfaceProfiles +
-                ", startupDelay=" + startupDelay +
-                ", encrypted=" + encrypted +
+                ", portValue=" + getPortValue() +
+                ", hostDNSEntry=" + getHostDNSEntry() +
+                ", supportedInterfaceProfiles=" + getSupportedInterfaceProfiles() +
+                ", startupDelay=" + getStartupDelay() +
+                ", encrypted=" + isEncrypted() +
                 '}';
     }
 }
