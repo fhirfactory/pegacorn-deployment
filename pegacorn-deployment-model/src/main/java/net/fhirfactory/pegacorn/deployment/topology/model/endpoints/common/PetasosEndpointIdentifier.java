@@ -127,14 +127,14 @@ public class PetasosEndpointIdentifier implements Serializable {
     @Override
     public String toString() {
         return "PetasosEndpointIdentifier{" +
-                "endpointName='" + endpointName + '\'' +
-                ", endpointChannelName='" + endpointChannelName + '\'' +
+                "endpointName=" + endpointName +
+                ", endpointChannelName=" + endpointChannelName +
                 ", endpointZone=" + endpointZone +
-                ", endpointGroup='" + endpointGroup + '\'' +
-                ", endpointSite='" + endpointSite + '\'' +
-                ", endpointDetailedAddressName='" + endpointDetailedAddressName + '\'' +
-                ", endpointComponentID='" + endpointComponentID + '\'' +
-                ", processingPlantComponentID='" + processingPlantComponentID + '\'' +
+                ", endpointGroup=" + endpointGroup +
+                ", endpointSite=" + endpointSite +
+                ", endpointDetailedAddressName=" + endpointDetailedAddressName +
+                ", endpointComponentID=" + endpointComponentID +
+                ", processingPlantComponentID=" + processingPlantComponentID +
                 '}';
     }
 }

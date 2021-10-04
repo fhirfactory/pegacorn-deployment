@@ -177,12 +177,12 @@ public class DeploymentModeSegment {
                 ", processingPlantReplicationCount=" + processingPlantReplicationCount +
                 ", concurrent=" + concurrent +
                 ", usingInternalEncryption=" + usingInternalEncryption +
-                ", deploymentConfig='" + deploymentConfig + '\'' +
-                ", otherDeploymentFlags='" + otherDeploymentFlags + '\'' +
-                ", intraNetworkIPCStackConfigFile='" + intraNetworkIPCStackConfigFile + '\'' +
-                ", intraNetworkOAMStackConfigFile='" + intraNetworkOAMStackConfigFile + '\'' +
-                ", interNetworkIPCStackConfigFile='" + interNetworkIPCStackConfigFile + '\'' +
-                ", interNetworkOAMStackConfigFile='" + interNetworkOAMStackConfigFile + '\'' +
+                ", deploymentConfig=" + deploymentConfig +
+                ", otherDeploymentFlags=" + otherDeploymentFlags +
+                ", intraNetworkIPCStackConfigFile=" + intraNetworkIPCStackConfigFile +
+                ", intraNetworkOAMStackConfigFile=" + intraNetworkOAMStackConfigFile +
+                ", interNetworkIPCStackConfigFile=" + interNetworkIPCStackConfigFile +
+                ", interNetworkOAMStackConfigFile=" + interNetworkOAMStackConfigFile +
                 '}';
     }
 }

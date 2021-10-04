@@ -53,11 +53,11 @@ public class StandardInteractClientPortSegment extends StandardExternalFacingPor
     @Override
     public String toString() {
         return "StandardInteractClientPortSegment{" +
-                "portType='" + getPortType() + '\'' +
+                "portType=" + getPortType() +
                 ", connectedSystem=" + getConnectedSystem() +
                 ", startupDelay=" + getStartupDelay() +
-                ", name='" + getName() + '\'' +
-                ", portParameters='" + portParameters + '\'' +
+                ", name=" + getName() +
+                ", portParameters=" + portParameters +
                 ", defaultRetryCount=" + defaultRetryCount +
                 ", defaultRetryWait=" + defaultRetryWait +
                 ", defaultTimeout=" + defaultTimeout +

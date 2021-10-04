@@ -70,8 +70,8 @@ public class IPCInterfaceDefinition implements Serializable {
     @Override
     public String toString() {
         return "IPCInterfaceDefinition{" +
-                "interfaceFormalName='" + interfaceFormalName + '\'' +
-                ", interfaceFormalVersion='" + interfaceFormalVersion + '\'' +
+                "interfaceFormalName=" + interfaceFormalName +
+                ", interfaceFormalVersion=" + interfaceFormalVersion +
                 '}';
     }
 }

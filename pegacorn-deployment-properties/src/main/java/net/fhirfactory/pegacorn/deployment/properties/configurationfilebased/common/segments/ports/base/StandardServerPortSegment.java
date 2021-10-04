@@ -21,7 +21,6 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base;
 
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemProperties;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -36,8 +35,8 @@ public abstract class StandardServerPortSegment {
 
     private int portValue;
     private String portType;
-    private Boolean isServer;
-    private Boolean isEncrypted;
+    private boolean server;
+    private boolean encrypted;
     private String hostDNSEntry;
     private ArrayList<InterfaceDefinitionSegment> supportedInterfaceProfiles;
     private int startupDelay;
@@ -46,8 +45,8 @@ public abstract class StandardServerPortSegment {
     public StandardServerPortSegment(){
         super();
         this.supportedInterfaceProfiles = new ArrayList<>();
-        this.isEncrypted = false;
-        this.isServer = false;
+        this.server = false;
+        this.encrypted = false;
         this.startupDelay = 0;
         this.name = null;
     }
@@ -67,28 +66,20 @@ public abstract class StandardServerPortSegment {
         this.portType = portType;
     }
 
-    public Boolean getServer() {
-        return isServer;
+    public boolean isServer() {
+        return server;
     }
 
-    public Boolean isServer(){
-        return(isServer);
+    public void setServer(boolean server) {
+        this.server = server;
     }
 
-    public void setServer(Boolean server) {
-        isServer = server;
+    public boolean isEncrypted() {
+        return encrypted;
     }
 
-    public Boolean getEncrypted() {
-        return isEncrypted;
-    }
-
-    public Boolean isEncrypted(){
-        return(isEncrypted);
-    }
-
-    public void setEncrypted(Boolean encrypted) {
-        isEncrypted = encrypted;
+    public void setEncrypted(boolean encrypted) {
+        this.encrypted = encrypted;
     }
 
     public ArrayList<InterfaceDefinitionSegment> getSupportedInterfaceProfiles() {
@@ -127,17 +118,13 @@ public abstract class StandardServerPortSegment {
     public String toString() {
         return "StandardServerPortSegment{" +
                 "portValue=" + portValue +
-                ", portType='" + portType + '\'' +
-                ", isServer=" + isServer +
-                ", isEncrypted=" + isEncrypted +
-                ", hostDNSEntry='" + hostDNSEntry + '\'' +
+                ", portType=" + portType +
+                ", isServer=" + isServer() +
+                ", isEncrypted=" + isEncrypted() +
+                ", hostDNSEntry=" + hostDNSEntry +
                 ", supportedInterfaceProfiles=" + supportedInterfaceProfiles +
                 ", startupDelay=" + startupDelay +
-                ", name='" + name + '\'' +
-                ", server=" + getServer() +
-                ", server=" + isServer() +
-                ", encrypted=" + getEncrypted() +
-                ", encrypted=" + isEncrypted() +
+                ", name=" + name +
                 '}';
     }
 }

@@ -75,21 +75,21 @@ public class IPCServerTopologyEndpoint extends IPCTopologyEndpoint {
                 ", nodeFDN=" + getNodeFDN() +
                 ", componentType=" + getComponentType() +
                 ", containingNodeFDN=" + getContainingNodeFDN() +
-                ", nodeKey='" + getComponentID() + '\'' +
+                ", nodeKey=" + getComponentID() +
                 ", nodeFunctionFDN=" + getNodeFunctionFDN() +
                 ", concurrencyMode=" + getConcurrencyMode() +
                 ", resilienceMode=" + getResilienceMode() +
                 ", securityZone=" + getSecurityZone() +
                 ", kubernetesDeployed=" + isKubernetesDeployed() +
                 ", portValue=" + portValue +
-                ", portType='" + portType + '\'' +
+                ", portType=" + portType +
                 ", aServer=" + aServer +
                 ", encrypted=" + isEncrypted() +
-                ", interfaceDNSName='" + hostDNSName + '\'' +
+                ", interfaceDNSName=" + hostDNSName +
                 ", supportedInterfaceSet=" + supportedInterfaceSet +
                 ", additionalParameters=" + getAdditionalParameters() +
-                ", connectedSystemName='" + getConnectedSystemName() + '\'' +
-                ", name='" + getName() + '\'' +
+                ", connectedSystemName=" + getConnectedSystemName() +
+                ", name=" + getName() +
                 ", endpointType=" + getEndpointType() +
                 '}';
     }

@@ -107,8 +107,8 @@ public class IPCInterface implements Serializable {
     public String toString() {
         return "IPCInterface{" +
                 "enablingTopologyEndpoint=" + enablingTopologyEndpoint +
-                ", targetName='" + targetName + '\'' +
-                ", groupName='" + groupName + '\'' +
+                ", targetName=" + targetName +
+                ", groupName=" + groupName +
                 ", supportedDeploymentModes=" + supportedDeploymentModes +
                 ", supportedInterfaceDefinitions=" + supportedInterfaceDefinitions +
                 '}';

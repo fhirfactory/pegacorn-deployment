@@ -119,8 +119,8 @@ public class PetasosEndpoint implements Serializable {
     public String toString() {
         return "PetasosEndpoint{" +
                 "endpointID=" + endpointID +
-                ", endpointServiceName='" + endpointServiceName + '\'' +
-                ", endpointDescription='" + endpointDescription + '\'' +
+                ", endpointServiceName=" + endpointServiceName +
+                ", endpointDescription=" + endpointDescription +
                 ", representativeFHIREndpoint=" + representativeFHIREndpoint +
                 ", endpointStatus=" + endpointStatus +
                 ", interfaceFunction=" + interfaceFunction +

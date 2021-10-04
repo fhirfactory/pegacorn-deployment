@@ -23,8 +23,8 @@ public class JGroupsInitialHostSegment {
     @Override
     public String toString() {
         return "JGroupsInitialHostSegment{" +
-                "hostName='" + hostName + '\'' +
-                ", portNumber='" + portNumber + '\'' +
+                "hostName=" + hostName +
+                ", portNumber=" + portNumber +
                 '}';
     }
 }

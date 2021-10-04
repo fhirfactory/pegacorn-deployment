@@ -50,7 +50,7 @@ public class HTTPClusteredServiceServerPortSegment extends StandardClusterServic
     @Override
     public String toString() {
         return "HTTPClusteredServicePortSegment{" +
-                "webServicePath='" + webServicePath + '\'' +
+                "webServicePath=" + webServicePath +
                 '}';
     }
 }

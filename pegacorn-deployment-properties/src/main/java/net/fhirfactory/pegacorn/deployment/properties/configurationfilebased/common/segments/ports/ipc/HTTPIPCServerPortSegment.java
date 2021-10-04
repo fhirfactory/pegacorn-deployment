@@ -60,17 +60,17 @@ public class HTTPIPCServerPortSegment extends StandardClusterServiceServerPortSe
     public String toString() {
         return "HTTPIPCPortSegment{" +
                 "portValue=" + getPortValue() +
-                ", portType='" + getPortType() + '\'' +
+                ", portType=" + getPortType() +
                 ", isServer=" + isServer() +
                 ", isEncrypted=" + isEncrypted() +
-                ", hostDNSEntry='" + getHostDNSEntry() + '\'' +
+                ", hostDNSEntry=" + getHostDNSEntry() +
                 ", supportedInterfaceProfiles=" + getSupportedInterfaceProfiles() +
                 ", servicePortValue=" + getServicePortValue() +
-                ", servicePortName='" + getServicePortName() + '\'' +
-                ", serviceDNSEntry='" + getServiceDNSEntry() + '\'' +
+                ", servicePortName=" + getServicePortName() +
+                ", serviceDNSEntry=" + getServiceDNSEntry() +
                 ", clusterServicePortOffsetValue=" + clusterServicePortOffsetValue +
                 ", clusterServicePortOffsetValue=" + clusterServicePortOffsetValue +
-                ", path='" + path + '\'' +
+                ", path=" + path +
                 '}';
     }
 }

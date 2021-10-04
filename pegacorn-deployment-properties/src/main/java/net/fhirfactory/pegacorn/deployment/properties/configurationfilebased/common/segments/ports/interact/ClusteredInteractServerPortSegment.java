@@ -21,6 +21,8 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact;
 
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemProperties;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.StandardClusterServiceServerPortSegment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,10 +33,39 @@ public class ClusteredInteractServerPortSegment extends StandardInteractServerPo
     private String servicePortName;
     private String serviceDNSEntry;
     private Integer clusterServicePortOffsetValue;
+    
+    public ClusteredInteractServerPortSegment(){
+        super();
+        this.servicePortValue = null;
+        this.servicePortName = null;
+        this.serviceDNSEntry = null;
+        this.clusterServicePortOffsetValue = null;
+    }
 
     @Override
     protected Logger specifyLogger(){
         return(LOG);
+    }
+
+
+    @Override
+    public String toString() {
+        return "ClusteredInteractServerPortSegment{" +
+                "servicePortValue=" + getServicePortValue() +
+                ", servicePortName=" + getServicePortName() +
+                ", serviceDNSEntry=" + getServiceDNSEntry() +
+                ", clusterServicePortOffsetValue=" + getClusterServicePortOffsetValue() +
+                ", portType=" + getPortType() +
+                ", connectedSystem=" + getConnectedSystem() +
+                ", startupDelay=" + getStartupDelay() +
+                ", name=" + getName() +
+                ", server=" + isServer() +
+                ", hostDNSEntry=" + getHostDNSEntry() +
+                ", supportedInterfaceProfiles=" + getSupportedInterfaceProfiles() +
+                ", startupDelay=" + getStartupDelay() +
+                ", portValue=" + getPortValue() +
+                ", encrypted=" + isEncrypted() +
+                '}';
     }
 
     public Integer getServicePortValue() {
@@ -67,25 +98,5 @@ public class ClusteredInteractServerPortSegment extends StandardInteractServerPo
 
     public void setClusterServicePortOffsetValue(Integer clusterServicePortOffsetValue) {
         this.clusterServicePortOffsetValue = clusterServicePortOffsetValue;
-    }
-
-    @Override
-    public String toString() {
-        return "ClusteredInteractServerPortSegment{" +
-                "servicePortValue=" + servicePortValue +
-                ", servicePortName='" + servicePortName + '\'' +
-                ", serviceDNSEntry='" + serviceDNSEntry + '\'' +
-                ", clusterServicePortOffsetValue=" + clusterServicePortOffsetValue +
-                ", portType='" + getPortType() + '\'' +
-                ", connectedSystem=" + getConnectedSystem() +
-                ", startupDelay=" + getStartupDelay() +
-                ", name='" + getName() + '\'' +
-                ", server=" + isServer() +
-                ", hostDNSEntry='" + getHostDNSEntry() + '\'' +
-                ", supportedInterfaceProfiles=" + getSupportedInterfaceProfiles() +
-                ", startupDelay=" + getStartupDelay() +
-                ", portValue=" + getPortValue() +
-                ", encrypted=" + isEncrypted() +
-                '}';
     }
 }

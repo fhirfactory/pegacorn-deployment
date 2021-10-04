@@ -63,26 +63,26 @@ public class IPCClusteredServerTopologyEndpoint extends IPCServerTopologyEndpoin
                 ", nodeFDN=" + getNodeFDN() +
                 ", componentType=" + getComponentType() +
                 ", containingNodeFDN=" + getContainingNodeFDN() +
-                ", nodeKey='" + getComponentID() + '\'' +
+                ", nodeKey=" + getComponentID() +
                 ", nodeFunctionFDN=" + getNodeFunctionFDN() +
                 ", concurrencyMode=" + getConcurrencyMode() +
                 ", resilienceMode=" + getResilienceMode() +
                 ", securityZone=" + getSecurityZone() +
                 ", kubernetesDeployed=" + isKubernetesDeployed() +
                 ", servicePortValue=" + servicePortValue +
-                ", servicePortName='" + servicePortName + '\'' +
+                ", servicePortName=" + servicePortName +
                 ", servicePortOffset=" + servicePortOffset +
-                ", serviceDNSName='" + serviceDNSName + '\'' +
-                ", toStringString='" + toStringString + '\'' +
+                ", serviceDNSName=" + serviceDNSName +
+                ", toStringString=" + toStringString +
                 ", endpointType=" + getEndpointType() +
                 ", supportedInterfaceSet=" + getSupportedInterfaceSet() +
                 ", encrypted=" + isEncrypted() +
                 ", portValue=" + getPortValue() +
-                ", portType='" + getPortType() + '\'' +
+                ", portType=" + getPortType() +
                 ", aServer=" + getaServer() +
                 ", encrypted=" + isEncrypted() +
-                ", interfaceDNSName='" + getHostDNSName() + '\'' +
-                ", name='" + getName() + '\'' +
+                ", interfaceDNSName=" + getHostDNSName() +
+                ", name=" + getName() +
                 ", additionalParameters=" + getAdditionalParameters() +
                 '}';
     }

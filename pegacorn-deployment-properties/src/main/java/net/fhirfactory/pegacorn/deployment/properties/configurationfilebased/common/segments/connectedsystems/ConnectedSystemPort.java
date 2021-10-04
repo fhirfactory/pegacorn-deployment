@@ -76,8 +76,8 @@ public class ConnectedSystemPort {
                 "targetInterfaceDefinition=" + targetInterfaceDefinition +
                 ", encryptionRequired=" + encryptionRequired +
                 ", targetPortValue=" + targetPortValue +
-                ", targetPortDNSName='" + targetPortDNSName + '\'' +
-                ", targetPath='" + targetPath + '\'' +
+                ", targetPortDNSName=" + targetPortDNSName +
+                ", targetPath=" + targetPath +
                 '}';
     }
 }

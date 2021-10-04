@@ -91,7 +91,7 @@ public class ClusterServiceTopologyNode extends TopologyNode implements Endpoint
 
     @Override
     public void addEndpoint(TopologyNodeFDN endpointFDN) {
-        LOG.debug(".addEndpoint(): Entry, endpointFDN->{}", endpointFDN);
+        getLogger().debug(".addEndpoint(): Entry, endpointFDN->{}", endpointFDN);
         serviceEndpoints.add(endpointFDN);
     }
 }

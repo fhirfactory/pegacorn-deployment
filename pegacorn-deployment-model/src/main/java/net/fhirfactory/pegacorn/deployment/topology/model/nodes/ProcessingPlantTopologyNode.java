@@ -184,7 +184,7 @@ public class ProcessingPlantTopologyNode extends TopologyNode implements Endpoin
                 ", nodeFDN=" + getNodeFDN() +
                 ", componentType=" + getComponentType() +
                 ", containingNodeFDN=" + getContainingNodeFDN() +
-                ", nodeKey='" + getComponentID() + '\'' +
+                ", nodeKey=" + getComponentID() +
                 ", nodeFunctionFDN=" + getNodeFunctionFDN() +
                 ", concurrencyMode=" + getConcurrencyMode() +
                 ", resilienceMode=" + getResilienceMode() +
@@ -193,16 +193,16 @@ public class ProcessingPlantTopologyNode extends TopologyNode implements Endpoin
                 ", workshops=" + workshops +
                 ", endpoints=" + endpoints +
                 ", connections=" + connections +
-                ", nameSpace='" + nameSpace + '\'' +
-                ", interZoneIPCStackConfigFile='" + interZoneIPCStackConfigFile + '\'' +
-                ", interZoneOAMStackConfigFile='" + interZoneOAMStackConfigFile + '\'' +
-                ", intraZoneIPCStackConfigFile='" + intraZoneIPCStackConfigFile + '\'' +
-                ", intraZoneOAMStackConfigFile='" + intraZoneOAMStackConfigFile + '\'' +
-                ", defaultDNSName='" + defaultDNSName + '\'' +
+                ", nameSpace=" + nameSpace +
+                ", interZoneIPCStackConfigFile=" + interZoneIPCStackConfigFile +
+                ", interZoneOAMStackConfigFile=" + interZoneOAMStackConfigFile +
+                ", intraZoneIPCStackConfigFile=" + intraZoneIPCStackConfigFile +
+                ", intraZoneOAMStackConfigFile=" + intraZoneOAMStackConfigFile +
+                ", defaultDNSName=" + defaultDNSName +
                 ", internalTrafficEncrypted=" + internalTrafficEncrypted +
                 ", instanceCount=" + instanceCount +
-                ", subsystemName='" + getSubsystemName() + '\'' +
-                ", clusterServiceName='" + getClusterServiceName() + '\'' +
+                ", subsystemName=" + getSubsystemName() +
+                ", clusterServiceName=" + getClusterServiceName() +
                 '}';
     }
 }
