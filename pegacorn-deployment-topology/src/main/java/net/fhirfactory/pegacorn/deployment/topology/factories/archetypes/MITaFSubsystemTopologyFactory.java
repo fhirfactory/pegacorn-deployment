@@ -62,6 +62,7 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
         }
         mllpServerTopologyNode.setEncrypted(mllpServerPort.isEncrypted());
         String name = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.MLLP_SERVER, endpointFunctionName);
+//        String name = "Server(MLLP:"+mllpServerPort.getServiceDNSEntry()+":"+mllpServerPort.getServicePortValue()+")";
         TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), TopologyNodeTypeEnum.ENDPOINT);
         mllpServerTopologyNode.setNodeRDN(nodeRDN);
         mllpServerTopologyNode.setActualHostIP(getActualHostIP());
@@ -95,7 +96,7 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
             mllpServerTopologyNode.getSupportedInterfaceSet().add(currentInterface);
         }
         endpointProvider.addEndpoint(mllpServerTopologyNode.getNodeFDN());
-        getLogger().trace(".createMLLPServerEndpoint(): Add the createMLLPServerEndpoint Port to the Topology Cache");
+        getLogger().warn(".createMLLPServerEndpoint(): Add the {}/{} Port to the Topology Cache", mllpServerTopologyNode.getNodeRDN().getNodeName(), endpointFunctionName);
         getTopologyIM().addTopologyNode(endpointProvider.getNodeFDN(), mllpServerTopologyNode);
         getLogger().debug(".createMLLPServerEndpoint(): Exit, endpoint added");
         return(mllpServerTopologyNode);
@@ -113,6 +114,11 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
             return(null);
         }
         String name = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.MLLP_CLIENT, endpointFunctionName);
+//        String targetName = mllpClientPort.getConnectedSystem().getTargetPort1().getTargetPortDNSName();
+//        if(targetName == null){
+//            targetName = mllpClientPort.getConnectedSystem().getSubsystemName();
+//        }
+//        String name = "Client(MLLP:"+targetName+":"+mllpClientPort.getConnectedSystem().getTargetPort1().getTargetPortValue()+")";
         TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), TopologyNodeTypeEnum.ENDPOINT);
         mllpClientTopologyNode.setNodeRDN(nodeRDN);
         mllpClientTopologyNode.setActualPodIP(getActualPodIP());
@@ -125,10 +131,10 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
         mllpClientTopologyNode.setNodeRDN(nodeRDN);
         mllpClientTopologyNode.setContainingNodeFDN(endpointProvider.getNodeFDN());
         ConnectedSystemProperties connectedSystem = mllpClientPort.getConnectedSystem();
+        ConnectedSystemPort targetPort1 = connectedSystem.getTargetPort1();
         mllpClientTopologyNode.setConnectedSystemName(connectedSystem.getSubsystemName());
         ConnectedExternalSystemTopologyNode externalSystem = new ConnectedExternalSystemTopologyNode();
         externalSystem.setSubsystemName(connectedSystem.getSubsystemName());
-        ConnectedSystemPort targetPort1 = connectedSystem.getTargetPort1();
         ExternalSystemIPCEndpoint systemEndpointPort1 = newExternalSystemIPCEndpoint(targetPort1);
         externalSystem.getTargetPorts().add(systemEndpointPort1);
         if(connectedSystem.getTargetPort2() != null)
@@ -145,7 +151,7 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
         }
         mllpClientTopologyNode.setTargetSystem(externalSystem);
         endpointProvider.addEndpoint(mllpClientTopologyNode.getNodeFDN());
-        getLogger().trace(".newMLLPClientEndpoint(): Add the createMLLPServerEndpoint Port to the Topology Cache");
+        getLogger().warn(".newMLLPClientEndpoint(): Add the {}/{} Port to the Topology Cache", mllpClientTopologyNode.getNodeRDN().getNodeName(), endpointFunctionName);
         getTopologyIM().addTopologyNode(endpointProvider.getNodeFDN(), mllpClientTopologyNode);
         getLogger().debug(".newMLLPClientEndpoint(): Exit, endpoint added");
         return(mllpClientTopologyNode);

@@ -51,6 +51,10 @@ public abstract class TopologyNode implements Serializable {
     private String actualHostIP;
     private String actualPodIP;
 
+    //
+    // Constructor
+    //
+
     public TopologyNode(){
         this.nodeRDN = null;
         this.nodeFDN = null;
@@ -59,6 +63,187 @@ public abstract class TopologyNode implements Serializable {
         this.resilienceMode = null;
         this.componentID = null;
         this.otherConfigurationParameters = new ConcurrentHashMap<>();
+    }
+
+    //
+    // Some Helper Functions
+    //
+
+    @JsonIgnore
+    public void constructFDN(TopologyNodeFDN parentNodeFDN, TopologyNodeRDN nodeRDN){
+        getLogger().debug(".constructFDN(): Entry, parentNodeFDN->{}, nodeRDN->{}", parentNodeFDN, nodeRDN);
+        if(parentNodeFDN == null || nodeRDN.getNodeType().equals(TopologyNodeTypeEnum.SOLUTION)){
+            getLogger().trace(".constructFDN(): Is a Solution Node");
+            TopologyNodeFDN solutionFDN = new TopologyNodeFDN();
+            solutionFDN.appendTopologyNodeRDN(nodeRDN);
+            this.nodeFDN = solutionFDN;
+        } else {
+            getLogger().trace(".constructFDN(): Is not a Solution Node");
+            TopologyNodeFDN newFDN = (TopologyNodeFDN)SerializationUtils.clone(parentNodeFDN);
+            getLogger().trace(".constructFDN(): newFDN Created");
+            newFDN.appendTopologyNodeRDN(nodeRDN);
+            getLogger().trace(".constructFDN(): nodeRDN appended");
+            this.nodeFDN = newFDN;
+            getLogger().trace(".constructFDN(): this.nodeFDN assigned->{}", this.getNodeFDN());
+        }
+        setNodeRDN(nodeRDN);
+        constructComponentID();
+        getLogger().debug(".constructFDN(): Exit, nodeFDN->{}", this.getNodeFDN());
+    }
+
+    @JsonIgnore
+    public void constructComponentID(){
+        String id = getNodeRDN().getNodeName() + "::" + Long.toHexString(UUID.randomUUID().getLeastSignificantBits());
+        setComponentID(id);
+    }
+
+    @JsonIgnore
+    public void constructFunctionFDN(TopologyNodeFunctionFDN parentFunctionFDN, TopologyNodeRDN nodeRDN){
+        getLogger().debug(".constructFunctionFDN(): Entry");
+        switch(nodeRDN.getNodeType()){
+            case SOLUTION: {
+                TopologyNodeFunctionFDN solutionFDN = new TopologyNodeFunctionFDN();
+                solutionFDN.appendTopologyNodeRDN(nodeRDN);
+                this.nodeFunctionFDN = solutionFDN;
+                break;
+            }
+            case SITE:
+            case PLATFORM:{
+                this.nodeFunctionFDN = parentFunctionFDN;
+                break;
+            }
+            default:{
+                TopologyNodeFunctionFDN newFunctionFDN = (TopologyNodeFunctionFDN)SerializationUtils.clone(parentFunctionFDN);
+                newFunctionFDN.appendTopologyNodeRDN(nodeRDN);
+                this.nodeFunctionFDN = newFunctionFDN;
+            }
+        }
+        setNodeRDN(nodeRDN);
+        constructComponentID();
+        getLogger().debug(".constructFunctionFDN(): Exit, nodeFunctionFDN->{}", this.getNodeFunctionFDN());
+    }
+
+    @JsonIgnore
+    public boolean isKubernetesDeployed(){
+        if(getResilienceMode() == null){
+            return(false);
+        }
+        switch(getResilienceMode()){
+            case RESILIENCE_MODE_KUBERNETES_CLUSTERED:
+            case RESILIENCE_MODE_KUBERNETES_MULTISITE:
+            case RESILIENCE_MODE_KUBERNETES_STANDALONE:
+            case RESILIENCE_MODE_KUBERNETES_MULTISITE_CLUSTERED:
+                return(true);
+            case RESILIENCE_MODE_CLUSTERED:
+            case RESILIENCE_MODE_MULTISITE:
+            case RESILIENCE_MODE_STANDALONE:
+            case RESILIENCE_MODE_MULTISITE_CLUSTERED:
+            default:
+                return(false);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode{" +
+                "nodeRDN=" + nodeRDN +
+                ", nodeFDN=" + nodeFDN +
+                ", componentID='" + componentID + '\'' +
+                ", nodeFunctionFDN=" + nodeFunctionFDN +
+                ", componentType=" + componentType +
+                ", containingNodeFDN=" + containingNodeFDN +
+                ", concurrencyMode=" + concurrencyMode +
+                ", resilienceMode=" + resilienceMode +
+                ", securityZone=" + securityZone +
+                ", otherConfigurationParameters=" + otherConfigurationParameters +
+                ", actualHostIP='" + actualHostIP + '\'' +
+                ", actualPodIP='" + actualPodIP + '\'' +
+                ", kubernetesDeployed=" + isKubernetesDeployed() +
+                '}';
+    }
+
+    @JsonIgnore
+    public void addOtherConfigurationParameter(String key, String value){
+        if(this.otherConfigurationParameters.containsKey(key)){
+            this.otherConfigurationParameters.remove(key);
+        }
+        this.otherConfigurationParameters.put(key,value);
+    }
+
+    public String getOtherConfigurationParameter(String key){
+        if(this.otherConfigurationParameters.containsKey(key)){
+            String value = this.otherConfigurationParameters.get(key);
+            return(value);
+        }
+        return(null);
+    }
+
+    //
+    // Getters (and Setters)
+    //
+
+    public ConcurrentHashMap<String, String> getOtherConfigurationParameters() {
+        return otherConfigurationParameters;
+    }
+
+    public void setOtherConfigurationParameters(ConcurrentHashMap<String, String> otherConfigurationParameters) {
+        this.otherConfigurationParameters = otherConfigurationParameters;
+    }
+
+    public ConcurrencyModeEnum getConcurrencyMode() {
+        return concurrencyMode;
+    }
+
+    public void setConcurrencyMode(ConcurrencyModeEnum concurrencyMode) {
+        this.concurrencyMode = concurrencyMode;
+    }
+
+    public ResilienceModeEnum getResilienceMode() {
+        return resilienceMode;
+    }
+
+    public void setResilienceMode(ResilienceModeEnum resilienceMode) {
+        this.resilienceMode = resilienceMode;
+    }
+
+    public NetworkSecurityZoneEnum getSecurityZone() {
+        return securityZone;
+    }
+
+    public void setSecurityZone(NetworkSecurityZoneEnum securityZone) {
+        this.securityZone = securityZone;
+    }
+
+    public String getComponentID() {
+        return componentID;
+    }
+
+    public void setComponentID(String componentID) {
+        this.componentID = componentID;
+    }
+
+    public TopologyNodeFunctionFDN getNodeFunctionFDN() {
+        return nodeFunctionFDN;
+    }
+
+    public void setNodeFunctionFDN(TopologyNodeFunctionFDN nodeFunctionFDN) {
+        this.nodeFunctionFDN = nodeFunctionFDN;
+    }
+
+    public TopologyNodeTypeEnum getComponentType() {
+        return componentType;
+    }
+
+    public void setComponentType(TopologyNodeTypeEnum componentType) {
+        this.componentType = componentType;
+    }
+
+    public TopologyNodeFDN getContainingNodeFDN() {
+        return containingNodeFDN;
+    }
+
+    public void setContainingNodeFDN(TopologyNodeFDN containingNodeFDN) {
+        this.containingNodeFDN = containingNodeFDN;
     }
 
     public String getActualHostIP() {
@@ -94,173 +279,5 @@ public abstract class TopologyNode implements Serializable {
         this.nodeFDN = nodeFDN;
         setNodeRDN(nodeFDN.getLeafRDN());
         constructComponentID();
-    }
-
-    public TopologyNodeTypeEnum getComponentType() {
-        return componentType;
-    }
-
-    public void setComponentType(TopologyNodeTypeEnum componentType) {
-        this.componentType = componentType;
-    }
-
-    public TopologyNodeFDN getContainingNodeFDN() {
-        return containingNodeFDN;
-    }
-
-    public void setContainingNodeFDN(TopologyNodeFDN containingNodeFDN) {
-        this.containingNodeFDN = containingNodeFDN;
-    }
-
-    @JsonIgnore
-    public void constructFDN(TopologyNodeFDN parentNodeFDN, TopologyNodeRDN nodeRDN){
-        getLogger().debug(".constructFDN(): Entry, parentNodeFDN->{}, nodeRDN->{}", parentNodeFDN, nodeRDN);
-        if(parentNodeFDN == null || nodeRDN.getNodeType().equals(TopologyNodeTypeEnum.SOLUTION)){
-            getLogger().trace(".constructFDN(): Is a Solution Node");
-            TopologyNodeFDN solutionFDN = new TopologyNodeFDN();
-            solutionFDN.appendTopologyNodeRDN(nodeRDN);
-            this.nodeFDN = solutionFDN;
-        } else {
-            getLogger().trace(".constructFDN(): Is not a Solution Node");
-            TopologyNodeFDN newFDN = (TopologyNodeFDN)SerializationUtils.clone(parentNodeFDN);
-            getLogger().trace(".constructFDN(): newFDN Created");
-            newFDN.appendTopologyNodeRDN(nodeRDN);
-            getLogger().trace(".constructFDN(): nodeRDN appended");
-            this.nodeFDN = newFDN;
-            getLogger().trace(".constructFDN(): this.nodeFDN assigned->{}", this.getNodeFDN());
-        }
-        setNodeRDN(nodeRDN);
-        constructComponentID();
-        getLogger().debug(".constructFDN(): Exit, nodeFDN->{}", this.getNodeFDN());
-    }
-
-    @JsonIgnore
-    public void constructComponentID(){
-        String id = getNodeRDN().getNodeName() + "::" + Long.toHexString(UUID.randomUUID().getLeastSignificantBits());
-        setComponentID(id);
-    }
-
-    public String getComponentID() {
-        return componentID;
-    }
-
-    public void setComponentID(String componentID) {
-        this.componentID = componentID;
-    }
-
-    public TopologyNodeFunctionFDN getNodeFunctionFDN() {
-        return nodeFunctionFDN;
-    }
-
-    public void setNodeFunctionFDN(TopologyNodeFunctionFDN nodeFunctionFDN) {
-        this.nodeFunctionFDN = nodeFunctionFDN;
-    }
-
-    @JsonIgnore
-    public void constructFunctionFDN(TopologyNodeFunctionFDN parentFunctionFDN, TopologyNodeRDN nodeRDN){
-        getLogger().debug(".constructFunctionFDN(): Entry");
-        switch(nodeRDN.getNodeType()){
-            case SOLUTION: {
-                TopologyNodeFunctionFDN solutionFDN = new TopologyNodeFunctionFDN();
-                solutionFDN.appendTopologyNodeRDN(nodeRDN);
-                this.nodeFunctionFDN = solutionFDN;
-                break;
-            }
-            case SITE:
-            case PLATFORM:{
-                this.nodeFunctionFDN = parentFunctionFDN;
-                break;
-            }
-            default:{
-                TopologyNodeFunctionFDN newFunctionFDN = (TopologyNodeFunctionFDN)SerializationUtils.clone(parentFunctionFDN);
-                newFunctionFDN.appendTopologyNodeRDN(nodeRDN);
-                this.nodeFunctionFDN = newFunctionFDN;
-            }
-        }
-        setNodeRDN(nodeRDN);
-        constructComponentID();
-        getLogger().debug(".constructFunctionFDN(): Exit, nodeFunctionFDN->{}", this.getNodeFunctionFDN());
-    }
-
-    public ConcurrencyModeEnum getConcurrencyMode() {
-        return concurrencyMode;
-    }
-
-    public void setConcurrencyMode(ConcurrencyModeEnum concurrencyMode) {
-        this.concurrencyMode = concurrencyMode;
-    }
-
-    public ResilienceModeEnum getResilienceMode() {
-        return resilienceMode;
-    }
-
-    public void setResilienceMode(ResilienceModeEnum resilienceMode) {
-        this.resilienceMode = resilienceMode;
-    }
-
-    public NetworkSecurityZoneEnum getSecurityZone() {
-        return securityZone;
-    }
-
-    public void setSecurityZone(NetworkSecurityZoneEnum securityZone) {
-        this.securityZone = securityZone;
-    }
-
-    @JsonIgnore
-    public boolean isKubernetesDeployed(){
-        if(getResilienceMode() == null){
-            return(false);
-        }
-        switch(getResilienceMode()){
-            case RESILIENCE_MODE_KUBERNETES_CLUSTERED:
-            case RESILIENCE_MODE_KUBERNETES_MULTISITE:
-            case RESILIENCE_MODE_KUBERNETES_STANDALONE:
-            case RESILIENCE_MODE_KUBERNETES_MULTISITE_CLUSTERED:
-                return(true);
-            case RESILIENCE_MODE_CLUSTERED:
-            case RESILIENCE_MODE_MULTISITE:
-            case RESILIENCE_MODE_STANDALONE:
-            case RESILIENCE_MODE_MULTISITE_CLUSTERED:
-            default:
-                return(false);
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "TopologyNode{" +
-                "nodeRDN=" + nodeRDN +
-                ", nodeFDN=" + nodeFDN +
-                ", nodeFunctionFDN=" + nodeFunctionFDN +
-                ", componentType=" + componentType +
-                ", containingComponent=" + containingNodeFDN +
-                ", concurrencyMode=" + concurrencyMode +
-                ", resilienceMode=" + resilienceMode +
-                ", securityZone=" + securityZone +
-                '}';
-    }
-
-    public ConcurrentHashMap<String, String> getOtherConfigurationParameters() {
-        return otherConfigurationParameters;
-    }
-
-    public void setOtherConfigurationParameters(ConcurrentHashMap<String, String> otherConfigurationParameters) {
-        this.otherConfigurationParameters = otherConfigurationParameters;
-    }
-
-    @JsonIgnore
-    public void addOtherConfigurationParameter(String key, String value){
-        if(this.otherConfigurationParameters.containsKey(key)){
-            this.otherConfigurationParameters.remove(key);
-        }
-        this.otherConfigurationParameters.put(key,value);
-    }
-
-    public String getOtherConfigurationParameter(String key){
-        if(this.otherConfigurationParameters.containsKey(key)){
-            String value = this.otherConfigurationParameters.get(key);
-            return(value);
-        }
-        return(null);
     }
 }
