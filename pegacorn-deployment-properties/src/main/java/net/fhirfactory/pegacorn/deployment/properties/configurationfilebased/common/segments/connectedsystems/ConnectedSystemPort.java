@@ -29,6 +29,14 @@ public class ConnectedSystemPort {
     private Integer targetPortValue;
     private String targetPortDNSName;
     private String targetPath;
+    
+    public ConnectedSystemPort(){
+        this.targetInterfaceDefinition = null;
+        this.encryptionRequired = false;
+        this.targetPortValue = null;
+        this.targetPortDNSName = null;
+        this.targetPath = null;
+    }
 
     public InterfaceDefinitionSegment getTargetInterfaceDefinition() {
         return targetInterfaceDefinition;

@@ -129,18 +129,18 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
         ConnectedExternalSystemTopologyNode externalSystem = new ConnectedExternalSystemTopologyNode();
         externalSystem.setSubsystemName(connectedSystem.getSubsystemName());
         ConnectedSystemPort targetPort1 = connectedSystem.getTargetPort1();
-        ExternalSystemIPCEndpoint systemEndpointPort1 = newExternalSystemIPCEndpoint(targetPort1);
+        ExternalSystemIPCEndpoint systemEndpointPort1 = newExternalSystemIPCEndpoint(targetPort1, mllpClientTopologyNode.isEncrypted());
         externalSystem.getTargetPorts().add(systemEndpointPort1);
         if(connectedSystem.getTargetPort2() != null)
         {
             ConnectedSystemPort targetPort2 = connectedSystem.getTargetPort2();
-            ExternalSystemIPCEndpoint systemEndpointPort2 = newExternalSystemIPCEndpoint(targetPort2);
+            ExternalSystemIPCEndpoint systemEndpointPort2 = newExternalSystemIPCEndpoint(targetPort2, mllpClientTopologyNode.isEncrypted());
             externalSystem.getTargetPorts().add(systemEndpointPort2);
         }
         if(connectedSystem.getTargetPort3() != null)
         {
             ConnectedSystemPort targetPort3 = connectedSystem.getTargetPort3();
-            ExternalSystemIPCEndpoint systemEndpointPort3 = newExternalSystemIPCEndpoint(targetPort3);
+            ExternalSystemIPCEndpoint systemEndpointPort3 = newExternalSystemIPCEndpoint(targetPort3, mllpClientTopologyNode.isEncrypted());
             externalSystem.getTargetPorts().add(systemEndpointPort3);
         }
         mllpClientTopologyNode.setTargetSystem(externalSystem);
@@ -151,10 +151,14 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
         return(mllpClientTopologyNode);
     }
 
-    protected ExternalSystemIPCEndpoint newExternalSystemIPCEndpoint(ConnectedSystemPort connectedSystemPort) {
+    protected ExternalSystemIPCEndpoint newExternalSystemIPCEndpoint(ConnectedSystemPort connectedSystemPort, boolean defaultEncryption) {
         getLogger().debug(".newExternalSystemIPCEndpoint(): Entry, connectedSystemPort->{}", connectedSystemPort);
         ExternalSystemIPCEndpoint systemEndpointPort = new ExternalSystemIPCEndpoint();
-        systemEndpointPort.setEncryptionRequired(connectedSystemPort.getEncryptionRequired());
+        boolean encryptionRequired = defaultEncryption;
+        if(connectedSystemPort.getEncryptionRequired() != null){
+            encryptionRequired = connectedSystemPort.getEncryptionRequired();
+        }
+        systemEndpointPort.setEncryptionRequired(encryptionRequired);
         systemEndpointPort.setTargetPortDNSName(connectedSystemPort.getTargetPortDNSName());
         systemEndpointPort.setTargetPortValue(connectedSystemPort.getTargetPortValue());
         IPCInterfaceDefinition currentInterfaceDefinition = new IPCInterfaceDefinition();
