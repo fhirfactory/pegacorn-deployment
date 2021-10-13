@@ -21,7 +21,11 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems;
 
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.datatypes.ParameterNameValuePairType;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.InterfaceDefinitionSegment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConnectedSystemPort {
     private InterfaceDefinitionSegment targetInterfaceDefinition;
@@ -29,6 +33,28 @@ public class ConnectedSystemPort {
     private Integer targetPortValue;
     private String targetPortDNSName;
     private String targetPath;
+    private List<ParameterNameValuePairType> otherConfigurationParameters;
+
+    //
+    // Constructor(s)
+    //
+
+    public ConnectedSystemPort(){
+        targetInterfaceDefinition = null;
+        encryptionRequired = false;
+        targetPortValue = null;
+        targetPortDNSName = null;
+        targetPath = null;
+        otherConfigurationParameters = new ArrayList<>();
+    }
+
+    public List<ParameterNameValuePairType> getOtherConfigurationParameters() {
+        return otherConfigurationParameters;
+    }
+
+    public void setOtherConfigurationParameters(List<ParameterNameValuePairType> otherConfigurationParameters) {
+        this.otherConfigurationParameters = otherConfigurationParameters;
+    }
 
     public InterfaceDefinitionSegment getTargetInterfaceDefinition() {
         return targetInterfaceDefinition;
@@ -76,8 +102,9 @@ public class ConnectedSystemPort {
                 "targetInterfaceDefinition=" + targetInterfaceDefinition +
                 ", encryptionRequired=" + encryptionRequired +
                 ", targetPortValue=" + targetPortValue +
-                ", targetPortDNSName=" + targetPortDNSName +
-                ", targetPath=" + targetPath +
+                ", targetPortDNSName='" + targetPortDNSName + '\'' +
+                ", targetPath='" + targetPath + '\'' +
+                ", otherConfigurationParameters=" + otherConfigurationParameters +
                 '}';
     }
 }

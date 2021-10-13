@@ -21,13 +21,17 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base;
 
+import net.fhirfactory.pegacorn.deployment.topology.model.common.ConfigurableNode;
+import net.fhirfactory.pegacorn.deployment.topology.model.common.ConfigurationParametersType;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCInterfaceDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ExternalSystemIPCEndpoint implements Serializable {
+public class ExternalSystemIPCEndpoint extends ConfigurableNode {
     private static final Logger LOG = LoggerFactory.getLogger(ExternalSystemIPCEndpoint.class);
 
     private IPCInterfaceDefinition supportedInterfaceDefinition;
@@ -35,6 +39,24 @@ public class ExternalSystemIPCEndpoint implements Serializable {
     private Integer targetPortValue;
     private String targetPortDNSName;
     private String targetPath;
+
+
+    //
+    // Constructor(s)
+    //
+
+    public ExternalSystemIPCEndpoint(){
+        super();
+        this.supportedInterfaceDefinition = null;
+        this.encryptionRequired = false;
+        this.targetPath = null;
+        this.targetPortValue = null;
+        this.targetPortDNSName = null;
+    }
+
+    //
+    // Getters and Setters
+    //
 
     public IPCInterfaceDefinition getSupportedInterfaceDefinition() {
         return supportedInterfaceDefinition;
@@ -76,14 +98,19 @@ public class ExternalSystemIPCEndpoint implements Serializable {
         this.targetPath = targetPath;
     }
 
+    //
+    // To String
+    //
+
     @Override
     public String toString() {
         return "ExternalSystemIPCEndpoint{" +
                 "supportedInterfaceDefinition=" + supportedInterfaceDefinition +
                 ", encryptionRequired=" + encryptionRequired +
                 ", targetPortValue=" + targetPortValue +
-                ", targetPortDNSName=" + targetPortDNSName +
-                ", targetPath=" + targetPath +
+                ", targetPortDNSName='" + targetPortDNSName + '\'' +
+                ", targetPath='" + targetPath + '\'' +
+                ", otherConfigParameters=" + getOtherConfigParameters() +
                 '}';
     }
 }

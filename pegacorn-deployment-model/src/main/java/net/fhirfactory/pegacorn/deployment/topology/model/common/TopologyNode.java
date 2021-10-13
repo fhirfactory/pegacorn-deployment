@@ -36,7 +36,7 @@ import java.io.Serializable;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class TopologyNode implements Serializable {
+public abstract class TopologyNode extends ConfigurableNode implements Serializable {
     abstract protected Logger getLogger();
     private TopologyNodeRDN nodeRDN;
     private TopologyNodeFDN nodeFDN;
@@ -56,6 +56,7 @@ public abstract class TopologyNode implements Serializable {
     //
 
     public TopologyNode(){
+        super();
         this.nodeRDN = null;
         this.nodeFDN = null;
         this.nodeFunctionFDN = null;
@@ -159,6 +160,7 @@ public abstract class TopologyNode implements Serializable {
                 ", actualHostIP='" + actualHostIP + '\'' +
                 ", actualPodIP='" + actualPodIP + '\'' +
                 ", kubernetesDeployed=" + isKubernetesDeployed() +
+                ", otherConfigurationParameters=" + getOtherConfigurationParameters() +
                 '}';
     }
 

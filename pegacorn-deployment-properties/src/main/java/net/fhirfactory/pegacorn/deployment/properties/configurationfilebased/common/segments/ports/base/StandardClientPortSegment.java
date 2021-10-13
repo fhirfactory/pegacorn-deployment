@@ -24,7 +24,7 @@ package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.co
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemProperties;
 import org.slf4j.Logger;
 
-public abstract class StandardClientPortSegment {
+public abstract class StandardClientPortSegment extends ConfigurableNodeSegment{
 
     protected abstract Logger specifyLogger();
 

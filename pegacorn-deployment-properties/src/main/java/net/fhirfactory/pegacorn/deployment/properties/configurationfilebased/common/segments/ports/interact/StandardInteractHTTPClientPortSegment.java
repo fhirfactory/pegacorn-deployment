@@ -1,16 +1,39 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact;
 
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemProperties;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.StandardClientPortSegment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class StandardInteractClientPortSegment extends StandardExternalFacingPort {
-    private static Logger LOG = LoggerFactory.getLogger(StandardInteractClientPortSegment.class);
+public class StandardInteractHTTPClientPortSegment extends StandardExternalFacingPort {
+    private static Logger LOG = LoggerFactory.getLogger(StandardInteractHTTPClientPortSegment.class);
 
     private int defaultRetryCount;
     private int defaultRetryWait;
     private int defaultTimeout;
+    private String contextPath;
+
+    //
+    // Constructor(s)
+    //
+
+    public StandardInteractHTTPClientPortSegment(){
+        super();
+        this.defaultRetryCount = 3;
+        this.defaultRetryWait = 30;
+        this.defaultTimeout = 60;
+        this.contextPath = null;
+    }
+
+    //
+    // Getters and Setters
+    //
+
+    public String getContextPath() {
+        return contextPath;
+    }
+
+    public void setContextPath(String contextPath) {
+        this.contextPath = contextPath;
+    }
 
     public int getDefaultRetryCount() {
         return defaultRetryCount;
@@ -45,19 +68,19 @@ public class StandardInteractClientPortSegment extends StandardExternalFacingPor
     // To String
     //
 
-
     @Override
     public String toString() {
         return "StandardInteractClientPortSegment{" +
-                "otherConfigurationParameters=" + getOtherConfigurationParameters() +
+                "name=" + getName() +
+                ", otherConfigurationParameters=" + getOtherConfigurationParameters() +
                 ", portValue=" + getPortValue() +
-                ", portType='" + getPortType() + '\'' +
+                ", portType=" + getPortType() +
                 ", server=" + isServer() +
                 ", encrypted=" + isEncrypted() +
                 ", supportedInterfaceProfiles=" + getSupportedInterfaceProfiles() +
-                ", hostDNSEntry='" + getHostDNSEntry() + '\'' +
+                ", hostDNSEntry=" + getHostDNSEntry() +
                 ", startupDelay=" + getStartupDelay() +
-                ", name='" + getName() + '\'' +
+                ", contextPath=" + contextPath +
                 ", connectedSystem=" + getConnectedSystem() +
                 ", defaultRetryCount=" + defaultRetryCount +
                 ", defaultRetryWait=" + defaultRetryWait +

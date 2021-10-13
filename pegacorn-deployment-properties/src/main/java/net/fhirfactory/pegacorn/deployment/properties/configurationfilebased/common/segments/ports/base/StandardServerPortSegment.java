@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 
 import java.util.ArrayList;
 
-public abstract class StandardServerPortSegment {
+public abstract class StandardServerPortSegment extends ConfigurableNodeSegment{
 
     protected abstract Logger specifyLogger();
 
