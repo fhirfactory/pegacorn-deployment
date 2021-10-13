@@ -694,17 +694,19 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
     protected BaseSubsystemPropertyFile readPropertyFile(){
         String propertyFileName = specifyPropertyFileName();
         Class propertyFileClass = specifyPropertyFileClass();
-        getLogger().info(".readPropertyFile(): Entry, propertyFileName->{}", propertyFileName);
+        getLogger().warn(".readPropertyFile(): Entry, propertyFileName->{}", propertyFileName);
         try {
             getLogger().trace(".readPropertyFile(): Establish YAML ObjectMapper");
             ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
             yamlMapper.findAndRegisterModules();
             yamlMapper.configure(JsonParser.Feature.ALLOW_MISSING_VALUES, true);
-            getLogger().trace(".readPropertyFile(): Establishing InputStream");
+            getLogger().warn(".readPropertyFile(): [Openning Configuration File] Start");
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
             InputStream propertyYAMLFile = classLoader.getResourceAsStream("./"+propertyFileName);
-            getLogger().trace(".readPropertyFile(): Reading YAML configuration file");
+            getLogger().warn(".readPropertyFile(): [Openning Configuration File] End");
+            getLogger().warn(".readPropertyFile(): [Importing Configuration File] Start");
             this.propertyFile = (BaseSubsystemPropertyFile) yamlMapper.readValue(propertyYAMLFile, propertyFileClass);
+            getLogger().warn(".readPropertyFile(): [Read YAML Configuration File] Finish");
             getLogger().debug(".loadPropertyFile(): Exit, file loaded, propertyFile->{}", this.propertyFile);
             return(this.propertyFile);
         } catch(FileNotFoundException noFile){
