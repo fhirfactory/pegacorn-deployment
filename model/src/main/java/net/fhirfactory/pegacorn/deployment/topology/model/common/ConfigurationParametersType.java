@@ -21,7 +21,9 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.model.common;
 
-public class ConfigurationParametersType {
+import java.io.Serializable;
+
+public class ConfigurationParametersType implements Serializable {
     private String parameterName;
     private String parameterValue;
 

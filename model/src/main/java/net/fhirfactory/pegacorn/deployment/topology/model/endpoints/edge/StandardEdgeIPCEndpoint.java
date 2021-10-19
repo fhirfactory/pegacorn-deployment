@@ -21,6 +21,7 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.IPCServerTopologyEndpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,10 +35,19 @@ public class StandardEdgeIPCEndpoint extends IPCServerTopologyEndpoint {
     private List<InitialHostSpecification> initialHosts;
     private String nameSpace;
 
+    //
+    // Constructor(s)
+    //
+
     public StandardEdgeIPCEndpoint(){
         super();
         initialHosts = new ArrayList<>();
+        this.nameSpace = null;
     }
+
+    //
+    // Getters and Setters
+    //
 
     public List<InitialHostSpecification> getInitialHosts() {
         return initialHosts;
@@ -55,20 +65,21 @@ public class StandardEdgeIPCEndpoint extends IPCServerTopologyEndpoint {
         this.nameSpace = nameSpace;
     }
 
-    @Override
+    @Override @JsonIgnore
     protected Logger getLogger() {
         return (LOG);
     }
+
+    //
+    // To String
+    //
 
     @Override
     public String toString() {
         return "StandardEdgeIPCEndpoint{" +
                 "nodeRDN=" + getNodeRDN() +
-                ", nodeFDN=" + getNodeFDN() +
                 ", componentType=" + getComponentType() +
-                ", containingNodeFDN=" + getContainingNodeFDN() +
-                ", nodeKey=" + getComponentID() +
-                ", nodeFunctionFDN=" + getNodeFunctionFDN() +
+                ", nodeKey=" + getComponentType() +
                 ", concurrencyMode=" + getConcurrencyMode() +
                 ", resilienceMode=" + getResilienceMode() +
                 ", securityZone=" + getSecurityZone() +

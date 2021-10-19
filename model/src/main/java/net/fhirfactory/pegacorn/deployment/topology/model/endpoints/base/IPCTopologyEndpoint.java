@@ -21,11 +21,19 @@ public class IPCTopologyEndpoint extends TopologyNode {
     private Boolean encrypted;
     private TopologyNodeFDN implementingWUP;
 
+    //
+    // Constructor(s)
+    //
+
     public IPCTopologyEndpoint(){
         super();
         encrypted = false;
         this.additionalParameters = new HashMap<>();
     }
+
+    //
+    // Getters and Setters
+    //
 
     public TopologyNodeFDN getImplementingWUP() {
         return implementingWUP;
@@ -75,7 +83,7 @@ public class IPCTopologyEndpoint extends TopologyNode {
         this.endpointType = endpointType;
     }
 
-    @Override
+    @Override @JsonIgnore
     protected Logger getLogger() {
         return (LOG);
     }
@@ -89,27 +97,31 @@ public class IPCTopologyEndpoint extends TopologyNode {
         return(value);
     }
 
+    //
+    // To String
+    //
+
     @Override
     public String toString() {
         return "IPCTopologyEndpoint{" +
-                "nodeRDN=" + getNodeRDN() +
-                ", nodeFDN=" + getNodeFDN() +
+                "otherConfigParameters=" + getOtherConfigParameters() +
+                ", kubernetesDeployed=" + isKubernetesDeployed() +
+                ", nodeRDN=" + getNodeRDN() +
                 ", componentType=" + getComponentType() +
-                ", containingNodeFDN=" + getContainingNodeFDN() +
-                ", nodeKey=" + getComponentID() +
-                ", nodeFunctionFDN=" + getNodeFunctionFDN() +
+                ", componentId=" + getComponentId() +
+                ", parentNode=" + getParentNode() +
                 ", concurrencyMode=" + getConcurrencyMode() +
                 ", resilienceMode=" + getResilienceMode() +
                 ", securityZone=" + getSecurityZone() +
-                ", kubernetesDeployed=" + isKubernetesDeployed() +
                 ", otherConfigurationParameters=" + getOtherConfigurationParameters() +
-                ", name=" + name +
+                ", actualHostIP='" + getActualHostIP() + '\'' +
+                ", actualPodIP='" + getActualPodIP() + '\'' +
+                ", name='" + name + '\'' +
                 ", endpointType=" + endpointType +
                 ", additionalParameters=" + additionalParameters +
-                ", connectedSystemName=" + connectedSystemName +
+                ", connectedSystemName='" + connectedSystemName + '\'' +
                 ", encrypted=" + encrypted +
                 ", implementingWUP=" + implementingWUP +
-                ", actualHostIP=" + getActualHostIP() +
                 '}';
     }
 }

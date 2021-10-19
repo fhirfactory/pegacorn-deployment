@@ -22,6 +22,7 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.common;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
@@ -38,6 +39,20 @@ public class ConfigurableNode implements Serializable {
 
     public ConfigurableNode(){
         this.otherConfigParameters = new ArrayList<>();
+    }
+
+    public ConfigurableNode(ConfigurableNode ori){
+        this.otherConfigParameters = new ArrayList<>();
+        if(ori.getOtherConfigParameters() == null){
+            return;
+        }
+        if(ori.getOtherConfigParameters().isEmpty()){
+            return;
+        }
+        for(ConfigurationParametersType currentParameter: ori.getOtherConfigParameters()){
+            ConfigurationParametersType newParameter = SerializationUtils.clone(currentParameter);
+            this.otherConfigParameters.add(newParameter);
+        }
     }
 
     //
@@ -101,6 +116,12 @@ public class ConfigurableNode implements Serializable {
     //
     // Getters and Setters (Bean Methods)
     //
+
+    @JsonIgnore
+    public boolean hasOtherConfigParameters(){
+        boolean hasValue = this.otherConfigParameters != null;
+        return(hasValue);
+    }
 
     public List<ConfigurationParametersType> getOtherConfigParameters() {
         return otherConfigParameters;

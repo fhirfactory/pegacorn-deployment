@@ -21,8 +21,10 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.model.nodes;
 
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.fhirfactory.pegacorn.common.model.componentid.ComponentIdType;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
+import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,24 +33,60 @@ import java.util.ArrayList;
 public class SubsystemTopologyNode extends TopologyNode {
     private static final Logger LOG = LoggerFactory.getLogger(SubsystemTopologyNode.class);
 
-    private ArrayList<TopologyNodeFDN> businessServices;
+    private ArrayList<ComponentIdType> businessServices;
     private Integer siteCount;
 
+    //
+    // Constructor(s)
+    //
+
     public SubsystemTopologyNode(){
+        super();
         businessServices = new ArrayList<>();
     }
 
-    @Override
+    public SubsystemTopologyNode(SubsystemTopologyNode ori){
+        super(ori);
+        this.businessServices = new ArrayList<>();
+        this.siteCount = null;
+
+        if(ori.hasBusinessServices()){
+            for(ComponentIdType currentId: ori.getBusinessServices()){
+                getBusinessServices().add(SerializationUtils.clone(currentId));
+            }
+        }
+        if(ori.hasSiteCount()){
+            setSiteCount(SerializationUtils.clone(ori.getSiteCount()));
+        }
+    }
+
+    //
+    // Getters and Setters
+    //
+
+    @Override @JsonIgnore
     protected Logger getLogger() {
         return (LOG);
     }
 
-    public ArrayList<TopologyNodeFDN> getBusinessServices() {
+    @JsonIgnore
+    public boolean hasBusinessServices(){
+        boolean hasValue = this.businessServices != null;
+        return(hasValue);
+    }
+
+    public ArrayList<ComponentIdType> getBusinessServices() {
         return businessServices;
     }
 
-    public void setBusinessServices(ArrayList<TopologyNodeFDN> businessServices) {
+    public void setBusinessServices(ArrayList<ComponentIdType> businessServices) {
         this.businessServices = businessServices;
+    }
+
+    @JsonIgnore
+    public boolean hasSiteCount(){
+        boolean hasValue = this.siteCount != null;
+        return(hasValue);
     }
 
     public Integer getSiteCount() {
@@ -57,5 +95,29 @@ public class SubsystemTopologyNode extends TopologyNode {
 
     public void setSiteCount(Integer siteCount) {
         this.siteCount = siteCount;
+    }
+
+    //
+    // To String
+    //
+
+    @Override
+    public String toString() {
+        return "SubsystemTopologyNode{" +
+                "otherConfigParameters=" + getOtherConfigParameters() +
+                ", kubernetesDeployed=" + isKubernetesDeployed() +
+                ", nodeRDN=" + getNodeRDN() +
+                ", componentType=" + getComponentType() +
+                ", componentId=" + getComponentId() +
+                ", parentNode=" + getParentNode() +
+                ", concurrencyMode=" + getConcurrencyMode() +
+                ", resilienceMode=" + getResilienceMode() +
+                ", securityZone=" + getSecurityZone() +
+                ", otherConfigurationParameters=" + getOtherConfigurationParameters() +
+                ", actualHostIP='" + getActualHostIP() + '\'' +
+                ", actualPodIP='" + getActualPodIP() + '\'' +
+                ", businessServices=" + businessServices +
+                ", siteCount=" + siteCount +
+                '}';
     }
 }

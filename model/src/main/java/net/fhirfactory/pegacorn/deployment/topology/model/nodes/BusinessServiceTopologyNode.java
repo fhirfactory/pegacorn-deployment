@@ -21,6 +21,8 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.model.nodes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.fhirfactory.pegacorn.common.model.componentid.ComponentIdType;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
 import org.slf4j.Logger;
@@ -31,35 +33,65 @@ import java.util.ArrayList;
 public class BusinessServiceTopologyNode extends TopologyNode {
     private static final Logger LOG = LoggerFactory.getLogger(BusinessServiceTopologyNode.class);
 
-    private ArrayList<TopologyNodeFDN> deploymentSites;
-    private ArrayList<TopologyNodeFDN> externalisedServices;
+    private ArrayList<ComponentIdType> deploymentSites;
+    private ArrayList<ComponentIdType> externalisedServices;
     private boolean preferringEncryption;
     private String defaultDNSName;
+
+    //
+    // Constructor(s)
+    //
 
     public BusinessServiceTopologyNode(){
         super();
         this.deploymentSites = new ArrayList<>();
         this.externalisedServices = new ArrayList<>();
+        this.preferringEncryption = false;
+        this.defaultDNSName = null;
     }
 
-    @Override
+    public BusinessServiceTopologyNode(BusinessServiceTopologyNode ori){
+        super(ori);
+        this.deploymentSites = new ArrayList<>();
+        this.externalisedServices = new ArrayList<>();
+        this.preferringEncryption = false;
+        this.defaultDNSName = null;
+    }
+
+    //
+    // Getters and Setters
+    //
+
+    @Override @JsonIgnore
     protected Logger getLogger() {
         return (LOG);
     }
 
-    public ArrayList<TopologyNodeFDN> getDeploymentSites() {
+    @JsonIgnore
+    public boolean hasDeploymentSites(){
+        boolean hasValue = this.deploymentSites != null;
+        return(hasValue);
+    }
+
+    public ArrayList<ComponentIdType> getDeploymentSites() {
         return deploymentSites;
     }
 
-    public void setDeploymentSites(ArrayList<TopologyNodeFDN> deploymentSites) {
+    public void setDeploymentSites(ArrayList<ComponentIdType> deploymentSites) {
         this.deploymentSites = deploymentSites;
     }
 
-    public ArrayList<TopologyNodeFDN> getExternalisedServices() {
+    @JsonIgnore
+    public boolean hasExternalisedServices(){
+        boolean hasValue = this.externalisedServices != null;
+        return(hasValue);
+    }
+
+    public ArrayList<ComponentIdType> getExternalisedServices() {
         return externalisedServices;
     }
 
-    public void setExternalisedServices(ArrayList<TopologyNodeFDN> externalisedServices) {
+    public void setExternalisedServices(ArrayList<ComponentIdType> externalisedServices) {
         this.externalisedServices = externalisedServices;
     }
 
@@ -71,11 +103,55 @@ public class BusinessServiceTopologyNode extends TopologyNode {
         this.preferringEncryption = preferringEncryption;
     }
 
+    public boolean hasDefaultDNSName(){
+        boolean hasValue = this.defaultDNSName != null;
+        return(hasValue);
+    }
+
     public String getDefaultDNSName() {
         return defaultDNSName;
     }
 
     public void setDefaultDNSName(String defaultDNSName) {
         this.defaultDNSName = defaultDNSName;
+    }
+
+    //
+    // To String
+    //
+
+    @Override
+    public String toString() {
+        return "BusinessServiceTopologyNode{" +
+                "otherConfigParameters=" + getOtherConfigParameters() +
+                ", kubernetesDeployed=" + isKubernetesDeployed() +
+                ", hasNodeRDN=" + hasNodeRDN() +
+                ", nodeRDN=" + getNodeRDN() +
+                ", hasComponentType=" + hasComponentType() +
+                ", componentType=" + getComponentType() +
+                ", hasComponentId=" + hasComponentId() +
+                ", componentId=" + getComponentId() +
+                ", hasParentNode=" + hasParentNode() +
+                ", parentNode=" + getParentNode() +
+                ", hasConcurrencyMode=" + hasConcurrencyMode() +
+                ", concurrencyMode=" + getConcurrencyMode() +
+                ", hasResilienceMode=" + hasResilienceMode() +
+                ", resilienceMode=" + getResilienceMode() +
+                ", hasSecurityZone=" + hasSecurityZone() +
+                ", securityZone=" + getSecurityZone() +
+                ", hasOtherConfigurationParameters=" + hasOtherConfigurationParameters() +
+                ", otherConfigurationParameters=" + getOtherConfigurationParameters() +
+                ", hasActualHostIP=" + hasActualHostIP() +
+                ", actualHostIP='" + getActualHostIP() + '\'' +
+                ", hasActualPodIP=" + hasActualPodIP() +
+                ", actualPodIP='" + getActualPodIP() + '\'' +
+                ", deploymentSites=" + deploymentSites +
+                ", externalisedServices=" + externalisedServices +
+                ", preferringEncryption=" + preferringEncryption +
+                ", defaultDNSName='" + defaultDNSName + '\'' +
+                ", hasDeploymentSites=" + hasDeploymentSites() +
+                ", hasExternalisedServices=" + hasExternalisedServices() +
+                ", hasDefaultDNSName=" + hasDefaultDNSName() +
+                '}';
     }
 }

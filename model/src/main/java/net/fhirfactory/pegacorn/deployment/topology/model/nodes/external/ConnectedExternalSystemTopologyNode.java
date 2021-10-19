@@ -19,9 +19,23 @@ public class ConnectedExternalSystemTopologyNode implements Serializable {
     private String externalisedServiceEndpointName;
     private List<ExternalSystemIPCEndpoint> targetPorts;
 
+    //
+    // Constructor(s)
+    //
+
     public ConnectedExternalSystemTopologyNode(){
         this.targetPorts = new ArrayList<>();
+        this.externalisedServiceName = null;
+        this.externalisedServiceEndpointName = null;
+        this.subsystemName = null;
+        this.subsystemVersion = null;
+        this.solutionName = null;
+        this.owningOrganizationName = null;
     }
+
+    //
+    // Getters and Setters
+    //
 
     public String getOwningOrganizationName() {
         return owningOrganizationName;
@@ -79,6 +93,10 @@ public class ConnectedExternalSystemTopologyNode implements Serializable {
         this.targetPorts.clear();
         this.targetPorts.addAll(targetPorts);
     }
+
+    //
+    // To String
+    //
 
     @Override
     public String toString() {

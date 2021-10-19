@@ -1,5 +1,6 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,17 +14,28 @@ public class IPCServerTopologyEndpoint extends IPCTopologyEndpoint {
     private String portType;
     private Boolean aServer;
     private String hostDNSName;
-
     private ArrayList<IPCInterface> supportedInterfaceSet;
 
-    @Override
-    protected Logger getLogger() {
-        return (LOG);
-    }
+    //
+    // Constructor(s)
+    //
 
     public IPCServerTopologyEndpoint(){
         super();
         this.supportedInterfaceSet = new ArrayList<>();
+        this.portValue = 0;
+        this.portType = null;
+        this.aServer = false;
+        this.hostDNSName = null;
+    }
+
+    //
+    // Getters and Setters
+    //
+
+    @Override @JsonIgnore
+    protected Logger getLogger() {
+        return (LOG);
     }
 
     public ArrayList<IPCInterface> getSupportedInterfaceSet() {
@@ -68,29 +80,7 @@ public class IPCServerTopologyEndpoint extends IPCTopologyEndpoint {
         this.hostDNSName = interfaceDNSName;
     }
 
-    @Override
-    public String toString() {
-        return "IPCServerTopologyEndpoint{" +
-                "nodeRDN=" + getNodeRDN() +
-                ", nodeFDN=" + getNodeFDN() +
-                ", componentType=" + getComponentType() +
-                ", containingNodeFDN=" + getContainingNodeFDN() +
-                ", nodeKey=" + getComponentID() +
-                ", nodeFunctionFDN=" + getNodeFunctionFDN() +
-                ", concurrencyMode=" + getConcurrencyMode() +
-                ", resilienceMode=" + getResilienceMode() +
-                ", securityZone=" + getSecurityZone() +
-                ", kubernetesDeployed=" + isKubernetesDeployed() +
-                ", portValue=" + portValue +
-                ", portType=" + portType +
-                ", aServer=" + aServer +
-                ", encrypted=" + isEncrypted() +
-                ", interfaceDNSName=" + hostDNSName +
-                ", supportedInterfaceSet=" + supportedInterfaceSet +
-                ", additionalParameters=" + getAdditionalParameters() +
-                ", connectedSystemName=" + getConnectedSystemName() +
-                ", name=" + getName() +
-                ", endpointType=" + getEndpointType() +
-                '}';
-    }
+    //
+    // To String
+    //
 }

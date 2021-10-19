@@ -21,8 +21,10 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.model.nodes;
 
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.fhirfactory.pegacorn.common.model.componentid.ComponentIdType;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
+import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,42 +33,116 @@ import java.util.ArrayList;
 public class WorkUnitProcessorTopologyNode extends TopologyNode {
     private static final Logger LOG = LoggerFactory.getLogger(WorkUnitProcessorTopologyNode.class);
 
-    private ArrayList<TopologyNodeFDN> wupComponents;
-    private ArrayList<TopologyNodeFDN> wupInterchangeComponents;
-    private ArrayList<TopologyNodeFDN> endpoints;
+    private ArrayList<ComponentIdType> wupComponents;
+    private ArrayList<ComponentIdType> wupInterchangeComponents;
+    private ArrayList<ComponentIdType> endpoints;
+
+    //
+    // Constructor(s)
+    //
 
     public WorkUnitProcessorTopologyNode(){
+        super();
         this.wupComponents = new ArrayList<>();
         this.wupInterchangeComponents = new ArrayList<>();
         this.endpoints = new ArrayList<>();
     }
 
-    @Override
+    public WorkUnitProcessorTopologyNode(WorkUnitProcessorTopologyNode ori){
+        super(ori);
+        this.wupComponents = new ArrayList<>();
+        this.wupInterchangeComponents = new ArrayList<>();
+        this.endpoints = new ArrayList<>();
+        if (ori.hasWupComponents()) {
+            for(ComponentIdType currentId: ori.getWupComponents()){
+                getWupComponents().add(SerializationUtils.clone(currentId));
+            }
+        }
+        if(ori.hasWupInterchangeComponents()){
+            for(ComponentIdType currentId: ori.getWupInterchangeComponents()){
+                getWupInterchangeComponents().add(SerializationUtils.clone(currentId));
+            }
+        }
+        if(ori.hasEndpoints()){
+            for(ComponentIdType currentId: ori.getEndpoints()){
+                getEndpoints().add(SerializationUtils.clone(currentId));
+            }
+        }
+    }
+
+    //
+    // Getters and Setters
+    //
+
+    @Override @JsonIgnore
     protected Logger getLogger() {
         return (LOG);
     }
 
-    public ArrayList<TopologyNodeFDN> getWupComponents() {
+    @JsonIgnore
+    public boolean hasWupComponents(){
+        boolean hasValue = this.wupComponents != null;
+        return(hasValue);
+    }
+
+    public ArrayList<ComponentIdType> getWupComponents() {
         return wupComponents;
     }
 
-    public void setWupComponents(ArrayList<TopologyNodeFDN> wupComponents) {
+    public void setWupComponents(ArrayList<ComponentIdType> wupComponents) {
         this.wupComponents = wupComponents;
     }
 
-    public ArrayList<TopologyNodeFDN> getWupInterchangeComponents() {
+    @JsonIgnore
+    public boolean hasWupInterchangeComponents(){
+        boolean hasValue = this.wupInterchangeComponents != null;
+        return(hasValue);
+    }
+
+    public ArrayList<ComponentIdType> getWupInterchangeComponents() {
         return wupInterchangeComponents;
     }
 
-    public void setWupInterchangeComponents(ArrayList<TopologyNodeFDN> wupInterchangeComponents) {
+    public void setWupInterchangeComponents(ArrayList<ComponentIdType> wupInterchangeComponents) {
         this.wupInterchangeComponents = wupInterchangeComponents;
     }
 
-    public ArrayList<TopologyNodeFDN> getEndpoints() {
+    @JsonIgnore
+    public boolean hasEndpoints(){
+        boolean hasValue = this.endpoints != null;
+        return(hasValue);
+    }
+
+    public ArrayList<ComponentIdType> getEndpoints() {
         return endpoints;
     }
 
-    public void setEndpoints(ArrayList<TopologyNodeFDN> endpoints) {
+    public void setEndpoints(ArrayList<ComponentIdType> endpoints) {
         this.endpoints = endpoints;
+    }
+
+    //
+    // To String
+    //
+
+    @Override
+    public String toString() {
+        return "WorkUnitProcessorTopologyNode{" +
+                "otherConfigParameters=" + getOtherConfigParameters() +
+                ", kubernetesDeployed=" + isKubernetesDeployed() +
+                ", nodeRDN=" + getNodeRDN() +
+                ", componentType=" + getComponentType() +
+                ", componentId=" + getComponentId() +
+                ", parentNode=" + getParentNode() +
+                ", concurrencyMode=" + getConcurrencyMode() +
+                ", resilienceMode=" + getResilienceMode() +
+                ", securityZone=" + getSecurityZone() +
+                ", otherConfigurationParameters=" + getOtherConfigurationParameters() +
+                ", actualHostIP='" + getActualHostIP() + '\'' +
+                ", actualPodIP='" + getActualPodIP() + '\'' +
+                ", wupComponents=" + wupComponents +
+                ", wupInterchangeComponents=" + wupInterchangeComponents +
+                ", endpoints=" + endpoints +
+                '}';
     }
 }

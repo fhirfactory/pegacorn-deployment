@@ -21,8 +21,12 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.model.nodes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.ser.std.SerializableSerializer;
+import net.fhirfactory.pegacorn.common.model.componentid.ComponentIdType;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
+import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,25 +35,61 @@ import java.util.ArrayList;
 public class DeploymentSiteTopologyNode extends TopologyNode {
     private static final Logger LOG = LoggerFactory.getLogger(DeploymentSiteTopologyNode.class);
 
-    private ArrayList<TopologyNodeFDN> clusterServices;
+    private ArrayList<ComponentIdType> clusterServices;
     private Integer instanceCount;
+
+    //
+    // Constructor(s)
+    //
 
     public DeploymentSiteTopologyNode(){
         super();
         this.clusterServices = new ArrayList<>();
+        this.instanceCount = null;
     }
 
-    @Override
+    public DeploymentSiteTopologyNode(DeploymentSiteTopologyNode ori){
+        super(ori);
+        this.clusterServices = new ArrayList<>();
+        this.instanceCount = null;
+
+        if(ori.hasClusterServices()){
+            for(ComponentIdType currentId: ori.getClusterServices()){
+                getClusterServices().add(SerializationUtils.clone(currentId));
+            }
+        }
+        if(ori.hasInstanceCount()){
+            setInstanceCount(ori.getInstanceCount());
+        }
+    }
+
+    //
+    // Getters and Setters
+    //
+
+    @Override @JsonIgnore
     protected Logger getLogger() {
         return (LOG);
     }
 
-    public ArrayList<TopologyNodeFDN> getClusterServices() {
+    @JsonIgnore
+    public boolean hasClusterServices(){
+        boolean hasValue = this.clusterServices != null;
+        return(hasValue);
+    }
+
+    public ArrayList<ComponentIdType> getClusterServices() {
         return clusterServices;
     }
 
-    public void setClusterServices(ArrayList<TopologyNodeFDN> clusterServices) {
+    public void setClusterServices(ArrayList<ComponentIdType> clusterServices) {
         this.clusterServices = clusterServices;
+    }
+
+    @JsonIgnore
+    public boolean hasInstanceCount(){
+        boolean hasValue = this.instanceCount != null;
+        return(hasValue);
     }
 
     public Integer getInstanceCount() {
@@ -58,5 +98,29 @@ public class DeploymentSiteTopologyNode extends TopologyNode {
 
     public void setInstanceCount(Integer instanceCount) {
         this.instanceCount = instanceCount;
+    }
+
+    //
+    // to String
+    //
+
+    @Override
+    public String toString() {
+        return "DeploymentSiteTopologyNode{" +
+                "otherConfigParameters=" + getOtherConfigParameters() +
+                ", kubernetesDeployed=" + isKubernetesDeployed() +
+                ", nodeRDN=" + getNodeRDN() +
+                ", componentType=" + getComponentType() +
+                ", componentId=" + getComponentId() +
+                ", parentNode=" + getParentNode() +
+                ", concurrencyMode=" + getConcurrencyMode() +
+                ", resilienceMode=" + getResilienceMode() +
+                ", securityZone=" + getSecurityZone() +
+                ", otherConfigurationParameters=" + getOtherConfigurationParameters() +
+                ", actualHostIP='" + getActualHostIP() + '\'' +
+                ", actualPodIP='" + getActualPodIP() + '\'' +
+                ", clusterServices=" + clusterServices +
+                ", instanceCount=" + instanceCount +
+                '}';
     }
 }

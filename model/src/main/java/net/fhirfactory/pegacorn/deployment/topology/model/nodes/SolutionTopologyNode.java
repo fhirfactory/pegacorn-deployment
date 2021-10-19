@@ -21,6 +21,8 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.model.nodes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.fhirfactory.pegacorn.common.model.componentid.ComponentIdType;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
 import org.slf4j.Logger;
@@ -31,20 +33,45 @@ import java.util.ArrayList;
 public class SolutionTopologyNode extends TopologyNode {
     private static final Logger LOG = LoggerFactory.getLogger(SolutionTopologyNode.class);
 
-    private ArrayList<TopologyNodeFDN> subsystemList;
+    private ArrayList<ComponentIdType> subsystemList;
     private String systemOwner;
+
+    //
+    // Constructor(s)
+    //
 
     public SolutionTopologyNode(){
         super();
         subsystemList = new ArrayList<>();
     }
 
-    public ArrayList<TopologyNodeFDN> getSubsystemList() {
+    public SolutionTopologyNode(SolutionTopologyNode ori){
+        super(ori);
+
+    }
+
+    //
+    // Getters and Setters
+    //
+
+    @JsonIgnore
+    public boolean hasSubsystemList(){
+        boolean hasValue = this.subsystemList != null;
+        return(hasValue);
+    }
+
+    public ArrayList<ComponentIdType> getSubsystemList() {
         return subsystemList;
     }
 
-    public void setSubsystemList(ArrayList<TopologyNodeFDN> subsystemList) {
+    public void setSubsystemList(ArrayList<ComponentIdType> subsystemList) {
         this.subsystemList = subsystemList;
+    }
+
+    @JsonIgnore
+    public boolean hasSystemOwner(){
+        boolean hasValue = this.systemOwner != null;
+        return(hasValue);
     }
 
     public String getSystemOwner() {
@@ -56,8 +83,32 @@ public class SolutionTopologyNode extends TopologyNode {
 
     }
 
-    @Override
+    @Override @JsonIgnore
     protected Logger getLogger() {
         return (LOG);
+    }
+
+    //
+    // To String
+    //
+
+    @Override
+    public String toString() {
+        return "SolutionTopologyNode{" +
+                "otherConfigParameters=" + getOtherConfigParameters() +
+                ", kubernetesDeployed=" + isKubernetesDeployed() +
+                ", nodeRDN=" + getNodeRDN() +
+                ", componentType=" + getComponentType() +
+                ", componentId=" + getComponentId() +
+                ", parentNode=" + getParentNode() +
+                ", concurrencyMode=" + getConcurrencyMode() +
+                ", resilienceMode=" + getResilienceMode() +
+                ", securityZone=" + getSecurityZone() +
+                ", otherConfigurationParameters=" + getOtherConfigurationParameters() +
+                ", actualHostIP='" + getActualHostIP() + '\'' +
+                ", actualPodIP='" + getActualPodIP() + '\'' +
+                ", subsystemList=" + subsystemList +
+                ", systemOwner='" + systemOwner + '\'' +
+                '}';
     }
 }

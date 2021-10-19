@@ -22,11 +22,10 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.nodes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeRDN;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeTypeEnum;
+import net.fhirfactory.pegacorn.common.model.componentid.ComponentIdType;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.common.EndpointProviderInterface;
+import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,37 +34,140 @@ import java.util.ArrayList;
 public class ProcessingPlantTopologyNode extends TopologyNode implements EndpointProviderInterface {
     private static final Logger LOG = LoggerFactory.getLogger(ProcessingPlantTopologyNode.class);
 
-    private ArrayList<TopologyNodeFDN> workshops;
-    private ArrayList<TopologyNodeFDN> endpoints;
-    private ArrayList<TopologyNodeFDN> connections;
+    private ArrayList<ComponentIdType> workshops;
+    private ArrayList<ComponentIdType> endpoints;
+    private ArrayList<ComponentIdType> connections;
     private String nameSpace;
     private String interZoneIPCStackConfigFile;
     private String interZoneOAMStackConfigFile;
     private String intraZoneIPCStackConfigFile;
     private String intraZoneOAMStackConfigFile;
-
     private String defaultDNSName;
     private boolean internalTrafficEncrypted;
     private Integer instanceCount;
 
-    @Override
-    protected Logger getLogger() {
-        return (LOG);
-    }
+    //
+    // Constructor(s)
+    //
 
     public ProcessingPlantTopologyNode(){
+        super();
         this.workshops = new ArrayList<>();
         this.endpoints = new ArrayList<>();
         this.connections = new ArrayList<>();
-
         this.nameSpace = null;
         this.defaultDNSName = null;
         this.internalTrafficEncrypted = false;
-
         this.interZoneIPCStackConfigFile = null;
         this.interZoneOAMStackConfigFile = null;
         this.intraZoneIPCStackConfigFile = null;
         this.intraZoneOAMStackConfigFile = null;
+    }
+
+    public ProcessingPlantTopologyNode(ProcessingPlantTopologyNode ori){
+        super(ori);
+        this.workshops = new ArrayList<>();
+        this.endpoints = new ArrayList<>();
+        this.connections = new ArrayList<>();
+        this.nameSpace = null;
+        this.defaultDNSName = null;
+        this.internalTrafficEncrypted = false;
+        this.interZoneIPCStackConfigFile = null;
+        this.interZoneOAMStackConfigFile = null;
+        this.intraZoneIPCStackConfigFile = null;
+        this.intraZoneOAMStackConfigFile = null;
+
+        if(ori.hasWorkshops()){
+            for(ComponentIdType currentId: ori.getWorkshops()){
+                getWorkshops().add(SerializationUtils.clone(currentId));
+            }
+        }
+        if(ori.hasEndpoints()){
+            for(ComponentIdType currentId: ori.getEndpoints()){
+                getEndpoints().add(SerializationUtils.clone(currentId));
+            }
+        }
+        if (ori.hasConnections()) {
+            for(ComponentIdType currentId: ori.getConnections()){
+                getConnections().add(SerializationUtils.clone(currentId));
+            }
+        }
+        if(ori.hasNameSpace()){
+            setNameSpace(SerializationUtils.clone(ori.getNameSpace()));
+        }
+        if(ori.hasDefaultDNSName()){
+            setDefaultDNSName(SerializationUtils.clone(ori.getDefaultDNSName()));
+        }
+        setInternalTrafficEncrypted(ori.isInternalTrafficEncrypted());
+        if(ori.hasInterZoneIPCStackConfigFile()){
+            setInterZoneIPCStackConfigFile(SerializationUtils.clone(ori.getInterZoneIPCStackConfigFile()));
+        }
+        if(ori.hasInterZoneOAMStackConfigFile()){
+            setInterZoneOAMStackConfigFile(SerializationUtils.clone(ori.getInterZoneOAMStackConfigFile()));
+        }
+        if(ori.hasIntraZoneIPCStackConfigFile()){
+            setIntraZoneIPCStackConfigFile(SerializationUtils.clone(ori.getIntraZoneIPCStackConfigFile()));
+        }
+        if(ori.hasIntraZoneOAMStackConfigFile()){
+            setIntraZoneOAMStackConfigFile(SerializationUtils.clone(ori.getIntraZoneOAMStackConfigFile()));
+        }
+    }
+
+    //
+    // Getters and Setters
+    //
+
+    @Override @JsonIgnore
+    protected Logger getLogger() {
+        return (LOG);
+    }
+
+    @JsonIgnore
+    public boolean hasWorkshops(){
+        boolean hasValue = this.workshops != null;
+        return(hasValue);
+    }
+
+    public ArrayList<ComponentIdType> getWorkshops() {
+        return workshops;
+    }
+
+    public void setWorkshops(ArrayList<ComponentIdType> workshops) {
+        this.workshops = workshops;
+    }
+
+    @JsonIgnore
+    public boolean hasEndpoints(){
+        boolean hasValue = this.endpoints != null;
+        return(hasValue);
+    }
+
+    public ArrayList<ComponentIdType> getEndpoints() {
+        return endpoints;
+    }
+
+    public void setEndpoints(ArrayList<ComponentIdType> endpoints) {
+        this.endpoints = endpoints;
+    }
+
+    @JsonIgnore
+    public boolean hasConnections(){
+        boolean hasValue = this.connections != null;
+        return(hasValue);
+    }
+
+    public ArrayList<ComponentIdType> getConnections() {
+        return connections;
+    }
+
+    public void setConnections(ArrayList<ComponentIdType> connections) {
+        this.connections = connections;
+    }
+
+    @JsonIgnore
+    public boolean hasInterZoneIPCStackConfigFile(){
+        boolean hasValue = this.interZoneIPCStackConfigFile != null;
+        return(hasValue);
     }
 
     public String getInterZoneIPCStackConfigFile() {
@@ -74,6 +176,12 @@ public class ProcessingPlantTopologyNode extends TopologyNode implements Endpoin
 
     public void setInterZoneIPCStackConfigFile(String interZoneIPCStackConfigFile) {
         this.interZoneIPCStackConfigFile = interZoneIPCStackConfigFile;
+    }
+
+    @JsonIgnore
+    public boolean hasInterZoneOAMStackConfigFile(){
+        boolean hasValue = this.interZoneOAMStackConfigFile != null;
+        return(hasValue);
     }
 
     public String getInterZoneOAMStackConfigFile() {
@@ -92,28 +200,10 @@ public class ProcessingPlantTopologyNode extends TopologyNode implements Endpoin
         this.internalTrafficEncrypted = internalTrafficEncrypted;
     }
 
-    public ArrayList<TopologyNodeFDN> getWorkshops() {
-        return workshops;
-    }
-
-    public void setWorkshops(ArrayList<TopologyNodeFDN> workshops) {
-        this.workshops = workshops;
-    }
-
-    public ArrayList<TopologyNodeFDN> getEndpoints() {
-        return endpoints;
-    }
-
-    public void setEndpoints(ArrayList<TopologyNodeFDN> endpoints) {
-        this.endpoints = endpoints;
-    }
-
-    public ArrayList<TopologyNodeFDN> getConnections() {
-        return connections;
-    }
-
-    public void setConnections(ArrayList<TopologyNodeFDN> connections) {
-        this.connections = connections;
+    @JsonIgnore
+    public boolean hasDefaultDNSName(){
+        boolean hasValue = this.defaultDNSName != null;
+        return(hasValue);
     }
 
     public String getDefaultDNSName() {
@@ -124,12 +214,24 @@ public class ProcessingPlantTopologyNode extends TopologyNode implements Endpoin
         this.defaultDNSName = defaultDNSName;
     }
 
+    @JsonIgnore
+    public boolean hasInstanceCount(){
+        boolean hasValue = this.instanceCount != null;
+        return(hasValue);
+    }
+
     public Integer getInstanceCount() {
         return instanceCount;
     }
 
     public void setInstanceCount(Integer instanceCount) {
         this.instanceCount = instanceCount;
+    }
+
+    @JsonIgnore
+    public boolean hasNameSpace(){
+        boolean hasValue = this.nameSpace != null;
+        return(hasValue);
     }
 
     public String getNameSpace() {
@@ -141,8 +243,14 @@ public class ProcessingPlantTopologyNode extends TopologyNode implements Endpoin
     }
 
     @Override
-    public void addEndpoint(TopologyNodeFDN endpointFDN) {
+    public void addEndpoint(ComponentIdType endpointFDN) {
         endpoints.add(endpointFDN);
+    }
+
+    @JsonIgnore
+    public boolean hasIntraZoneIPCStackConfigFile(){
+        boolean hasValue = this.intraZoneIPCStackConfigFile != null;
+        return(hasValue);
     }
 
     public String getIntraZoneIPCStackConfigFile() {
@@ -153,6 +261,12 @@ public class ProcessingPlantTopologyNode extends TopologyNode implements Endpoin
         this.intraZoneIPCStackConfigFile = intraZoneIPCStackConfigFile;
     }
 
+    @JsonIgnore
+    public boolean hasIntraZoneOAMStackConfigFile(){
+        boolean hasValue = this.intraZoneOAMStackConfigFile != null;
+        return(hasValue);
+    }
+
     public String getIntraZoneOAMStackConfigFile() {
         return intraZoneOAMStackConfigFile;
     }
@@ -161,48 +275,36 @@ public class ProcessingPlantTopologyNode extends TopologyNode implements Endpoin
         this.intraZoneOAMStackConfigFile = intraZoneOAMStackConfigFile;
     }
 
-    @JsonIgnore
-    public String getSubsystemName(){
-        TopologyNodeFDN nodeFDN = getNodeFDN();
-        TopologyNodeRDN subsystemRDN = nodeFDN.extractRDNForNodeType(TopologyNodeTypeEnum.SUBSYSTEM);
-        String subsystemName = subsystemRDN.getNodeName();
-        return(subsystemName);
-    }
-
-    @JsonIgnore
-    public String getClusterServiceName(){
-        TopologyNodeFDN nodeFDN = getNodeFDN();
-        TopologyNodeRDN subsystemRDN = nodeFDN.extractRDNForNodeType(TopologyNodeTypeEnum.CLUSTER_SERVICE);
-        String subsystemName = subsystemRDN.getNodeName();
-        return(subsystemName);
-    }
+    //
+    // To String
+    //
 
     @Override
     public String toString() {
         return "ProcessingPlantTopologyNode{" +
-                "nodeRDN=" + getNodeRDN() +
-                ", nodeFDN=" + getNodeFDN() +
+                "otherConfigParameters=" + getOtherConfigParameters() +
+                ", kubernetesDeployed=" + isKubernetesDeployed() +
+                ", nodeRDN=" + getNodeRDN() +
                 ", componentType=" + getComponentType() +
-                ", containingNodeFDN=" + getContainingNodeFDN() +
-                ", nodeKey=" + getComponentID() +
-                ", nodeFunctionFDN=" + getNodeFunctionFDN() +
+                ", componentId=" + getComponentId() +
+                ", parentNode=" + getParentNode() +
                 ", concurrencyMode=" + getConcurrencyMode() +
                 ", resilienceMode=" + getResilienceMode() +
                 ", securityZone=" + getSecurityZone() +
-                ", kubernetesDeployed=" + isKubernetesDeployed() +
+                ", otherConfigurationParameters=" + getOtherConfigurationParameters() +
+                ", actualHostIP='" + getActualHostIP() + '\'' +
+                ", actualPodIP='" + getActualPodIP() + '\'' +
                 ", workshops=" + workshops +
                 ", endpoints=" + endpoints +
                 ", connections=" + connections +
-                ", nameSpace=" + nameSpace +
-                ", interZoneIPCStackConfigFile=" + interZoneIPCStackConfigFile +
-                ", interZoneOAMStackConfigFile=" + interZoneOAMStackConfigFile +
-                ", intraZoneIPCStackConfigFile=" + intraZoneIPCStackConfigFile +
-                ", intraZoneOAMStackConfigFile=" + intraZoneOAMStackConfigFile +
-                ", defaultDNSName=" + defaultDNSName +
+                ", nameSpace='" + nameSpace + '\'' +
+                ", interZoneIPCStackConfigFile='" + interZoneIPCStackConfigFile + '\'' +
+                ", interZoneOAMStackConfigFile='" + interZoneOAMStackConfigFile + '\'' +
+                ", intraZoneIPCStackConfigFile='" + intraZoneIPCStackConfigFile + '\'' +
+                ", intraZoneOAMStackConfigFile='" + intraZoneOAMStackConfigFile + '\'' +
+                ", defaultDNSName='" + defaultDNSName + '\'' +
                 ", internalTrafficEncrypted=" + internalTrafficEncrypted +
                 ", instanceCount=" + instanceCount +
-                ", subsystemName=" + getSubsystemName() +
-                ", clusterServiceName=" + getClusterServiceName() +
                 '}';
     }
 }

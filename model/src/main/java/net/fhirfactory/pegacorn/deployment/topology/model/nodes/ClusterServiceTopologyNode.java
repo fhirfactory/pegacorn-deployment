@@ -21,6 +21,8 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.model.nodes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.fhirfactory.pegacorn.common.model.componentid.ComponentIdType;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.common.EndpointProviderInterface;
@@ -32,16 +34,15 @@ import java.util.ArrayList;
 public class ClusterServiceTopologyNode extends TopologyNode implements EndpointProviderInterface {
     private static final Logger LOG = LoggerFactory.getLogger(ClusterServiceTopologyNode.class);
 
-    private ArrayList<TopologyNodeFDN> platformNodes;
+    private ArrayList<ComponentIdType> platformNodes;
     private Integer platformNodeCount;
-    private ArrayList<TopologyNodeFDN> serviceEndpoints;
+    private ArrayList<ComponentIdType> serviceEndpoints;
     private String defaultDNSName;
     private boolean internalTrafficEncrypted;
 
-    @Override
-    protected Logger getLogger() {
-        return (LOG);
-    }
+    //
+    // Constructor(s)
+    //
 
     public ClusterServiceTopologyNode(){
         super();
@@ -49,20 +50,47 @@ public class ClusterServiceTopologyNode extends TopologyNode implements Endpoint
         this.serviceEndpoints = new ArrayList<>();
     }
 
-    public ArrayList<TopologyNodeFDN> getPlatformNodes() {
+    //
+    // Getters and Setters
+    //
+
+    @Override @JsonIgnore
+    protected Logger getLogger() {
+        return (LOG);
+    }
+
+    @JsonIgnore
+    public boolean hasPlatformNodes(){
+        boolean hasValue = this.platformNodes != null;
+        return(hasValue);
+    }
+
+    public ArrayList<ComponentIdType> getPlatformNodes() {
         return platformNodes;
     }
 
-    public void setPlatformNodes(ArrayList<TopologyNodeFDN> platformNodes) {
+    public void setPlatformNodes(ArrayList<ComponentIdType> platformNodes) {
         this.platformNodes = platformNodes;
     }
 
-    public ArrayList<TopologyNodeFDN> getServiceEndpoints() {
+    @JsonIgnore
+    public boolean hasServiceEndpoints(){
+        boolean hasValue = this.serviceEndpoints != null;
+        return(hasValue);
+    }
+
+    public ArrayList<ComponentIdType> getServiceEndpoints() {
         return serviceEndpoints;
     }
 
-    public void setServiceEndpoints(ArrayList<TopologyNodeFDN> serviceEndpoints) {
+    public void setServiceEndpoints(ArrayList<ComponentIdType> serviceEndpoints) {
         this.serviceEndpoints = serviceEndpoints;
+    }
+
+    @JsonIgnore
+    public boolean hasDefaultDNSName(){
+        boolean hasValue = this.defaultDNSName != null;
+        return(hasValue);
     }
 
     public String getDefaultDNSName() {
@@ -81,6 +109,12 @@ public class ClusterServiceTopologyNode extends TopologyNode implements Endpoint
         this.internalTrafficEncrypted = internalTrafficEncrypted;
     }
 
+    @JsonIgnore
+    public boolean hasPlatformNodeCount(){
+        boolean hasValue = this.platformNodeCount != null;
+        return(hasValue);
+    }
+
     public Integer getPlatformNodeCount() {
         return platformNodeCount;
     }
@@ -90,8 +124,8 @@ public class ClusterServiceTopologyNode extends TopologyNode implements Endpoint
     }
 
     @Override
-    public void addEndpoint(TopologyNodeFDN endpointFDN) {
-        getLogger().debug(".addEndpoint(): Entry, endpointFDN->{}", endpointFDN);
-        serviceEndpoints.add(endpointFDN);
+    public void addEndpoint(ComponentIdType endpointId) {
+        getLogger().debug(".addEndpoint(): Entry, endpointId->{}", endpointId);
+        serviceEndpoints.add(endpointId);
     }
 }

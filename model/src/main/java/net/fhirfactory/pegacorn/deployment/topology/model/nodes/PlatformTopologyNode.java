@@ -21,8 +21,11 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.model.nodes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.fhirfactory.pegacorn.common.model.componentid.ComponentIdType;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
+import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,24 +34,61 @@ import java.util.ArrayList;
 public class PlatformTopologyNode extends TopologyNode {
     private static final Logger LOG = LoggerFactory.getLogger(PlatformTopologyNode.class);
 
-    private ArrayList<TopologyNodeFDN> processingPlants;
+    private ArrayList<ComponentIdType> processingPlants;
     private Integer instanceCount;
 
+    //
+    // Constructor(s)
+    //
+
     public PlatformTopologyNode(){
+        super();
         this.processingPlants = new ArrayList<>();
+        this.instanceCount = null;
     }
 
-    @Override
+    public PlatformTopologyNode(PlatformTopologyNode ori){
+        super(ori);
+        this.processingPlants = new ArrayList<>();
+        this.instanceCount = null;
+
+        if(ori.hasProcessingPlants()){
+            for(ComponentIdType currentId: ori.getProcessingPlants()){
+                getProcessingPlants().add(SerializationUtils.clone(currentId));
+            }
+        }
+        if(ori.hasInstanceCount()){
+            setInstanceCount(ori.getInstanceCount());
+        }
+    }
+
+    //
+    // Getters and Setters
+    //
+
+    @Override @JsonIgnore
     protected Logger getLogger() {
         return (LOG);
     }
 
-    public ArrayList<TopologyNodeFDN> getProcessingPlants() {
+    @JsonIgnore
+    public boolean hasProcessingPlants(){
+        boolean hasValue = this.processingPlants != null;
+        return(hasValue);
+    }
+
+    public ArrayList<ComponentIdType> getProcessingPlants() {
         return processingPlants;
     }
 
-    public void setProcessingPlants(ArrayList<TopologyNodeFDN> processingPlants) {
+    public void setProcessingPlants(ArrayList<ComponentIdType> processingPlants) {
         this.processingPlants = processingPlants;
+    }
+
+    @JsonIgnore
+    public boolean hasInstanceCount(){
+        boolean hasValue = this.instanceCount != null;
+        return(hasValue);
     }
 
     public Integer getInstanceCount() {
@@ -57,5 +97,29 @@ public class PlatformTopologyNode extends TopologyNode {
 
     public void setInstanceCount(Integer instanceCount) {
         this.instanceCount = instanceCount;
+    }
+
+    //
+    // To String
+    //
+
+    @Override
+    public String toString() {
+        return "PlatformTopologyNode{" +
+                "otherConfigParameters=" + getOtherConfigParameters() +
+                ", kubernetesDeployed=" + isKubernetesDeployed() +
+                ", nodeRDN=" + getNodeRDN() +
+                ", componentType=" + getComponentType() +
+                ", componentId=" + getComponentId() +
+                ", parentNode=" + getParentNode() +
+                ", concurrencyMode=" + getConcurrencyMode() +
+                ", resilienceMode=" + getResilienceMode() +
+                ", securityZone=" + getSecurityZone() +
+                ", otherConfigurationParameters=" + getOtherConfigurationParameters() +
+                ", actualHostIP='" + getActualHostIP() + '\'' +
+                ", actualPodIP='" + getActualPodIP() + '\'' +
+                ", processingPlants=" + processingPlants +
+                ", instanceCount=" + instanceCount +
+                '}';
     }
 }

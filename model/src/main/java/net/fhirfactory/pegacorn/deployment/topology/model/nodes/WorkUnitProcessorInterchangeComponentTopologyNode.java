@@ -21,6 +21,7 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.model.nodes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,8 +29,46 @@ import org.slf4j.LoggerFactory;
 public class WorkUnitProcessorInterchangeComponentTopologyNode extends TopologyNode {
     private static final Logger LOG = LoggerFactory.getLogger(WorkUnitProcessorInterchangeComponentTopologyNode.class);
 
-    @Override
+    //
+    // Constructor(s)
+    //
+
+    public WorkUnitProcessorInterchangeComponentTopologyNode(){
+        super();
+    }
+
+    public WorkUnitProcessorInterchangeComponentTopologyNode(WorkUnitProcessorInterchangeComponentTopologyNode ori){
+        super(ori);
+    }
+
+    //
+    // Getters and Setters
+    //
+
+    @Override @JsonIgnore
     protected Logger getLogger() {
         return (LOG);
+    }
+
+    //
+    // To String
+    //
+
+    @Override
+    public String toString() {
+        return "WorkUnitProcessorInterchangeComponentTopologyNode{" +
+                "otherConfigParameters=" + getOtherConfigParameters() +
+                ", kubernetesDeployed=" + isKubernetesDeployed() +
+                ", nodeRDN=" + getNodeRDN() +
+                ", componentType=" + getComponentType() +
+                ", componentId=" + getComponentId() +
+                ", parentNode=" + getParentNode() +
+                ", concurrencyMode=" + getConcurrencyMode() +
+                ", resilienceMode=" + getResilienceMode() +
+                ", securityZone=" + getSecurityZone() +
+                ", otherConfigurationParameters=" + getOtherConfigurationParameters() +
+                ", actualHostIP='" + getActualHostIP() + '\'' +
+                ", actualPodIP='" + getActualPodIP() + '\'' +
+                '}';
     }
 }

@@ -12,16 +12,25 @@ public class IPCClusteredServerTopologyEndpoint extends IPCServerTopologyEndpoin
     private Integer servicePortOffset;
     private String serviceDNSName;
 
-    @JsonIgnore
-    private String toStringString;
-
-    @Override
-    protected Logger getLogger() {
-        return (LOG);
-    }
+    //
+    // Constructor(s)
+    //
 
     public IPCClusteredServerTopologyEndpoint(){
         super();
+        this.servicePortName = null;
+        this.servicePortOffset = null;
+        this.servicePortOffset = null;
+        this.serviceDNSName = null;
+    }
+
+    //
+    // Getters and Setters
+    //
+
+    @Override @JsonIgnore
+    protected Logger getLogger() {
+        return (LOG);
     }
 
     public Integer getServicePortValue() {
@@ -56,34 +65,40 @@ public class IPCClusteredServerTopologyEndpoint extends IPCServerTopologyEndpoin
         this.serviceDNSName = serviceDNSName;
     }
 
+    //
+    // To String
+    //
+
     @Override
     public String toString() {
         return "IPCClusteredServerTopologyEndpoint{" +
-                "nodeRDN=" + getNodeRDN() +
-                ", nodeFDN=" + getNodeFDN() +
+                "otherConfigParameters=" + getOtherConfigParameters() +
+                ", kubernetesDeployed=" + isKubernetesDeployed() +
+                ", nodeRDN=" + getNodeRDN() +
                 ", componentType=" + getComponentType() +
-                ", containingNodeFDN=" + getContainingNodeFDN() +
-                ", nodeKey=" + getComponentID() +
-                ", nodeFunctionFDN=" + getNodeFunctionFDN() +
+                ", componentId=" + getComponentId() +
+                ", parentNode=" + getParentNode() +
                 ", concurrencyMode=" + getConcurrencyMode() +
                 ", resilienceMode=" + getResilienceMode() +
                 ", securityZone=" + getSecurityZone() +
-                ", kubernetesDeployed=" + isKubernetesDeployed() +
+                ", otherConfigurationParameters=" + getOtherConfigurationParameters() +
+                ", actualHostIP='" + getActualHostIP() + '\'' +
+                ", actualPodIP='" + getActualPodIP() + '\'' +
                 ", servicePortValue=" + servicePortValue +
-                ", servicePortName=" + servicePortName +
+                ", servicePortName='" + servicePortName + '\'' +
                 ", servicePortOffset=" + servicePortOffset +
-                ", serviceDNSName=" + serviceDNSName +
-                ", toStringString=" + toStringString +
-                ", endpointType=" + getEndpointType() +
+                ", serviceDNSName='" + serviceDNSName + '\'' +
                 ", supportedInterfaceSet=" + getSupportedInterfaceSet() +
-                ", encrypted=" + isEncrypted() +
                 ", portValue=" + getPortValue() +
-                ", portType=" + getPortType() +
+                ", portType='" + getPortType() + '\'' +
                 ", aServer=" + getaServer() +
+                ", hostDNSName='" + getHostDNSName() + '\'' +
+                ", implementingWUP=" + getImplementingWUP() +
                 ", encrypted=" + isEncrypted() +
-                ", interfaceDNSName=" + getHostDNSName() +
-                ", name=" + getName() +
                 ", additionalParameters=" + getAdditionalParameters() +
+                ", connectedSystemName='" + getConnectedSystemName() + '\'' +
+                ", name='" + getName() + '\'' +
+                ", endpointType=" + getEndpointType() +
                 '}';
     }
 }

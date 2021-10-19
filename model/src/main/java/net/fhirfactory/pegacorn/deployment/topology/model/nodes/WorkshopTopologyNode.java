@@ -21,8 +21,11 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.model.nodes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.fhirfactory.pegacorn.common.model.componentid.ComponentIdType;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
+import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,22 +34,70 @@ import java.util.ArrayList;
 public class WorkshopTopologyNode extends TopologyNode {
     private static final Logger LOG = LoggerFactory.getLogger(WorkshopTopologyNode.class);
 
-    private ArrayList<TopologyNodeFDN> wupSet;
+    private ArrayList<ComponentIdType> wupSet;
+
+    //
+    // Constructor(s)
+    //
 
     public WorkshopTopologyNode(){
+        super();
         this.wupSet = new ArrayList<>();
     }
 
-    @Override
+    public WorkshopTopologyNode(WorkshopTopologyNode ori){
+        super(ori);
+        this.wupSet = new ArrayList<>();
+        if(ori.hasWupSet()){
+            for(ComponentIdType currentId: ori.getWupSet()){
+                getWupSet().add(SerializationUtils.clone(currentId));
+            }
+        }
+    }
+
+    //
+    // Getters and Setters
+    //
+
+    @Override @JsonIgnore
     protected Logger getLogger() {
         return (LOG);
     }
 
-    public ArrayList<TopologyNodeFDN> getWupSet() {
+    @JsonIgnore
+    public boolean hasWupSet(){
+        boolean hasValue = this.wupSet != null;
+        return(hasValue);
+    }
+
+    public ArrayList<ComponentIdType> getWupSet() {
         return wupSet;
     }
 
-    public void setWupSet(ArrayList<TopologyNodeFDN> wupSet) {
+    public void setWupSet(ArrayList<ComponentIdType> wupSet) {
         this.wupSet = wupSet;
+    }
+
+    //
+    // To String
+    //
+
+    @Override
+    public String toString() {
+        return "WorkshopTopologyNode{" +
+                "otherConfigParameters=" + getOtherConfigParameters() +
+                ", kubernetesDeployed=" + isKubernetesDeployed() +
+                ", nodeRDN=" + getNodeRDN() +
+                ", componentType=" + getComponentType() +
+                ", componentId=" + getComponentId() +
+                ", parentNode=" + getParentNode() +
+                ", concurrencyMode=" + getConcurrencyMode() +
+                ", resilienceMode=" + getResilienceMode() +
+                ", securityZone=" + getSecurityZone() +
+                ", otherConfigurationParameters=" + getOtherConfigurationParameters() +
+                ", actualHostIP='" + getActualHostIP() + '\'' +
+                ", actualPodIP='" + getActualPodIP() + '\'' +
+                ", wupSet=" + wupSet +
+                '}';
     }
 }

@@ -22,10 +22,7 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.common;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFunctionFDN;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeRDN;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeTypeEnum;
+import net.fhirfactory.pegacorn.common.model.componentid.*;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.valuesets.NetworkSecurityZoneEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.mode.ConcurrencyModeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.mode.ResilienceModeEnum;
@@ -39,11 +36,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class TopologyNode extends ConfigurableNode implements Serializable {
     abstract protected Logger getLogger();
     private TopologyNodeRDN nodeRDN;
-    private TopologyNodeFDN nodeFDN;
-    private String componentID;
-    private TopologyNodeFunctionFDN nodeFunctionFDN;
-    private TopologyNodeTypeEnum componentType;
-    private TopologyNodeFDN containingNodeFDN;
+    private ComponentTypeType componentType;
+    private ComponentIdType componentId;
+    private TopologyNode parentNode;
     private ConcurrencyModeEnum concurrencyMode;
     private ResilienceModeEnum resilienceMode;
     private NetworkSecurityZoneEnum securityZone;
@@ -58,71 +53,60 @@ public abstract class TopologyNode extends ConfigurableNode implements Serializa
     public TopologyNode(){
         super();
         this.nodeRDN = null;
-        this.nodeFDN = null;
-        this.nodeFunctionFDN = null;
+        this.componentType = null;
+        this.componentId = null;
+        this.parentNode = null;
         this.concurrencyMode = null;
         this.resilienceMode = null;
-        this.componentID = null;
+        this.securityZone = null;
+        this.actualHostIP = null;
+        this.actualPodIP = null;
         this.otherConfigurationParameters = new ConcurrentHashMap<>();
+    }
+
+    public TopologyNode(TopologyNode ori){
+        super(ori);
+        this.nodeRDN = null;
+        this.componentType = null;
+        this.componentId = null;
+        this.parentNode = null;
+        this.concurrencyMode = null;
+        this.resilienceMode = null;
+        this.securityZone = null;
+        this.actualHostIP = null;
+        this.actualPodIP = null;
+        if(ori.hasNodeRDN()){
+            setNodeRDN(SerializationUtils.clone(ori.getNodeRDN()));
+        }
+        if(ori.hasComponentType()){
+            setComponentType(SerializationUtils.clone(ori.getComponentType()));
+        }
+        if(ori.hasComponentId()){
+            setComponentId(SerializationUtils.clone(ori.getComponentId()));
+        }
+        if (ori.hasParentNode()) {
+            setParentNode(SerializationUtils.clone(ori.getParentNode()));
+        }
+        if(ori.hasConcurrencyMode()){
+            setConcurrencyMode(ori.getConcurrencyMode());
+        }
+        if(ori.hasResilienceMode()){
+            setResilienceMode(ori.getResilienceMode());
+        }
+        if(ori.hasSecurityZone()){
+            setSecurityZone(ori.getSecurityZone());
+        }
+        if(ori.hasActualHostIP()){
+            setActualHostIP(SerializationUtils.clone(ori.getActualHostIP()));
+        }
+        if(ori.hasActualPodIP()){
+            setActualPodIP(SerializationUtils.clone(ori.getActualPodIP()));
+        }
     }
 
     //
     // Some Helper Functions
     //
-
-    @JsonIgnore
-    public void constructFDN(TopologyNodeFDN parentNodeFDN, TopologyNodeRDN nodeRDN){
-        getLogger().debug(".constructFDN(): Entry, parentNodeFDN->{}, nodeRDN->{}", parentNodeFDN, nodeRDN);
-        if(parentNodeFDN == null || nodeRDN.getNodeType().equals(TopologyNodeTypeEnum.SOLUTION)){
-            getLogger().trace(".constructFDN(): Is a Solution Node");
-            TopologyNodeFDN solutionFDN = new TopologyNodeFDN();
-            solutionFDN.appendTopologyNodeRDN(nodeRDN);
-            this.nodeFDN = solutionFDN;
-        } else {
-            getLogger().trace(".constructFDN(): Is not a Solution Node");
-            TopologyNodeFDN newFDN = (TopologyNodeFDN)SerializationUtils.clone(parentNodeFDN);
-            getLogger().trace(".constructFDN(): newFDN Created");
-            newFDN.appendTopologyNodeRDN(nodeRDN);
-            getLogger().trace(".constructFDN(): nodeRDN appended");
-            this.nodeFDN = newFDN;
-            getLogger().trace(".constructFDN(): this.nodeFDN assigned->{}", this.getNodeFDN());
-        }
-        setNodeRDN(nodeRDN);
-        constructComponentID();
-        getLogger().debug(".constructFDN(): Exit, nodeFDN->{}", this.getNodeFDN());
-    }
-
-    @JsonIgnore
-    public void constructComponentID(){
-        String id = getNodeRDN().getNodeName() + "::" + Long.toHexString(UUID.randomUUID().getLeastSignificantBits());
-        setComponentID(id);
-    }
-
-    @JsonIgnore
-    public void constructFunctionFDN(TopologyNodeFunctionFDN parentFunctionFDN, TopologyNodeRDN nodeRDN){
-        getLogger().debug(".constructFunctionFDN(): Entry");
-        switch(nodeRDN.getNodeType()){
-            case SOLUTION: {
-                TopologyNodeFunctionFDN solutionFDN = new TopologyNodeFunctionFDN();
-                solutionFDN.appendTopologyNodeRDN(nodeRDN);
-                this.nodeFunctionFDN = solutionFDN;
-                break;
-            }
-            case SITE:
-            case PLATFORM:{
-                this.nodeFunctionFDN = parentFunctionFDN;
-                break;
-            }
-            default:{
-                TopologyNodeFunctionFDN newFunctionFDN = (TopologyNodeFunctionFDN)SerializationUtils.clone(parentFunctionFDN);
-                newFunctionFDN.appendTopologyNodeRDN(nodeRDN);
-                this.nodeFunctionFDN = newFunctionFDN;
-            }
-        }
-        setNodeRDN(nodeRDN);
-        constructComponentID();
-        getLogger().debug(".constructFunctionFDN(): Exit, nodeFunctionFDN->{}", this.getNodeFunctionFDN());
-    }
 
     @JsonIgnore
     public boolean isKubernetesDeployed(){
@@ -142,26 +126,6 @@ public abstract class TopologyNode extends ConfigurableNode implements Serializa
             default:
                 return(false);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode{" +
-                "nodeRDN=" + nodeRDN +
-                ", nodeFDN=" + nodeFDN +
-                ", componentID='" + componentID + '\'' +
-                ", nodeFunctionFDN=" + nodeFunctionFDN +
-                ", componentType=" + componentType +
-                ", containingNodeFDN=" + containingNodeFDN +
-                ", concurrencyMode=" + concurrencyMode +
-                ", resilienceMode=" + resilienceMode +
-                ", securityZone=" + securityZone +
-                ", otherConfigurationParameters=" + otherConfigurationParameters +
-                ", actualHostIP='" + actualHostIP + '\'' +
-                ", actualPodIP='" + actualPodIP + '\'' +
-                ", kubernetesDeployed=" + isKubernetesDeployed() +
-                ", otherConfigurationParameters=" + getOtherConfigurationParameters() +
-                '}';
     }
 
     @JsonIgnore
@@ -184,12 +148,66 @@ public abstract class TopologyNode extends ConfigurableNode implements Serializa
     // Getters (and Setters)
     //
 
-    public ConcurrentHashMap<String, String> getOtherConfigurationParameters() {
-        return otherConfigurationParameters;
+    @JsonIgnore
+    public boolean hasNodeRDN(){
+        boolean hasValue = this.nodeRDN != null;
+        return(hasValue);
     }
 
-    public void setOtherConfigurationParameters(ConcurrentHashMap<String, String> otherConfigurationParameters) {
-        this.otherConfigurationParameters = otherConfigurationParameters;
+    public TopologyNodeRDN getNodeRDN() {
+        return nodeRDN;
+    }
+
+    public void setNodeRDN(TopologyNodeRDN nodeRDN) {
+        this.nodeRDN = nodeRDN;
+    }
+
+    @JsonIgnore
+    public boolean hasComponentType(){
+        boolean hasValue = this.componentType != null;
+        return(hasValue);
+    }
+
+    public ComponentTypeType getComponentType() {
+        return componentType;
+    }
+
+    public void setComponentType(ComponentTypeType componentType) {
+        this.componentType = componentType;
+    }
+
+    @JsonIgnore
+    public boolean hasComponentId(){
+        boolean hasValue = this.componentId != null;
+        return(hasValue);
+    }
+
+    public ComponentIdType getComponentId() {
+        return componentId;
+    }
+
+    public void setComponentId(ComponentIdType componentId) {
+        this.componentId = componentId;
+    }
+
+    @JsonIgnore
+    public boolean hasParentNode(){
+        boolean hasValue = this.parentNode != null;
+        return(hasValue);
+    }
+
+    public TopologyNode getParentNode() {
+        return parentNode;
+    }
+
+    public void setParentNode(TopologyNode parentNode) {
+        this.parentNode = parentNode;
+    }
+
+    @JsonIgnore
+    public boolean hasConcurrencyMode(){
+        boolean hasValue = this.concurrencyMode != null;
+        return(hasValue);
     }
 
     public ConcurrencyModeEnum getConcurrencyMode() {
@@ -200,12 +218,24 @@ public abstract class TopologyNode extends ConfigurableNode implements Serializa
         this.concurrencyMode = concurrencyMode;
     }
 
+    @JsonIgnore
+    public boolean hasResilienceMode(){
+        boolean hasValue = this.resilienceMode != null;
+        return(hasValue);
+    }
+
     public ResilienceModeEnum getResilienceMode() {
         return resilienceMode;
     }
 
     public void setResilienceMode(ResilienceModeEnum resilienceMode) {
         this.resilienceMode = resilienceMode;
+    }
+
+    @JsonIgnore
+    public boolean hasSecurityZone(){
+        boolean hasValue = this.securityZone != null;
+        return(hasValue);
     }
 
     public NetworkSecurityZoneEnum getSecurityZone() {
@@ -216,36 +246,24 @@ public abstract class TopologyNode extends ConfigurableNode implements Serializa
         this.securityZone = securityZone;
     }
 
-    public String getComponentID() {
-        return componentID;
+    @JsonIgnore
+    public boolean hasOtherConfigurationParameters(){
+        boolean hasValue = this.otherConfigurationParameters != null;
+        return(hasValue);
     }
 
-    public void setComponentID(String componentID) {
-        this.componentID = componentID;
+    public ConcurrentHashMap<String, String> getOtherConfigurationParameters() {
+        return otherConfigurationParameters;
     }
 
-    public TopologyNodeFunctionFDN getNodeFunctionFDN() {
-        return nodeFunctionFDN;
+    public void setOtherConfigurationParameters(ConcurrentHashMap<String, String> otherConfigurationParameters) {
+        this.otherConfigurationParameters = otherConfigurationParameters;
     }
 
-    public void setNodeFunctionFDN(TopologyNodeFunctionFDN nodeFunctionFDN) {
-        this.nodeFunctionFDN = nodeFunctionFDN;
-    }
-
-    public TopologyNodeTypeEnum getComponentType() {
-        return componentType;
-    }
-
-    public void setComponentType(TopologyNodeTypeEnum componentType) {
-        this.componentType = componentType;
-    }
-
-    public TopologyNodeFDN getContainingNodeFDN() {
-        return containingNodeFDN;
-    }
-
-    public void setContainingNodeFDN(TopologyNodeFDN containingNodeFDN) {
-        this.containingNodeFDN = containingNodeFDN;
+    @JsonIgnore
+    public boolean hasActualHostIP(){
+        boolean hasValue = this.actualHostIP != null;
+        return(hasValue);
     }
 
     public String getActualHostIP() {
@@ -256,6 +274,12 @@ public abstract class TopologyNode extends ConfigurableNode implements Serializa
         this.actualHostIP = actualHostIP;
     }
 
+    @JsonIgnore
+    public boolean hasActualPodIP(){
+        boolean hasValue = this.actualPodIP != null;
+        return(hasValue);
+    }
+
     public String getActualPodIP() {
         return actualPodIP;
     }
@@ -264,22 +288,26 @@ public abstract class TopologyNode extends ConfigurableNode implements Serializa
         this.actualPodIP = actualPodIP;
     }
 
-    public TopologyNodeRDN getNodeRDN() {
-        return nodeRDN;
-    }
+    //
+    // To String
+    //
 
-    public void setNodeRDN(TopologyNodeRDN nodeRDN) {
-        this.nodeRDN = nodeRDN;
-        constructComponentID();
-    }
-
-    public TopologyNodeFDN getNodeFDN() {
-        return nodeFDN;
-    }
-
-    public void setNodeFDN(TopologyNodeFDN nodeFDN) {
-        this.nodeFDN = nodeFDN;
-        setNodeRDN(nodeFDN.getLeafRDN());
-        constructComponentID();
+    @Override
+    public String toString() {
+        return "TopologyNode{" +
+                "otherConfigParameters=" + getOtherConfigParameters() +
+                ", nodeRDN=" + nodeRDN +
+                ", componentType=" + componentType +
+                ", componentId=" + componentId +
+                ", parentNode=" + parentNode +
+                ", concurrencyMode=" + concurrencyMode +
+                ", resilienceMode=" + resilienceMode +
+                ", securityZone=" + securityZone +
+                ", otherConfigurationParameters=" + otherConfigurationParameters +
+                ", actualHostIP=" + actualHostIP +
+                ", actualPodIP=" + actualPodIP +
+                ", kubernetesDeployed=" + isKubernetesDeployed() +
+                '}';
     }
 }
+
