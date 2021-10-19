@@ -21,7 +21,10 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.datatypes.ParameterNameValuePairType;
+import net.fhirfactory.pegacorn.deployment.topology.model.common.ConfigurationParametersType;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -48,6 +51,60 @@ public class ConfigurableNodeSegment implements Serializable {
 
     public void setOtherConfigurationParameters(List<ParameterNameValuePairType> otherConfigurationParameters) {
         this.otherConfigurationParameters = otherConfigurationParameters;
+    }
+
+    @JsonIgnore
+    public String getConfigurationParameter(String parameterName){
+        if(StringUtils.isEmpty(parameterName)){
+            return(null);
+        }
+        for(ParameterNameValuePairType currentConfigurationParameter: otherConfigurationParameters){
+            if(currentConfigurationParameter.getParameterName().equalsIgnoreCase(parameterName)){
+                return(currentConfigurationParameter.getParameterValue());
+            }
+        }
+        return(null);
+    }
+
+    @JsonIgnore
+    public void setConfigurationParameter(String parameterName, String parameterValue) {
+        if(StringUtils.isEmpty(parameterName) || StringUtils.isEmpty(parameterValue)){
+            return;
+        }
+        removeConfigurationParameter(parameterName);
+        ParameterNameValuePairType newParameter = new ParameterNameValuePairType();
+        newParameter.setParameterName(parameterName);
+        newParameter.setParameterValue(parameterValue);
+        otherConfigurationParameters.add(newParameter);
+    }
+
+    @JsonIgnore
+    public void setConfigurationParameter(ParameterNameValuePairType newParameter) {
+        if(newParameter == null){
+            return;
+        }
+        if(StringUtils.isEmpty(newParameter.getParameterName()) || StringUtils.isEmpty(newParameter.getParameterValue())){
+            return;
+        }
+        removeConfigurationParameter(newParameter.getParameterName());
+        otherConfigurationParameters.add(newParameter);
+    }
+
+    @JsonIgnore
+    public void removeConfigurationParameter(String parameterName){
+        if(StringUtils.isEmpty(parameterName)){
+            return;
+        }
+        ParameterNameValuePairType existingParameter = null;
+        for(ParameterNameValuePairType currentConfigurationParameter: otherConfigurationParameters){
+            if(currentConfigurationParameter.getParameterName().equalsIgnoreCase(parameterName)){
+                existingParameter = currentConfigurationParameter;
+                break;
+            }
+        }
+        if(existingParameter != null){
+            otherConfigurationParameters.remove(existingParameter);
+        }
     }
 
     //

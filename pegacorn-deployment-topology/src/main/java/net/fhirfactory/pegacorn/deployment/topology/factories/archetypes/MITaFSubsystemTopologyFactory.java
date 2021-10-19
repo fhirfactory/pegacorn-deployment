@@ -135,7 +135,6 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
         mllpClientTopologyNode.setConnectedSystemName(connectedSystem.getSubsystemName());
         ConnectedExternalSystemTopologyNode externalSystem = new ConnectedExternalSystemTopologyNode();
         externalSystem.setSubsystemName(connectedSystem.getSubsystemName());
-        ConnectedSystemPort targetPort1 = connectedSystem.getTargetPort1();
         ExternalSystemIPCEndpoint systemEndpointPort1 = newExternalSystemIPCEndpoint(targetPort1, mllpClientTopologyNode.isEncrypted());
         externalSystem.getTargetPorts().add(systemEndpointPort1);
         if(connectedSystem.getTargetPort2() != null)

@@ -6,16 +6,14 @@ import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.com
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemPort;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemProperties;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.InterfaceDefinitionSegment;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.ClusteredInteractHTTPServerPortSegment;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.StandardInteractClientPortSegment;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.StandardInteractHTTPServerPortSegment;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.StandardInteractServerPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.*;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.HTTPIPCServerPortSegment;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.JGroupsIPCServerPortSegment;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.JGroupsInitialHostSegment;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCInterface;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCInterfaceDefinition;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.valuesets.NetworkSecurityZoneEnum;
+import net.fhirfactory.pegacorn.deployment.topology.model.common.valuesets.PegacornConfigurationParameterNameEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.ExternalSystemIPCEndpoint;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.IPCServerTopologyEndpoint;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.PetasosEndpointTopologyTypeEnum;
@@ -397,9 +395,32 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
     // Build an HTTP Client Endpoint (Helper Method)
     //
 
-    protected StandardInteractClientTopologyEndpointPort newHTTPClient(EndpointProviderInterface endpointProvider, String endpointFunctionName, StandardInteractClientPortSegment httpClientPort){
+    protected StandardInteractClientTopologyEndpointPort newHTTPClient(EndpointProviderInterface endpointProvider, String endpointFunctionName, StandardInteractHTTPClientPortSegment httpClientPort){
         getLogger().debug(".newHTTPClient(): Entry, endpointProvider->{}, httpClientPort->{}", endpointProvider, httpClientPort);
         StandardInteractClientTopologyEndpointPort httpFHIRClient = new StandardInteractClientTopologyEndpointPort();
+        if (httpClientPort == null) {
+            getLogger().debug(".newHTTPClient(): Exit, no port to add");
+            return (null);
+        }
+        StandardInteractClientTopologyEndpointPort endpointPort = newHTTPClient(httpFHIRClient, endpointProvider, endpointFunctionName, httpClientPort);
+        endpointPort.setConfigurationParameter(PegacornConfigurationParameterNameEnum.PEGACORN_INTERACT_HTTP_CONTEXT_PATH.getParameterName(), httpClientPort.getContextPath());
+        return(endpointPort);
+    }
+
+
+    protected StandardInteractClientTopologyEndpointPort newHTTPClient(EndpointProviderInterface endpointProvider, String endpointFunctionName, StandardInteractClientPortSegment  httpClientPort) {
+        getLogger().debug(".newHTTPClient(): Entry, endpointProvider->{}, httpClientPort->{}", endpointProvider, httpClientPort);
+        StandardInteractClientTopologyEndpointPort httpFHIRClient = new StandardInteractClientTopologyEndpointPort();
+        if (httpClientPort == null) {
+            getLogger().debug(".newHTTPClient(): Exit, no port to add");
+            return (null);
+        }
+        StandardInteractClientTopologyEndpointPort endpointPort = newHTTPClient(httpFHIRClient, endpointProvider, endpointFunctionName, httpClientPort);
+        return(endpointPort);
+    }
+
+    protected StandardInteractClientTopologyEndpointPort newHTTPClient(StandardInteractClientTopologyEndpointPort httpFHIRClient, EndpointProviderInterface endpointProvider, String endpointFunctionName, StandardInteractClientPortSegment  httpClientPort){
+        getLogger().debug(".newHTTPClient(): Entry, endpointProvider->{}, httpClientPort->{}", endpointProvider, httpClientPort);
         if(httpClientPort == null){
             getLogger().debug(".newHTTPClient(): Exit, no port to add");
             return(null);

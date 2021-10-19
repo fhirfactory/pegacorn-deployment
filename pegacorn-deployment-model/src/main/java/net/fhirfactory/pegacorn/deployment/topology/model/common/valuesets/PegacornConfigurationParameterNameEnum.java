@@ -21,16 +21,28 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.model.common.valuesets;
 
-public enum AdditionalParametersListEnum {
-    INITIAL_HOSTS("initialHosts");
+public enum PegacornConfigurationParameterNameEnum {
+    PEGACORN_IPC_TECHNOLOGY_JROUPS_INITIAL_HOSTS("initialHosts","edge.technology.jgroups_initial_hosts"),
+    PEGACORN_INTERACT_MLLP_CONSUMER_COUNT("mllpComsumers", "interact.mllp.consumer_count"),
+    PEGACORN_INTERACT_MLLP_ACCEPT_TIMEOUT("acceptTimeout", "interact.mllp.server_accept_timeout"),
+    PEGACORN_INTERACT_MLLP_BIND_TIMEOUT("bindTimeout", "interact.mllp.server_bind_timeout"),
+    PEGACORN_PETASOS_WUP_QUEUE_SIZE("wupSedaQueueSize", "petasos.wup.sesa_queue_size"),
+    PEGACORN_PETASOS_INTERCHANGE_QUEUE_SIZE("interchangeSedaQueueSize", "petasos.interchange.sesa_queue_size"),
+    PEGACORN_INTERACT_HTTP_CONTEXT_PATH("contextPath", "interact.http.context_path");
 
-    private String parameterValue;
+    private String parameterName;
+    private String parameterToken;
 
-    private AdditionalParametersListEnum(String parameterValue) {
-        this.parameterValue = parameterValue;
+    private PegacornConfigurationParameterNameEnum(String name, String token) {
+        this.parameterName = name;
+        this.parameterToken = token;
     }
 
-    public String getParameterValue(){
-        return(this.parameterValue);
+    public String getParameterName(){
+        return(parameterName);
+    }
+
+    public String getParameterToken(){
+        return(parameterToken);
     }
 }

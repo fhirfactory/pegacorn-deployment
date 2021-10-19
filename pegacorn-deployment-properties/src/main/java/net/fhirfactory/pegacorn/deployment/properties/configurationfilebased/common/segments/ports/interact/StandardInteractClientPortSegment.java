@@ -12,6 +12,21 @@ public class StandardInteractClientPortSegment extends StandardExternalFacingPor
     private int defaultRetryWait;
     private int defaultTimeout;
 
+    //
+    // Constructor(s)
+    //
+
+    public StandardInteractClientPortSegment(){
+        super();
+        this.defaultRetryCount = 3;
+        this.defaultRetryWait = 30;
+        this.defaultTimeout = 30;
+    }
+
+    //
+    // Getters and Setters
+    //
+
     public int getDefaultRetryCount() {
         return defaultRetryCount;
     }

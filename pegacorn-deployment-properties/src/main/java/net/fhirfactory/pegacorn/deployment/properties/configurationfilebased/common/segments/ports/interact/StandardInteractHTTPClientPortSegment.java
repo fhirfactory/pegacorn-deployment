@@ -3,12 +3,9 @@ package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.co
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class StandardInteractHTTPClientPortSegment extends StandardExternalFacingPort {
+public class StandardInteractHTTPClientPortSegment extends StandardInteractClientPortSegment {
     private static Logger LOG = LoggerFactory.getLogger(StandardInteractHTTPClientPortSegment.class);
 
-    private int defaultRetryCount;
-    private int defaultRetryWait;
-    private int defaultTimeout;
     private String contextPath;
 
     //
@@ -17,10 +14,11 @@ public class StandardInteractHTTPClientPortSegment extends StandardExternalFacin
 
     public StandardInteractHTTPClientPortSegment(){
         super();
-        this.defaultRetryCount = 3;
-        this.defaultRetryWait = 30;
-        this.defaultTimeout = 60;
-        this.contextPath = null;
+         this.contextPath = null;
+    }
+
+    public StandardInteractHTTPClientPortSegment(StandardInteractClientPortSegment clientPortSegment){
+
     }
 
     //
@@ -35,30 +33,6 @@ public class StandardInteractHTTPClientPortSegment extends StandardExternalFacin
         this.contextPath = contextPath;
     }
 
-    public int getDefaultRetryCount() {
-        return defaultRetryCount;
-    }
-
-    public void setDefaultRetryCount(int defaultRetryCount) {
-        this.defaultRetryCount = defaultRetryCount;
-    }
-
-    public int getDefaultRetryWait() {
-        return defaultRetryWait;
-    }
-
-    public void setDefaultRetryWait(int defaultRetryWait) {
-        this.defaultRetryWait = defaultRetryWait;
-    }
-
-    public int getDefaultTimeout() {
-        return defaultTimeout;
-    }
-
-    public void setDefaultTimeout(int defaultTimeout) {
-        this.defaultTimeout = defaultTimeout;
-    }
-
     @Override
     protected Logger specifyLogger() {
         return (LOG);
@@ -70,21 +44,21 @@ public class StandardInteractHTTPClientPortSegment extends StandardExternalFacin
 
     @Override
     public String toString() {
-        return "StandardInteractClientPortSegment{" +
-                "name=" + getName() +
-                ", otherConfigurationParameters=" + getOtherConfigurationParameters() +
+        return "StandardInteractHTTPClientPortSegment{" +
+                "otherConfigurationParameters=" + getOtherConfigurationParameters() +
                 ", portValue=" + getPortValue() +
-                ", portType=" + getPortType() +
+                ", portType='" + getPortType() + '\'' +
                 ", server=" + isServer() +
                 ", encrypted=" + isEncrypted() +
                 ", supportedInterfaceProfiles=" + getSupportedInterfaceProfiles() +
-                ", hostDNSEntry=" + getHostDNSEntry() +
+                ", hostDNSEntry='" + getHostDNSEntry() + '\'' +
                 ", startupDelay=" + getStartupDelay() +
-                ", contextPath=" + contextPath +
+                ", name='" + getName() + '\'' +
                 ", connectedSystem=" + getConnectedSystem() +
-                ", defaultRetryCount=" + defaultRetryCount +
-                ", defaultRetryWait=" + defaultRetryWait +
-                ", defaultTimeout=" + defaultTimeout +
+                ", defaultRetryCount=" + getDefaultRetryCount() +
+                ", defaultRetryWait=" + getDefaultRetryWait() +
+                ", defaultTimeout=" + getDefaultTimeout() +
+                ", contextPath='" + contextPath + '\'' +
                 '}';
     }
 }

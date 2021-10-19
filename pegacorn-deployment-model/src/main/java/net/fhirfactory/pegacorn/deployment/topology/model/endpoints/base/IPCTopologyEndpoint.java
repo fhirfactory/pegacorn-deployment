@@ -3,7 +3,7 @@ package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
-import net.fhirfactory.pegacorn.deployment.topology.model.common.valuesets.AdditionalParametersListEnum;
+import net.fhirfactory.pegacorn.deployment.topology.model.common.valuesets.PegacornConfigurationParameterNameEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.PetasosEndpointTopologyTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +16,7 @@ public class IPCTopologyEndpoint extends TopologyNode {
 
     private String name;
     private PetasosEndpointTopologyTypeEnum endpointType;
-    private Map<AdditionalParametersListEnum, String> additionalParameters;
+    private Map<PegacornConfigurationParameterNameEnum, String> additionalParameters;
     private String connectedSystemName;
     private Boolean encrypted;
     private TopologyNodeFDN implementingWUP;
@@ -43,11 +43,11 @@ public class IPCTopologyEndpoint extends TopologyNode {
         this.encrypted = encrypted;
     }
 
-    public Map<AdditionalParametersListEnum, String> getAdditionalParameters() {
+    public Map<PegacornConfigurationParameterNameEnum, String> getAdditionalParameters() {
         return additionalParameters;
     }
 
-    public void setAdditionalParameters(Map<AdditionalParametersListEnum, String> additionalParameters) {
+    public void setAdditionalParameters(Map<PegacornConfigurationParameterNameEnum, String> additionalParameters) {
         this.additionalParameters = additionalParameters;
     }
 
@@ -81,7 +81,7 @@ public class IPCTopologyEndpoint extends TopologyNode {
     }
 
     @JsonIgnore
-    public String getAdditionalParameter(AdditionalParametersListEnum parameterName){
+    public String getAdditionalParameter(PegacornConfigurationParameterNameEnum parameterName){
         if(this.additionalParameters.isEmpty()){
             return(null);
         }

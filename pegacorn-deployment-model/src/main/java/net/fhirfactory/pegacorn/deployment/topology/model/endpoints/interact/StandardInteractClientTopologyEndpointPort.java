@@ -28,9 +28,18 @@ public class StandardInteractClientTopologyEndpointPort extends IPCTopologyEndpo
 
     private ConnectedExternalSystemTopologyNode targetSystem;
 
+    //
+    // Constructor(s)
+    //
+
     public StandardInteractClientTopologyEndpointPort(){
+        super();
         targetSystem = new ConnectedExternalSystemTopologyNode();
     }
+
+    //
+    // Getters and Setters
+    //
 
     public ConnectedExternalSystemTopologyNode getTargetSystem() {
         return targetSystem;
@@ -40,4 +49,34 @@ public class StandardInteractClientTopologyEndpointPort extends IPCTopologyEndpo
         this.targetSystem = targetSystem;
     }
 
+    //
+    // To String
+    //
+
+    @Override
+    public String toString() {
+        return "StandardInteractClientTopologyEndpointPort{" +
+                "otherConfigParameters=" + getOtherConfigParameters() +
+                ", kubernetesDeployed=" + isKubernetesDeployed() +
+                ", otherConfigurationParameters=" + getOtherConfigurationParameters() +
+                ", concurrencyMode=" + getConcurrencyMode() +
+                ", resilienceMode=" + getResilienceMode() +
+                ", securityZone=" + getSecurityZone() +
+                ", componentID='" + getComponentID() + '\'' +
+                ", nodeFunctionFDN=" + getNodeFunctionFDN() +
+                ", componentType=" + getComponentType() +
+                ", containingNodeFDN=" + getContainingNodeFDN() +
+                ", actualHostIP='" + getActualHostIP() + '\'' +
+                ", actualPodIP='" + getActualPodIP() + '\'' +
+                ", nodeRDN=" + getNodeRDN() +
+                ", nodeFDN=" + getNodeFDN() +
+                ", implementingWUP=" + getImplementingWUP() +
+                ", encrypted=" + isEncrypted() +
+                ", additionalParameters=" + getAdditionalParameters() +
+                ", connectedSystemName='" + getConnectedSystemName() + '\'' +
+                ", name='" + getName() + '\'' +
+                ", endpointType=" + getEndpointType() +
+                ", targetSystem=" + targetSystem +
+                '}';
+    }
 }
