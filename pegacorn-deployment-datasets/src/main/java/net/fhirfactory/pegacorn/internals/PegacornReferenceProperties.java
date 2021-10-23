@@ -105,4 +105,9 @@ public class PegacornReferenceProperties {
     public String getAuditDMContextPath(){
         return("/pegacorn/hestia/audit-event");
     }
+    
+
+    public String getTaskDMContextPath(){
+        return("/pegacorn/hestia/task");
+    }
 }
