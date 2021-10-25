@@ -95,7 +95,7 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
         port.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_MULTISITE_CLUSTERED);
 
         endpointProvider.addEndpoint(mllpServerTopologyNode.getNodeFDN());
-        getLogger().trace(".createMLLPServerEndpoint(): Add the createMLLPServerEndpoint Port to the Topology Cache");
+        getLogger().warn(".createMLLPServerEndpoint(): Add the {}/{} Port to the Topology Cache", mllpServerTopologyNode.getNodeRDN().getNodeName(), endpointFunctionName);
         getTopologyIM().addTopologyNode(endpointProvider.getNodeFDN(), mllpServerTopologyNode);
         getLogger().debug(".createMLLPServerEndpoint(): Exit, endpoint added");
         return(mllpServerTopologyNode);
@@ -125,6 +125,7 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
         mllpClientTopologyNode.setNodeRDN(nodeRDN);
         mllpClientTopologyNode.setContainingNodeFDN(endpointProvider.getNodeFDN());
         ConnectedSystemProperties connectedSystem = mllpClientPort.getConnectedSystem();
+        ConnectedSystemPort targetPort1 = connectedSystem.getTargetPort1();
         mllpClientTopologyNode.setConnectedSystemName(connectedSystem.getSubsystemName());
         ConnectedExternalSystemTopologyNode externalSystem = new ConnectedExternalSystemTopologyNode();
         externalSystem.setSubsystemName(connectedSystem.getSubsystemName());
@@ -145,7 +146,7 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
         }
         mllpClientTopologyNode.setTargetSystem(externalSystem);
         endpointProvider.addEndpoint(mllpClientTopologyNode.getNodeFDN());
-        getLogger().trace(".newMLLPClientEndpoint(): Add the createMLLPServerEndpoint Port to the Topology Cache");
+        getLogger().warn(".newMLLPClientEndpoint(): Add the {}/{} Port to the Topology Cache", mllpClientTopologyNode.getNodeRDN().getNodeName(), endpointFunctionName);
         getTopologyIM().addTopologyNode(endpointProvider.getNodeFDN(), mllpClientTopologyNode);
         getLogger().debug(".newMLLPClientEndpoint(): Exit, endpoint added");
         return(mllpClientTopologyNode);

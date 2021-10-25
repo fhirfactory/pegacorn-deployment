@@ -48,6 +48,10 @@ public abstract class TopologyNode implements Serializable {
     private String actualHostIP;
     private String actualPodIP;
 
+    //
+    // Constructor
+    //
+
     public TopologyNode(){
         this.nodeRDN = null;
         this.nodeFDN = null;
@@ -58,9 +62,9 @@ public abstract class TopologyNode implements Serializable {
         this.otherConfigurationParameters = new ConcurrentHashMap<>();
     }
 
-    public String getActualHostIP() {
-        return actualHostIP;
-    }
+    //
+    // Some Helper Functions
+    //
 
     public void setActualHostIP(String actualHostIP) {
         this.actualHostIP = actualHostIP;
@@ -182,6 +186,73 @@ public abstract class TopologyNode implements Serializable {
         getLogger().debug(".constructFunctionFDN(): Exit, nodeFunctionFDN->{}", this.getNodeFunctionFDN());
     }
 
+    @JsonIgnore
+    public boolean isKubernetesDeployed(){
+        if(getResilienceMode() == null){
+            return(false);
+        }
+        switch(getResilienceMode()){
+            case RESILIENCE_MODE_KUBERNETES_CLUSTERED:
+            case RESILIENCE_MODE_KUBERNETES_MULTISITE:
+            case RESILIENCE_MODE_KUBERNETES_STANDALONE:
+            case RESILIENCE_MODE_KUBERNETES_MULTISITE_CLUSTERED:
+                return(true);
+            case RESILIENCE_MODE_CLUSTERED:
+            case RESILIENCE_MODE_MULTISITE:
+            case RESILIENCE_MODE_STANDALONE:
+            case RESILIENCE_MODE_MULTISITE_CLUSTERED:
+            default:
+                return(false);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode{" +
+                "nodeRDN=" + nodeRDN +
+                ", nodeFDN=" + nodeFDN +
+                ", componentID='" + componentID + '\'' +
+                ", nodeFunctionFDN=" + nodeFunctionFDN +
+                ", componentType=" + componentType +
+                ", containingNodeFDN=" + containingNodeFDN +
+                ", concurrencyMode=" + concurrencyMode +
+                ", resilienceMode=" + resilienceMode +
+                ", securityZone=" + securityZone +
+                ", otherConfigurationParameters=" + otherConfigurationParameters +
+                ", actualHostIP='" + actualHostIP + '\'' +
+                ", actualPodIP='" + actualPodIP + '\'' +
+                ", kubernetesDeployed=" + isKubernetesDeployed() +
+                '}';
+    }
+
+    @JsonIgnore
+    public void addOtherConfigurationParameter(String key, String value){
+        if(this.otherConfigurationParameters.containsKey(key)){
+            this.otherConfigurationParameters.remove(key);
+        }
+        this.otherConfigurationParameters.put(key,value);
+    }
+
+    public String getOtherConfigurationParameter(String key){
+        if(this.otherConfigurationParameters.containsKey(key)){
+            String value = this.otherConfigurationParameters.get(key);
+            return(value);
+        }
+        return(null);
+    }
+
+    //
+    // Getters (and Setters)
+    //
+
+    public ConcurrentHashMap<String, String> getOtherConfigurationParameters() {
+        return otherConfigurationParameters;
+    }
+
+    public void setOtherConfigurationParameters(ConcurrentHashMap<String, String> otherConfigurationParameters) {
+        this.otherConfigurationParameters = otherConfigurationParameters;
+    }
+
     public ConcurrencyModeEnum getConcurrencyMode() {
         return concurrencyMode;
     }
@@ -206,61 +277,70 @@ public abstract class TopologyNode implements Serializable {
         this.securityZone = securityZone;
     }
 
-    @JsonIgnore
-    public boolean isKubernetesDeployed(){
-        if(getResilienceMode() == null){
-            return(false);
-        }
-        switch(getResilienceMode()){
-            case RESILIENCE_MODE_KUBERNETES_CLUSTERED:
-            case RESILIENCE_MODE_KUBERNETES_MULTISITE:
-            case RESILIENCE_MODE_KUBERNETES_STANDALONE:
-            case RESILIENCE_MODE_KUBERNETES_MULTISITE_CLUSTERED:
-                return(true);
-            case RESILIENCE_MODE_CLUSTERED:
-            case RESILIENCE_MODE_MULTISITE:
-            case RESILIENCE_MODE_STANDALONE:
-            case RESILIENCE_MODE_MULTISITE_CLUSTERED:
-            default:
-                return(false);
-        }
+    public String getComponentID() {
+        return componentID;
     }
 
-    @Override
-    public String toString() {
-        return "TopologyNode{" +
-                "nodeRDN=" + nodeRDN +
-                ", nodeFDN=" + nodeFDN +
-                ", nodeFunctionFDN=" + nodeFunctionFDN +
-                ", componentType=" + componentType +
-                ", containingComponent=" + containingNodeFDN +
-                ", concurrencyMode=" + concurrencyMode +
-                ", resilienceMode=" + resilienceMode +
-                ", securityZone=" + securityZone +
-                '}';
+    public void setComponentID(String componentID) {
+        this.componentID = componentID;
     }
 
-    public ConcurrentHashMap<String, String> getOtherConfigurationParameters() {
-        return otherConfigurationParameters;
+    public TopologyNodeFunctionFDN getNodeFunctionFDN() {
+        return nodeFunctionFDN;
     }
 
-    public void setOtherConfigurationParameters(ConcurrentHashMap<String, String> otherConfigurationParameters) {
-        this.otherConfigurationParameters = otherConfigurationParameters;
+    public void setNodeFunctionFDN(TopologyNodeFunctionFDN nodeFunctionFDN) {
+        this.nodeFunctionFDN = nodeFunctionFDN;
     }
 
-    @JsonIgnore
-    public void addOtherConfigurationParameter(String key, String value){
-        if(this.otherConfigurationParameters.containsKey(key)){
-            this.otherConfigurationParameters.remove(key);
-        }
-        this.otherConfigurationParameters.put(key,value);
+    public TopologyNodeTypeEnum getComponentType() {
+        return componentType;
     }
 
-    public String getOtherConfigurationParameter(String key){
-        if(this.otherConfigurationParameters.containsKey(key)){
-            String value = this.otherConfigurationParameters.get(key);
-            return(value);
-        }
-        return(null);
+    public void setComponentType(TopologyNodeTypeEnum componentType) {
+        this.componentType = componentType;
+    }
+
+    public TopologyNodeFDN getContainingNodeFDN() {
+        return containingNodeFDN;
+    }
+
+    public void setContainingNodeFDN(TopologyNodeFDN containingNodeFDN) {
+        this.containingNodeFDN = containingNodeFDN;
+    }
+
+    public String getActualHostIP() {
+        return actualHostIP;
+    }
+
+    public void setActualHostIP(String actualHostIP) {
+        this.actualHostIP = actualHostIP;
+    }
+
+    public String getActualPodIP() {
+        return actualPodIP;
+    }
+
+    public void setActualPodIP(String actualPodIP) {
+        this.actualPodIP = actualPodIP;
+    }
+
+    public TopologyNodeRDN getNodeRDN() {
+        return nodeRDN;
+    }
+
+    public void setNodeRDN(TopologyNodeRDN nodeRDN) {
+        this.nodeRDN = nodeRDN;
+        constructComponentID();
+    }
+
+    public TopologyNodeFDN getNodeFDN() {
+        return nodeFDN;
+    }
+
+    public void setNodeFDN(TopologyNodeFDN nodeFDN) {
+        this.nodeFDN = nodeFDN;
+        setNodeRDN(nodeFDN.getLeafRDN());
+        constructComponentID();
     }
 }
