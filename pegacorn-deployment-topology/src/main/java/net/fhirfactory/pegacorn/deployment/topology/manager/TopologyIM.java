@@ -23,7 +23,7 @@ package net.fhirfactory.pegacorn.deployment.topology.manager;
 
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDNToken;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeTypeEnum;
+import net.fhirfactory.pegacorn.common.model.componentid.ComponentTypeTypeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.interfaces.SolutionNodeFactoryInterface;
 import net.fhirfactory.pegacorn.deployment.topology.manager.cache.TopologyNodesDM;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
@@ -164,7 +164,7 @@ public class TopologyIM {
                     workshop.getWupSet().add(wup.getNodeFDN());
                     WorkUnitProcessorComponentTopologyNode wupCore = new WorkUnitProcessorComponentTopologyNode();
                     wupCore.setContainingNodeFDN(workshop.getNodeFDN());
-                    wupCore.setComponentType(TopologyNodeTypeEnum.WUP_CORE);
+                    wupCore.setComponentType(ComponentTypeTypeEnum.WUP_CORE);
                     TopologyNodeFDN newFDN = new TopologyNodeFDN(wup.getNodeFDN());
                     newFDN.appendTopologyNodeRDN(wup.getNodeRDN());
                     wupCore.setNodeFDN(newFDN);
@@ -268,7 +268,7 @@ public class TopologyIM {
         return(retrievedNode);
     }
 
-    public List<TopologyNode> nodeSearch(TopologyNodeTypeEnum nodeType, String nodeName,  String nodeVersion ){
+    public List<TopologyNode> nodeSearch(ComponentTypeTypeEnum nodeType, String nodeName, String nodeVersion ){
         List<TopologyNode> nodeList = topologyDataManager.nodeSearch(nodeType, nodeName, nodeVersion);
         return(nodeList);
     }

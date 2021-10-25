@@ -22,12 +22,12 @@
 package net.fhirfactory.pegacorn.deployment.topology.factories.communicate;
 
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeRDN;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeTypeEnum;
+import net.fhirfactory.pegacorn.common.model.componentid.ComponentTypeTypeEnum;
 import net.fhirfactory.pegacorn.deployment.names.functionality.subsystem.CommunicateRoomServerComponentNames;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes.DBaaSSubSystemPropertyFile;
 import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.common.PegacornTopologyFactoryBase;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.PetasosEndpointTopologyTypeEnum;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge.StandardEdgeIPCEndpoint;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge.petasos.PetasosEndpointTopologyTypeEnum;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge.answer.StandardEdgeIPCEndpoint;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.ProcessingPlantTopologyNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +53,7 @@ public abstract class CommunicateRoomServerDBaaSTopologyFactory extends Pegacorn
         roomServerPostgreSQLServer.setEncrypted(propertyFile.getDeploymentMode().isUsingInternalEncryption());
         roomServerPostgreSQLServer.setPortType("SQL");
         roomServerPostgreSQLServer.setEndpointType(PetasosEndpointTopologyTypeEnum.SQL_SERVER);
-        TopologyNodeRDN appServerRDN = createNodeRDN(appServicesName, propertyFile.getSubsystemInstant().getProcessingPlantVersion(), TopologyNodeTypeEnum.ENDPOINT);
+        TopologyNodeRDN appServerRDN = createNodeRDN(appServicesName, propertyFile.getSubsystemInstant().getProcessingPlantVersion(), ComponentTypeTypeEnum.ENDPOINT);
         roomServerPostgreSQLServer.constructFDN(processingPlantNode.getNodeFDN(),appServerRDN);
         roomServerPostgreSQLServer.constructFunctionFDN(processingPlantNode.getNodeFunctionFDN(),appServerRDN);
         roomServerPostgreSQLServer.setHostDNSName(roomServerComponentNames.getDefaultInterfaceNameForBinding());

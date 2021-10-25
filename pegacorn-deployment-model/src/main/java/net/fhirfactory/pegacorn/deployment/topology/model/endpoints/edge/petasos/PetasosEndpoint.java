@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common;
+package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge.petasos;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.r4.model.Endpoint;

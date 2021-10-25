@@ -19,9 +19,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge;
+package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge.answer;
 
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.IPCServerTopologyEndpoint;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge.InitialHostSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

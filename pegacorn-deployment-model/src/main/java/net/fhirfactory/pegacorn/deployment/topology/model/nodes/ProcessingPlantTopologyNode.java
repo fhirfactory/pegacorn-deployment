@@ -22,9 +22,9 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.nodes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.fhirfactory.pegacorn.common.model.componentid.ComponentTypeTypeEnum;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeRDN;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeTypeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.TopologyNode;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.common.EndpointProviderInterface;
 import org.slf4j.Logger;
@@ -164,7 +164,7 @@ public class ProcessingPlantTopologyNode extends TopologyNode implements Endpoin
     @JsonIgnore
     public String getSubsystemName(){
         TopologyNodeFDN nodeFDN = getNodeFDN();
-        TopologyNodeRDN subsystemRDN = nodeFDN.extractRDNForNodeType(TopologyNodeTypeEnum.SUBSYSTEM);
+        TopologyNodeRDN subsystemRDN = nodeFDN.extractRDNForNodeType(ComponentTypeTypeEnum.SUBSYSTEM);
         String subsystemName = subsystemRDN.getNodeName();
         return(subsystemName);
     }
@@ -172,7 +172,7 @@ public class ProcessingPlantTopologyNode extends TopologyNode implements Endpoin
     @JsonIgnore
     public String getClusterServiceName(){
         TopologyNodeFDN nodeFDN = getNodeFDN();
-        TopologyNodeRDN subsystemRDN = nodeFDN.extractRDNForNodeType(TopologyNodeTypeEnum.CLUSTER_SERVICE);
+        TopologyNodeRDN subsystemRDN = nodeFDN.extractRDNForNodeType(ComponentTypeTypeEnum.CLUSTER_SERVICE);
         String subsystemName = subsystemRDN.getNodeName();
         return(subsystemName);
     }

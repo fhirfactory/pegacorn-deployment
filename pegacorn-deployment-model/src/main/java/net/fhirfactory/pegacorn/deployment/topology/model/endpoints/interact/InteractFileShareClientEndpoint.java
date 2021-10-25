@@ -1,10 +1,11 @@
-package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base;
+package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.interact;
 
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.IPCClusteredServerTopologyEndpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ExternalFileShareIPCEndpoint extends IPCClusteredServerTopologyEndpoint {
-    private static final Logger LOG = LoggerFactory.getLogger(ExternalFileShareIPCEndpoint.class);
+public class InteractFileShareClientEndpoint extends IPCClusteredServerTopologyEndpoint {
+    private static final Logger LOG = LoggerFactory.getLogger(InteractFileShareClientEndpoint.class);
     private String fileShareName;
     private String fileShareProtocol;
     private String fileSharePath;

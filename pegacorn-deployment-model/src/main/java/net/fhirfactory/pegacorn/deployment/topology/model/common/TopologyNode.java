@@ -22,10 +22,7 @@
 package net.fhirfactory.pegacorn.deployment.topology.model.common;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFunctionFDN;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeRDN;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeTypeEnum;
+import net.fhirfactory.pegacorn.common.model.componentid.*;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.valuesets.NetworkSecurityZoneEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.mode.ConcurrencyModeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.mode.ResilienceModeEnum;
@@ -40,9 +37,9 @@ public abstract class TopologyNode implements Serializable {
     abstract protected Logger getLogger();
     private TopologyNodeRDN nodeRDN;
     private TopologyNodeFDN nodeFDN;
-    private String componentID;
+    private ComponentIdType componentID;
     private TopologyNodeFunctionFDN nodeFunctionFDN;
-    private TopologyNodeTypeEnum componentType;
+    private ComponentTypeTypeEnum componentType;
     private TopologyNodeFDN containingNodeFDN;
     private ConcurrencyModeEnum concurrencyMode;
     private ResilienceModeEnum resilienceMode;
@@ -96,11 +93,11 @@ public abstract class TopologyNode implements Serializable {
         constructComponentID();
     }
 
-    public TopologyNodeTypeEnum getComponentType() {
+    public ComponentTypeTypeEnum getComponentType() {
         return componentType;
     }
 
-    public void setComponentType(TopologyNodeTypeEnum componentType) {
+    public void setComponentType(ComponentTypeTypeEnum componentType) {
         this.componentType = componentType;
     }
 
@@ -115,7 +112,7 @@ public abstract class TopologyNode implements Serializable {
     @JsonIgnore
     public void constructFDN(TopologyNodeFDN parentNodeFDN, TopologyNodeRDN nodeRDN){
         getLogger().debug(".constructFDN(): Entry, parentNodeFDN->{}, nodeRDN->{}", parentNodeFDN, nodeRDN);
-        if(parentNodeFDN == null || nodeRDN.getNodeType().equals(TopologyNodeTypeEnum.SOLUTION)){
+        if(parentNodeFDN == null || nodeRDN.getNodeType().equals(ComponentTypeTypeEnum.SOLUTION)){
             getLogger().trace(".constructFDN(): Is a Solution Node");
             TopologyNodeFDN solutionFDN = new TopologyNodeFDN();
             solutionFDN.appendTopologyNodeRDN(nodeRDN);
@@ -137,14 +134,17 @@ public abstract class TopologyNode implements Serializable {
     @JsonIgnore
     public void constructComponentID(){
         String id = getNodeRDN().getNodeName() + "::" + Long.toHexString(UUID.randomUUID().getLeastSignificantBits());
-        setComponentID(id);
+        ComponentIdType newId = new ComponentIdType();
+        newId.setId(id);
+        newId.setDisplayName(id);
+        setComponentID(newId);
     }
 
-    public String getComponentID() {
+    public ComponentIdType getComponentID() {
         return componentID;
     }
 
-    public void setComponentID(String componentID) {
+    public void setComponentID(ComponentIdType componentID) {
         this.componentID = componentID;
     }
 

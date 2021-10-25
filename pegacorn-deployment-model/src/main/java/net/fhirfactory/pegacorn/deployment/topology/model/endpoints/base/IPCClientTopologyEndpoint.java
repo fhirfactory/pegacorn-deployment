@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Mark A. Hunter (ACT Health)
+ * Copyright (c) 2021 Mark A. Hunter (ACT Health)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,24 +19,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.topology.model.nodes;
+package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base;
 
-public enum DefaultWorkshopSetEnum {
-    BEHAVIOUR_WORKSHOP("Behaviour"),
-    INTERACT_WORKSHOP("Interact"),
-    TRANSFORM_WORKSHOP("Transform"),
-    WORKFLOW_WORKSHOP("Workflow"),
-    POLICY_ENFORCEMENT_WORKSHOP("PolicyEnforcement"),
-    AUDIT_SERVICES_WORKSHOP("Audit"),
-    EDGE_WORKSHOP("EdgeIPC");
+public class IPCClientTopologyEndpoint extends IPCTopologyEndpoint {
 
-    private String workshop;
-
-    private DefaultWorkshopSetEnum(String newWorkshop){
-        this.workshop = newWorkshop;
-    }
-
-    public String getWorkshop(){
-        return(this.workshop);
-    }
 }

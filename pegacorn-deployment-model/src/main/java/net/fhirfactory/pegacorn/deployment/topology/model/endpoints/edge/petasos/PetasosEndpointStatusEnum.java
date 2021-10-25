@@ -19,26 +19,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common;
+package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge.petasos;
 
-public enum PetasosEndpointChannelScopeEnum {
-    ENDPOINT_CHANNEL_SCOPE_INTERSITE("endpoint.channel_scope.intersite", "InterSite"),
-    ENDPOINT_CHANNEL_SCOPE_INTERZONE("endpoint.channel_scope.interzone", "InterZone"),
-    ENDPOINT_CHANNEL_SCOPE_INTRAZONE("endpoint.channel_scope.intrazone", "IntraZone");
+public enum PetasosEndpointStatusEnum {
+    PETASOS_ENDPOINT_STATUS_SAME("petasos_endpoint.status.same"),
+    PETASOS_ENDPOINT_STATUS_DETECTED("petasos_endpoint.status.detected"),
+    PETASOS_ENDPOINT_STATUS_REACHABLE("petasos_endpoint.status.reachable"),
+    PETASOS_ENDPOINT_STATUS_UNREACHABLE("petasos_endpoint.status.unreachable"),
+    PETASOS_ENDPOINT_STATUS_STARTED("petasos_endpoint.status.started"),
+    PETASOS_ENDPOINT_STATUS_OPERATIONAL("petasos_endpoint.status.operational"),
+    PETASOS_ENDPOINT_STATUS_SUSPECT("petasos_endpoint.status.suspect"),
+    PETASOS_ENDPOINT_STATUS_FAILED("petasos_endpoint.status.failed");
 
-    private String endpointScope;
-    private String endpointScopeName;
+    private String endpointStatus;
 
-    private PetasosEndpointChannelScopeEnum(String scope, String scopeName) {
-        this.endpointScope = scope;
-        this.endpointScopeName = scopeName;
+    private PetasosEndpointStatusEnum(String status){
+        this.endpointStatus = status;
     }
 
-    public String getEndpointScope() {
-        return (this.endpointScope);
-    }
-
-    public String getEndpointScopeName(){
-        return(this.endpointScopeName);
+    public String getEndpointStatus() {
+        return endpointStatus;
     }
 }

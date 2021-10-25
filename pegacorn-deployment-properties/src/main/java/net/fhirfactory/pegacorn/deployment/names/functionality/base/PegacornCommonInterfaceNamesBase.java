@@ -21,7 +21,7 @@
  */
 package net.fhirfactory.pegacorn.deployment.names.functionality.base;
 
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.PetasosEndpointTopologyTypeEnum;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge.petasos.PetasosEndpointTopologyTypeEnum;
 
 public abstract class PegacornCommonInterfaceNamesBase {
 
@@ -72,7 +72,7 @@ public abstract class PegacornCommonInterfaceNamesBase {
     //
 
     public String getConnectionNameAtoB(String clientEndpoint, String serverEndpoint){
-        String newName = "IPCConnection:"+clientEndpoint+"-"+serverEndpoint;
+        String newName = "ActiveIPCConnection:"+clientEndpoint+"-"+serverEndpoint;
         return(newName);
     }
 

@@ -21,7 +21,7 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.manager.cache;
 
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeTypeEnum;
+import net.fhirfactory.pegacorn.common.model.componentid.ComponentTypeTypeEnum;
 import net.fhirfactory.pegacorn.common.model.generalid.FDNToken;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.valuesets.NetworkSecurityZoneEnum;
 import net.fhirfactory.pegacorn.deployment.properties.codebased.DeploymentSystemIdentificationInterface;
@@ -80,12 +80,12 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
 
     @Override
     public String getSystemName() {
-        return (getDeploymentSolution().getNodeFDN().extractRDNForNodeType(TopologyNodeTypeEnum.SOLUTION).getNodeName());
+        return (getDeploymentSolution().getNodeFDN().extractRDNForNodeType(ComponentTypeTypeEnum.SOLUTION).getNodeName());
     }
 
     @Override
     public String getSystemVersion() {
-        return (getDeploymentSolution().getNodeFDN().extractRDNForNodeType(TopologyNodeTypeEnum.SOLUTION).getNodeVersion());
+        return (getDeploymentSolution().getNodeFDN().extractRDNForNodeType(ComponentTypeTypeEnum.SOLUTION).getNodeVersion());
     }
 
     @Override
@@ -208,7 +208,7 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
         return(stringsAreEqual);
     }
 
-    public List<TopologyNode> nodeSearch(TopologyNodeTypeEnum nodeType, String nodeName, String nodeVersion){
+    public List<TopologyNode> nodeSearch(ComponentTypeTypeEnum nodeType, String nodeName, String nodeVersion){
         LOG.debug(".nodeSearch(): Entry, nodeType->{}, nodeName->{}, nodeVersion->{}", nodeType, nodeName, nodeVersion);
         ArrayList<TopologyNode> nodeList = new ArrayList<>();
         Collection<TopologyNode> topologyNodes= null;
@@ -237,7 +237,7 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
         }
         for(TopologyNode currentNode: nodeCollection){
             boolean nameSame = currentNode.getNodeRDN().getNodeName().contentEquals(nodeName);
-            boolean isProcessingPlant = currentNode.getComponentType().equals(TopologyNodeTypeEnum.PROCESSING_PLANT);
+            boolean isProcessingPlant = currentNode.getComponentType().equals(ComponentTypeTypeEnum.PROCESSING_PLANT);
             if(nameSame && isProcessingPlant){
                 return(currentNode.getSecurityZone());
             }

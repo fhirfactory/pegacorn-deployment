@@ -21,7 +21,7 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.technologies;
 
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge.StandardEdgeIPCEndpoint;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge.answer.StandardEdgeIPCEndpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -23,8 +23,8 @@ package net.fhirfactory.pegacorn.deployment.topology.factories.helpers;
 
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeFDN;
 import net.fhirfactory.pegacorn.deployment.topology.manager.TopologyIM;
-import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCInterface;
-import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCInterfaceDefinition;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.IPCInterface;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.IPCInterfaceDefinition;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.IPCClusteredServerTopologyEndpoint;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.*;
 import org.slf4j.Logger;

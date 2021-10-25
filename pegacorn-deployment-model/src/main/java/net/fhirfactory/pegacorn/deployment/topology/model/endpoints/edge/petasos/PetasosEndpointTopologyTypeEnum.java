@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common;
+package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge.petasos;
 
 public enum PetasosEndpointTopologyTypeEnum {
     JGROUPS_INTRAZONE_SERVICE("JGroups.IntraZone","endpoint.ipc_messaging.jgroups_intrazone" ),

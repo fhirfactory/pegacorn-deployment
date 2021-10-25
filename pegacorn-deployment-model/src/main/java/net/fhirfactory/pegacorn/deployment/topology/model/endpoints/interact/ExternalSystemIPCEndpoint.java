@@ -19,19 +19,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base;
+package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.interact;
 
-import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCInterfaceDefinition;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.IPCInterface;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.IPCInterfaceDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 
-public class ExternalSystemIPCEndpoint implements Serializable {
+public class ExternalSystemIPCEndpoint extends IPCInterface implements Serializable {
     private static final Logger LOG = LoggerFactory.getLogger(ExternalSystemIPCEndpoint.class);
 
     private IPCInterfaceDefinition supportedInterfaceDefinition;
-    private Boolean encryptionRequired;
     private Integer targetPortValue;
     private String targetPortDNSName;
     private String targetPath;
@@ -45,11 +45,11 @@ public class ExternalSystemIPCEndpoint implements Serializable {
     }
 
     public Boolean getEncryptionRequired() {
-        return encryptionRequired;
+        return (isEncrypted());
     }
 
     public void setEncryptionRequired(Boolean encryptionRequired) {
-        this.encryptionRequired = encryptionRequired;
+        setEncrypted(encryptionRequired);
     }
 
     public Integer getTargetPortValue() {
@@ -80,7 +80,7 @@ public class ExternalSystemIPCEndpoint implements Serializable {
     public String toString() {
         return "ExternalSystemIPCEndpoint{" +
                 "supportedInterfaceDefinition=" + supportedInterfaceDefinition +
-                ", encryptionRequired=" + encryptionRequired +
+                ", encryptionRequired=" + isEncrypted() +
                 ", targetPortValue=" + targetPortValue +
                 ", targetPortDNSName=" + targetPortDNSName +
                 ", targetPath=" + targetPath +

@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.topology.model.common;
+package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base;
 
 import java.io.Serializable;
 import java.util.Objects;

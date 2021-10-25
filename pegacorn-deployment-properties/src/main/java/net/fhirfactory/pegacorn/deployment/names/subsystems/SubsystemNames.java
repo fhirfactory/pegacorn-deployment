@@ -45,4 +45,22 @@ public abstract class SubsystemNames {
         return(hestiaAuditIM);
     }
 
+    //
+    // ITOps Information Manager
+    //
+
+    public String getITOpsIMSystemName(){
+        String itOpsIMName = specifyDeploymentShortName() + "-itops-im";
+        return(itOpsIMName);
+    }
+
+    //
+    // Ladon Digital Twins
+    //
+
+    public String getPatientDigitalTwinSystemName() {
+        String patientDigitalTwin = specifyDeploymentShortName() + "-ladon-digitaltwin-patient";
+        return(patientDigitalTwin);
+    }
+
 }

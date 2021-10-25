@@ -1,7 +1,7 @@
 package net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.common;
 
+import net.fhirfactory.pegacorn.common.model.componentid.ComponentTypeTypeEnum;
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeRDN;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeTypeEnum;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes.PetasosEnabledSubsystemPropertyFile;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemPort;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemProperties;
@@ -13,17 +13,17 @@ import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.com
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.HTTPIPCServerPortSegment;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.JGroupsIPCServerPortSegment;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.JGroupsInitialHostSegment;
-import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCInterface;
-import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCInterfaceDefinition;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.IPCInterface;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.IPCInterfaceDefinition;
 import net.fhirfactory.pegacorn.deployment.topology.model.common.valuesets.NetworkSecurityZoneEnum;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.ExternalSystemIPCEndpoint;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.interact.ExternalSystemIPCEndpoint;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.IPCServerTopologyEndpoint;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.PetasosEndpointTopologyTypeEnum;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge.petasos.PetasosEndpointTopologyTypeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.interact.StandardInteractClientTopologyEndpointPort;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.technologies.HTTPProcessingPlantTopologyEndpointPort;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.technologies.HTTPServerClusterServiceTopologyEndpointPort;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge.InitialHostSpecification;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge.StandardEdgeIPCEndpoint;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge.answer.StandardEdgeIPCEndpoint;
 import net.fhirfactory.pegacorn.deployment.topology.model.mode.ResilienceModeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.common.EndpointProviderInterface;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.external.ConnectedExternalSystemTopologyNode;
@@ -59,7 +59,7 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
         }
         edgeAnswerPort.setEncrypted(petasosEnabledSubsystemPropertyFile.getDeploymentMode().isUsingInternalEncryption());
         String name = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.HTTP_API_SERVER, getInterfaceNames().getFunctionNameEdgeAnswer());
-        TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), TopologyNodeTypeEnum.ENDPOINT);
+        TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), ComponentTypeTypeEnum.ENDPOINT);
         edgeAnswerPort.setNodeRDN(nodeRDN);
         edgeAnswerPort.setActualHostIP(getActualHostIP());
         edgeAnswerPort.setActualPodIP(getActualPodIP());
@@ -70,7 +70,7 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
         edgeAnswerPort.setPortValue(port.getPortValue());
         edgeAnswerPort.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
         edgeAnswerPort.setBasePath(pegacornReferenceProperties.getPegacornInternalFhirResourceR4Path());
-        edgeAnswerPort.setComponentType(TopologyNodeTypeEnum.ENDPOINT);
+        edgeAnswerPort.setComponentType(ComponentTypeTypeEnum.ENDPOINT);
         edgeAnswerPort.setaServer(true);
         edgeAnswerPort.setContainingNodeFDN(endpointProvider.getNodeFDN());
         endpointProvider.addEndpoint(edgeAnswerPort.getNodeFDN());
@@ -90,7 +90,7 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
         }
         interZoneIPC.setEncrypted(petasosEnabledSubsystemPropertyFile.getDeploymentMode().isUsingInternalEncryption());
         String name = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.JGROUPS_INTERZONE_SERVICE, getInterfaceNames().getFunctionNameInterZoneJGroupsIPC());
-        TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), TopologyNodeTypeEnum.ENDPOINT);
+        TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), ComponentTypeTypeEnum.ENDPOINT);
         interZoneIPC.setName(getInterfaceNames().getFunctionNameInterZoneJGroupsIPC());
         interZoneIPC.setNodeRDN(nodeRDN);
         interZoneIPC.setActualHostIP(getActualHostIP());
@@ -110,7 +110,7 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
             currentInitialHostSpec.setPort(currentInitialHostSegment.getPortNumber());
             interZoneIPC.getInitialHosts().add(currentInitialHostSpec);
         }
-        interZoneIPC.setComponentType(TopologyNodeTypeEnum.ENDPOINT);
+        interZoneIPC.setComponentType(ComponentTypeTypeEnum.ENDPOINT);
         interZoneIPC.setaServer(true);
         interZoneIPC.setContainingNodeFDN(endpointProvider.getNodeFDN());
         for(InterfaceDefinitionSegment currentSegment: port.getSupportedInterfaceProfiles()) {
@@ -146,7 +146,7 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
         }
         interZoneOAM.setEncrypted(petasosEnabledSubsystemPropertyFile.getDeploymentMode().isUsingInternalEncryption());
         String name = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.JGROUPS_INTERZONE_SERVICE, getInterfaceNames().getFunctionNameInterZoneJGroupsIPC());
-        TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), TopologyNodeTypeEnum.ENDPOINT);
+        TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), ComponentTypeTypeEnum.ENDPOINT);
         interZoneOAM.setName(getInterfaceNames().getFunctionNameInterZoneJGroupsIPC());
         interZoneOAM.setNodeRDN(nodeRDN);
         interZoneOAM.setActualHostIP(getActualHostIP());
@@ -166,7 +166,7 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
             currentInitialHostSpec.setPort(currentInitialHostSegment.getPortNumber());
             interZoneOAM.getInitialHosts().add(currentInitialHostSpec);
         }
-        interZoneOAM.setComponentType(TopologyNodeTypeEnum.ENDPOINT);
+        interZoneOAM.setComponentType(ComponentTypeTypeEnum.ENDPOINT);
         interZoneOAM.setaServer(true);
         interZoneOAM.setContainingNodeFDN(endpointProvider.getNodeFDN());
         for(InterfaceDefinitionSegment currentSegment: port.getSupportedInterfaceProfiles()) {
@@ -202,7 +202,7 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
         }
         intraZoneIPC.setEncrypted(petasosEnabledSubsystemPropertyFile.getDeploymentMode().isUsingInternalEncryption());
         String name = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.JGROUPS_INTRAZONE_SERVICE, getInterfaceNames().getFunctionNameIntraZoneJGroupsIPC());
-        TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), TopologyNodeTypeEnum.ENDPOINT);
+        TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), ComponentTypeTypeEnum.ENDPOINT);
         intraZoneIPC.setName(getInterfaceNames().getFunctionNameIntraZoneJGroupsIPC());
         intraZoneIPC.setNodeRDN(nodeRDN);
         intraZoneIPC.setActualHostIP(getActualHostIP());
@@ -221,7 +221,7 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
             currentInitialHostSpec.setPort(currentInitialHostSegment.getPortNumber());
             intraZoneIPC.getInitialHosts().add(currentInitialHostSpec);
         }
-        intraZoneIPC.setComponentType(TopologyNodeTypeEnum.ENDPOINT);
+        intraZoneIPC.setComponentType(ComponentTypeTypeEnum.ENDPOINT);
         intraZoneIPC.setaServer(true);
         intraZoneIPC.setContainingNodeFDN(endpointProvider.getNodeFDN());
         for(InterfaceDefinitionSegment currentSegment: port.getSupportedInterfaceProfiles()) {
@@ -253,7 +253,7 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
         }
         intraZoneOAM.setEncrypted(petasosEnabledSubsystemPropertyFile.getDeploymentMode().isUsingInternalEncryption());
         String name = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.JGROUPS_INTRAZONE_SERVICE, getInterfaceNames().getFunctionNameIntraZoneJGroupsIPC());
-        TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), TopologyNodeTypeEnum.ENDPOINT);
+        TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), ComponentTypeTypeEnum.ENDPOINT);
         intraZoneOAM.setName(getInterfaceNames().getFunctionNameIntraZoneJGroupsIPC());
         intraZoneOAM.setNodeRDN(nodeRDN);
         intraZoneOAM.setHostDNSName(port.getHostDNSEntry());
@@ -272,7 +272,7 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
             currentInitialHostSpec.setPort(currentInitialHostSegment.getPortNumber());
             intraZoneOAM.getInitialHosts().add(currentInitialHostSpec);
         }
-        intraZoneOAM.setComponentType(TopologyNodeTypeEnum.ENDPOINT);
+        intraZoneOAM.setComponentType(ComponentTypeTypeEnum.ENDPOINT);
         intraZoneOAM.setaServer(true);
         intraZoneOAM.setContainingNodeFDN(endpointProvider.getNodeFDN());
         for(InterfaceDefinitionSegment currentSegment: port.getSupportedInterfaceProfiles()) {
@@ -309,7 +309,7 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
         }
         edgeReceivePort.setEncrypted(petasosEnabledSubsystemPropertyFile.getDeploymentMode().isUsingInternalEncryption());
         String name = getSubsystemBaseNames().getEndpointServerName(getSubsystemBaseNames().getEndpointServerName(getSubsystemBaseNames().getFunctionNameEdgeReceive()));
-        TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), TopologyNodeTypeEnum.ENDPOINT);
+        TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), ComponentTypeTypeEnum.ENDPOINT);
         edgeReceivePort.setNodeRDN(nodeRDN);
         edgeReceivePort.constructFDN(endpointProvider.getNodeFDN(), nodeRDN);
         edgeReceivePort.setPortType(port.getPortType());
@@ -317,7 +317,7 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
         edgeReceivePort.setPortValue(port.getPortValue());
         edgeReceivePort.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
         edgeReceivePort.setBasePath(pegacornReferenceProperties.getPegacornPetasosIPCPath());
-        edgeReceivePort.setComponentType(TopologyNodeTypeEnum.ENDPOINT);
+        edgeReceivePort.setComponentType(ComponentTypeTypeEnum.ENDPOINT);
         edgeReceivePort.setaServer(true);
         edgeReceivePort.setContainingNodeFDN(endpointProvider.getNodeFDN());
         endpointProvider.addEndpoint( edgeReceivePort.getNodeFDN());
@@ -343,7 +343,7 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
         }
         petasosReplicationPort.setEncrypted(petasosEnabledSubsystemPropertyFile.getDeploymentMode().isUsingInternalEncryption());
         String name = getSubsystemBaseNames().getEndpointServerName(getSubsystemBaseNames().getEndpointServerName(getSubsystemBaseNames().getFunctionNameEdgeReceive()));
-        TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), TopologyNodeTypeEnum.ENDPOINT);
+        TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), ComponentTypeTypeEnum.ENDPOINT);
         petasosReplicationPort.setNodeRDN(nodeRDN);
         petasosReplicationPort.constructFDN(endpointProvider.getNodeFDN(), nodeRDN);
         petasosReplicationPort.setPortType(port.getPortType());
@@ -353,7 +353,7 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
         petasosReplicationPort.setBasePath(pegacornReferenceProperties.getPegacornPetasosReplicationPath());
         petasosReplicationPort.setaServer(true);
         petasosReplicationPort.setContainingNodeFDN(endpointProvider.getNodeFDN());
-        petasosReplicationPort.setComponentType(TopologyNodeTypeEnum.ENDPOINT);
+        petasosReplicationPort.setComponentType(ComponentTypeTypeEnum.ENDPOINT);
         endpointProvider.addEndpoint( petasosReplicationPort.getNodeFDN());
         getLogger().trace(".addPetasosReplicationPort(): Add the PetasosReplication Port to the Topology Cache");
         getTopologyIM().addTopologyNode(endpointProvider.getNodeFDN(), petasosReplicationPort);
@@ -374,7 +374,7 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
         }
         petasosStatusPort.setEncrypted(petasosEnabledSubsystemPropertyFile.getDeploymentMode().isUsingInternalEncryption());
         String name = getSubsystemBaseNames().getEndpointServerName(getSubsystemBaseNames().getEndpointServerName(getSubsystemBaseNames().getFunctionNameEdgeReceive()));
-        TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), TopologyNodeTypeEnum.ENDPOINT);
+        TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), ComponentTypeTypeEnum.ENDPOINT);
         petasosStatusPort.setNodeRDN(nodeRDN);
         petasosStatusPort.constructFDN(endpointProvider.getNodeFDN(), nodeRDN);
         petasosStatusPort.setPortType(port.getPortType());
@@ -383,7 +383,7 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
         petasosStatusPort.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
         petasosStatusPort.setBasePath(pegacornReferenceProperties.getPegacornPetasosStatusPath());
         petasosStatusPort.setaServer(true);
-        petasosStatusPort.setComponentType(TopologyNodeTypeEnum.ENDPOINT);
+        petasosStatusPort.setComponentType(ComponentTypeTypeEnum.ENDPOINT);
         petasosStatusPort.setContainingNodeFDN(endpointProvider.getNodeFDN());
         endpointProvider.addEndpoint(petasosStatusPort.getNodeFDN());
         getLogger().trace(".addPetasosStatusPort(): Add the PetasosStatus Port to the Topology Cache");
@@ -405,14 +405,14 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
             return(null);
         }
         String name = getInterfaceNames().getEndpointServerName(endpointFunctionName);
-        TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), TopologyNodeTypeEnum.ENDPOINT);
+        TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), ComponentTypeTypeEnum.ENDPOINT);
         httpFHIRClient.setNodeRDN(nodeRDN);
         httpFHIRClient.setName(endpointFunctionName);
         httpFHIRClient.setActualHostIP(getActualHostIP());
         httpFHIRClient.setActualPodIP(getActualPodIP());
         httpFHIRClient.constructFDN(endpointProvider.getNodeFDN(), nodeRDN);
         httpFHIRClient.setEndpointType(PetasosEndpointTopologyTypeEnum.HTTP_API_CLIENT);
-        httpFHIRClient.setComponentType(TopologyNodeTypeEnum.ENDPOINT);
+        httpFHIRClient.setComponentType(ComponentTypeTypeEnum.ENDPOINT);
         httpFHIRClient.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
         httpFHIRClient.setNodeRDN(nodeRDN);
         httpFHIRClient.setContainingNodeFDN(endpointProvider.getNodeFDN());
@@ -475,7 +475,7 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
             HTTPServerClusterServiceTopologyEndpointPort httpServer = new HTTPServerClusterServiceTopologyEndpointPort();
             httpServer.setEncrypted(endpoint.isEncrypted());
             String name = getInterfaceNames().getEndpointServerName(endpointFunctionName);
-            TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), TopologyNodeTypeEnum.ENDPOINT);
+            TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), ComponentTypeTypeEnum.ENDPOINT);
             httpServer.setNodeRDN(nodeRDN);
             httpServer.setActualPodIP(getActualPodIP());
             httpServer.setActualHostIP(getActualHostIP());
@@ -483,7 +483,7 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
             httpServer.constructFDN(endpointProvider.getNodeFDN(), nodeRDN);
             httpServer.setPortType(httpServerPort.getPortType());
             httpServer.setEndpointType(PetasosEndpointTopologyTypeEnum.HTTP_API_SERVER);
-            httpServer.setComponentType(TopologyNodeTypeEnum.ENDPOINT);
+            httpServer.setComponentType(ComponentTypeTypeEnum.ENDPOINT);
             httpServer.setPortValue(httpServerPort.getPortValue());
             httpServer.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
             httpServer.setBasePath(serverPath);
@@ -502,7 +502,7 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
             HTTPProcessingPlantTopologyEndpointPort httpServer = new HTTPProcessingPlantTopologyEndpointPort();
             httpServer.setEncrypted(getPropertyFile().getDeploymentMode().isUsingInternalEncryption());
             String name = getInterfaceNames().getEndpointServerName(endpointFunctionName);
-            TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), TopologyNodeTypeEnum.ENDPOINT);
+            TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getNodeRDN().getNodeVersion(), ComponentTypeTypeEnum.ENDPOINT);
             httpServer.setNodeRDN(nodeRDN);
             httpServer.setActualPodIP(getActualPodIP());
             httpServer.setActualHostIP(getActualHostIP());
@@ -510,7 +510,7 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
             httpServer.constructFDN(endpointProvider.getNodeFDN(), nodeRDN);
             httpServer.setPortType(httpServerPort.getPortType());
             httpServer.setEndpointType(PetasosEndpointTopologyTypeEnum.HTTP_API_SERVER);
-            httpServer.setComponentType(TopologyNodeTypeEnum.ENDPOINT);
+            httpServer.setComponentType(ComponentTypeTypeEnum.ENDPOINT);
             httpServer.setPortValue(httpServerPort.getPortValue());
             httpServer.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
             httpServer.setBasePath(serverPath);

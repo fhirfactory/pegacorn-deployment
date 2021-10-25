@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common;
+package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge.petasos;
 
 public enum PetasosEndpointFunctionTypeEnum {
     PETASOS_INTERACT_ENDPOINT("petasos_endpoint_function.interact", "Interact"),

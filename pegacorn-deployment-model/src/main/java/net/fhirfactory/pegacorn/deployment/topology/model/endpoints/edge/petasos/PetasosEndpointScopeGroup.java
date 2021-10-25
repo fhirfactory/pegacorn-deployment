@@ -1,4 +1,4 @@
-package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common;
+package net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge.petasos;
 
 import java.io.Serializable;
 

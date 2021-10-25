@@ -22,15 +22,15 @@
 package net.fhirfactory.pegacorn.deployment.topology.factories.communicate;
 
 import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeRDN;
-import net.fhirfactory.pegacorn.common.model.componentid.TopologyNodeTypeEnum;
+import net.fhirfactory.pegacorn.common.model.componentid.ComponentTypeTypeEnum;
 import net.fhirfactory.pegacorn.deployment.names.functionality.subsystem.CommunicateIrisSubsystemFunctionalityNames;
 import net.fhirfactory.pegacorn.deployment.names.functionality.subsystem.CommunicateRoomServerComponentNames;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.InterfaceDefinitionSegment;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.communicate.iris.im.CommunicateIrisIMPropertyFile;
 import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.common.PetasosEnabledSubsystemTopologyFactory;
-import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCInterface;
-import net.fhirfactory.pegacorn.deployment.topology.model.common.IPCInterfaceDefinition;
-import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.common.PetasosEndpointTopologyTypeEnum;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.IPCInterface;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.base.IPCInterfaceDefinition;
+import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.edge.petasos.PetasosEndpointTopologyTypeEnum;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.technologies.HTTPProcessingPlantTopologyEndpointPort;
 import net.fhirfactory.pegacorn.deployment.topology.model.endpoints.technologies.HTTPServerClusterServiceTopologyEndpointPort;
 import net.fhirfactory.pegacorn.deployment.topology.model.nodes.common.EndpointProviderInterface;
@@ -58,13 +58,13 @@ public abstract class CommunicateIrisIMTopologyFactory extends PetasosEnabledSub
         getLogger().debug(".addMatrixServicesServerEndpoint(): Entry");
         HTTPServerClusterServiceTopologyEndpointPort matrixApplicationServicesServer = new HTTPServerClusterServiceTopologyEndpointPort();
         String name = communicateIrisComponentNames.getEndpointServerName(communicateIrisComponentNames.getFunctionNameInteractMatrixApplicationServices());
-        TopologyNodeRDN nodeRDN = createNodeRDN(name, getCommunicateIrisPropertyFile().getSubsystemInstant().getProcessingPlantVersion(), TopologyNodeTypeEnum.ENDPOINT);
+        TopologyNodeRDN nodeRDN = createNodeRDN(name, getCommunicateIrisPropertyFile().getSubsystemInstant().getProcessingPlantVersion(), ComponentTypeTypeEnum.ENDPOINT);
         matrixApplicationServicesServer.setNodeRDN(nodeRDN);
         matrixApplicationServicesServer.constructFDN(endpointProvider.getNodeFDN(),nodeRDN);
         matrixApplicationServicesServer.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(),nodeRDN);
         matrixApplicationServicesServer.setEndpointType(PetasosEndpointTopologyTypeEnum.HTTP_API_SERVER);
         matrixApplicationServicesServer.setaServer(true);
-        if(endpointProvider.getComponentType().equals(TopologyNodeTypeEnum.CLUSTER_SERVICE)) {
+        if(endpointProvider.getComponentType().equals(ComponentTypeTypeEnum.CLUSTER_SERVICE)) {
             matrixApplicationServicesServer.setHostDNSName(getCommunicateIrisPropertyFile().getInteractMatrixApplicationServicesServer().getServiceDNSEntry());
         } else {
             matrixApplicationServicesServer.setHostDNSName(getCommunicateIrisPropertyFile().getInteractMatrixApplicationServicesServer().getHostDNSEntry());
@@ -72,7 +72,7 @@ public abstract class CommunicateIrisIMTopologyFactory extends PetasosEnabledSub
         matrixApplicationServicesServer.setPortType("HTTPS");
         matrixApplicationServicesServer.setServicePortOffset(getCommunicateIrisPropertyFile().getInteractMatrixApplicationServicesServer().getClusterServicePortOffsetValue());
         matrixApplicationServicesServer.setPortValue(getCommunicateIrisPropertyFile().getInteractMatrixApplicationServicesServer().getPortValue());
-        matrixApplicationServicesServer.setComponentType(TopologyNodeTypeEnum.ENDPOINT);
+        matrixApplicationServicesServer.setComponentType(ComponentTypeTypeEnum.ENDPOINT);
         Integer portValue = getCommunicateIrisPropertyFile().getDefaultServicePortLowerBound() + getCommunicateIrisPropertyFile().getInteractMatrixApplicationServicesServer().getClusterServicePortOffsetValue();
         matrixApplicationServicesServer.setServicePortValue(portValue);
         matrixApplicationServicesServer.setEncrypted(getCommunicateIrisPropertyFile().getDeploymentMode().isUsingInternalEncryption());
@@ -98,13 +98,13 @@ public abstract class CommunicateIrisIMTopologyFactory extends PetasosEnabledSub
         getLogger().debug(".addApplicationServicesClientEndpoint(): Entry");
         HTTPProcessingPlantTopologyEndpointPort matrixClientServicesAPIClient = new HTTPProcessingPlantTopologyEndpointPort();
         String clientName = communicateIrisComponentNames.getEndpointClientName(communicateRoomServerComponentNames.getFunctionNameMatrixClientServices());
-        TopologyNodeRDN nodeRDN = createNodeRDN(clientName, getCommunicateIrisPropertyFile().getSubsystemInstant().getProcessingPlantVersion(), TopologyNodeTypeEnum.ENDPOINT);
+        TopologyNodeRDN nodeRDN = createNodeRDN(clientName, getCommunicateIrisPropertyFile().getSubsystemInstant().getProcessingPlantVersion(), ComponentTypeTypeEnum.ENDPOINT);
         matrixClientServicesAPIClient.setNodeRDN(nodeRDN);
         matrixClientServicesAPIClient.constructFDN(endpointProvider.getNodeFDN(),nodeRDN);
         matrixClientServicesAPIClient.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(),nodeRDN);
         matrixClientServicesAPIClient.setEndpointType(PetasosEndpointTopologyTypeEnum.HTTP_API_CLIENT);
         matrixClientServicesAPIClient.setaServer(false);
-        matrixClientServicesAPIClient.setComponentType(TopologyNodeTypeEnum.ENDPOINT);
+        matrixClientServicesAPIClient.setComponentType(ComponentTypeTypeEnum.ENDPOINT);
         matrixClientServicesAPIClient.setEncrypted(getCommunicateIrisPropertyFile().getDeploymentMode().isUsingInternalEncryption());
         endpointProvider.addEndpoint(matrixClientServicesAPIClient.getNodeFDN());
         getLogger().trace(".addApplicationServicesClientEndpoint(): Add the MatrixApplicationServicesClientEndpoint Port to the Topology Cache");
