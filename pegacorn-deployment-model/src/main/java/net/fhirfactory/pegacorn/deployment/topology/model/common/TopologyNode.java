@@ -66,21 +66,6 @@ public abstract class TopologyNode implements Serializable {
     // Some Helper Functions
     //
 
-    public void setActualHostIP(String actualHostIP) {
-        this.actualHostIP = actualHostIP;
-    }
-
-    public String getActualPodIP() {
-        return actualPodIP;
-    }
-
-    public void setActualPodIP(String actualPodIP) {
-        this.actualPodIP = actualPodIP;
-    }
-
-    public TopologyNodeRDN getNodeRDN() {
-        return nodeRDN;
-    }
 
     public void setNodeRDN(TopologyNodeRDN nodeRDN) {
         this.nodeRDN = nodeRDN;
@@ -95,22 +80,6 @@ public abstract class TopologyNode implements Serializable {
         this.nodeFDN = nodeFDN;
         setNodeRDN(nodeFDN.getLeafRDN());
         constructComponentID();
-    }
-
-    public ComponentTypeTypeEnum getComponentType() {
-        return componentType;
-    }
-
-    public void setComponentType(ComponentTypeTypeEnum componentType) {
-        this.componentType = componentType;
-    }
-
-    public TopologyNodeFDN getContainingNodeFDN() {
-        return containingNodeFDN;
-    }
-
-    public void setContainingNodeFDN(TopologyNodeFDN containingNodeFDN) {
-        this.containingNodeFDN = containingNodeFDN;
     }
 
     @JsonIgnore
@@ -142,22 +111,6 @@ public abstract class TopologyNode implements Serializable {
         newId.setId(id);
         newId.setDisplayName(id);
         setComponentID(newId);
-    }
-
-    public ComponentIdType getComponentID() {
-        return componentID;
-    }
-
-    public void setComponentID(ComponentIdType componentID) {
-        this.componentID = componentID;
-    }
-
-    public TopologyNodeFunctionFDN getNodeFunctionFDN() {
-        return nodeFunctionFDN;
-    }
-
-    public void setNodeFunctionFDN(TopologyNodeFunctionFDN nodeFunctionFDN) {
-        this.nodeFunctionFDN = nodeFunctionFDN;
     }
 
     @JsonIgnore
@@ -277,11 +230,11 @@ public abstract class TopologyNode implements Serializable {
         this.securityZone = securityZone;
     }
 
-    public String getComponentID() {
+    public ComponentIdType getComponentID() {
         return componentID;
     }
 
-    public void setComponentID(String componentID) {
+    public void setComponentID(ComponentIdType componentID) {
         this.componentID = componentID;
     }
 
@@ -293,11 +246,11 @@ public abstract class TopologyNode implements Serializable {
         this.nodeFunctionFDN = nodeFunctionFDN;
     }
 
-    public TopologyNodeTypeEnum getComponentType() {
+    public ComponentTypeTypeEnum getComponentType() {
         return componentType;
     }
 
-    public void setComponentType(TopologyNodeTypeEnum componentType) {
+    public void setComponentType(ComponentTypeTypeEnum componentType) {
         this.componentType = componentType;
     }
 
@@ -329,18 +282,4 @@ public abstract class TopologyNode implements Serializable {
         return nodeRDN;
     }
 
-    public void setNodeRDN(TopologyNodeRDN nodeRDN) {
-        this.nodeRDN = nodeRDN;
-        constructComponentID();
-    }
-
-    public TopologyNodeFDN getNodeFDN() {
-        return nodeFDN;
-    }
-
-    public void setNodeFDN(TopologyNodeFDN nodeFDN) {
-        this.nodeFDN = nodeFDN;
-        setNodeRDN(nodeFDN.getLeafRDN());
-        constructComponentID();
-    }
 }
