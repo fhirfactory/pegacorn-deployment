@@ -21,8 +21,8 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.manager;
 
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.base.IPCInterface;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.base.IPCInterfaceDefinition;
+import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.base.IPCAdapter;
+import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.base.IPCAdapterDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,26 +37,26 @@ import java.util.concurrent.ConcurrentHashMap;
 public class InterfaceMapIM {
     private static final Logger LOG = LoggerFactory.getLogger(InterfaceMapIM.class);
 
-    private ConcurrentHashMap<String, IPCInterface> interfaces;
+    private ConcurrentHashMap<String, IPCAdapter> interfaces;
 
     public InterfaceMapIM(){
         this.interfaces = new ConcurrentHashMap<>();
     }
 
-    public Map<String, IPCInterface> getInterfaces() {
+    public Map<String, IPCAdapter> getInterfaces() {
         return (interfaces);
     }
 
-    public void setInterfaces(ConcurrentHashMap<String, IPCInterface> interfaces) {
+    public void setInterfaces(ConcurrentHashMap<String, IPCAdapter> interfaces) {
         this.interfaces = interfaces;
     }
 
-    public Set<IPCInterface> getSupportedInterfaceRealisations(String interfaceFormalName, String interfaceFormalVersion){
-        Set<IPCInterface> supportedInterfaces = new HashSet<>();
-        Collection<IPCInterface> existingIPCInterfaces = interfaces.values();
-        for(IPCInterface currentInterface: existingIPCInterfaces){
+    public Set<IPCAdapter> getSupportedInterfaceRealisations(String interfaceFormalName, String interfaceFormalVersion){
+        Set<IPCAdapter> supportedInterfaces = new HashSet<>();
+        Collection<IPCAdapter> existingIPCAdapters = interfaces.values();
+        for(IPCAdapter currentInterface: existingIPCAdapters){
             boolean itMatches = false;
-            for(IPCInterfaceDefinition currentInterfaceDef: currentInterface.getSupportedInterfaceDefinitions()){
+            for(IPCAdapterDefinition currentInterfaceDef: currentInterface.getSupportedInterfaceDefinitions()){
                 boolean sameFormalName = interfaceFormalName.contentEquals(currentInterfaceDef.getInterfaceFormalName());
                 boolean sameFormalVersion = interfaceFormalVersion.contentEquals(currentInterfaceDef.getInterfaceFormalVersion());
                 if(sameFormalName && sameFormalVersion){

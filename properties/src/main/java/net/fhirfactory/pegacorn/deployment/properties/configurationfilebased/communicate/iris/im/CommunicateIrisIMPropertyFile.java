@@ -2,20 +2,38 @@ package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.co
 
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.SecurityCredentialSegment;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.ClusteredInteractHTTPServerPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.StandardInteractHTTPClientPortSegment;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.communicate.common.CommunicateSubsystemPropertyFile;
 
 public class CommunicateIrisIMPropertyFile extends CommunicateSubsystemPropertyFile {
 
-
+    private StandardInteractHTTPClientPortSegment interactMatrixClientServicesClient;
     private ClusteredInteractHTTPServerPortSegment interactMatrixApplicationServicesServer;
     private ClusteredInteractHTTPServerPortSegment interactPegacornVoIPServicesServer;
     private SecurityCredentialSegment wildflyUser;
 
+    //
+    // Constructor(s)
+    //
+
     public CommunicateIrisIMPropertyFile(){
         super();
-        wildflyUser = new SecurityCredentialSegment();
-        interactMatrixApplicationServicesServer = new ClusteredInteractHTTPServerPortSegment();
-        interactPegacornVoIPServicesServer = new ClusteredInteractHTTPServerPortSegment();
+        this.wildflyUser = new SecurityCredentialSegment();
+        this.interactMatrixClientServicesClient = new StandardInteractHTTPClientPortSegment();
+        this.interactMatrixApplicationServicesServer = new ClusteredInteractHTTPServerPortSegment();
+        this.interactPegacornVoIPServicesServer = new ClusteredInteractHTTPServerPortSegment();
+    }
+
+    //
+    // Getters and Setters
+    //
+
+    public StandardInteractHTTPClientPortSegment getInteractMatrixClientServicesClient() {
+        return interactMatrixClientServicesClient;
+    }
+
+    public void setInteractMatrixClientServicesClient(StandardInteractHTTPClientPortSegment interactMatrixClientServicesClient) {
+        this.interactMatrixClientServicesClient = interactMatrixClientServicesClient;
     }
 
     public ClusteredInteractHTTPServerPortSegment getInteractMatrixApplicationServicesServer() {
@@ -42,13 +60,39 @@ public class CommunicateIrisIMPropertyFile extends CommunicateSubsystemPropertyF
         this.wildflyUser = wildflyUser;
     }
 
+    //
+    // To String
+    //
+
     @Override
     public String toString() {
         return "CommunicateIrisIMPropertyFile{" +
-                "interactMatrixApplicationServicesServer=" + interactMatrixApplicationServicesServer +
+                "kubeReadinessProbe=" + getKubeReadinessProbe() +
+                ", kubeLivelinessProbe=" + getKubeLivelinessProbe() +
+                ", prometheusPort=" + getPrometheusPort() +
+                ", jolokiaPort=" + getJolokiaPort() +
+                ", subsystemInstant=" + getSubsystemInstant() +
+                ", deploymentMode=" + getDeploymentMode() +
+                ", deploymentSites=" + getDeploymentSites() +
+                ", subsystemImageProperties=" + getSubsystemImageProperties() +
+                ", trustStorePassword=" + getTrustStorePassword() +
+                ", keyPassword=" + getKeyPassword() +
+                ", deploymentZone=" + getDeploymentZone() +
+                ", defaultServicePortLowerBound=" + getDefaultServicePortLowerBound() +
+                ", loadBalancer=" + getLoadBalancer() +
+                ", volumeMounts=" + getVolumeMounts() +
+                ", debugProperties=" + getDebugProperties() +
+                ", hapiAPIKey=" + getHapiAPIKey() +
+                ", javaDeploymentParameters=" + getJavaDeploymentParameters() +
+                ", interZoneIPC=" + getInterZoneIPC() +
+                ", edgeAnswer=" + getEdgeAnswer() +
+                ", intraZoneIPC=" + getIntraZoneIPC() +
+                ", interZoneOAM=" + getInterZoneOAM() +
+                ", intraZoneOAM=" + getIntraZoneOAM() +
+                ", interactMatrixClientServicesClient=" + interactMatrixClientServicesClient +
+                ", interactMatrixApplicationServicesServer=" + interactMatrixApplicationServicesServer +
                 ", interactPegacornVoIPServicesServer=" + interactPegacornVoIPServicesServer +
                 ", wildflyUser=" + wildflyUser +
-                "," + super.toString() +
                 '}';
     }
 }

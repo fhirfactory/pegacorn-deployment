@@ -49,6 +49,11 @@ public final class PetasosPropertyConstants {
     // Size of the cache in bytes, once exceeded entries will be written to the overflow
     // directory
     public final static long CACHE_SIZE_IN_BYTES = 1000000000;
+
+    // The nominal period (in seconds) any single processing plant should wait before assuming
+    // that a particular cache item in an infinity span cache is synchronised.
+    // This is a very pessimistic number...
+    public final static long PETASOS_DISTRIBUTED_CACHE_SYNCHRONISATION_WAIT = 5;
     
     // How long should completed content be kept within the caches?
     public final static long CACHE_ENTRY_RETENTION_PERIOD_SECONDS = 60;
@@ -69,5 +74,8 @@ public final class PetasosPropertyConstants {
     public final static String WUP_INTERACT_PORT_TYPE = "WUPInteractIngresPortType";
 
     public final static String DEFAULT_TIMEZONE="Australia/Sydney";
+
+    public final static String TASK_DISTRIBUTION_QUEUE="seda:task_distribution_queue";
+    public final static String TASK_OUTCOME_COLLECTION_QUEUE="seda:task_outcome_collection_queue";
 
 }

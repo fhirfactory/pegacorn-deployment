@@ -22,28 +22,32 @@
 package net.fhirfactory.pegacorn.deployment.names.subsystems;
 
 import net.fhirfactory.pegacorn.core.model.petasos.ipc.PegacornCommonInterfaceNamesBase;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.base.IPCInterfaceDefinition;
+import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.base.IPCAdapterDefinition;
 
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class CommunicateIrisSubsystemFunctionalityNames extends PegacornCommonInterfaceNamesBase {
-    public String getFunctionNameInteractMatrixClientServices(){return("Interact-Matrix-ApplicationServices");}
+    public String getFunctionNameSynapseMatrixClientServices(){return("syn-appsvcs");}
+    public String getFunctionNameSynapseAdminServices(){
+        return("syn-admin");
+    }
+    public String getFunctionNameIrisAppServices(){return("iris-appsvcs");}
+
     public String getVersionInteractMatrixClientServices(){return("0.6.1");}
 
-    public String getFunctionNameInteractMatrixApplicationServices(){return("Matrix Application Service API");}
     public String getVersionInteractMatrixApplicationServices(){return("0.1.2");}
 
-    public IPCInterfaceDefinition getMatrixClientServicesPortDefinition(){
-        IPCInterfaceDefinition appServersPort = new IPCInterfaceDefinition();
-        appServersPort.setInterfaceFormalName(getFunctionNameInteractMatrixClientServices());
+    public IPCAdapterDefinition getMatrixClientServicesPortDefinition(){
+        IPCAdapterDefinition appServersPort = new IPCAdapterDefinition();
+        appServersPort.setInterfaceFormalName("Matrix-ClientServicesAPI");
         appServersPort.setInterfaceFormalVersion(getVersionInteractMatrixClientServices());
         return(appServersPort);
     }
 
-    public IPCInterfaceDefinition getMatrixApplicationServicesPortDefinition(){
-        IPCInterfaceDefinition appServersPort = new IPCInterfaceDefinition();
-        appServersPort.setInterfaceFormalName(getFunctionNameInteractMatrixApplicationServices());
+    public IPCAdapterDefinition getMatrixApplicationServicesPortDefinition(){
+        IPCAdapterDefinition appServersPort = new IPCAdapterDefinition();
+        appServersPort.setInterfaceFormalName("Matrix-ApplicationServicesAPI");
         appServersPort.setInterfaceFormalVersion(getVersionInteractMatrixApplicationServices());
         return(appServersPort);
     }

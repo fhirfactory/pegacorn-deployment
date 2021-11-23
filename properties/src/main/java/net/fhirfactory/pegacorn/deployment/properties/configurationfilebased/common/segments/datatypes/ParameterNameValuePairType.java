@@ -19,9 +19,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.communicate.whispers;
+package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.datatypes;
 
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.communicate.common.CommunicateSubsystemPropertyFile;
+public class ParameterNameValuePairType {
+    private String parameterName;
+    private String parameterValue;
 
-public class WhispersSignallingControllerPropertyFile extends CommunicateSubsystemPropertyFile {
+    public ParameterNameValuePairType(){
+        this.parameterName = null;
+        this.parameterValue = null;
+    }
+
+    public String getParameterName() {
+        return parameterName;
+    }
+
+    public void setParameterName(String parameterName) {
+        this.parameterName = parameterName;
+    }
+
+    public String getParameterValue() {
+        return parameterValue;
+    }
+
+    public void setParameterValue(String parameterValue) {
+        this.parameterValue = parameterValue;
+    }
+
+    @Override
+    public String toString() {
+        return "ConfigAttributePairType{" +
+                "name='" + parameterName + '\'' +
+                ", value='" + parameterValue + '\'' +
+                '}';
+    }
 }

@@ -19,34 +19,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact;
+package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base;
 
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.InterfaceDefinitionSegment;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.datatypes.ParameterNameValuePairType;
+import net.fhirfactory.pegacorn.internals.SerializableObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
-public class StandardInteractServerPortSegment extends StandardExternalFacingPort {
-    private static Logger LOG = LoggerFactory.getLogger(StandardInteractServerPortSegment.class);
+public class ConfigurableNodeSegment implements Serializable {
+    List<ParameterNameValuePairType> otherConfigurationParameters;
 
-    @Override
-    protected Logger specifyLogger() {
-        return (LOG);
+    //
+    // Constructor(s)
+    //
+
+    public ConfigurableNodeSegment(){
+        this.otherConfigurationParameters = new ArrayList<>();
     }
+
+    //
+    // Getters and Setters (Bean Methods)
+    //
+
+    public List<ParameterNameValuePairType> getOtherConfigurationParameters() {
+        return otherConfigurationParameters;
+    }
+
+    public void setOtherConfigurationParameters(List<ParameterNameValuePairType> otherConfigurationParameters) {
+        this.otherConfigurationParameters = otherConfigurationParameters;
+    }
+
+    //
+    // To String
+    //
 
     @Override
     public String toString() {
-        return "StandardInteractServerPortSegment{" +
-                "portType=" + getPortType() +
-                ", connectedSystem=" + getConnectedSystem() +
-                ", name=" + getName() +
-                ", server=" + isServer() +
-                ", portValue=" + getPortValue() +
-                ", hostDNSEntry=" + getHostDNSEntry() +
-                ", supportedInterfaceProfiles=" + getSupportedInterfaceProfiles() +
-                ", startupDelay=" + getStartupDelay() +
-                ", encrypted=" + isEncrypted() +
+        return "ConfigurableNodeSegment{" +
+                "otherConfigurationParameters=" + otherConfigurationParameters +
                 '}';
     }
 }

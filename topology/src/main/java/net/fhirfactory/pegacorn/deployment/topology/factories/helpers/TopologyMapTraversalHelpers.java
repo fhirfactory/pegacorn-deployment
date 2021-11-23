@@ -21,12 +21,12 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.factories.helpers;
 
-import net.fhirfactory.pegacorn.core.model.topology.nodes.*;
 import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeFDN;
-import net.fhirfactory.pegacorn.deployment.topology.manager.TopologyIM;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.base.IPCInterface;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.base.IPCInterfaceDefinition;
+import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.base.IPCAdapter;
+import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.base.IPCAdapterDefinition;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.base.IPCClusteredServerTopologyEndpoint;
+import net.fhirfactory.pegacorn.core.model.topology.nodes.*;
+import net.fhirfactory.pegacorn.deployment.topology.manager.TopologyIM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +46,7 @@ public class TopologyMapTraversalHelpers {
      * @param requiredInterface
      * @return
      */
-    public BusinessServiceTopologyNode selectBusinessService(SubsystemTopologyNode subsystemNode, IPCInterfaceDefinition requiredInterface){
+    public BusinessServiceTopologyNode selectBusinessService(SubsystemTopologyNode subsystemNode, IPCAdapterDefinition requiredInterface){
         if(subsystemNode == null){
             return(null);
         }
@@ -54,8 +54,8 @@ public class TopologyMapTraversalHelpers {
             BusinessServiceTopologyNode businessServiceNode = (BusinessServiceTopologyNode)topologyIM.getNode(businessServiceNodeFDN);
             for(TopologyNodeFDN endpointNodeFDN: businessServiceNode.getExternalisedServices()){
                 IPCClusteredServerTopologyEndpoint endpointNode = (IPCClusteredServerTopologyEndpoint)topologyIM.getNode(endpointNodeFDN);
-                for(IPCInterface currentInterface: endpointNode.getSupportedInterfaceSet()){
-                    for(IPCInterfaceDefinition currentInterfaceDefinition: currentInterface.getSupportedInterfaceDefinitions()){
+                for(IPCAdapter currentInterface: endpointNode.getAdapterList()){
+                    for(IPCAdapterDefinition currentInterfaceDefinition: currentInterface.getSupportedInterfaceDefinitions()){
                         boolean interfaceNameSame = currentInterfaceDefinition.getInterfaceFormalName().contentEquals(requiredInterface.getInterfaceFormalName());
                         boolean interfaceNameVersion = currentInterfaceDefinition.getInterfaceFormalName().contentEquals(requiredInterface.getInterfaceFormalVersion());
                         if(interfaceNameSame && interfaceNameVersion){
@@ -94,7 +94,7 @@ public class TopologyMapTraversalHelpers {
      * @param requiredInterface
      * @return
      */
-    public ClusterServiceTopologyNode selectClusterService(DeploymentSiteTopologyNode siteNode, IPCInterfaceDefinition requiredInterface){
+    public ClusterServiceTopologyNode selectClusterService(DeploymentSiteTopologyNode siteNode, IPCAdapterDefinition requiredInterface){
         if(siteNode == null){
             return(null);
         }
@@ -102,10 +102,10 @@ public class TopologyMapTraversalHelpers {
             ClusterServiceTopologyNode serviceNode = (ClusterServiceTopologyNode)topologyIM.getNode(serviceNodeFDN);
             for(TopologyNodeFDN endpointNodeFDN: serviceNode.getServiceEndpoints()){
                 IPCClusteredServerTopologyEndpoint endpointNode = (IPCClusteredServerTopologyEndpoint)topologyIM.getNode(endpointNodeFDN);
-                for(IPCInterface currentInterface: endpointNode.getSupportedInterfaceSet()){
-                    for(IPCInterfaceDefinition currentInterfaceDefinition: currentInterface.getSupportedInterfaceDefinitions()){
-                        boolean interfaceNameSame = currentInterface.getInstanceName().contentEquals(requiredInterface.getInterfaceFormalName());
-                        boolean interfaceNameVersion = currentInterface.getInstanceName().contentEquals(requiredInterface.getInterfaceFormalVersion());
+                for(IPCAdapter currentInterface: endpointNode.getAdapterList()){
+                    for(IPCAdapterDefinition currentInterfaceDefinition: currentInterface.getSupportedInterfaceDefinitions()){
+                        boolean interfaceNameSame = currentInterfaceDefinition.getInterfaceFormalName().contentEquals(requiredInterface.getInterfaceFormalName());
+                        boolean interfaceNameVersion = currentInterfaceDefinition.getInterfaceFormalVersion().contentEquals(requiredInterface.getInterfaceFormalVersion());
                         if(interfaceNameSame && interfaceNameVersion){
                             return(serviceNode);
                         }
@@ -122,16 +122,16 @@ public class TopologyMapTraversalHelpers {
      * @param requiredInterface
      * @return
      */
-    public IPCClusteredServerTopologyEndpoint selectClusterServiceEndpoint(ClusterServiceTopologyNode clusterService, IPCInterfaceDefinition requiredInterface){
+    public IPCClusteredServerTopologyEndpoint selectClusterServiceEndpoint(ClusterServiceTopologyNode clusterService, IPCAdapterDefinition requiredInterface){
         if(clusterService == null){
             return(null);
         }
         for(TopologyNodeFDN endpointNodeFDN: clusterService.getServiceEndpoints()){
             IPCClusteredServerTopologyEndpoint endpointNode = (IPCClusteredServerTopologyEndpoint)topologyIM.getNode(endpointNodeFDN);
-            for(IPCInterface currentInterface: endpointNode.getSupportedInterfaceSet()){
-                for(IPCInterfaceDefinition currentInterfaceDefinition: currentInterface.getSupportedInterfaceDefinitions()){
-                    boolean interfaceNameSame = currentInterface.getInstanceName().contentEquals(requiredInterface.getInterfaceFormalName());
-                    boolean interfaceNameVersion = currentInterface.getInstanceName().contentEquals(requiredInterface.getInterfaceFormalVersion());
+            for(IPCAdapter currentInterface: endpointNode.getAdapterList()){
+                for(IPCAdapterDefinition currentInterfaceDefinition: currentInterface.getSupportedInterfaceDefinitions()){
+                    boolean interfaceNameSame = currentInterfaceDefinition.getInterfaceFormalName().contentEquals(requiredInterface.getInterfaceFormalName());
+                    boolean interfaceNameVersion = currentInterfaceDefinition.getInterfaceFormalVersion().contentEquals(requiredInterface.getInterfaceFormalVersion());
                     if(interfaceNameSame && interfaceNameVersion){
                         return(endpointNode);
                     }
@@ -172,18 +172,18 @@ public class TopologyMapTraversalHelpers {
      * @param requiredInterface
      * @return
      */
-    public ProcessingPlantTopologyNode selectProcessingPlant(PlatformTopologyNode platformTopologyNode, IPCInterfaceDefinition requiredInterface){
+    public ProcessingPlantSoftwareComponent selectProcessingPlant(PlatformTopologyNode platformTopologyNode, IPCAdapterDefinition requiredInterface){
         if(platformTopologyNode == null){
             return(null);
         }
         for(TopologyNodeFDN currentProcessingPlantFDN: platformTopologyNode.getProcessingPlants()){
-            ProcessingPlantTopologyNode currentProcessingPlant = (ProcessingPlantTopologyNode)topologyIM.getNode(currentProcessingPlantFDN);
+            ProcessingPlantSoftwareComponent currentProcessingPlant = (ProcessingPlantSoftwareComponent)topologyIM.getNode(currentProcessingPlantFDN);
             for(TopologyNodeFDN endpointNodeFDN: currentProcessingPlant.getEndpoints()){
                 IPCClusteredServerTopologyEndpoint endpointNode = (IPCClusteredServerTopologyEndpoint)topologyIM.getNode(endpointNodeFDN);
-                for(IPCInterface currentInterface: endpointNode.getSupportedInterfaceSet()){
-                    for(IPCInterfaceDefinition currentInterfaceDefinition: currentInterface.getSupportedInterfaceDefinitions()){
-                        boolean interfaceNameSame = currentInterface.getInstanceName().contentEquals(requiredInterface.getInterfaceFormalName());
-                        boolean interfaceNameVersion = currentInterface.getInstanceName().contentEquals(requiredInterface.getInterfaceFormalVersion());
+                for(IPCAdapter currentInterface: endpointNode.getAdapterList()){
+                    for(IPCAdapterDefinition currentInterfaceDefinition: currentInterface.getSupportedInterfaceDefinitions()){
+                        boolean interfaceNameSame = currentInterfaceDefinition.getInterfaceFormalName().contentEquals(requiredInterface.getInterfaceFormalName());
+                        boolean interfaceNameVersion = currentInterfaceDefinition.getInterfaceFormalVersion().contentEquals(requiredInterface.getInterfaceFormalVersion());
                         if(interfaceNameSame && interfaceNameVersion){
                             return(currentProcessingPlant);
                         }
@@ -200,16 +200,16 @@ public class TopologyMapTraversalHelpers {
      * @param requiredInterface
      * @return
      */
-    public IPCClusteredServerTopologyEndpoint selectProcessingPlantEndpoint(ProcessingPlantTopologyNode processingPlantNode, IPCInterfaceDefinition requiredInterface){
+    public IPCClusteredServerTopologyEndpoint selectProcessingPlantEndpoint(ProcessingPlantSoftwareComponent processingPlantNode, IPCAdapterDefinition requiredInterface){
         if(processingPlantNode == null){
             return(null);
         }
         for(TopologyNodeFDN endpointNodeFDN: processingPlantNode.getEndpoints()){
             IPCClusteredServerTopologyEndpoint endpointNode = (IPCClusteredServerTopologyEndpoint)topologyIM.getNode(endpointNodeFDN);
-            for(IPCInterface currentInterface: endpointNode.getSupportedInterfaceSet()){
-                for(IPCInterfaceDefinition currentInterfaceDefinition: currentInterface.getSupportedInterfaceDefinitions()){
-                    boolean interfaceNameSame = currentInterface.getInstanceName().contentEquals(requiredInterface.getInterfaceFormalName());
-                    boolean interfaceNameVersion = currentInterface.getInstanceName().contentEquals(requiredInterface.getInterfaceFormalVersion());
+            for(IPCAdapter currentInterface: endpointNode.getAdapterList()){
+                for(IPCAdapterDefinition currentInterfaceDefinition: currentInterface.getSupportedInterfaceDefinitions()){
+                    boolean interfaceNameSame = currentInterfaceDefinition.getInterfaceFormalName().contentEquals(requiredInterface.getInterfaceFormalName());
+                    boolean interfaceNameVersion = currentInterfaceDefinition.getInterfaceFormalVersion().contentEquals(requiredInterface.getInterfaceFormalVersion());
                     if(interfaceNameSame && interfaceNameVersion){
                         return(endpointNode);
                     }

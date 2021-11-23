@@ -26,22 +26,23 @@ package net.fhirfactory.pegacorn.deployment.topology.factories.archetypes;
 
 import net.fhirfactory.pegacorn.core.model.componentid.ComponentTypeTypeEnum;
 import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeRDN;
+import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.base.IPCAdapterDefinition;
+import net.fhirfactory.pegacorn.core.model.topology.endpoints.edge.petasos.PetasosEndpointTopologyTypeEnum;
+import net.fhirfactory.pegacorn.core.model.topology.endpoints.interact.ClusteredInteractServerTopologyEndpointPort;
+import net.fhirfactory.pegacorn.core.model.topology.endpoints.interact.StandardInteractClientTopologyEndpointPort;
+import net.fhirfactory.pegacorn.core.model.topology.endpoints.interact.mllp.InteractMLLPClientEndpoint;
+import net.fhirfactory.pegacorn.core.model.topology.endpoints.interact.mllp.InteractMLLPServerEndpoint;
+import net.fhirfactory.pegacorn.core.model.topology.endpoints.interact.mllp.adapters.MLLPClientAdapter;
+import net.fhirfactory.pegacorn.core.model.topology.endpoints.interact.mllp.adapters.MLLPServerAdapter;
+import net.fhirfactory.pegacorn.core.model.topology.mode.ResilienceModeEnum;
+import net.fhirfactory.pegacorn.core.model.topology.nodes.common.EndpointProviderInterface;
+import net.fhirfactory.pegacorn.core.model.topology.nodes.external.ConnectedExternalSystemTopologyNode;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemPort;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemProperties;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.InterfaceDefinitionSegment;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.ClusteredInteractServerPortSegment;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.StandardInteractClientPortSegment;
 import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.common.PetasosEnabledSubsystemTopologyFactory;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.base.IPCInterfaceDefinition;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.edge.petasos.PetasosEndpointTopologyTypeEnum;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.interact.ClusteredInteractServerTopologyEndpointPort;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.interact.StandardInteractClientTopologyEndpointPort;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.interact.mllp.InteractMLLPClientAdapter;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.interact.mllp.InteractMLLPServerAdapter;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.interact.mllp.datatype.MLLPPort;
-import net.fhirfactory.pegacorn.core.model.topology.mode.ResilienceModeEnum;
-import net.fhirfactory.pegacorn.core.model.topology.nodes.common.EndpointProviderInterface;
-import net.fhirfactory.pegacorn.core.model.topology.nodes.external.ConnectedExternalSystemTopologyNode;
 
 /**
  * 
@@ -56,31 +57,32 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
 
     protected ClusteredInteractServerTopologyEndpointPort newMLLPServerEndpoint(EndpointProviderInterface endpointProvider, String endpointFunctionName, ClusteredInteractServerPortSegment mllpServerPort){
         getLogger().debug(".createMLLPServerEndpoint(): Entry, endpointProvider->{}, mllpServerPort->{}", endpointProvider, mllpServerPort);
-        InteractMLLPServerAdapter mllpServerTopologyNode = new InteractMLLPServerAdapter();
+        InteractMLLPServerEndpoint mllpServerTopologyNode = new InteractMLLPServerEndpoint();
         if(mllpServerPort == null){
             getLogger().debug(".createMLLPServerEndpoint(): Exit, no port to add");
             return(null);
         }
-        mllpServerTopologyNode.setEncrypted(mllpServerPort.isEncrypted());
-        String name = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.MLLP_SERVER, endpointFunctionName);
+        String name = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.INTERACT_MLLP_SERVER, endpointFunctionName);
         TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getComponentRDN().getNodeVersion(), ComponentTypeTypeEnum.ENDPOINT);
         mllpServerTopologyNode.setComponentRDN(nodeRDN);
+        mllpServerTopologyNode.setEndpointConfigurationName(mllpServerPort.getName());
         mllpServerTopologyNode.setActualHostIP(getActualHostIP());
         mllpServerTopologyNode.setActualPodIP(getActualPodIP());
-        mllpServerTopologyNode.setName(endpointFunctionName);
         mllpServerTopologyNode.constructFDN(endpointProvider.getComponentFDN(), nodeRDN);
-        mllpServerTopologyNode.setEndpointType(PetasosEndpointTopologyTypeEnum.MLLP_SERVER);
+        mllpServerTopologyNode.setEndpointType(PetasosEndpointTopologyTypeEnum.INTERACT_MLLP_SERVER);
         mllpServerTopologyNode.setComponentType(ComponentTypeTypeEnum.ENDPOINT);
         mllpServerTopologyNode.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
         mllpServerTopologyNode.setComponentRDN(nodeRDN);
         mllpServerTopologyNode.setConnectedSystemName(mllpServerPort.getConnectedSystem().getSubsystemName());
         mllpServerTopologyNode.setContainingNodeFDN(endpointProvider.getComponentFDN());
-        MLLPPort port = new MLLPPort();
-        port.setPort(Integer.toString(mllpServerPort.getPortValue()));
-        port.setServer(true);
+        mllpServerTopologyNode.setServer(true);
+        MLLPServerAdapter port = new MLLPServerAdapter();
+        port.setPortNumber(mllpServerPort.getPortValue());
         port.setHostName(mllpServerPort.getHostDNSEntry());
+        port.setServiceDNSName(mllpServerPort.getServiceDNSEntry());
+        port.setServicePortValue(mllpServerPort.getServicePortValue());
         for(InterfaceDefinitionSegment currentSegment: mllpServerPort.getSupportedInterfaceProfiles()) {
-            IPCInterfaceDefinition currentInterfaceDefinition = new IPCInterfaceDefinition();
+            IPCAdapterDefinition currentInterfaceDefinition = new IPCAdapterDefinition();
             currentInterfaceDefinition.setInterfaceFormalName(currentSegment.getInterfaceDefinitionName());
             currentInterfaceDefinition.setInterfaceFormalVersion(currentSegment.getInterfaceDefinitionVersion());
         }
@@ -106,19 +108,19 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
 
     protected StandardInteractClientTopologyEndpointPort newMLLPClientEndpoint(EndpointProviderInterface endpointProvider, String endpointFunctionName, StandardInteractClientPortSegment mllpClientPort){
         getLogger().debug(".newMLLPClientEndpoint(): Entry, endpointProvider->{}, mllpClientPort->{}", endpointProvider, mllpClientPort);
-        InteractMLLPClientAdapter mllpClientTopologyNode = new InteractMLLPClientAdapter();
+        InteractMLLPClientEndpoint mllpClientTopologyNode = new InteractMLLPClientEndpoint();
         if(mllpClientPort == null){
             getLogger().debug(".newMLLPClientEndpoint(): Exit, no port to add");
             return(null);
         }
-        String name = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.MLLP_CLIENT, endpointFunctionName);
+        String name = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.INTERACT_MLLP_CLIENT, endpointFunctionName);
         TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getComponentRDN().getNodeVersion(), ComponentTypeTypeEnum.ENDPOINT);
         mllpClientTopologyNode.setComponentRDN(nodeRDN);
+        mllpClientTopologyNode.setEndpointConfigurationName(mllpClientPort.getName());
         mllpClientTopologyNode.setActualPodIP(getActualPodIP());
         mllpClientTopologyNode.setActualHostIP(getActualHostIP());
-        mllpClientTopologyNode.setName(endpointFunctionName);
         mllpClientTopologyNode.constructFDN(endpointProvider.getComponentFDN(), nodeRDN);
-        mllpClientTopologyNode.setEndpointType(PetasosEndpointTopologyTypeEnum.MLLP_CLIENT);
+        mllpClientTopologyNode.setEndpointType(PetasosEndpointTopologyTypeEnum.INTERACT_MLLP_CLIENT);
         mllpClientTopologyNode.setComponentType(ComponentTypeTypeEnum.ENDPOINT);
         mllpClientTopologyNode.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
         mllpClientTopologyNode.setComponentRDN(nodeRDN);
@@ -129,18 +131,18 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
         ConnectedExternalSystemTopologyNode externalSystem = new ConnectedExternalSystemTopologyNode();
         externalSystem.setSubsystemName(connectedSystem.getSubsystemName());
         ConnectedSystemPort targetPort1 = connectedSystem.getTargetPort1();
-        MLLPPort systemEndpointPort1 = newExternalSystemIPCEndpoint(targetPort1, mllpClientTopologyNode.isEncrypted());
+        MLLPClientAdapter systemEndpointPort1 = newMLLPClientAdapter(targetPort1);
         externalSystem.getTargetPorts().add(systemEndpointPort1);
         if(connectedSystem.getTargetPort2() != null)
         {
             ConnectedSystemPort targetPort2 = connectedSystem.getTargetPort2();
-            MLLPPort systemEndpointPort2 = newExternalSystemIPCEndpoint(targetPort2, mllpClientTopologyNode.isEncrypted());
+            MLLPClientAdapter systemEndpointPort2 = newMLLPClientAdapter(targetPort2);
             externalSystem.getTargetPorts().add(systemEndpointPort2);
         }
         if(connectedSystem.getTargetPort3() != null)
         {
             ConnectedSystemPort targetPort3 = connectedSystem.getTargetPort3();
-            MLLPPort systemEndpointPort3 = newExternalSystemIPCEndpoint(targetPort3, mllpClientTopologyNode.isEncrypted());
+            MLLPClientAdapter systemEndpointPort3 = newMLLPClientAdapter(targetPort3);
             externalSystem.getTargetPorts().add(systemEndpointPort3);
         }
         mllpClientTopologyNode.setTargetSystem(externalSystem);
@@ -151,17 +153,17 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
         return(mllpClientTopologyNode);
     }
 
-    protected MLLPPort newExternalSystemIPCEndpoint(ConnectedSystemPort connectedSystemPort, boolean defaultEncryption) {
+    protected MLLPClientAdapter newMLLPClientAdapter(ConnectedSystemPort connectedSystemPort) {
         getLogger().debug(".newExternalSystemIPCEndpoint(): Entry, connectedSystemPort->{}", connectedSystemPort);
-        MLLPPort systemEndpointPort = new MLLPPort();
-        boolean encryptionRequired = defaultEncryption;
+        MLLPClientAdapter systemEndpointPort = new MLLPClientAdapter();
+        boolean encryptionRequired = false;
         if(connectedSystemPort.getEncryptionRequired() != null){
             encryptionRequired = connectedSystemPort.getEncryptionRequired();
         }
         systemEndpointPort.setEncrypted(encryptionRequired);
         systemEndpointPort.setHostName(connectedSystemPort.getTargetPortDNSName());
-        systemEndpointPort.setPort(Integer.toString(connectedSystemPort.getTargetPortValue()));
-        IPCInterfaceDefinition currentInterfaceDefinition = new IPCInterfaceDefinition();
+        systemEndpointPort.setPortNumber(connectedSystemPort.getTargetPortValue());
+        IPCAdapterDefinition currentInterfaceDefinition = new IPCAdapterDefinition();
         currentInterfaceDefinition.setInterfaceFormalName(connectedSystemPort.getTargetInterfaceDefinition().getInterfaceDefinitionName());
         currentInterfaceDefinition.setInterfaceFormalVersion(connectedSystemPort.getTargetInterfaceDefinition().getInterfaceDefinitionVersion());
         systemEndpointPort.getSupportedInterfaceDefinitions().add(currentInterfaceDefinition);

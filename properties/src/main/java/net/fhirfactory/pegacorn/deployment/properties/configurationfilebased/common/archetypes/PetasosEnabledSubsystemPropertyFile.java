@@ -21,6 +21,7 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes;
 
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.HTTPIPCClientPortSegment;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.HTTPIPCServerPortSegment;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.JGroupsIPCServerPortSegment;
 
@@ -29,15 +30,124 @@ public class PetasosEnabledSubsystemPropertyFile extends ClusterServiceDeliveryS
     private JGroupsIPCServerPortSegment intraZoneIPC;
     private JGroupsIPCServerPortSegment interZoneOAM;
     private JGroupsIPCServerPortSegment intraZoneOAM;
+    private JGroupsIPCServerPortSegment interZoneAudit;
+    private JGroupsIPCServerPortSegment intraZoneAudit;
+    private JGroupsIPCServerPortSegment interZoneInterception;
+    private JGroupsIPCServerPortSegment intraZoneInterception;
+    private JGroupsIPCServerPortSegment interZoneTasks;
+    private JGroupsIPCServerPortSegment intraZoneTasks;
+    private JGroupsIPCServerPortSegment multiZoneInfinispan;
+    private JGroupsIPCServerPortSegment interZoneMetrics;
+    private JGroupsIPCServerPortSegment intraZoneMetrics;
     private HTTPIPCServerPortSegment edgeAnswer;
+    private HTTPIPCClientPortSegment edgeAsk;
+
+    //
+    // Constructor(s)
+    //
 
     public PetasosEnabledSubsystemPropertyFile(){
         super();
         edgeAnswer = new HTTPIPCServerPortSegment();
+        edgeAsk = new HTTPIPCClientPortSegment();
         interZoneIPC = new JGroupsIPCServerPortSegment();
         intraZoneIPC = new JGroupsIPCServerPortSegment();
         interZoneOAM = new JGroupsIPCServerPortSegment();
         intraZoneOAM = new JGroupsIPCServerPortSegment();
+        interZoneAudit = new JGroupsIPCServerPortSegment();
+        intraZoneAudit= new JGroupsIPCServerPortSegment();
+        interZoneInterception = new JGroupsIPCServerPortSegment();
+        intraZoneInterception = new JGroupsIPCServerPortSegment();
+        interZoneTasks = new JGroupsIPCServerPortSegment();
+        intraZoneTasks = new JGroupsIPCServerPortSegment();
+        multiZoneInfinispan = new JGroupsIPCServerPortSegment();
+        interZoneMetrics = new JGroupsIPCServerPortSegment();
+        intraZoneMetrics = new JGroupsIPCServerPortSegment();
+    }
+
+    //
+    // Getters and Setters
+    //
+
+
+    public HTTPIPCClientPortSegment getEdgeAsk() {
+        return edgeAsk;
+    }
+
+    public void setEdgeAsk(HTTPIPCClientPortSegment edgeAsk) {
+        this.edgeAsk = edgeAsk;
+    }
+
+    public JGroupsIPCServerPortSegment getInterZoneAudit() {
+        return interZoneAudit;
+    }
+
+    public void setInterZoneAudit(JGroupsIPCServerPortSegment interZoneAudit) {
+        this.interZoneAudit = interZoneAudit;
+    }
+
+    public JGroupsIPCServerPortSegment getIntraZoneAudit() {
+        return intraZoneAudit;
+    }
+
+    public void setIntraZoneAudit(JGroupsIPCServerPortSegment intraZoneAudit) {
+        this.intraZoneAudit = intraZoneAudit;
+    }
+
+    public JGroupsIPCServerPortSegment getInterZoneInterception() {
+        return interZoneInterception;
+    }
+
+    public void setInterZoneInterception(JGroupsIPCServerPortSegment interZoneInterception) {
+        this.interZoneInterception = interZoneInterception;
+    }
+
+    public JGroupsIPCServerPortSegment getIntraZoneInterception() {
+        return intraZoneInterception;
+    }
+
+    public void setIntraZoneInterception(JGroupsIPCServerPortSegment intraZoneInterception) {
+        this.intraZoneInterception = intraZoneInterception;
+    }
+
+    public JGroupsIPCServerPortSegment getInterZoneTasks() {
+        return interZoneTasks;
+    }
+
+    public void setInterZoneTasks(JGroupsIPCServerPortSegment interZoneTasks) {
+        this.interZoneTasks = interZoneTasks;
+    }
+
+    public JGroupsIPCServerPortSegment getIntraZoneTasks() {
+        return intraZoneTasks;
+    }
+
+    public void setIntraZoneTasks(JGroupsIPCServerPortSegment intraZoneTasks) {
+        this.intraZoneTasks = intraZoneTasks;
+    }
+
+    public JGroupsIPCServerPortSegment getMultiZoneInfinispan() {
+        return multiZoneInfinispan;
+    }
+
+    public void setMultiZoneInfinispan(JGroupsIPCServerPortSegment multiZoneInfinispan) {
+        this.multiZoneInfinispan = multiZoneInfinispan;
+    }
+
+    public JGroupsIPCServerPortSegment getInterZoneMetrics() {
+        return interZoneMetrics;
+    }
+
+    public void setInterZoneMetrics(JGroupsIPCServerPortSegment interZoneMetrics) {
+        this.interZoneMetrics = interZoneMetrics;
+    }
+
+    public JGroupsIPCServerPortSegment getIntraZoneMetrics() {
+        return intraZoneMetrics;
+    }
+
+    public void setIntraZoneMetrics(JGroupsIPCServerPortSegment intraZoneMetrics) {
+        this.intraZoneMetrics = intraZoneMetrics;
     }
 
     public JGroupsIPCServerPortSegment getInterZoneIPC() {
@@ -80,30 +190,45 @@ public class PetasosEnabledSubsystemPropertyFile extends ClusterServiceDeliveryS
         this.intraZoneOAM = intraZoneOAM;
     }
 
+    //
+    // To String
+    //
+
     @Override
     public String toString() {
         return "PetasosEnabledSubsystemPropertyFile{" +
-                "defaultServicePortLowerBound=" + getDefaultServicePortLowerBound() +
+                "kubeReadinessProbe=" + getKubeReadinessProbe() +
+                ", kubeLivelinessProbe=" + getKubeLivelinessProbe() +
+                ", prometheusPort=" + getPrometheusPort() +
+                ", jolokiaPort=" + getJolokiaPort() +
+                ", subsystemInstant=" + getSubsystemInstant() +
+                ", deploymentMode=" + getDeploymentMode() +
+                ", deploymentSites=" + getDeploymentSites() +
+                ", subsystemImageProperties=" + getSubsystemImageProperties() +
+                ", trustStorePassword=" + getTrustStorePassword() +
+                ", keyPassword=" + getKeyPassword() +
+                ", deploymentZone=" + getDeploymentZone() +
+                ", defaultServicePortLowerBound=" + getDefaultServicePortLowerBound() +
                 ", loadBalancer=" + getLoadBalancer() +
                 ", volumeMounts=" + getVolumeMounts() +
                 ", debugProperties=" + getDebugProperties() +
                 ", hapiAPIKey=" + getHapiAPIKey() +
                 ", javaDeploymentParameters=" + getJavaDeploymentParameters() +
-                ", subsystemInstant=" + getSubsystemInstant() +
-                ", deploymentMode=" + getDeploymentMode() +
-                ", deploymentSites=" + getDeploymentSites() +
-                ", kubeReadinessProbe=" + getKubeReadinessProbe() +
-                ", kubeLivelinessProbe=" + getKubeLivelinessProbe() +
-                ", prometheusPort=" + getPrometheusPort() +
-                ", jolokiaPort=" + getJolokiaPort() +
-                ", subsystemImageProperties=" + getSubsystemImageProperties() +
-                ", trustStorePassword=" + getTrustStorePassword() +
-                ", keyPassword=" + getKeyPassword() +
-                ", interZoneIPC=" + getInterZoneIPC() +
-                ", intraZoneIPC=" + getIntraZoneIPC() +
-                ", interZoneOAM=" + getInterZoneOAM() +
-                ", intraZoneOAM=" + getIntraZoneOAM() +
-                ", edgeAnswer=" + getEdgeAnswer() +
+                ", interZoneIPC=" + interZoneIPC +
+                ", intraZoneIPC=" + intraZoneIPC +
+                ", interZoneOAM=" + interZoneOAM +
+                ", intraZoneOAM=" + intraZoneOAM +
+                ", interZoneAudit=" + interZoneAudit +
+                ", intraZoneAudit=" + intraZoneAudit +
+                ", interZoneInterception=" + interZoneInterception +
+                ", intraZoneInterception=" + intraZoneInterception +
+                ", interZoneTasks=" + interZoneTasks +
+                ", intraZoneTasks=" + intraZoneTasks +
+                ", multiZoneInfinispan=" + multiZoneInfinispan +
+                ", interZoneMetrics=" + interZoneMetrics +
+                ", intraZoneMetrics=" + intraZoneMetrics +
+                ", edgeAnswer=" + edgeAnswer +
+                ", edgeAsk=" + edgeAsk +
                 '}';
     }
 }

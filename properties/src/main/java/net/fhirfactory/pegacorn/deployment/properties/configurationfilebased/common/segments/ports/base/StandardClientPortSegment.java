@@ -21,16 +21,13 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemProperties;
 import org.slf4j.Logger;
 
-public abstract class StandardClientPortSegment {
+public abstract class StandardClientPortSegment  extends ConfigurableNodeSegment {
 
     protected abstract Logger specifyLogger();
-
-    protected Logger getLogger(){
-        return(specifyLogger());
-    }
 
     private String portType;
     private String portParameters;
@@ -40,12 +37,25 @@ public abstract class StandardClientPortSegment {
     private ConnectedSystemProperties connectedSystem;
     private String name;
 
+    //
+    // Constructor(s)
+    //
+
     public StandardClientPortSegment(){
         super();
         this.connectedSystem = new ConnectedSystemProperties();
         this.name = null;
         this.portType = null;
         this.portParameters = null;
+    }
+
+    //
+    // Getters and Setters
+    //
+
+    @JsonIgnore
+    protected Logger getLogger(){
+        return(specifyLogger());
     }
 
     public String getPortType() {
@@ -104,16 +114,22 @@ public abstract class StandardClientPortSegment {
         this.name = name;
     }
 
+
+    //
+    // To String
+    //
+
     @Override
     public String toString() {
         return "StandardClientPortSegment{" +
-                "portType=" + portType +
-                ", portParameters=" + portParameters +
+                "otherConfigurationParameters=" + getOtherConfigurationParameters() +
+                ", portType='" + portType + '\'' +
+                ", portParameters='" + portParameters + '\'' +
                 ", defaultRetryCount=" + defaultRetryCount +
                 ", defaultRetryWait=" + defaultRetryWait +
                 ", defaultTimeout=" + defaultTimeout +
                 ", connectedSystem=" + connectedSystem +
-                ", name=" + name +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

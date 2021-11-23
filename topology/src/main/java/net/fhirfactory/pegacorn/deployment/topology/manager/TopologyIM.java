@@ -22,6 +22,7 @@
 package net.fhirfactory.pegacorn.deployment.topology.manager;
 
 import net.fhirfactory.pegacorn.core.model.component.SoftwareComponent;
+import net.fhirfactory.pegacorn.core.model.componentid.ComponentIdType;
 import net.fhirfactory.pegacorn.core.model.componentid.ComponentTypeTypeEnum;
 import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeFDN;
 import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeFDNToken;
@@ -143,23 +144,23 @@ public class TopologyIM {
             }
             case PROCESSING_PLANT:{
                 PlatformTopologyNode platformTopologyNode = (PlatformTopologyNode) parentNodeElement;
-                ProcessingPlantTopologyNode processingPlant = (ProcessingPlantTopologyNode) newNodeElement;
+                ProcessingPlantSoftwareComponent processingPlant = (ProcessingPlantSoftwareComponent) newNodeElement;
                 if(!platformTopologyNode.getProcessingPlants().contains(processingPlant.getComponentFDN())) {
                     platformTopologyNode.getProcessingPlants().add(processingPlant.getComponentFDN());
                 }
                 break;
             }
             case WORKSHOP:{
-                ProcessingPlantTopologyNode processingPlant = (ProcessingPlantTopologyNode) parentNodeElement;
-                WorkshopTopologyNode workshop = (WorkshopTopologyNode) newNodeElement;
+                ProcessingPlantSoftwareComponent processingPlant = (ProcessingPlantSoftwareComponent) parentNodeElement;
+                WorkshopSoftwareComponent workshop = (WorkshopSoftwareComponent) newNodeElement;
                 if(!processingPlant.getWorkshops().contains(workshop.getComponentFDN())) {
                     processingPlant.getWorkshops().add(workshop.getComponentFDN());
                 }
                 break;
             }
             case WUP:{
-                WorkshopTopologyNode workshop = (WorkshopTopologyNode) parentNodeElement;
-                WorkUnitProcessorTopologyNode wup = (WorkUnitProcessorTopologyNode) newNodeElement;
+                WorkshopSoftwareComponent workshop = (WorkshopSoftwareComponent) parentNodeElement;
+                WorkUnitProcessorSoftwareComponent wup = (WorkUnitProcessorSoftwareComponent) newNodeElement;
                 if(!workshop.getWupSet().contains(wup.getComponentFDN())) {
                     workshop.getWupSet().add(wup.getComponentFDN());
                     WorkUnitProcessorComponentTopologyNode wupCore = new WorkUnitProcessorComponentTopologyNode();
@@ -175,7 +176,7 @@ public class TopologyIM {
             }
             case WUP_INTERCHANGE_ROUTER:
             case WUP_INTERCHANGE_PAYLOAD_TRANSFORMER:{
-                WorkUnitProcessorTopologyNode wup = (WorkUnitProcessorTopologyNode) parentNodeElement;
+                WorkUnitProcessorSoftwareComponent wup = (WorkUnitProcessorSoftwareComponent) parentNodeElement;
                 WorkUnitProcessorInterchangeComponentTopologyNode wupInterchangeComponent = (WorkUnitProcessorInterchangeComponentTopologyNode) newNodeElement;
                 if(!wup.getWupInterchangeComponents().contains(wupInterchangeComponent.getComponentFDN())) {
                     wup.getWupInterchangeComponents().add(wupInterchangeComponent.getComponentFDN());
@@ -189,7 +190,7 @@ public class TopologyIM {
             case WUP_CONTAINER_INGRES_PROCESSOR:
             case WUP_CONTAINER_EGRESS_GATEKEEPER:
             case WUP_CONTAINER_INGRES_GATEKEEPER:{
-                WorkUnitProcessorTopologyNode wup = (WorkUnitProcessorTopologyNode) parentNodeElement;
+                WorkUnitProcessorSoftwareComponent wup = (WorkUnitProcessorSoftwareComponent) parentNodeElement;
                 WorkUnitProcessorComponentTopologyNode wupComponent = (WorkUnitProcessorComponentTopologyNode) newNodeElement;
                 if(!wup.getWupInterchangeComponents().contains(wupComponent.getComponentFDN())) {
                     wup.getWupComponents().add(wupComponent.getComponentFDN());
@@ -215,7 +216,7 @@ public class TopologyIM {
                         break;
                     }
                     case PROCESSING_PLANT:{
-                        ProcessingPlantTopologyNode processingPlant = (ProcessingPlantTopologyNode) parentNodeElement;
+                        ProcessingPlantSoftwareComponent processingPlant = (ProcessingPlantSoftwareComponent) parentNodeElement;
                         IPCTopologyEndpoint endpoint = (IPCTopologyEndpoint) newNodeElement;
                         if(!processingPlant.getEndpoints().contains(endpoint.getComponentFDN())) {
                             processingPlant.getEndpoints().add(endpoint.getComponentFDN());
@@ -223,10 +224,26 @@ public class TopologyIM {
                         break;
                     }
                     case WUP:{
-                        WorkUnitProcessorTopologyNode wup = (WorkUnitProcessorTopologyNode) parentNodeElement;
+                        WorkUnitProcessorSoftwareComponent wup = (WorkUnitProcessorSoftwareComponent) parentNodeElement;
                         IPCTopologyEndpoint endpoint = (IPCTopologyEndpoint) newNodeElement;
-                        if(!wup.getEndpoints().contains(endpoint.getComponentFDN())) {
-                            wup.getEndpoints().add(endpoint.getComponentFDN());
+                        switch(endpoint.getComponentSystemRole()) {
+                            case COMPONENT_ROLE_SUBSYSTEM_EDGE:{
+                                wup.setEgressEndpoint(endpoint);
+                                wup.setIngresEndpoint(endpoint);
+                                break;
+                            }
+                            case COMPONENT_ROLE_INTERACT_EGRESS:{
+                                wup.setEgressEndpoint(endpoint);
+                                break;
+                            }
+                            case COMPONENT_ROLE_INTERACT_INGRES:{
+                                wup.setIngresEndpoint(endpoint);
+                                break;
+                            }
+                            default: {
+                                wup.setEgressEndpoint(endpoint);
+                                wup.setIngresEndpoint(endpoint);
+                            }
                         }
                         break;
                     }
@@ -255,7 +272,7 @@ public class TopologyIM {
 
     public SoftwareComponent getNode(TopologyNodeFDN nodeID) {
         LOG.debug(".getNode(): Entry, nodeID --> {}", nodeID);
-        SoftwareComponent retrievedNode = topologyDataManager.nodeSearch(nodeID);
+        SoftwareComponent retrievedNode = topologyDataManager.getSoftwareComponent(nodeID);
         LOG.debug(".getNode(): Exit, retrievedNode --> {}", retrievedNode);
         return (retrievedNode);
     }
@@ -268,8 +285,15 @@ public class TopologyIM {
         return(retrievedNode);
     }
 
+    public SoftwareComponent getNode(ComponentIdType componentId){
+        LOG.debug(".getNode(): Entry, componentId --> {}", componentId);
+        SoftwareComponent retrievedNode = topologyDataManager.getSoftwareComponent(componentId);
+        LOG.debug(".getNode(): Exit, retrievedNode --> {}", retrievedNode);
+        return(retrievedNode);
+    }
+
     public List<SoftwareComponent> nodeSearch(ComponentTypeTypeEnum nodeType, String nodeName, String nodeVersion ){
-        List<SoftwareComponent> nodeList = topologyDataManager.nodeSearch(nodeType, nodeName, nodeVersion);
+        List<SoftwareComponent> nodeList = topologyDataManager.getSoftwareComponent(nodeType, nodeName, nodeVersion);
         return(nodeList);
     }
 
