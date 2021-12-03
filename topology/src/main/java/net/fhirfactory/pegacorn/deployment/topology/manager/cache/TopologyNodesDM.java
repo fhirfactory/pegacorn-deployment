@@ -24,7 +24,7 @@ package net.fhirfactory.pegacorn.deployment.topology.manager.cache;
 import net.fhirfactory.pegacorn.core.constants.systemwide.DeploymentSystemIdentificationInterface;
 import net.fhirfactory.pegacorn.core.model.component.SoftwareComponent;
 import net.fhirfactory.pegacorn.core.model.componentid.ComponentIdType;
-import net.fhirfactory.pegacorn.core.model.componentid.ComponentTypeTypeEnum;
+import net.fhirfactory.pegacorn.core.model.componentid.PegacornSystemComponentTypeTypeEnum;
 import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeFDN;
 import net.fhirfactory.pegacorn.core.model.generalid.FDNToken;
 import net.fhirfactory.pegacorn.core.model.topology.mode.NetworkSecurityZoneEnum;
@@ -84,12 +84,12 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
 
     @Override
     public String getSystemName() {
-        return (getDeploymentSolution().getComponentFDN().extractRDNForNodeType(ComponentTypeTypeEnum.SOLUTION).getNodeName());
+        return (getDeploymentSolution().getComponentFDN().extractRDNForNodeType(PegacornSystemComponentTypeTypeEnum.SOLUTION).getNodeName());
     }
 
     @Override
     public String getSystemVersion() {
-        return (getDeploymentSolution().getComponentFDN().extractRDNForNodeType(ComponentTypeTypeEnum.SOLUTION).getNodeVersion());
+        return (getDeploymentSolution().getComponentFDN().extractRDNForNodeType(PegacornSystemComponentTypeTypeEnum.SOLUTION).getNodeVersion());
     }
 
     public FDNToken getSystemIdentifier() {
@@ -259,7 +259,7 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
         return(stringsAreEqual);
     }
 
-    public List<SoftwareComponent> getSoftwareComponent(ComponentTypeTypeEnum nodeType, String nodeName, String nodeVersion){
+    public List<SoftwareComponent> getSoftwareComponent(PegacornSystemComponentTypeTypeEnum nodeType, String nodeName, String nodeVersion){
         LOG.debug(".nodeSearch(): Entry, nodeType->{}, nodeName->{}, nodeVersion->{}", nodeType, nodeName, nodeVersion);
         ArrayList<SoftwareComponent> nodeList = new ArrayList<>();
         Collection<SoftwareComponent> topologyNodes= null;
@@ -288,7 +288,7 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
         }
         for(SoftwareComponent currentNode: nodeCollection){
             boolean nameSame = currentNode.getComponentRDN().getNodeName().contentEquals(nodeName);
-            boolean isProcessingPlant = currentNode.getComponentType().equals(ComponentTypeTypeEnum.PROCESSING_PLANT);
+            boolean isProcessingPlant = currentNode.getComponentType().equals(PegacornSystemComponentTypeTypeEnum.PROCESSING_PLANT);
             if(nameSame && isProcessingPlant){
                 return(currentNode.getSecurityZone());
             }

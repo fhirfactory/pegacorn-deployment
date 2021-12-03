@@ -1,25 +1,19 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact;
 
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemProperties;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.datatypes.ParameterNameValuePairType;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.StandardClientPortSegment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 public class StandardInteractClientPortSegment extends StandardExternalFacingPort {
     private static Logger LOG = LoggerFactory.getLogger(StandardInteractClientPortSegment.class);
 
-    private String portParameters;
     private int defaultRetryCount;
     private int defaultRetryWait;
     private int defaultTimeout;
-
-    public String getPortParameters() {
-        return portParameters;
-    }
-
-    public void setPortParameters(String portParameters) {
-        this.portParameters = portParameters;
-    }
 
     public int getDefaultRetryCount() {
         return defaultRetryCount;
@@ -57,7 +51,7 @@ public class StandardInteractClientPortSegment extends StandardExternalFacingPor
                 ", connectedSystem=" + getConnectedSystem() +
                 ", startupDelay=" + getStartupDelay() +
                 ", name=" + getName() +
-                ", portParameters=" + portParameters +
+                ", portParameters=" + getPortParameters() +
                 ", defaultRetryCount=" + defaultRetryCount +
                 ", defaultRetryWait=" + defaultRetryWait +
                 ", defaultTimeout=" + defaultTimeout +

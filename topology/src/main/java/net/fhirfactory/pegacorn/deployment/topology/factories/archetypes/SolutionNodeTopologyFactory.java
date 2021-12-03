@@ -23,7 +23,7 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.factories.archetypes;
 
-import net.fhirfactory.pegacorn.core.model.componentid.ComponentTypeTypeEnum;
+import net.fhirfactory.pegacorn.core.model.componentid.PegacornSystemComponentTypeTypeEnum;
 import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeRDN;
 import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.interfaces.SolutionNodeFactoryInterface;
 import net.fhirfactory.pegacorn.core.model.topology.nodes.SolutionTopologyNode;
@@ -102,11 +102,11 @@ public abstract class SolutionNodeTopologyFactory implements SolutionNodeFactory
     public SolutionTopologyNode newSolutionNode(){
         getLogger().debug(".buildSolutionNode(): Entry");
         SolutionTopologyNode solution = new SolutionTopologyNode();
-        TopologyNodeRDN nodeRDN = new TopologyNodeRDN(ComponentTypeTypeEnum.SOLUTION, specifySystemName(), specifySystemVersion() );
+        TopologyNodeRDN nodeRDN = new TopologyNodeRDN(PegacornSystemComponentTypeTypeEnum.SOLUTION, specifySystemName(), specifySystemVersion() );
         solution.constructFDN(null, nodeRDN);
         solution.constructFunctionFDN(null,nodeRDN );
         solution.setComponentRDN(nodeRDN);
-        solution.setComponentType(ComponentTypeTypeEnum.SOLUTION);
+        solution.setComponentType(PegacornSystemComponentTypeTypeEnum.SOLUTION);
         getLogger().debug(".buildSolutionNode(): Exit, solution ->{}", solution);
         return(solution);
     }

@@ -19,48 +19,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments;
+package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc;
 
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.datatypes.VolumeMountType;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.StandardServerPortSegment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class VolumeMountSegment {
-    private List<VolumeMountType> mappedLocalStorage;
+public class JGroupsKubernetesPodPortSegment extends StandardServerPortSegment {
+    private static Logger LOG = LoggerFactory.getLogger(JGroupsKubernetesPodPortSegment.class);
 
-    //
-    // Constructor(s)
-    //
-
-    public VolumeMountSegment(){
-        this.mappedLocalStorage = new ArrayList<>();
+    @Override
+    protected Logger specifyLogger() {
+        return (LOG);
     }
-
-    //
-    // Business Methods
-    //
-
-    //
-    // Getters and Setters
-    //
-
-    public List<VolumeMountType> getMappedLocalStorage() {
-        return mappedLocalStorage;
-    }
-
-    public void setMappedLocalStorage(List<VolumeMountType> mappedLocalStorage) {
-        this.mappedLocalStorage = mappedLocalStorage;
-    }
-
-    //
-    // To String
-    //
 
     @Override
     public String toString() {
-        return "VolumeMountSegment{" +
-                "mappedLocalStorage=" + mappedLocalStorage +
+        return "JGroupsIPCPortSegment{" +
+                "portValue=" + getPortValue() +
+                ", portType=" + getPortType() +
+                ", server=" + isServer() +
+                ", encrypted=" + isEncrypted() +
+                ", supportedInterfaceProfiles=" + getSupportedInterfaceProfiles() +
+                ", hostDNSEntry=" + getHostDNSEntry() +
                 '}';
     }
 }

@@ -21,44 +21,15 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc;
 
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.StandardServerPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.StandardClusterServiceServerPortSegment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-
-public class JGroupsIPCServerPortSegment extends StandardServerPortSegment {
-    private static Logger LOG = LoggerFactory.getLogger(JGroupsIPCServerPortSegment.class);
-
-    public JGroupsIPCServerPortSegment(){
-        super();
-    }
+public class JGroupsInterZoneRepeaterServerPortSegment extends StandardClusterServiceServerPortSegment {
+    private static final Logger LOG = LoggerFactory.getLogger(JGroupsInterZoneRepeaterServerPortSegment.class);
 
     @Override
     protected Logger specifyLogger() {
         return (LOG);
-    }
-
-    private List<JGroupsInitialHostSegment> initialHosts;
-
-    public List<JGroupsInitialHostSegment> getInitialHosts() {
-        return initialHosts;
-    }
-
-    public void setInitialHosts(List<JGroupsInitialHostSegment> initialHosts) {
-        this.initialHosts = initialHosts;
-    }
-
-    @Override
-    public String toString() {
-        return "JGroupsIPCPortSegment{" +
-                "portValue=" + getPortValue() +
-                ", portType=" + getPortType() +
-                ", server=" + isServer() +
-                ", encrypted=" + isEncrypted() +
-                ", supportedInterfaceProfiles=" + getSupportedInterfaceProfiles() +
-                ", hostDNSEntry=" + getHostDNSEntry() +
-                ", initialHosts=" + initialHosts +
-                '}';
     }
 }

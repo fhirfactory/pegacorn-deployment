@@ -29,12 +29,13 @@ import net.fhirfactory.pegacorn.core.model.petasos.ipc.PegacornCommonInterfaceNa
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.HTTPServerAdapter;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.general.HTTPServerTopologyEndpoint;
 import net.fhirfactory.pegacorn.core.model.topology.nodes.*;
-import net.fhirfactory.pegacorn.core.model.componentid.ComponentTypeTypeEnum;
+import net.fhirfactory.pegacorn.core.model.componentid.PegacornSystemComponentTypeTypeEnum;
 import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeFDN;
 import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeFunctionFDN;
 import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeRDN;
 import net.fhirfactory.pegacorn.deployment.names.sites.SiteKeyNames;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes.BaseSubsystemPropertyFile;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.datatypes.ParameterNameValuePairType;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.standard.HTTPProcessingPlantServerPortSegment;
 import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.interfaces.SolutionNodeFactoryInterface;
 import net.fhirfactory.pegacorn.deployment.topology.manager.TopologyIM;
@@ -48,9 +49,14 @@ import org.slf4j.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFactoryInterface {
@@ -163,7 +169,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
 
 
     @Override
-    public TopologyNodeRDN createNodeRDN(String nodeName, String nodeVersion, ComponentTypeTypeEnum nodeType){
+    public TopologyNodeRDN createNodeRDN(String nodeName, String nodeVersion, PegacornSystemComponentTypeTypeEnum nodeType){
         getLogger().debug(".createNodeRDN: Entry, nodeName->{}, nodeVersion->{}, nodeType->{}", nodeName, nodeVersion, nodeType);
         TopologyNodeRDN newRDN = new TopologyNodeRDN(nodeType, nodeName, nodeVersion);
         getLogger().debug(".createNodeRDN: Exit, newRDN->{}", newRDN);
@@ -181,7 +187,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         getLogger().debug(".addSubsystemNode(): Entry, solution->{}", solution);
         SubsystemTopologyNode subsystem = new SubsystemTopologyNode();
         getLogger().trace(".addSubsystemNode(): Create the Subsystem RDN (createNodeRDN()) --> Start");
-        TopologyNodeRDN nodeRDN = createNodeRDN(getPropertyFile().getSubsystemInstant().getSubsystemName(), getPropertyFile().getSubsystemInstant().getSubsystemVersion(), ComponentTypeTypeEnum.SUBSYSTEM);
+        TopologyNodeRDN nodeRDN = createNodeRDN(getPropertyFile().getSubsystemInstant().getSubsystemName(), getPropertyFile().getSubsystemInstant().getSubsystemVersion(), PegacornSystemComponentTypeTypeEnum.SUBSYSTEM);
         getLogger().trace(".addSubsystemNode(): Create the Subsystem RDN (createNodeRDN()) --> Finish, nodeRDN->{}", nodeRDN);
         getLogger().trace(".addSubsystemNode(): Create the Subsystem FDN (constructFDN()) --> Start");
         subsystem.constructFDN(solution.getComponentFDN(), nodeRDN);
@@ -200,7 +206,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         subsystem.setContainingNodeFDN(solution.getComponentFDN());
         getLogger().trace(".addSubsystemNode(): Add the subsystem to the Solution subsystem list");
         solution.getSubsystemList().add(subsystem.getComponentFDN());
-        subsystem.setComponentType(ComponentTypeTypeEnum.SUBSYSTEM);
+        subsystem.setComponentType(PegacornSystemComponentTypeTypeEnum.SUBSYSTEM);
         getLogger().trace(".addSubsystemNode(): Add the subsystem to the Topology Cache");
         getTopologyIM().addTopologyNode(solution.getComponentFDN(), subsystem);
         getLogger().debug(".addSubsystemNode(): Exit");
@@ -218,7 +224,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         getLogger().debug(".addBusinessServiceNode(): Entry");
         BusinessServiceTopologyNode businessService = new BusinessServiceTopologyNode();
         getLogger().trace(".addBusinessServiceNode(): Create the Business Service RDN (createNodeRDN()) --> Start");
-        TopologyNodeRDN nodeRDN = createNodeRDN(getPropertyFile().getSubsystemInstant().getExternalisedServiceName(), getPropertyFile().getSubsystemInstant().getSubsystemVersion(), ComponentTypeTypeEnum.EXTERNALISED_SERVICE);
+        TopologyNodeRDN nodeRDN = createNodeRDN(getPropertyFile().getSubsystemInstant().getExternalisedServiceName(), getPropertyFile().getSubsystemInstant().getSubsystemVersion(), PegacornSystemComponentTypeTypeEnum.EXTERNALISED_SERVICE);
         getLogger().trace(".addBusinessServiceNode(): Create the Business Service RDN (createNodeRDN()) --> Finish, nodeRDN->{}", nodeRDN);
         getLogger().trace(".addBusinessServiceNode(): Create the Business Service FDN (constructFDN()) --> Start");
         businessService.constructFDN(subsystem.getComponentFDN(),nodeRDN);
@@ -227,7 +233,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         businessService.constructFunctionFDN(subsystem.getNodeFunctionFDN(),nodeRDN);
         getLogger().trace(".addBusinessServiceNode(): Create the Business Service FDN (constructFunctionFDN()) --> Finish, nodeFunctionFDN->{}", businessService.getNodeFunctionFDN());
         businessService.setComponentRDN(nodeRDN);
-        businessService.setComponentType(ComponentTypeTypeEnum.EXTERNALISED_SERVICE);
+        businessService.setComponentType(PegacornSystemComponentTypeTypeEnum.EXTERNALISED_SERVICE);
         businessService.setContainingNodeFDN(subsystem.getComponentFDN());
         subsystem.getBusinessServices().add(businessService.getComponentFDN());
         getLogger().trace(".addBusinessServiceNode(): Add the BusinessService to the Topology Cache");
@@ -249,7 +255,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         TopologyNodeFDN businessServiceFDN = businessService.getComponentFDN();
         TopologyNodeFunctionFDN businessServiceFunctionFDN = businessService.getNodeFunctionFDN();
         getLogger().trace(".addDeploymentSiteNode(): Create the Deployment Site RDN (createNodeRDN()) --> Start");
-        TopologyNodeRDN nodeRDN = createNodeRDN(getPropertyFile().getDeploymentSites().getSite1Name(), getPropertyFile().getSubsystemInstant().getSubsystemVersion(), ComponentTypeTypeEnum.SITE);
+        TopologyNodeRDN nodeRDN = createNodeRDN(getPropertyFile().getDeploymentSites().getSite1Name(), getPropertyFile().getSubsystemInstant().getSubsystemVersion(), PegacornSystemComponentTypeTypeEnum.SITE);
         getLogger().trace(".addDeploymentSiteNode(): Create the Deployment Site RDN (createNodeRDN()) --> Finish, nodeRDN->{}", nodeRDN);
         getLogger().trace(".addDeploymentSiteNode(): Create the Deployment Site FDN (constructFDN()) --> Start, businessServiceFDN->{}, nodeRDN->{}", businessServiceFDN, nodeRDN);
         site.constructFDN(businessServiceFDN, nodeRDN);
@@ -258,7 +264,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         site.constructFunctionFDN(businessServiceFunctionFDN, nodeRDN);
         getLogger().trace(".addDeploymentSiteNode(): Create the Deployment Site FDN (constructFunctionFDN()) --> Finish, nodeFunctionFDN->{}", businessServiceFunctionFDN);
         site.setComponentRDN(nodeRDN);
-        site.setComponentType(ComponentTypeTypeEnum.SITE);
+        site.setComponentType(PegacornSystemComponentTypeTypeEnum.SITE);
         site.setInstanceCount(getPropertyFile().getDeploymentSites().getSiteCount());
         site.setContainingNodeFDN(businessService.getComponentFDN());
         businessService.getDeploymentSites().add(site.getComponentFDN());
@@ -277,11 +283,11 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
     public ClusterServiceTopologyNode addClusterServiceNode(DeploymentSiteTopologyNode site){
         getLogger().debug(".addClusterServiceNode(): Entry");
         ClusterServiceTopologyNode clusterService = new ClusterServiceTopologyNode();
-        TopologyNodeRDN nodeRDN = createNodeRDN(getPropertyFile().getSubsystemInstant().getClusterServiceName(), getPropertyFile().getSubsystemInstant().getProcessingPlantVersion(), ComponentTypeTypeEnum.CLUSTER_SERVICE);
+        TopologyNodeRDN nodeRDN = createNodeRDN(getPropertyFile().getSubsystemInstant().getClusterServiceName(), getPropertyFile().getSubsystemInstant().getProcessingPlantVersion(), PegacornSystemComponentTypeTypeEnum.CLUSTER_SERVICE);
         clusterService.constructFDN(site.getComponentFDN(),nodeRDN);
         clusterService.constructFunctionFDN(site.getNodeFunctionFDN(),nodeRDN);
         clusterService.setComponentRDN(nodeRDN);
-        clusterService.setComponentType(ComponentTypeTypeEnum.CLUSTER_SERVICE);
+        clusterService.setComponentType(PegacornSystemComponentTypeTypeEnum.CLUSTER_SERVICE);
         clusterService.setResilienceMode(getResilienceMode());
         clusterService.setConcurrencyMode(getConcurrenceMode());
         clusterService.setDefaultDNSName(getPropertyFile().getSubsystemInstant().getClusterServiceDNSName());
@@ -305,11 +311,11 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         PlatformTopologyNode node = new PlatformTopologyNode();
         String hostName = pegacornProperties.getProperty("MY_POD_NAME", "PlatformNode0");
 //      TODO Fix This --> lookup POD Name or DNS Name
-        TopologyNodeRDN nodeRDN = createNodeRDN(hostName, getPropertyFile().getSubsystemInstant().getProcessingPlantVersion(), ComponentTypeTypeEnum.PLATFORM);
+        TopologyNodeRDN nodeRDN = createNodeRDN(hostName, getPropertyFile().getSubsystemInstant().getProcessingPlantVersion(), PegacornSystemComponentTypeTypeEnum.PLATFORM);
         node.constructFDN(clusterService.getComponentFDN(), nodeRDN);
         node.setActualHostIP(getActualHostIP());
         node.setActualPodIP(getActualPodIP());
-        node.setComponentType(ComponentTypeTypeEnum.PLATFORM);
+        node.setComponentType(PegacornSystemComponentTypeTypeEnum.PLATFORM);
         node.constructFunctionFDN(clusterService.getNodeFunctionFDN(), nodeRDN);
         node.setComponentRDN(nodeRDN);
         node.setInstanceCount(getPropertyFile().getDeploymentMode().getProcessingPlantReplicationCount());
@@ -331,7 +337,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         ProcessingPlantSoftwareComponent processingPlant = new ProcessingPlantSoftwareComponent();
         String name = getPropertyFile().getSubsystemInstant().getProcessingPlantName();
         String version = getPropertyFile().getSubsystemInstant().getProcessingPlantVersion();
-        TopologyNodeRDN nodeRDN = createNodeRDN(name, version, ComponentTypeTypeEnum.PROCESSING_PLANT);
+        TopologyNodeRDN nodeRDN = createNodeRDN(name, version, PegacornSystemComponentTypeTypeEnum.PROCESSING_PLANT);
         processingPlant.setComponentRDN(nodeRDN);
         processingPlant.setActualHostIP(getActualHostIP());
         processingPlant.setActualPodIP(getActualPodIP());
@@ -339,19 +345,35 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         processingPlant.constructFunctionFDN(node.getNodeFunctionFDN(), nodeRDN);
         processingPlant.setResilienceMode(getResilienceMode());
         processingPlant.setConcurrencyMode(getConcurrenceMode());
-        processingPlant.setComponentType(ComponentTypeTypeEnum.PROCESSING_PLANT);
+        processingPlant.setComponentType(PegacornSystemComponentTypeTypeEnum.PROCESSING_PLANT);
         processingPlant.setNameSpace(getPropertyFile().getDeploymentZone().getNameSpace());
-        processingPlant.setInterZoneIPCStackConfigFile(getPropertyFile().getDeploymentMode().getInterNetworkIPCStackConfigFile());
-        processingPlant.setInterZoneOAMStackConfigFile(getPropertyFile().getDeploymentMode().getInterNetworkOAMStackConfigFile());
-        processingPlant.setIntraZoneIPCStackConfigFile(getPropertyFile().getDeploymentMode().getIntraNetworkIPCStackConfigFile());
-        processingPlant.setIntraZoneOAMStackConfigFile(getPropertyFile().getDeploymentMode().getIntraNetworkOAMStackConfigFile());
+        //
+        // Assign the Configuration File Names (InterZone)
+        processingPlant.setInterZoneIPCStackConfigFile(getPropertyFile().getDeploymentMode().getInterZoneIPCStackConfigFile());
+        processingPlant.setInterZoneTopologyStackConfigFile(getPropertyFile().getDeploymentMode().getInterZoneTopologyStackConfigFile());
+        processingPlant.setInterZoneSubscriptionsStackConfigFile(getPropertyFile().getDeploymentMode().getIntraZoneSubscriptionsStackConfigFile());
+        processingPlant.setMultiZoneInfinispanStackConfigFile(getPropertyFile().getDeploymentMode().getMultiZoneInfinispanStackConfigFile());
+        processingPlant.setInterZoneTaskingStackConfigFile(getPropertyFile().getDeploymentMode().getInterZoneTaskingStackConfigFile());
+        processingPlant.setInterZoneAuditStackConfigFile(getPropertyFile().getDeploymentMode().getInterZoneAuditStackConfigFile());
+        processingPlant.setInterZoneInterceptionStackConfigFile(getPropertyFile().getDeploymentMode().getInterZoneInterceptionStackConfigFile());
+        processingPlant.setInterZoneMetricsStackConfigFile(getPropertyFile().getDeploymentMode().getInterZoneMetricsStackConfigFile());
+        //
+        // Assign the Configuration File Names (IntraZone)
+        processingPlant.setIntraZoneIPCStackConfigFile(getPropertyFile().getDeploymentMode().getIntraZoneIPCStackConfigFile());
+        processingPlant.setIntraZoneTopologyStackConfigFile(getPropertyFile().getDeploymentMode().getIntraZoneTopologyStackConfigFile());
+        processingPlant.setIntraZoneSubscriptionsStackConfigFile(getPropertyFile().getDeploymentMode().getIntraZoneSubscriptionsStackConfigFile());
+        processingPlant.setIntraZoneTaskingStackConfigFile(getPropertyFile().getDeploymentMode().getIntraZoneTaskingStackConfigFile());
+        processingPlant.setIntraZoneAuditStackConfigFile(getPropertyFile().getDeploymentMode().getIntraZoneAuditStackConfigFile());
+        processingPlant.setIntraZoneInterceptionStackConfigFile(getPropertyFile().getDeploymentMode().getIntraZoneInterceptionStackConfigFile());
+        processingPlant.setIntraZoneMetricsStackConfigFile(getPropertyFile().getDeploymentMode().getIntraZoneMetricsStackConfigFile());
+
         processingPlant.setDefaultDNSName(getPropertyFile().getSubsystemInstant().getProcessingPlantDNSName());
         processingPlant.setInternalTrafficEncrypted(getPropertyFile().getDeploymentMode().isUsingInternalEncryption());
         processingPlant.setInstanceCount(getPropertyFile().getDeploymentMode().getProcessingPlantReplicationCount());
         processingPlant.setContainingNodeFDN(node.getComponentFDN());
         processingPlant.setSecurityZone(NetworkSecurityZoneEnum.fromDisplayName(getPropertyFile().getDeploymentZone().getSecurityZoneName()));
         node.getProcessingPlants().add(processingPlant.getComponentFDN());
-        populateOtherDeploymentProperties(processingPlant, getPropertyFile().getDeploymentMode().getOtherDeploymentFlags());
+        populateOtherDeploymentProperties(processingPlant, getPropertyFile().getDeploymentMode().getOtherDeploymentParameters());
         getLogger().trace(".addPegacornProcessingPlant(): Add the ProcessingPlant to the Topology Cache");
         getTopologyIM().addTopologyNode(node.getComponentFDN(), processingPlant);
         getLogger().debug(".addPegacornProcessingPlant(): Exit");
@@ -365,7 +387,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
      * @param processingPlant
      */
     @Override
-    public WorkshopSoftwareComponent createWorkshop(String name, String version, ProcessingPlantSoftwareComponent processingPlant, ComponentTypeTypeEnum nodeType){
+    public WorkshopSoftwareComponent createWorkshop(String name, String version, ProcessingPlantSoftwareComponent processingPlant, PegacornSystemComponentTypeTypeEnum nodeType){
         getLogger().debug(".addWorkshop(): Entry");
         WorkshopSoftwareComponent workshop = new WorkshopSoftwareComponent();
         TopologyNodeRDN nodeRDN = createNodeRDN(name, version,nodeType);
@@ -390,7 +412,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
      * @param workshop
      */
     @Override
-    public WorkUnitProcessorSoftwareComponent createWorkUnitProcessor(String name, String version, WorkshopSoftwareComponent workshop, ComponentTypeTypeEnum nodeType){
+    public WorkUnitProcessorSoftwareComponent createWorkUnitProcessor(String name, String version, WorkshopSoftwareComponent workshop, PegacornSystemComponentTypeTypeEnum nodeType){
         getLogger().debug(".addWorkUnitProcessor(): Entry, name->{}, version->{}", name, version);
         if(StringUtils.isEmpty(name) || StringUtils.isEmpty(version)){
             getLogger().error(".createWorkUnitProcessor(): name or version are emtpy!!!!");
@@ -418,9 +440,9 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
      * @param wup
      */
     @Override
-    public WorkUnitProcessorComponentTopologyNode createWorkUnitProcessorComponent(String name, ComponentTypeTypeEnum topologyType, WorkUnitProcessorSoftwareComponent wup){
+    public WorkUnitProcessorSubComponentSoftwareComponent createWorkUnitProcessorComponent(String name, PegacornSystemComponentTypeTypeEnum topologyType, WorkUnitProcessorSoftwareComponent wup){
         getLogger().debug(".addWorkUnitProcessorComponent(): Entry");
-        WorkUnitProcessorComponentTopologyNode wupComponent = new WorkUnitProcessorComponentTopologyNode();
+        WorkUnitProcessorSubComponentSoftwareComponent wupComponent = new WorkUnitProcessorSubComponentSoftwareComponent();
         TopologyNodeRDN nodeRDN = createNodeRDN(name, wup.getComponentRDN().getNodeVersion(), topologyType);
         wupComponent.constructFDN(wup.getComponentFDN(), nodeRDN);
         wupComponent.constructFunctionFDN(wup.getNodeFunctionFDN(), nodeRDN);
@@ -443,9 +465,9 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
      * @param wup
      */
     @Override
-    public WorkUnitProcessorInterchangeComponentTopologyNode createWorkUnitProcessingInterchangeComponent(String name, ComponentTypeTypeEnum topologyNodeType, WorkUnitProcessorSoftwareComponent wup){
+    public WorkUnitProcessorInterchangeSoftwareComponent createWorkUnitProcessingInterchangeComponent(String name, PegacornSystemComponentTypeTypeEnum topologyNodeType, WorkUnitProcessorSoftwareComponent wup){
         getLogger().debug(".addWorkUnitProcessingInterchangeComponent(): Entry");
-        WorkUnitProcessorInterchangeComponentTopologyNode wupInterchangeComponent = new WorkUnitProcessorInterchangeComponentTopologyNode();
+        WorkUnitProcessorInterchangeSoftwareComponent wupInterchangeComponent = new WorkUnitProcessorInterchangeSoftwareComponent();
         TopologyNodeRDN nodeRDN = createNodeRDN(name, wup.getComponentRDN().getNodeVersion(), topologyNodeType);
         wupInterchangeComponent.constructFDN(wup.getComponentFDN(), nodeRDN);
         wupInterchangeComponent.constructFunctionFDN(wup.getNodeFunctionFDN(), nodeRDN);
@@ -490,14 +512,14 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
             return;
         }
 
-        String name = interfaceNames.getEndpointServerName(interfaceNames.getFunctionNamePrometheus());
-        TopologyNodeRDN nodeRDN = createNodeRDN(name, processingPlant.getComponentRDN().getNodeVersion(), ComponentTypeTypeEnum.ENDPOINT);
+        String name = interfaceNames.getEndpointServerName(interfaceNames.getPrometheusEndpointName());
+        TopologyNodeRDN nodeRDN = createNodeRDN(name, processingPlant.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
         prometheusPort.setComponentRDN(nodeRDN);
         prometheusPort.setEndpointType(PetasosEndpointTopologyTypeEnum.INTERACT_HTTP_API_SERVER);
-        prometheusPort.setComponentType(ComponentTypeTypeEnum.ENDPOINT);
+        prometheusPort.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
         prometheusPort.constructFDN(processingPlant.getComponentFDN(), nodeRDN);
         prometheusPort.constructFunctionFDN(processingPlant.getNodeFunctionFDN(), nodeRDN );
-        prometheusPort.setEndpointConfigurationName(interfaceNames.getFunctionNamePrometheus());
+        prometheusPort.setEndpointConfigurationName(interfaceNames.getPrometheusEndpointName());
         prometheusPort.setContainingNodeFDN(processingPlant.getComponentFDN());
         prometheusPort.setServer(true);
 
@@ -526,13 +548,13 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
             getLogger().debug(".addJolokiaPort(): Exit, no port to add");
             return;
         }
-        String name = interfaceNames.getEndpointServerName(interfaceNames.getFunctionNameJolokia());
-        TopologyNodeRDN nodeRDN = createNodeRDN(name, processingPlant.getComponentRDN().getNodeVersion(), ComponentTypeTypeEnum.ENDPOINT);
+        String name = interfaceNames.getEndpointServerName(interfaceNames.getJolokiaEndpointName());
+        TopologyNodeRDN nodeRDN = createNodeRDN(name, processingPlant.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
         jolokiaPort.setComponentRDN(nodeRDN);
-        jolokiaPort.setEndpointConfigurationName(interfaceNames.getFunctionNameJolokia());
+        jolokiaPort.setEndpointConfigurationName(interfaceNames.getJolokiaEndpointName());
         jolokiaPort.constructFDN(processingPlant.getComponentFDN(), nodeRDN);
         jolokiaPort.setEndpointType(PetasosEndpointTopologyTypeEnum.INTERACT_HTTP_API_SERVER);
-        jolokiaPort.setComponentType(ComponentTypeTypeEnum.ENDPOINT);
+        jolokiaPort.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
         jolokiaPort.constructFunctionFDN(processingPlant.getNodeFunctionFDN(), nodeRDN );
         jolokiaPort.setServer(true);
         jolokiaPort.setContainingNodeFDN(processingPlant.getComponentFDN());
@@ -562,13 +584,13 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
             getLogger().debug(".addKubeLivelinessPort(): Exit, no port to add");
             return;
         }
-        String name = interfaceNames.getEndpointServerName(interfaceNames.getFunctionNameKubeLiveliness());
-        TopologyNodeRDN nodeRDN = createNodeRDN(name, processingPlant.getComponentRDN().getNodeVersion(), ComponentTypeTypeEnum.ENDPOINT);
+        String name = interfaceNames.getEndpointServerName(interfaceNames.getKubeLivelinessEndpointName());
+        TopologyNodeRDN nodeRDN = createNodeRDN(name, processingPlant.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
         kubeLivelinessPort.setComponentRDN(nodeRDN);
-        kubeLivelinessPort.setEndpointConfigurationName(interfaceNames.getFunctionNameKubeLiveliness());
+        kubeLivelinessPort.setEndpointConfigurationName(interfaceNames.getKubeLivelinessEndpointName());
         kubeLivelinessPort.constructFDN(processingPlant.getComponentFDN(), nodeRDN);
         kubeLivelinessPort.setEndpointType(PetasosEndpointTopologyTypeEnum.INTERACT_HTTP_API_SERVER);
-        kubeLivelinessPort.setComponentType(ComponentTypeTypeEnum.ENDPOINT);
+        kubeLivelinessPort.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
         kubeLivelinessPort.constructFunctionFDN(processingPlant.getNodeFunctionFDN(), nodeRDN );
         kubeLivelinessPort.setServer(true);
         kubeLivelinessPort.setContainingNodeFDN(processingPlant.getComponentFDN());
@@ -598,13 +620,13 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
             getLogger().debug(".addKubeReadinessPort(): Exit, no port to add");
             return;
         }
-        String name = interfaceNames.getEndpointServerName(interfaceNames.getFunctionNameKubeReadiness());
-        TopologyNodeRDN nodeRDN = createNodeRDN(name, processingPlant.getComponentRDN().getNodeVersion(), ComponentTypeTypeEnum.ENDPOINT);
+        String name = interfaceNames.getEndpointServerName(interfaceNames.getKubeReadinessEndpointName());
+        TopologyNodeRDN nodeRDN = createNodeRDN(name, processingPlant.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
         kubeReadinessPort.setComponentRDN(nodeRDN);
-        kubeReadinessPort.setEndpointConfigurationName(interfaceNames.getFunctionNameKubeReadiness());
+        kubeReadinessPort.setEndpointConfigurationName(interfaceNames.getKubeReadinessEndpointName());
         kubeReadinessPort.constructFDN(processingPlant.getComponentFDN(), nodeRDN);
         kubeReadinessPort.setEndpointType(PetasosEndpointTopologyTypeEnum.INTERACT_HTTP_API_SERVER);
-        kubeReadinessPort.setComponentType(ComponentTypeTypeEnum.ENDPOINT);
+        kubeReadinessPort.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
         kubeReadinessPort.constructFunctionFDN(processingPlant.getNodeFunctionFDN(), nodeRDN );
         kubeReadinessPort.setComponentRDN(nodeRDN);
         kubeReadinessPort.setContainingNodeFDN(processingPlant.getComponentFDN());
@@ -718,10 +740,12 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
             yamlMapper.configure(JsonParser.Feature.ALLOW_MISSING_VALUES, true);
             getLogger().warn(".readPropertyFile(): [Openning Configuration File] Start");
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-            InputStream propertyYAMLFile = classLoader.getResourceAsStream("./"+propertyFileName);
+//            InputStream propertyYAMLFile = classLoader.getResourceAsStream("./"+propertyFileName);
+            Path path = Paths.get(propertyFileName);
+            File file = path.toFile();
             getLogger().warn(".readPropertyFile(): [Openning Configuration File] End");
             getLogger().warn(".readPropertyFile(): [Importing Configuration File] Start");
-            this.propertyFile = (BaseSubsystemPropertyFile) yamlMapper.readValue(propertyYAMLFile, propertyFileClass);
+            this.propertyFile = (BaseSubsystemPropertyFile) yamlMapper.readValue(file, propertyFileClass);
             getLogger().warn(".readPropertyFile(): [Read YAML Configuration File] Finish");
             getLogger().debug(".loadPropertyFile(): Exit, file loaded, propertyFile->{}", this.propertyFile);
             return(this.propertyFile);
@@ -742,23 +766,14 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         this.processingPlantNode = processingPlantNode;
     }
 
-    public void populateOtherDeploymentProperties(ProcessingPlantSoftwareComponent node, String otherDeploymentPropertiesString){
+    public void populateOtherDeploymentProperties(ProcessingPlantSoftwareComponent node, List<ParameterNameValuePairType> otherDeploymentPropertiesMap){
         ConcurrentHashMap<String, String> propertiesMap = new ConcurrentHashMap<>();
-        if(StringUtils.isEmpty(otherDeploymentPropertiesString)){
+        if(otherDeploymentPropertiesMap.isEmpty()){
             node.setOtherConfigurationParameters(propertiesMap);
             return;
         }
-        String[] properties = otherDeploymentPropertiesString.split(",");
-        if(properties.length <= 0){
-            node.setOtherConfigurationParameters(propertiesMap);
-            return;
-        }
-        for(int counter = 0; counter < properties.length; counter += 1){
-            String currentProperty = properties[counter];
-            String[] currentPropertyPair = currentProperty.split("=");
-            if(currentPropertyPair.length == 2){
-                propertiesMap.put(currentPropertyPair[0], currentPropertyPair[1]);
-            }
+        for(ParameterNameValuePairType currentNameValuePair: otherDeploymentPropertiesMap){
+            propertiesMap.put(currentNameValuePair.getParameterName(), currentNameValuePair.getParameterValue());
         }
         node.setOtherConfigurationParameters(propertiesMap);
     }

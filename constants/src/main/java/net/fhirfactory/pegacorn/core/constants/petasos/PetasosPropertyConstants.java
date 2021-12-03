@@ -78,4 +78,6 @@ public final class PetasosPropertyConstants {
     public final static String TASK_DISTRIBUTION_QUEUE="seda:task_distribution_queue";
     public final static String TASK_OUTCOME_COLLECTION_QUEUE="seda:task_outcome_collection_queue";
 
+    public final static String AUDIT_LEVEL_PARAMETER_NAME="AUDIT_LEVEL";
+
 }

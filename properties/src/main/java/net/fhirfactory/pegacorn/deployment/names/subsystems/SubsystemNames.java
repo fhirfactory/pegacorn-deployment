@@ -21,7 +21,14 @@
  */
 package net.fhirfactory.pegacorn.deployment.names.subsystems;
 
-public abstract class SubsystemNames {
+import net.fhirfactory.pegacorn.core.interfaces.pubsub.PetasosSubscriptionReportingServiceProviderNameInterface;
+import net.fhirfactory.pegacorn.core.interfaces.tasks.PetasosTaskRepositoryServiceProviderNameInterface;
+import net.fhirfactory.pegacorn.core.interfaces.topology.PetasosTopologyReportingServiceProviderNameInterface;
+
+public abstract class SubsystemNames
+        implements PetasosTaskRepositoryServiceProviderNameInterface,
+        PetasosTopologyReportingServiceProviderNameInterface,
+        PetasosSubscriptionReportingServiceProviderNameInterface {
 
     abstract protected String specifyDeploymentShortName();
 
@@ -54,6 +61,16 @@ public abstract class SubsystemNames {
         return(itOpsIMName);
     }
 
+    @Override
+    public String getPetasosTopologyReportingServiceProviderName() {
+        return (getITOpsIMSystemName());
+    }
+
+    @Override
+    public String getPetasosSubscriptionReportingServiceProviderName() {
+        return (getITOpsIMSystemName());
+    }
+
     //
     // Ladon Digital Twins
     //
@@ -61,6 +78,20 @@ public abstract class SubsystemNames {
     public String getPatientDigitalTwinSystemName() {
         String patientDigitalTwin = specifyDeploymentShortName() + "-ladon-digitaltwin-patient";
         return(patientDigitalTwin);
+    }
+
+    //
+    // Ponos
+    //
+
+    public String getPanosManager(){
+        String ponosManagerName = specifyDeploymentShortName() + "-ponos-manager";
+        return(ponosManagerName);
+    }
+
+    @Override
+    public String getPetasosTaskRepositoryServiceProviderName() {
+        return (getPanosManager());
     }
 
 }

@@ -87,8 +87,8 @@ public class CommunicateIrisIMPropertyFile extends CommunicateSubsystemPropertyF
                 ", interZoneIPC=" + getInterZoneIPC() +
                 ", edgeAnswer=" + getEdgeAnswer() +
                 ", intraZoneIPC=" + getIntraZoneIPC() +
-                ", interZoneOAM=" + getInterZoneOAM() +
-                ", intraZoneOAM=" + getIntraZoneOAM() +
+                ", interZoneOAM=" + getInterZoneTopology() +
+                ", intraZoneOAM=" + getIntraZoneTopology() +
                 ", interactMatrixClientServicesClient=" + interactMatrixClientServicesClient +
                 ", interactMatrixApplicationServicesServer=" + interactMatrixApplicationServicesServer +
                 ", interactPegacornVoIPServicesServer=" + interactPegacornVoIPServicesServer +

@@ -23,7 +23,7 @@ package net.fhirfactory.pegacorn.deployment.topology.manager;
 
 import net.fhirfactory.pegacorn.core.model.component.SoftwareComponent;
 import net.fhirfactory.pegacorn.core.model.componentid.ComponentIdType;
-import net.fhirfactory.pegacorn.core.model.componentid.ComponentTypeTypeEnum;
+import net.fhirfactory.pegacorn.core.model.componentid.PegacornSystemComponentTypeTypeEnum;
 import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeFDN;
 import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeFDNToken;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.base.IPCTopologyEndpoint;
@@ -163,9 +163,9 @@ public class TopologyIM {
                 WorkUnitProcessorSoftwareComponent wup = (WorkUnitProcessorSoftwareComponent) newNodeElement;
                 if(!workshop.getWupSet().contains(wup.getComponentFDN())) {
                     workshop.getWupSet().add(wup.getComponentFDN());
-                    WorkUnitProcessorComponentTopologyNode wupCore = new WorkUnitProcessorComponentTopologyNode();
+                    WorkUnitProcessorSubComponentSoftwareComponent wupCore = new WorkUnitProcessorSubComponentSoftwareComponent();
                     wupCore.setContainingNodeFDN(workshop.getComponentFDN());
-                    wupCore.setComponentType(ComponentTypeTypeEnum.WUP_CORE);
+                    wupCore.setComponentType(PegacornSystemComponentTypeTypeEnum.WUP_CORE);
                     TopologyNodeFDN newFDN = new TopologyNodeFDN(wup.getComponentFDN());
                     newFDN.appendTopologyNodeRDN(wup.getComponentRDN());
                     wupCore.setComponentFDN(newFDN);
@@ -177,7 +177,7 @@ public class TopologyIM {
             case WUP_INTERCHANGE_ROUTER:
             case WUP_INTERCHANGE_PAYLOAD_TRANSFORMER:{
                 WorkUnitProcessorSoftwareComponent wup = (WorkUnitProcessorSoftwareComponent) parentNodeElement;
-                WorkUnitProcessorInterchangeComponentTopologyNode wupInterchangeComponent = (WorkUnitProcessorInterchangeComponentTopologyNode) newNodeElement;
+                WorkUnitProcessorInterchangeSoftwareComponent wupInterchangeComponent = (WorkUnitProcessorInterchangeSoftwareComponent) newNodeElement;
                 if(!wup.getWupInterchangeComponents().contains(wupInterchangeComponent.getComponentFDN())) {
                     wup.getWupInterchangeComponents().add(wupInterchangeComponent.getComponentFDN());
                 }
@@ -191,7 +191,7 @@ public class TopologyIM {
             case WUP_CONTAINER_EGRESS_GATEKEEPER:
             case WUP_CONTAINER_INGRES_GATEKEEPER:{
                 WorkUnitProcessorSoftwareComponent wup = (WorkUnitProcessorSoftwareComponent) parentNodeElement;
-                WorkUnitProcessorComponentTopologyNode wupComponent = (WorkUnitProcessorComponentTopologyNode) newNodeElement;
+                WorkUnitProcessorSubComponentSoftwareComponent wupComponent = (WorkUnitProcessorSubComponentSoftwareComponent) newNodeElement;
                 if(!wup.getWupInterchangeComponents().contains(wupComponent.getComponentFDN())) {
                     wup.getWupComponents().add(wupComponent.getComponentFDN());
                 }
@@ -292,7 +292,7 @@ public class TopologyIM {
         return(retrievedNode);
     }
 
-    public List<SoftwareComponent> nodeSearch(ComponentTypeTypeEnum nodeType, String nodeName, String nodeVersion ){
+    public List<SoftwareComponent> nodeSearch(PegacornSystemComponentTypeTypeEnum nodeType, String nodeName, String nodeVersion ){
         List<SoftwareComponent> nodeList = topologyDataManager.getSoftwareComponent(nodeType, nodeName, nodeVersion);
         return(nodeList);
     }

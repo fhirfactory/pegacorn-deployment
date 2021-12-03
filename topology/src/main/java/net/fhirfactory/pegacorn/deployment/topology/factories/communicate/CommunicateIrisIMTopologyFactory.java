@@ -21,7 +21,7 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.factories.communicate;
 
-import net.fhirfactory.pegacorn.core.model.componentid.ComponentTypeTypeEnum;
+import net.fhirfactory.pegacorn.core.model.componentid.PegacornSystemComponentTypeTypeEnum;
 import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeRDN;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.HTTPClientAdapter;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.HTTPServerAdapter;
@@ -58,7 +58,7 @@ public abstract class CommunicateIrisIMTopologyFactory extends PetasosEnabledSub
         getLogger().debug(".addMatrixServicesServerEndpoint(): Entry");
         InteractMatrixServerEndpoint matrixApplicationServicesServer = new InteractMatrixServerEndpoint();
         String name = communicateIrisComponentNames.getEndpointServerName(communicateIrisComponentNames.getFunctionNameIrisAppServices());
-        TopologyNodeRDN nodeRDN = createNodeRDN(name, getCommunicateIrisPropertyFile().getSubsystemInstant().getProcessingPlantVersion(), ComponentTypeTypeEnum.ENDPOINT);
+        TopologyNodeRDN nodeRDN = createNodeRDN(name, getCommunicateIrisPropertyFile().getSubsystemInstant().getProcessingPlantVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
         matrixApplicationServicesServer.setComponentRDN(nodeRDN);
         matrixApplicationServicesServer.constructFDN(endpointProvider.getComponentFDN(),nodeRDN);
         matrixApplicationServicesServer.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(),nodeRDN);
@@ -87,7 +87,7 @@ public abstract class CommunicateIrisIMTopologyFactory extends PetasosEnabledSub
             httpServer.getSupportedInterfaceDefinitions().add(interfaceDef);
             httpServer.getSupportedDeploymentModes().add(endpointProvider.getResilienceMode());
         }
-        matrixApplicationServicesServer.setComponentType(ComponentTypeTypeEnum.ENDPOINT);
+        matrixApplicationServicesServer.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
         matrixApplicationServicesServer.getAdapterList().add(httpServer);
         matrixApplicationServicesServer.setContainingNodeFDN(endpointProvider.getComponentFDN());
         endpointProvider.addEndpoint(matrixApplicationServicesServer.getComponentFDN());
@@ -100,7 +100,7 @@ public abstract class CommunicateIrisIMTopologyFactory extends PetasosEnabledSub
         getLogger().debug(".addApplicationServicesClientEndpoint(): Entry");
         InteractMatrixClientEndpoint matrixClientServicesAPIClient = new InteractMatrixClientEndpoint();
         String clientName = communicateIrisComponentNames.getEndpointClientName(communicateIrisComponentNames.getFunctionNameSynapseMatrixClientServices());
-        TopologyNodeRDN nodeRDN = createNodeRDN(clientName, getCommunicateIrisPropertyFile().getSubsystemInstant().getProcessingPlantVersion(), ComponentTypeTypeEnum.ENDPOINT);
+        TopologyNodeRDN nodeRDN = createNodeRDN(clientName, getCommunicateIrisPropertyFile().getSubsystemInstant().getProcessingPlantVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
         matrixClientServicesAPIClient.setComponentRDN(nodeRDN);
         matrixClientServicesAPIClient.constructFDN(endpointProvider.getComponentFDN(),nodeRDN);
         matrixClientServicesAPIClient.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(),nodeRDN);
@@ -123,7 +123,7 @@ public abstract class CommunicateIrisIMTopologyFactory extends PetasosEnabledSub
         getLogger().debug(".addSynapseAdminClientEndpoint(): Entry");
         InteractMatrixClientEndpoint matrixClientServicesAPIClient = new InteractMatrixClientEndpoint();
         String clientName = communicateIrisComponentNames.getEndpointClientName(communicateIrisComponentNames.getFunctionNameSynapseAdminServices());
-        TopologyNodeRDN nodeRDN = createNodeRDN(clientName, getCommunicateIrisPropertyFile().getSubsystemInstant().getProcessingPlantVersion(), ComponentTypeTypeEnum.ENDPOINT);
+        TopologyNodeRDN nodeRDN = createNodeRDN(clientName, getCommunicateIrisPropertyFile().getSubsystemInstant().getProcessingPlantVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
         matrixClientServicesAPIClient.setComponentRDN(nodeRDN);
         matrixClientServicesAPIClient.constructFDN(endpointProvider.getComponentFDN(),nodeRDN);
         matrixClientServicesAPIClient.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(),nodeRDN);

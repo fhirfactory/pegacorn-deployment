@@ -63,4 +63,17 @@ public class PegacornIPCCommonValues {
     public String getInterZoneIPCForwarderRouteEndpointName(){ return("direct:InterZoneIPCForwarder");}
 
     public String getIntraZoneIPCForwarderRouteEndpointName(){ return("direct:IntraZoneIPCForwarder");}
+
+    public String getJGroupsInterzoneRepeaterClientInterfaceType(){
+        return("JGroups-IZR-Client");
+    }
+
+    public String getJGroupsInterzoneRepeaterServerInterfaceType(){
+        return("JGroups-IZR-Server");
+    }
+
+    public String getJGroupsKubernetesServerInterfaceType(){
+        return("JGroups-Kube");
+    }
+
 }

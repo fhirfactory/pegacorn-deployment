@@ -24,7 +24,7 @@
 
 package net.fhirfactory.pegacorn.deployment.topology.factories.archetypes;
 
-import net.fhirfactory.pegacorn.core.model.componentid.ComponentTypeTypeEnum;
+import net.fhirfactory.pegacorn.core.model.componentid.PegacornSystemComponentTypeTypeEnum;
 import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeRDN;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.base.IPCAdapterDefinition;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.edge.petasos.PetasosEndpointTopologyTypeEnum;
@@ -63,14 +63,14 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
             return(null);
         }
         String name = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.INTERACT_MLLP_SERVER, endpointFunctionName);
-        TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getComponentRDN().getNodeVersion(), ComponentTypeTypeEnum.ENDPOINT);
+        TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
         mllpServerTopologyNode.setComponentRDN(nodeRDN);
         mllpServerTopologyNode.setEndpointConfigurationName(mllpServerPort.getName());
         mllpServerTopologyNode.setActualHostIP(getActualHostIP());
         mllpServerTopologyNode.setActualPodIP(getActualPodIP());
         mllpServerTopologyNode.constructFDN(endpointProvider.getComponentFDN(), nodeRDN);
         mllpServerTopologyNode.setEndpointType(PetasosEndpointTopologyTypeEnum.INTERACT_MLLP_SERVER);
-        mllpServerTopologyNode.setComponentType(ComponentTypeTypeEnum.ENDPOINT);
+        mllpServerTopologyNode.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
         mllpServerTopologyNode.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
         mllpServerTopologyNode.setComponentRDN(nodeRDN);
         mllpServerTopologyNode.setConnectedSystemName(mllpServerPort.getConnectedSystem().getSubsystemName());
@@ -114,14 +114,14 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
             return(null);
         }
         String name = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.INTERACT_MLLP_CLIENT, endpointFunctionName);
-        TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getComponentRDN().getNodeVersion(), ComponentTypeTypeEnum.ENDPOINT);
+        TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
         mllpClientTopologyNode.setComponentRDN(nodeRDN);
         mllpClientTopologyNode.setEndpointConfigurationName(mllpClientPort.getName());
         mllpClientTopologyNode.setActualPodIP(getActualPodIP());
         mllpClientTopologyNode.setActualHostIP(getActualHostIP());
         mllpClientTopologyNode.constructFDN(endpointProvider.getComponentFDN(), nodeRDN);
         mllpClientTopologyNode.setEndpointType(PetasosEndpointTopologyTypeEnum.INTERACT_MLLP_CLIENT);
-        mllpClientTopologyNode.setComponentType(ComponentTypeTypeEnum.ENDPOINT);
+        mllpClientTopologyNode.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
         mllpClientTopologyNode.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
         mllpClientTopologyNode.setComponentRDN(nodeRDN);
         mllpClientTopologyNode.setContainingNodeFDN(endpointProvider.getComponentFDN());

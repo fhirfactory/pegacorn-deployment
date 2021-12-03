@@ -21,8 +21,12 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments;
 
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.datatypes.ParameterNameValuePairType;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 public class DeploymentModeSegment {
@@ -31,11 +35,22 @@ public class DeploymentModeSegment {
     private boolean concurrent;
     private boolean usingInternalEncryption;
     private String deploymentConfig;
-    private String intraNetworkIPCStackConfigFile;
-    private String intraNetworkOAMStackConfigFile;
-    private String interNetworkIPCStackConfigFile;
-    private String interNetworkOAMStackConfigFile;
-    private String otherDeploymentFlags;
+    private String intraZoneIPCStackConfigFile;
+    private String intraZoneTopologyStackConfigFile;
+    private String intraZoneMetricsStackConfigFile;
+    private String intraZoneInterceptionStackConfigFile;
+    private String intraZoneSubscriptionsStackConfigFile;
+    private String intraZoneTaskingStackConfigFile;
+    private String intraZoneAuditStackConfigFile;
+    private String interZoneIPCStackConfigFile;
+    private String interZoneTopologyStackConfigFile;
+    private String interZoneMetricsStackConfigFile;
+    private String interZoneInterceptionStackConfigFile;
+    private String interZoneSubscriptionStackConfigFile;
+    private String interZoneTaskingStackConfigFile;
+    private String interZoneAuditStackConfigFile;
+    private String multiZoneInfinispanStackConfigFile;
+    private List<ParameterNameValuePairType> otherDeploymentParameters;
 
     public DeploymentModeSegment(){
         kubernetes = false;
@@ -43,11 +58,22 @@ public class DeploymentModeSegment {
         concurrent = false;
         usingInternalEncryption = false;
         deploymentConfig = null;
-        this.otherDeploymentFlags = null;
-        this.intraNetworkIPCStackConfigFile = null;
-        this.intraNetworkOAMStackConfigFile = null;
-        this.interNetworkIPCStackConfigFile = null;
-        this.interNetworkOAMStackConfigFile = null;
+        this.intraZoneIPCStackConfigFile = null;
+        this.intraZoneTopologyStackConfigFile = null;
+        this.intraZoneMetricsStackConfigFile = null;
+        this.intraZoneInterceptionStackConfigFile = null;
+        this.intraZoneSubscriptionsStackConfigFile = null;
+        this.intraZoneTaskingStackConfigFile = null;
+        this.intraZoneAuditStackConfigFile = null;
+        this.interZoneIPCStackConfigFile = null;
+        this.interZoneTopologyStackConfigFile = null;
+        this.interZoneMetricsStackConfigFile = null;
+        this.interZoneInterceptionStackConfigFile = null;
+        this.interZoneSubscriptionStackConfigFile = null;
+        this.interZoneTaskingStackConfigFile = null;
+        this.multiZoneInfinispanStackConfigFile = null;
+        this.interZoneAuditStackConfigFile = null;
+        this.otherDeploymentParameters = new ArrayList<>();
     }
 
     public void mergeOverrides(DeploymentModeSegment overrides){
@@ -60,61 +86,180 @@ public class DeploymentModeSegment {
         if(!StringUtils.isEmpty(overrides.getDeploymentConfig())){
             this.deploymentConfig = overrides.getDeploymentConfig();
         }
-        if(!StringUtils.isEmpty(overrides.getInterNetworkIPCStackConfigFile())){
-            this.setInterNetworkIPCStackConfigFile(overrides.getInterNetworkIPCStackConfigFile());
+        if(!StringUtils.isEmpty(overrides.getInterZoneIPCStackConfigFile())){
+            this.setInterZoneIPCStackConfigFile(overrides.getInterZoneIPCStackConfigFile());
         }
-        if(!StringUtils.isEmpty(overrides.getInterNetworkOAMStackConfigFile())){
-            this.setInterNetworkOAMStackConfigFile(overrides.getInterNetworkOAMStackConfigFile());
+        if(!StringUtils.isEmpty(overrides.getMultiZoneInfinispanStackConfigFile())){
+            this.setMultiZoneInfinispanStackConfigFile(overrides.getMultiZoneInfinispanStackConfigFile());
         }
-        if(!StringUtils.isEmpty(overrides.getIntraNetworkIPCStackConfigFile())){
-            this.setIntraNetworkIPCStackConfigFile(overrides.getIntraNetworkIPCStackConfigFile());
+        if(!StringUtils.isEmpty(overrides.getInterZoneInterceptionStackConfigFile())){
+            this.setInterZoneInterceptionStackConfigFile(overrides.getInterZoneInterceptionStackConfigFile());
         }
-        if(!StringUtils.isEmpty(overrides.getIntraNetworkOAMStackConfigFile())){
-            this.setIntraNetworkOAMStackConfigFile(overrides.getIntraNetworkOAMStackConfigFile());
+        if(!StringUtils.isEmpty(overrides.getInterZoneMetricsStackConfigFile())){
+            this.setInterZoneMetricsStackConfigFile(overrides.getInterZoneMetricsStackConfigFile());
         }
-        if(!StringUtils.isEmpty(overrides.getOtherDeploymentFlags())){
-            this.setOtherDeploymentFlags(overrides.getOtherDeploymentFlags());
+        if(!StringUtils.isEmpty(overrides.getInterZoneSubscriptionStackConfigFile())){
+            this.setInterZoneSubscriptionStackConfigFile(overrides.getInterZoneSubscriptionStackConfigFile());
+        }
+        if(!StringUtils.isEmpty(overrides.getInterZoneTaskingStackConfigFile())){
+            this.setInterZoneTaskingStackConfigFile(overrides.getInterZoneTaskingStackConfigFile());
+        }
+        if(!StringUtils.isEmpty(overrides.getInterZoneTopologyStackConfigFile())){
+            this.setInterZoneTopologyStackConfigFile(overrides.getInterZoneTopologyStackConfigFile());
+        }
+        if(!StringUtils.isEmpty(overrides.getInterZoneAuditStackConfigFile())){
+            this.setInterZoneAuditStackConfigFile(overrides.getInterZoneAuditStackConfigFile());
+        }
+        if(!StringUtils.isEmpty(overrides.getIntraZoneIPCStackConfigFile())){
+            this.setIntraZoneIPCStackConfigFile(overrides.getIntraZoneIPCStackConfigFile());
+        }
+        if(!StringUtils.isEmpty(overrides.getIntraZoneInterceptionStackConfigFile())){
+            this.setIntraZoneInterceptionStackConfigFile(overrides.getIntraZoneInterceptionStackConfigFile());
+        }
+        if(!StringUtils.isEmpty(overrides.getIntraZoneMetricsStackConfigFile())){
+            this.setIntraZoneMetricsStackConfigFile(overrides.getIntraZoneMetricsStackConfigFile());
+        }
+        if(!StringUtils.isEmpty(overrides.getIntraZoneSubscriptionsStackConfigFile())){
+            this.setIntraZoneSubscriptionsStackConfigFile(overrides.getIntraZoneSubscriptionsStackConfigFile());
+        }
+        if(!StringUtils.isEmpty(overrides.getIntraZoneTaskingStackConfigFile())){
+            this.setIntraZoneTaskingStackConfigFile(overrides.getIntraZoneTaskingStackConfigFile());
+        }
+        if(!StringUtils.isEmpty(overrides.getIntraZoneAuditStackConfigFile())){
+            this.setIntraZoneAuditStackConfigFile(overrides.getIntraZoneAuditStackConfigFile());
         }
     }
 
-    public String getOtherDeploymentFlags() {
-        return otherDeploymentFlags;
+    //
+    // Getters and Setters
+    //
+
+    public List<ParameterNameValuePairType> getOtherDeploymentParameters() {
+        return otherDeploymentParameters;
     }
 
-    public void setOtherDeploymentFlags(String otherDeploymentFlags) {
-        this.otherDeploymentFlags = otherDeploymentFlags;
+    public void setOtherDeploymentParameters(List<ParameterNameValuePairType> otherDeploymentParameters) {
+        this.otherDeploymentParameters = otherDeploymentParameters;
     }
 
-    public String getIntraNetworkIPCStackConfigFile() {
-        return intraNetworkIPCStackConfigFile;
+    public String getIntraZoneAuditStackConfigFile() {
+        return intraZoneAuditStackConfigFile;
     }
 
-    public void setIntraNetworkIPCStackConfigFile(String intraNetworkIPCStackConfigFile) {
-        this.intraNetworkIPCStackConfigFile = intraNetworkIPCStackConfigFile;
+    public void setIntraZoneAuditStackConfigFile(String intraZoneAuditStackConfigFile) {
+        this.intraZoneAuditStackConfigFile = intraZoneAuditStackConfigFile;
     }
 
-    public String getIntraNetworkOAMStackConfigFile() {
-        return intraNetworkOAMStackConfigFile;
+    public String getInterZoneAuditStackConfigFile() {
+        return interZoneAuditStackConfigFile;
     }
 
-    public void setIntraNetworkOAMStackConfigFile(String intraNetworkOAMStackConfigFile) {
-        this.intraNetworkOAMStackConfigFile = intraNetworkOAMStackConfigFile;
+    public void setInterZoneAuditStackConfigFile(String interZoneAuditStackConfigFile) {
+        this.interZoneAuditStackConfigFile = interZoneAuditStackConfigFile;
     }
 
-    public String getInterNetworkIPCStackConfigFile() {
-        return interNetworkIPCStackConfigFile;
+    public String getIntraZoneIPCStackConfigFile() {
+        return intraZoneIPCStackConfigFile;
     }
 
-    public void setInterNetworkIPCStackConfigFile(String interNetworkIPCStackConfigFile) {
-        this.interNetworkIPCStackConfigFile = interNetworkIPCStackConfigFile;
+    public void setIntraZoneIPCStackConfigFile(String intraZoneIPCStackConfigFile) {
+        this.intraZoneIPCStackConfigFile = intraZoneIPCStackConfigFile;
     }
 
-    public String getInterNetworkOAMStackConfigFile() {
-        return interNetworkOAMStackConfigFile;
+    public String getIntraZoneTopologyStackConfigFile() {
+        return intraZoneTopologyStackConfigFile;
     }
 
-    public void setInterNetworkOAMStackConfigFile(String interNetworkOAMStackConfigFile) {
-        this.interNetworkOAMStackConfigFile = interNetworkOAMStackConfigFile;
+    public void setIntraZoneTopologyStackConfigFile(String intraZoneTopologyStackConfigFile) {
+        this.intraZoneTopologyStackConfigFile = intraZoneTopologyStackConfigFile;
+    }
+
+    public String getIntraZoneMetricsStackConfigFile() {
+        return intraZoneMetricsStackConfigFile;
+    }
+
+    public void setIntraZoneMetricsStackConfigFile(String intraZoneMetricsStackConfigFile) {
+        this.intraZoneMetricsStackConfigFile = intraZoneMetricsStackConfigFile;
+    }
+
+    public String getIntraZoneInterceptionStackConfigFile() {
+        return intraZoneInterceptionStackConfigFile;
+    }
+
+    public void setIntraZoneInterceptionStackConfigFile(String intraZoneInterceptionStackConfigFile) {
+        this.intraZoneInterceptionStackConfigFile = intraZoneInterceptionStackConfigFile;
+    }
+
+    public String getIntraZoneSubscriptionsStackConfigFile() {
+        return intraZoneSubscriptionsStackConfigFile;
+    }
+
+    public void setIntraZoneSubscriptionsStackConfigFile(String intraZoneSubscriptionsStackConfigFile) {
+        this.intraZoneSubscriptionsStackConfigFile = intraZoneSubscriptionsStackConfigFile;
+    }
+
+    public String getIntraZoneTaskingStackConfigFile() {
+        return intraZoneTaskingStackConfigFile;
+    }
+
+    public void setIntraZoneTaskingStackConfigFile(String intraZoneTaskingStackConfigFile) {
+        this.intraZoneTaskingStackConfigFile = intraZoneTaskingStackConfigFile;
+    }
+
+    public String getInterZoneIPCStackConfigFile() {
+        return interZoneIPCStackConfigFile;
+    }
+
+    public void setInterZoneIPCStackConfigFile(String interZoneIPCStackConfigFile) {
+        this.interZoneIPCStackConfigFile = interZoneIPCStackConfigFile;
+    }
+
+    public String getInterZoneTopologyStackConfigFile() {
+        return interZoneTopologyStackConfigFile;
+    }
+
+    public void setInterZoneTopologyStackConfigFile(String interZoneTopologyStackConfigFile) {
+        this.interZoneTopologyStackConfigFile = interZoneTopologyStackConfigFile;
+    }
+
+    public String getInterZoneMetricsStackConfigFile() {
+        return interZoneMetricsStackConfigFile;
+    }
+
+    public void setInterZoneMetricsStackConfigFile(String interZoneMetricsStackConfigFile) {
+        this.interZoneMetricsStackConfigFile = interZoneMetricsStackConfigFile;
+    }
+
+    public String getInterZoneInterceptionStackConfigFile() {
+        return interZoneInterceptionStackConfigFile;
+    }
+
+    public void setInterZoneInterceptionStackConfigFile(String interZoneInterceptionStackConfigFile) {
+        this.interZoneInterceptionStackConfigFile = interZoneInterceptionStackConfigFile;
+    }
+
+    public String getInterZoneSubscriptionStackConfigFile() {
+        return interZoneSubscriptionStackConfigFile;
+    }
+
+    public void setInterZoneSubscriptionStackConfigFile(String interZoneSubscriptionStackConfigFile) {
+        this.interZoneSubscriptionStackConfigFile = interZoneSubscriptionStackConfigFile;
+    }
+
+    public String getInterZoneTaskingStackConfigFile() {
+        return interZoneTaskingStackConfigFile;
+    }
+
+    public void setInterZoneTaskingStackConfigFile(String interZoneTaskingStackConfigFile) {
+        this.interZoneTaskingStackConfigFile = interZoneTaskingStackConfigFile;
+    }
+
+    public String getMultiZoneInfinispanStackConfigFile() {
+        return multiZoneInfinispanStackConfigFile;
+    }
+
+    public void setMultiZoneInfinispanStackConfigFile(String multiZoneInfinispanStackConfigFile) {
+        this.multiZoneInfinispanStackConfigFile = multiZoneInfinispanStackConfigFile;
     }
 
     public String getDeploymentConfig() {
@@ -157,18 +302,9 @@ public class DeploymentModeSegment {
         this.usingInternalEncryption = usingInternalEncryption;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof DeploymentModeSegment)) return false;
-        DeploymentModeSegment that = (DeploymentModeSegment) o;
-        return isKubernetes() == that.isKubernetes() && isConcurrent() == that.isConcurrent() && isUsingInternalEncryption() == that.isUsingInternalEncryption() && Objects.equals(getProcessingPlantReplicationCount(), that.getProcessingPlantReplicationCount()) && Objects.equals(getDeploymentConfig(), that.getDeploymentConfig()) && Objects.equals(getIntraNetworkIPCStackConfigFile(), that.getIntraNetworkIPCStackConfigFile()) && Objects.equals(getIntraNetworkOAMStackConfigFile(), that.getIntraNetworkOAMStackConfigFile()) && Objects.equals(getInterNetworkIPCStackConfigFile(), that.getInterNetworkIPCStackConfigFile()) && Objects.equals(getInterNetworkOAMStackConfigFile(), that.getInterNetworkOAMStackConfigFile());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(isKubernetes(), getProcessingPlantReplicationCount(), isConcurrent(), isUsingInternalEncryption(), getDeploymentConfig(), getIntraNetworkIPCStackConfigFile(), getIntraNetworkOAMStackConfigFile(), getInterNetworkIPCStackConfigFile(), getInterNetworkOAMStackConfigFile());
-    }
+    //
+    // To String
+    //
 
     @Override
     public String toString() {
@@ -178,11 +314,21 @@ public class DeploymentModeSegment {
                 ", concurrent=" + concurrent +
                 ", usingInternalEncryption=" + usingInternalEncryption +
                 ", deploymentConfig=" + deploymentConfig +
-                ", otherDeploymentFlags=" + otherDeploymentFlags +
-                ", intraNetworkIPCStackConfigFile=" + intraNetworkIPCStackConfigFile +
-                ", intraNetworkOAMStackConfigFile=" + intraNetworkOAMStackConfigFile +
-                ", interNetworkIPCStackConfigFile=" + interNetworkIPCStackConfigFile +
-                ", interNetworkOAMStackConfigFile=" + interNetworkOAMStackConfigFile +
+                ", intraZoneIPCStackConfigFile=" + intraZoneIPCStackConfigFile +
+                ", intraZoneTopologyStackConfigFile=" + intraZoneTopologyStackConfigFile +
+                ", intraZoneMetricsStackConfigFile=" + intraZoneMetricsStackConfigFile +
+                ", intraZoneInterceptionStackConfigFile=" + intraZoneInterceptionStackConfigFile +
+                ", intraZoneSubscriptionsStackConfigFile=" + intraZoneSubscriptionsStackConfigFile +
+                ", intraZoneTaskingStackConfigFile=" + intraZoneTaskingStackConfigFile +
+                ", intraZoneAuditStackConfigFile=" + intraZoneAuditStackConfigFile +
+                ", interZoneIPCStackConfigFile=" + interZoneIPCStackConfigFile +
+                ", interZoneTopologyStackConfigFile=" + interZoneTopologyStackConfigFile +
+                ", interZoneMetricsStackConfigFile=" + interZoneMetricsStackConfigFile +
+                ", interZoneInterceptionStackConfigFile=" + interZoneInterceptionStackConfigFile +
+                ", interZoneSubscriptionStackConfigFile=" + interZoneSubscriptionStackConfigFile +
+                ", interZoneTaskingStackConfigFile=" + interZoneTaskingStackConfigFile +
+                ", multiZoneInfinispanStackConfigFile=" + multiZoneInfinispanStackConfigFile +
+                ", interZoneAuditStackConfigFile=" + interZoneAuditStackConfigFile +
                 '}';
     }
 }

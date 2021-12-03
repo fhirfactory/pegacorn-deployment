@@ -22,9 +22,11 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.datatypes.ParameterNameValuePairType;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class StandardServerPortSegment extends ConfigurableNodeSegment{
 
@@ -36,6 +38,7 @@ public abstract class StandardServerPortSegment extends ConfigurableNodeSegment{
     private ArrayList<InterfaceDefinitionSegment> supportedInterfaceProfiles;
     private int startupDelay;
     private String name;
+    private List<ParameterNameValuePairType> portParameters;
 
     //
     // Abstract Methods
@@ -54,6 +57,7 @@ public abstract class StandardServerPortSegment extends ConfigurableNodeSegment{
         this.encrypted = false;
         this.startupDelay = 0;
         this.name = null;
+        this.portParameters = new ArrayList<>();
     }
 
     //
@@ -63,6 +67,14 @@ public abstract class StandardServerPortSegment extends ConfigurableNodeSegment{
     @JsonIgnore
     protected Logger getLogger(){
         return(specifyLogger());
+    }
+
+    public List<ParameterNameValuePairType> getPortParameters() {
+        return portParameters;
+    }
+
+    public void setPortParameters(List<ParameterNameValuePairType> portParameters) {
+        this.portParameters = portParameters;
     }
 
     public int getPortValue() {
@@ -138,13 +150,13 @@ public abstract class StandardServerPortSegment extends ConfigurableNodeSegment{
         return "StandardServerPortSegment{" +
                 "otherConfigurationParameters=" + getOtherConfigurationParameters() +
                 ", portValue=" + portValue +
-                ", portType='" + portType + '\'' +
+                ", portType='" + portType +
                 ", server=" + server +
                 ", encrypted=" + encrypted +
-                ", hostDNSEntry='" + hostDNSEntry + '\'' +
+                ", hostDNSEntry='" + hostDNSEntry +
                 ", supportedInterfaceProfiles=" + supportedInterfaceProfiles +
                 ", startupDelay=" + startupDelay +
-                ", name='" + name + '\'' +
+                ", name=" + name +
                 '}';
     }
 }
