@@ -78,6 +78,25 @@ public final class PetasosPropertyConstants {
     public final static String TASK_DISTRIBUTION_QUEUE="seda:task_distribution_queue";
     public final static String TASK_OUTCOME_COLLECTION_QUEUE="seda:task_outcome_collection_queue";
 
+    //
+    // Processing Plant
+    //
+
     public final static String AUDIT_LEVEL_PARAMETER_NAME="AUDIT_LEVEL";
+    public final static String SEDA_QUEUE_SIZE_PARAMETER_NAME="SEDA_QUEUE_DEFAULT_SIZE";
+    public final static String SEDA_QUEUE_BLOCK_ON_FULL_PARAMETER_NAME="SEDA_QUEUE_BLOCK_ON_FULL";
+
+
+    //
+    // EndPoint Configurations
+    //
+
+    //
+    // MLLP
+
+    public final static String CAMEL_MLLP_RETRIES_PARAMETER_NAME="CAMEL_MLLP_RETRIES";
+    public final static String CAMEL_MLLP_RETRY_PERION_PARAMETER_NAME="CAMEL_MLLP_RETRY_PERIOD";
+    public final static String CAMEL_MLLP_CONNECTION_TIMEOUT_PARAMETER_NAME="CAMEL_MLLP_CONNECTION_TIMEOUT";
+    public final static String CAMEL_MLLP_KEEP_ALIVE_PARAMETER_NAME="CAMEL_MLLP_KEEPALIVE";
 
 }

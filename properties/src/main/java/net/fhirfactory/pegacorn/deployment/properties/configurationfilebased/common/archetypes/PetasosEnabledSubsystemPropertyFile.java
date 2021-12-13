@@ -27,21 +27,14 @@ import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.com
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.JGroupsKubernetesPodPortSegment;
 
 public class PetasosEnabledSubsystemPropertyFile extends ClusterServiceDeliverySubsystemPropertyFile{
-    private JGroupsInterZoneRepeaterClientPortSegment interZoneIPC;
-    private JGroupsKubernetesPodPortSegment intraZoneIPC;
-    private JGroupsInterZoneRepeaterClientPortSegment interZoneTopology;
-    private JGroupsKubernetesPodPortSegment intraZoneTopology;
-    private JGroupsInterZoneRepeaterClientPortSegment interZoneSubscriptions;
-    private JGroupsKubernetesPodPortSegment intraZoneSubscriptions;
-    private JGroupsInterZoneRepeaterClientPortSegment interZoneAudit;
-    private JGroupsKubernetesPodPortSegment intraZoneAudit;
-    private JGroupsInterZoneRepeaterClientPortSegment interZoneInterception;
-    private JGroupsKubernetesPodPortSegment intraZoneInterception;
-    private JGroupsInterZoneRepeaterClientPortSegment interZoneTasking;
-    private JGroupsKubernetesPodPortSegment intraZoneTasking;
-    private JGroupsInterZoneRepeaterClientPortSegment multiZoneInfinispan;
-    private JGroupsKubernetesPodPortSegment intraZoneMetrics;
-    private JGroupsInterZoneRepeaterClientPortSegment interZoneMetrics;
+    private JGroupsInterZoneRepeaterClientPortSegment petasosIPCMessagingEndpoint;
+    private JGroupsInterZoneRepeaterClientPortSegment petasosTopologyDiscoveryEndpoint;
+    private JGroupsInterZoneRepeaterClientPortSegment petasosSubscriptionsEndpoint;
+    private JGroupsInterZoneRepeaterClientPortSegment petasosAuditServicesEndpoint;
+    private JGroupsInterZoneRepeaterClientPortSegment petasosInterceptionEndpoint;
+    private JGroupsInterZoneRepeaterClientPortSegment petasosTaskServicesEndpoint;
+    private JGroupsInterZoneRepeaterClientPortSegment petasosMetricsEndpoint;
+    private JGroupsInterZoneRepeaterClientPortSegment multiuseInfinispanEndpoint;
     private HTTPIPCServerPortSegment edgeAnswer;
     private HTTPIPCClientPortSegment edgeAsk;
 
@@ -53,41 +46,26 @@ public class PetasosEnabledSubsystemPropertyFile extends ClusterServiceDeliveryS
         super();
         edgeAnswer = new HTTPIPCServerPortSegment();
         edgeAsk = new HTTPIPCClientPortSegment();
-        interZoneIPC = new JGroupsInterZoneRepeaterClientPortSegment();
-        intraZoneIPC = new JGroupsKubernetesPodPortSegment();
-        interZoneTopology = new JGroupsInterZoneRepeaterClientPortSegment();
-        intraZoneTopology = new JGroupsKubernetesPodPortSegment();
-        interZoneSubscriptions = new JGroupsInterZoneRepeaterClientPortSegment();
-        intraZoneSubscriptions = new JGroupsKubernetesPodPortSegment();
-        interZoneAudit = new JGroupsInterZoneRepeaterClientPortSegment();
-        intraZoneAudit= new JGroupsKubernetesPodPortSegment();
-        interZoneInterception = new JGroupsInterZoneRepeaterClientPortSegment();
-        intraZoneInterception = new JGroupsKubernetesPodPortSegment();
-        interZoneTasking = new JGroupsInterZoneRepeaterClientPortSegment();
-        intraZoneTasking = new JGroupsKubernetesPodPortSegment();
-        multiZoneInfinispan = new JGroupsInterZoneRepeaterClientPortSegment();
-        interZoneMetrics = new JGroupsInterZoneRepeaterClientPortSegment();
-        intraZoneMetrics = new JGroupsKubernetesPodPortSegment();
+        petasosIPCMessagingEndpoint = new JGroupsInterZoneRepeaterClientPortSegment();
+        petasosTopologyDiscoveryEndpoint = new JGroupsInterZoneRepeaterClientPortSegment();
+        petasosSubscriptionsEndpoint = new JGroupsInterZoneRepeaterClientPortSegment();
+        petasosAuditServicesEndpoint = new JGroupsInterZoneRepeaterClientPortSegment();
+        petasosInterceptionEndpoint = new JGroupsInterZoneRepeaterClientPortSegment();
+        petasosTaskServicesEndpoint = new JGroupsInterZoneRepeaterClientPortSegment();
+        multiuseInfinispanEndpoint = new JGroupsInterZoneRepeaterClientPortSegment();
+        petasosMetricsEndpoint = new JGroupsInterZoneRepeaterClientPortSegment();
     }
 
     //
     // Getters and Setters
     //
 
-    public JGroupsInterZoneRepeaterClientPortSegment getInterZoneSubscriptions() {
-        return interZoneSubscriptions;
+    public JGroupsInterZoneRepeaterClientPortSegment getPetasosSubscriptionsEndpoint() {
+        return petasosSubscriptionsEndpoint;
     }
 
-    public void setInterZoneSubscriptions(JGroupsInterZoneRepeaterClientPortSegment interZoneSubscriptions) {
-        this.interZoneSubscriptions = interZoneSubscriptions;
-    }
-
-    public JGroupsKubernetesPodPortSegment getIntraZoneSubscriptions() {
-        return intraZoneSubscriptions;
-    }
-
-    public void setIntraZoneSubscriptions(JGroupsKubernetesPodPortSegment intraZoneSubscriptions) {
-        this.intraZoneSubscriptions = intraZoneSubscriptions;
+    public void setPetasosSubscriptionsEndpoint(JGroupsInterZoneRepeaterClientPortSegment petasosSubscriptionsEndpoint) {
+        this.petasosSubscriptionsEndpoint = petasosSubscriptionsEndpoint;
     }
 
     public HTTPIPCClientPortSegment getEdgeAsk() {
@@ -98,84 +76,52 @@ public class PetasosEnabledSubsystemPropertyFile extends ClusterServiceDeliveryS
         this.edgeAsk = edgeAsk;
     }
 
-    public JGroupsInterZoneRepeaterClientPortSegment getInterZoneAudit() {
-        return interZoneAudit;
+    public JGroupsInterZoneRepeaterClientPortSegment getPetasosAuditServicesEndpoint() {
+        return petasosAuditServicesEndpoint;
     }
 
-    public void setInterZoneAudit(JGroupsInterZoneRepeaterClientPortSegment interZoneAudit) {
-        this.interZoneAudit = interZoneAudit;
+    public void setPetasosAuditServicesEndpoint(JGroupsInterZoneRepeaterClientPortSegment petasosAuditServicesEndpoint) {
+        this.petasosAuditServicesEndpoint = petasosAuditServicesEndpoint;
     }
 
-    public JGroupsKubernetesPodPortSegment getIntraZoneAudit() {
-        return intraZoneAudit;
+    public JGroupsInterZoneRepeaterClientPortSegment getPetasosInterceptionEndpoint() {
+        return petasosInterceptionEndpoint;
     }
 
-    public void setIntraZoneAudit(JGroupsKubernetesPodPortSegment intraZoneAudit) {
-        this.intraZoneAudit = intraZoneAudit;
+    public void setPetasosInterceptionEndpoint(JGroupsInterZoneRepeaterClientPortSegment petasosInterceptionEndpoint) {
+        this.petasosInterceptionEndpoint = petasosInterceptionEndpoint;
     }
 
-    public JGroupsInterZoneRepeaterClientPortSegment getInterZoneInterception() {
-        return interZoneInterception;
+    public JGroupsInterZoneRepeaterClientPortSegment getPetasosTaskServicesEndpoint() {
+        return petasosTaskServicesEndpoint;
     }
 
-    public void setInterZoneInterception(JGroupsInterZoneRepeaterClientPortSegment interZoneInterception) {
-        this.interZoneInterception = interZoneInterception;
+    public void setPetasosTaskServicesEndpoint(JGroupsInterZoneRepeaterClientPortSegment petasosTaskServicesEndpoint) {
+        this.petasosTaskServicesEndpoint = petasosTaskServicesEndpoint;
     }
 
-    public JGroupsKubernetesPodPortSegment getIntraZoneInterception() {
-        return intraZoneInterception;
+    public JGroupsInterZoneRepeaterClientPortSegment getMultiuseInfinispanEndpoint() {
+        return multiuseInfinispanEndpoint;
     }
 
-    public void setIntraZoneInterception(JGroupsKubernetesPodPortSegment intraZoneInterception) {
-        this.intraZoneInterception = intraZoneInterception;
+    public void setMultiuseInfinispanEndpoint(JGroupsInterZoneRepeaterClientPortSegment multiuseInfinispanEndpoint) {
+        this.multiuseInfinispanEndpoint = multiuseInfinispanEndpoint;
     }
 
-    public JGroupsInterZoneRepeaterClientPortSegment getInterZoneTasking() {
-        return interZoneTasking;
+    public JGroupsInterZoneRepeaterClientPortSegment getPetasosMetricsEndpoint() {
+        return petasosMetricsEndpoint;
     }
 
-    public void setInterZoneTasking(JGroupsInterZoneRepeaterClientPortSegment interZoneTasking) {
-        this.interZoneTasking = interZoneTasking;
+    public void setPetasosMetricsEndpoint(JGroupsInterZoneRepeaterClientPortSegment petasosMetricsEndpoint) {
+        this.petasosMetricsEndpoint = petasosMetricsEndpoint;
     }
 
-    public JGroupsKubernetesPodPortSegment getIntraZoneTasking() {
-        return intraZoneTasking;
+    public JGroupsInterZoneRepeaterClientPortSegment getPetasosIPCMessagingEndpoint() {
+        return petasosIPCMessagingEndpoint;
     }
 
-    public void setIntraZoneTasking(JGroupsKubernetesPodPortSegment intraZoneTasking) {
-        this.intraZoneTasking = intraZoneTasking;
-    }
-
-    public JGroupsInterZoneRepeaterClientPortSegment getMultiZoneInfinispan() {
-        return multiZoneInfinispan;
-    }
-
-    public void setMultiZoneInfinispan(JGroupsInterZoneRepeaterClientPortSegment multiZoneInfinispan) {
-        this.multiZoneInfinispan = multiZoneInfinispan;
-    }
-
-    public JGroupsInterZoneRepeaterClientPortSegment getInterZoneMetrics() {
-        return interZoneMetrics;
-    }
-
-    public void setInterZoneMetrics(JGroupsInterZoneRepeaterClientPortSegment interZoneMetrics) {
-        this.interZoneMetrics = interZoneMetrics;
-    }
-
-    public JGroupsKubernetesPodPortSegment getIntraZoneMetrics() {
-        return intraZoneMetrics;
-    }
-
-    public void setIntraZoneMetrics(JGroupsKubernetesPodPortSegment intraZoneMetrics) {
-        this.intraZoneMetrics = intraZoneMetrics;
-    }
-
-    public JGroupsInterZoneRepeaterClientPortSegment getInterZoneIPC() {
-        return interZoneIPC;
-    }
-
-    public void setInterZoneIPC(JGroupsInterZoneRepeaterClientPortSegment interZoneIPC) {
-        this.interZoneIPC = interZoneIPC;
+    public void setPetasosIPCMessagingEndpoint(JGroupsInterZoneRepeaterClientPortSegment petasosIPCMessagingEndpoint) {
+        this.petasosIPCMessagingEndpoint = petasosIPCMessagingEndpoint;
     }
 
     public HTTPIPCServerPortSegment getEdgeAnswer() {
@@ -186,28 +132,12 @@ public class PetasosEnabledSubsystemPropertyFile extends ClusterServiceDeliveryS
         this.edgeAnswer = edgeAnswer;
     }
 
-    public JGroupsKubernetesPodPortSegment getIntraZoneIPC() {
-        return intraZoneIPC;
+    public JGroupsInterZoneRepeaterClientPortSegment getPetasosTopologyDiscoveryEndpoint() {
+        return petasosTopologyDiscoveryEndpoint;
     }
 
-    public void setIntraZoneIPC(JGroupsKubernetesPodPortSegment intraZoneIPC) {
-        this.intraZoneIPC = intraZoneIPC;
-    }
-
-    public JGroupsInterZoneRepeaterClientPortSegment getInterZoneTopology() {
-        return interZoneTopology;
-    }
-
-    public void setInterZoneTopology(JGroupsInterZoneRepeaterClientPortSegment interZoneTopology) {
-        this.interZoneTopology = interZoneTopology;
-    }
-
-    public JGroupsKubernetesPodPortSegment getIntraZoneTopology() {
-        return intraZoneTopology;
-    }
-
-    public void setIntraZoneTopology(JGroupsKubernetesPodPortSegment intraZoneTopology) {
-        this.intraZoneTopology = intraZoneTopology;
+    public void setPetasosTopologyDiscoveryEndpoint(JGroupsInterZoneRepeaterClientPortSegment petasosTopologyDiscoveryEndpoint) {
+        this.petasosTopologyDiscoveryEndpoint = petasosTopologyDiscoveryEndpoint;
     }
 
     //
@@ -234,21 +164,14 @@ public class PetasosEnabledSubsystemPropertyFile extends ClusterServiceDeliveryS
                 ", debugProperties=" + getDebugProperties() +
                 ", hapiAPIKey=" + getHapiAPIKey() +
                 ", javaDeploymentParameters=" + getJavaDeploymentParameters() +
-                ", interZoneIPC=" + interZoneIPC +
-                ", intraZoneIPC=" + intraZoneIPC +
-                ", interZoneTopology=" + interZoneTopology +
-                ", intraZoneTopology=" + intraZoneTopology +
-                ", interZoneSubscriptions=" + interZoneSubscriptions +
-                ", intraZoneSubscriptions=" + intraZoneSubscriptions +
-                ", interZoneAudit=" + interZoneAudit +
-                ", intraZoneAudit=" + intraZoneAudit +
-                ", interZoneInterception=" + interZoneInterception +
-                ", intraZoneInterception=" + intraZoneInterception +
-                ", interZoneTasks=" + interZoneTasking +
-                ", intraZoneTasks=" + intraZoneTasking +
-                ", multiZoneInfinispan=" + multiZoneInfinispan +
-                ", interZoneMetrics=" + interZoneMetrics +
-                ", intraZoneMetrics=" + intraZoneMetrics +
+                ", petasosIPCMessagingEndpoint=" + petasosIPCMessagingEndpoint +
+                ", petasosTopologyDiscoveryEndpoint=" + petasosTopologyDiscoveryEndpoint +
+                ", petasosSubscriptionsEndpoint=" + petasosSubscriptionsEndpoint +
+                ", petasosAuditServicesEndpoint=" + petasosAuditServicesEndpoint +
+                ", petasosInterceptionEndpoint=" + petasosInterceptionEndpoint +
+                ", petasosTaskServicesEndpoint=" + petasosTaskServicesEndpoint +
+                ", multiuseInfinispanEndpoint=" + multiuseInfinispanEndpoint +
+                ", petasosMetricsEndpoint=" + petasosMetricsEndpoint +
                 ", edgeAnswer=" + edgeAnswer +
                 ", edgeAsk=" + edgeAsk +
                 '}';

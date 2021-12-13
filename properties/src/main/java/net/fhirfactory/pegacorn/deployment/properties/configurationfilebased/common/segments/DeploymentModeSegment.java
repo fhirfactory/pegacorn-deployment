@@ -25,9 +25,7 @@ import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.com
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 public class DeploymentModeSegment {
     private boolean kubernetes;
@@ -35,21 +33,14 @@ public class DeploymentModeSegment {
     private boolean concurrent;
     private boolean usingInternalEncryption;
     private String deploymentConfig;
-    private String intraZoneIPCStackConfigFile;
-    private String intraZoneTopologyStackConfigFile;
-    private String intraZoneMetricsStackConfigFile;
-    private String intraZoneInterceptionStackConfigFile;
-    private String intraZoneSubscriptionsStackConfigFile;
-    private String intraZoneTaskingStackConfigFile;
-    private String intraZoneAuditStackConfigFile;
-    private String interZoneIPCStackConfigFile;
-    private String interZoneTopologyStackConfigFile;
-    private String interZoneMetricsStackConfigFile;
-    private String interZoneInterceptionStackConfigFile;
-    private String interZoneSubscriptionStackConfigFile;
-    private String interZoneTaskingStackConfigFile;
-    private String interZoneAuditStackConfigFile;
-    private String multiZoneInfinispanStackConfigFile;
+    private String petasosIPCStackConfigFile;
+    private String petasosTopologyStackConfigFile;
+    private String petasosMetricsStackConfigFile;
+    private String petasosInterceptionStackConfigFile;
+    private String petasosSubscriptionStackConfigFile;
+    private String petasosTaskingStackConfigFile;
+    private String petasosAuditStackConfigFile;
+    private String multiuseInfinispanStackConfigFile;
     private List<ParameterNameValuePairType> otherDeploymentParameters;
 
     public DeploymentModeSegment(){
@@ -58,21 +49,14 @@ public class DeploymentModeSegment {
         concurrent = false;
         usingInternalEncryption = false;
         deploymentConfig = null;
-        this.intraZoneIPCStackConfigFile = null;
-        this.intraZoneTopologyStackConfigFile = null;
-        this.intraZoneMetricsStackConfigFile = null;
-        this.intraZoneInterceptionStackConfigFile = null;
-        this.intraZoneSubscriptionsStackConfigFile = null;
-        this.intraZoneTaskingStackConfigFile = null;
-        this.intraZoneAuditStackConfigFile = null;
-        this.interZoneIPCStackConfigFile = null;
-        this.interZoneTopologyStackConfigFile = null;
-        this.interZoneMetricsStackConfigFile = null;
-        this.interZoneInterceptionStackConfigFile = null;
-        this.interZoneSubscriptionStackConfigFile = null;
-        this.interZoneTaskingStackConfigFile = null;
-        this.multiZoneInfinispanStackConfigFile = null;
-        this.interZoneAuditStackConfigFile = null;
+        this.petasosIPCStackConfigFile = null;
+        this.petasosTopologyStackConfigFile = null;
+        this.petasosMetricsStackConfigFile = null;
+        this.petasosInterceptionStackConfigFile = null;
+        this.petasosSubscriptionStackConfigFile = null;
+        this.petasosTaskingStackConfigFile = null;
+        this.multiuseInfinispanStackConfigFile = null;
+        this.petasosAuditStackConfigFile = null;
         this.otherDeploymentParameters = new ArrayList<>();
     }
 
@@ -86,47 +70,29 @@ public class DeploymentModeSegment {
         if(!StringUtils.isEmpty(overrides.getDeploymentConfig())){
             this.deploymentConfig = overrides.getDeploymentConfig();
         }
-        if(!StringUtils.isEmpty(overrides.getInterZoneIPCStackConfigFile())){
-            this.setInterZoneIPCStackConfigFile(overrides.getInterZoneIPCStackConfigFile());
+        if(!StringUtils.isEmpty(overrides.getPetasosIPCStackConfigFile())){
+            this.setPetasosIPCStackConfigFile(overrides.getPetasosIPCStackConfigFile());
         }
-        if(!StringUtils.isEmpty(overrides.getMultiZoneInfinispanStackConfigFile())){
-            this.setMultiZoneInfinispanStackConfigFile(overrides.getMultiZoneInfinispanStackConfigFile());
+        if(!StringUtils.isEmpty(overrides.getMultiuseInfinispanStackConfigFile())){
+            this.setMultiuseInfinispanStackConfigFile(overrides.getMultiuseInfinispanStackConfigFile());
         }
-        if(!StringUtils.isEmpty(overrides.getInterZoneInterceptionStackConfigFile())){
-            this.setInterZoneInterceptionStackConfigFile(overrides.getInterZoneInterceptionStackConfigFile());
+        if(!StringUtils.isEmpty(overrides.getPetasosInterceptionStackConfigFile())){
+            this.setPetasosInterceptionStackConfigFile(overrides.getPetasosInterceptionStackConfigFile());
         }
-        if(!StringUtils.isEmpty(overrides.getInterZoneMetricsStackConfigFile())){
-            this.setInterZoneMetricsStackConfigFile(overrides.getInterZoneMetricsStackConfigFile());
+        if(!StringUtils.isEmpty(overrides.getPetasosMetricsStackConfigFile())){
+            this.setPetasosMetricsStackConfigFile(overrides.getPetasosMetricsStackConfigFile());
         }
-        if(!StringUtils.isEmpty(overrides.getInterZoneSubscriptionStackConfigFile())){
-            this.setInterZoneSubscriptionStackConfigFile(overrides.getInterZoneSubscriptionStackConfigFile());
+        if(!StringUtils.isEmpty(overrides.getPetasosSubscriptionStackConfigFile())){
+            this.setPetasosSubscriptionStackConfigFile(overrides.getPetasosSubscriptionStackConfigFile());
         }
-        if(!StringUtils.isEmpty(overrides.getInterZoneTaskingStackConfigFile())){
-            this.setInterZoneTaskingStackConfigFile(overrides.getInterZoneTaskingStackConfigFile());
+        if(!StringUtils.isEmpty(overrides.getPetasosTaskingStackConfigFile())){
+            this.setPetasosTaskingStackConfigFile(overrides.getPetasosTaskingStackConfigFile());
         }
-        if(!StringUtils.isEmpty(overrides.getInterZoneTopologyStackConfigFile())){
-            this.setInterZoneTopologyStackConfigFile(overrides.getInterZoneTopologyStackConfigFile());
+        if(!StringUtils.isEmpty(overrides.getPetasosTopologyStackConfigFile())){
+            this.setPetasosTopologyStackConfigFile(overrides.getPetasosTopologyStackConfigFile());
         }
-        if(!StringUtils.isEmpty(overrides.getInterZoneAuditStackConfigFile())){
-            this.setInterZoneAuditStackConfigFile(overrides.getInterZoneAuditStackConfigFile());
-        }
-        if(!StringUtils.isEmpty(overrides.getIntraZoneIPCStackConfigFile())){
-            this.setIntraZoneIPCStackConfigFile(overrides.getIntraZoneIPCStackConfigFile());
-        }
-        if(!StringUtils.isEmpty(overrides.getIntraZoneInterceptionStackConfigFile())){
-            this.setIntraZoneInterceptionStackConfigFile(overrides.getIntraZoneInterceptionStackConfigFile());
-        }
-        if(!StringUtils.isEmpty(overrides.getIntraZoneMetricsStackConfigFile())){
-            this.setIntraZoneMetricsStackConfigFile(overrides.getIntraZoneMetricsStackConfigFile());
-        }
-        if(!StringUtils.isEmpty(overrides.getIntraZoneSubscriptionsStackConfigFile())){
-            this.setIntraZoneSubscriptionsStackConfigFile(overrides.getIntraZoneSubscriptionsStackConfigFile());
-        }
-        if(!StringUtils.isEmpty(overrides.getIntraZoneTaskingStackConfigFile())){
-            this.setIntraZoneTaskingStackConfigFile(overrides.getIntraZoneTaskingStackConfigFile());
-        }
-        if(!StringUtils.isEmpty(overrides.getIntraZoneAuditStackConfigFile())){
-            this.setIntraZoneAuditStackConfigFile(overrides.getIntraZoneAuditStackConfigFile());
+        if(!StringUtils.isEmpty(overrides.getPetasosAuditStackConfigFile())){
+            this.setPetasosAuditStackConfigFile(overrides.getPetasosAuditStackConfigFile());
         }
     }
 
@@ -142,124 +108,69 @@ public class DeploymentModeSegment {
         this.otherDeploymentParameters = otherDeploymentParameters;
     }
 
-    public String getIntraZoneAuditStackConfigFile() {
-        return intraZoneAuditStackConfigFile;
+
+    public String getPetasosAuditStackConfigFile() {
+        return petasosAuditStackConfigFile;
     }
 
-    public void setIntraZoneAuditStackConfigFile(String intraZoneAuditStackConfigFile) {
-        this.intraZoneAuditStackConfigFile = intraZoneAuditStackConfigFile;
+    public void setPetasosAuditStackConfigFile(String petasosAuditStackConfigFile) {
+        this.petasosAuditStackConfigFile = petasosAuditStackConfigFile;
     }
 
-    public String getInterZoneAuditStackConfigFile() {
-        return interZoneAuditStackConfigFile;
+    public String getPetasosIPCStackConfigFile() {
+        return petasosIPCStackConfigFile;
     }
 
-    public void setInterZoneAuditStackConfigFile(String interZoneAuditStackConfigFile) {
-        this.interZoneAuditStackConfigFile = interZoneAuditStackConfigFile;
+    public void setPetasosIPCStackConfigFile(String petasosIPCStackConfigFile) {
+        this.petasosIPCStackConfigFile = petasosIPCStackConfigFile;
     }
 
-    public String getIntraZoneIPCStackConfigFile() {
-        return intraZoneIPCStackConfigFile;
+    public String getPetasosTopologyStackConfigFile() {
+        return petasosTopologyStackConfigFile;
     }
 
-    public void setIntraZoneIPCStackConfigFile(String intraZoneIPCStackConfigFile) {
-        this.intraZoneIPCStackConfigFile = intraZoneIPCStackConfigFile;
+    public void setPetasosTopologyStackConfigFile(String petasosTopologyStackConfigFile) {
+        this.petasosTopologyStackConfigFile = petasosTopologyStackConfigFile;
     }
 
-    public String getIntraZoneTopologyStackConfigFile() {
-        return intraZoneTopologyStackConfigFile;
+    public String getPetasosMetricsStackConfigFile() {
+        return petasosMetricsStackConfigFile;
     }
 
-    public void setIntraZoneTopologyStackConfigFile(String intraZoneTopologyStackConfigFile) {
-        this.intraZoneTopologyStackConfigFile = intraZoneTopologyStackConfigFile;
+    public void setPetasosMetricsStackConfigFile(String petasosMetricsStackConfigFile) {
+        this.petasosMetricsStackConfigFile = petasosMetricsStackConfigFile;
     }
 
-    public String getIntraZoneMetricsStackConfigFile() {
-        return intraZoneMetricsStackConfigFile;
+    public String getPetasosInterceptionStackConfigFile() {
+        return petasosInterceptionStackConfigFile;
     }
 
-    public void setIntraZoneMetricsStackConfigFile(String intraZoneMetricsStackConfigFile) {
-        this.intraZoneMetricsStackConfigFile = intraZoneMetricsStackConfigFile;
+    public void setPetasosInterceptionStackConfigFile(String petasosInterceptionStackConfigFile) {
+        this.petasosInterceptionStackConfigFile = petasosInterceptionStackConfigFile;
     }
 
-    public String getIntraZoneInterceptionStackConfigFile() {
-        return intraZoneInterceptionStackConfigFile;
+    public String getPetasosSubscriptionStackConfigFile() {
+        return petasosSubscriptionStackConfigFile;
     }
 
-    public void setIntraZoneInterceptionStackConfigFile(String intraZoneInterceptionStackConfigFile) {
-        this.intraZoneInterceptionStackConfigFile = intraZoneInterceptionStackConfigFile;
+    public void setPetasosSubscriptionStackConfigFile(String petasosSubscriptionStackConfigFile) {
+        this.petasosSubscriptionStackConfigFile = petasosSubscriptionStackConfigFile;
     }
 
-    public String getIntraZoneSubscriptionsStackConfigFile() {
-        return intraZoneSubscriptionsStackConfigFile;
+    public String getPetasosTaskingStackConfigFile() {
+        return petasosTaskingStackConfigFile;
     }
 
-    public void setIntraZoneSubscriptionsStackConfigFile(String intraZoneSubscriptionsStackConfigFile) {
-        this.intraZoneSubscriptionsStackConfigFile = intraZoneSubscriptionsStackConfigFile;
+    public void setPetasosTaskingStackConfigFile(String petasosTaskingStackConfigFile) {
+        this.petasosTaskingStackConfigFile = petasosTaskingStackConfigFile;
     }
 
-    public String getIntraZoneTaskingStackConfigFile() {
-        return intraZoneTaskingStackConfigFile;
+    public String getMultiuseInfinispanStackConfigFile() {
+        return multiuseInfinispanStackConfigFile;
     }
 
-    public void setIntraZoneTaskingStackConfigFile(String intraZoneTaskingStackConfigFile) {
-        this.intraZoneTaskingStackConfigFile = intraZoneTaskingStackConfigFile;
-    }
-
-    public String getInterZoneIPCStackConfigFile() {
-        return interZoneIPCStackConfigFile;
-    }
-
-    public void setInterZoneIPCStackConfigFile(String interZoneIPCStackConfigFile) {
-        this.interZoneIPCStackConfigFile = interZoneIPCStackConfigFile;
-    }
-
-    public String getInterZoneTopologyStackConfigFile() {
-        return interZoneTopologyStackConfigFile;
-    }
-
-    public void setInterZoneTopologyStackConfigFile(String interZoneTopologyStackConfigFile) {
-        this.interZoneTopologyStackConfigFile = interZoneTopologyStackConfigFile;
-    }
-
-    public String getInterZoneMetricsStackConfigFile() {
-        return interZoneMetricsStackConfigFile;
-    }
-
-    public void setInterZoneMetricsStackConfigFile(String interZoneMetricsStackConfigFile) {
-        this.interZoneMetricsStackConfigFile = interZoneMetricsStackConfigFile;
-    }
-
-    public String getInterZoneInterceptionStackConfigFile() {
-        return interZoneInterceptionStackConfigFile;
-    }
-
-    public void setInterZoneInterceptionStackConfigFile(String interZoneInterceptionStackConfigFile) {
-        this.interZoneInterceptionStackConfigFile = interZoneInterceptionStackConfigFile;
-    }
-
-    public String getInterZoneSubscriptionStackConfigFile() {
-        return interZoneSubscriptionStackConfigFile;
-    }
-
-    public void setInterZoneSubscriptionStackConfigFile(String interZoneSubscriptionStackConfigFile) {
-        this.interZoneSubscriptionStackConfigFile = interZoneSubscriptionStackConfigFile;
-    }
-
-    public String getInterZoneTaskingStackConfigFile() {
-        return interZoneTaskingStackConfigFile;
-    }
-
-    public void setInterZoneTaskingStackConfigFile(String interZoneTaskingStackConfigFile) {
-        this.interZoneTaskingStackConfigFile = interZoneTaskingStackConfigFile;
-    }
-
-    public String getMultiZoneInfinispanStackConfigFile() {
-        return multiZoneInfinispanStackConfigFile;
-    }
-
-    public void setMultiZoneInfinispanStackConfigFile(String multiZoneInfinispanStackConfigFile) {
-        this.multiZoneInfinispanStackConfigFile = multiZoneInfinispanStackConfigFile;
+    public void setMultiuseInfinispanStackConfigFile(String multiuseInfinispanStackConfigFile) {
+        this.multiuseInfinispanStackConfigFile = multiuseInfinispanStackConfigFile;
     }
 
     public String getDeploymentConfig() {
@@ -314,21 +225,14 @@ public class DeploymentModeSegment {
                 ", concurrent=" + concurrent +
                 ", usingInternalEncryption=" + usingInternalEncryption +
                 ", deploymentConfig=" + deploymentConfig +
-                ", intraZoneIPCStackConfigFile=" + intraZoneIPCStackConfigFile +
-                ", intraZoneTopologyStackConfigFile=" + intraZoneTopologyStackConfigFile +
-                ", intraZoneMetricsStackConfigFile=" + intraZoneMetricsStackConfigFile +
-                ", intraZoneInterceptionStackConfigFile=" + intraZoneInterceptionStackConfigFile +
-                ", intraZoneSubscriptionsStackConfigFile=" + intraZoneSubscriptionsStackConfigFile +
-                ", intraZoneTaskingStackConfigFile=" + intraZoneTaskingStackConfigFile +
-                ", intraZoneAuditStackConfigFile=" + intraZoneAuditStackConfigFile +
-                ", interZoneIPCStackConfigFile=" + interZoneIPCStackConfigFile +
-                ", interZoneTopologyStackConfigFile=" + interZoneTopologyStackConfigFile +
-                ", interZoneMetricsStackConfigFile=" + interZoneMetricsStackConfigFile +
-                ", interZoneInterceptionStackConfigFile=" + interZoneInterceptionStackConfigFile +
-                ", interZoneSubscriptionStackConfigFile=" + interZoneSubscriptionStackConfigFile +
-                ", interZoneTaskingStackConfigFile=" + interZoneTaskingStackConfigFile +
-                ", multiZoneInfinispanStackConfigFile=" + multiZoneInfinispanStackConfigFile +
-                ", interZoneAuditStackConfigFile=" + interZoneAuditStackConfigFile +
+                ", petasosIPCStackConfigFile=" + petasosIPCStackConfigFile +
+                ", petasosTopologyStackConfigFile=" + petasosTopologyStackConfigFile +
+                ", petasosMetricsStackConfigFile=" + petasosMetricsStackConfigFile +
+                ", petasosInterceptionStackConfigFile=" + petasosInterceptionStackConfigFile +
+                ", petasosSubscriptionStackConfigFile=" + petasosSubscriptionStackConfigFile +
+                ", petasosTaskingStackConfigFile=" + petasosTaskingStackConfigFile +
+                ", multiuseInfinispanStackConfigFile=" + multiuseInfinispanStackConfigFile +
+                ", petasosAuditStackConfigFile=" + petasosAuditStackConfigFile +
                 '}';
     }
 }

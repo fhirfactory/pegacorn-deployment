@@ -73,23 +73,16 @@ public abstract class LadonDatagridPropertyFile extends PetasosEnabledSubsystemP
                 ", debugProperties=" + getDebugProperties() +
                 ", hapiAPIKey=" + getHapiAPIKey() +
                 ", javaDeploymentParameters=" + getJavaDeploymentParameters() +
-                ", interZoneSubscriptions=" + getInterZoneSubscriptions() +
-                ", intraZoneSubscriptions=" + getIntraZoneSubscriptions() +
-                ", edgeAsk=" + getEdgeAsk() +
-                ", interZoneAudit=" + getInterZoneAudit() +
-                ", intraZoneAudit=" + getIntraZoneAudit() +
-                ", interZoneInterception=" + getInterZoneInterception() +
-                ", intraZoneInterception=" + getIntraZoneInterception() +
-                ", interZoneTasking=" + getInterZoneTasking() +
-                ", intraZoneTasking=" + getIntraZoneTasking() +
-                ", multiZoneInfinispan=" + getMultiZoneInfinispan() +
-                ", interZoneMetrics=" + getInterZoneMetrics() +
-                ", intraZoneMetrics=" + getIntraZoneMetrics() +
-                ", interZoneIPC=" + getInterZoneIPC() +
+                ", getPetasosSubscriptionsEndpoint=" + getPetasosSubscriptionsEndpoint() +
+                ", getPetasosAuditServicesEndpoint=" + getPetasosAuditServicesEndpoint() +
+                ", getPetasosInterceptionEndpoint=" + getPetasosInterceptionEndpoint() +
+                ", getPetasosTaskServicesEndpoint=" + getPetasosTaskServicesEndpoint() +
+                ", getMultiuseInfinispanEndpoint=" + getMultiuseInfinispanEndpoint() +
+                ", getPetasosMetricsEndpoint=" + getPetasosMetricsEndpoint() +
+                ", getPetasosIPCMessagingEndpoint=" + getPetasosIPCMessagingEndpoint() +
+                ", getPetasosTopologyDiscoveryEndpoint=" + getPetasosTopologyDiscoveryEndpoint() +
                 ", edgeAnswer=" + getEdgeAnswer() +
-                ", intraZoneIPC=" + getIntraZoneIPC() +
-                ", interZoneTopology=" + getInterZoneTopology() +
-                ", intraZoneTopology=" + getIntraZoneTopology() +
+                ", edgeAsk=" + getEdgeAsk() +
                 ", multizoneDatagrid=" + multizoneDatagrid +
                 '}';
     }

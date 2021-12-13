@@ -52,8 +52,6 @@ import javax.inject.Inject;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -347,25 +345,16 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         processingPlant.setConcurrencyMode(getConcurrenceMode());
         processingPlant.setComponentType(PegacornSystemComponentTypeTypeEnum.PROCESSING_PLANT);
         processingPlant.setNameSpace(getPropertyFile().getDeploymentZone().getNameSpace());
+
         //
         // Assign the Configuration File Names (InterZone)
-        processingPlant.setInterZoneIPCStackConfigFile(getPropertyFile().getDeploymentMode().getInterZoneIPCStackConfigFile());
-        processingPlant.setInterZoneTopologyStackConfigFile(getPropertyFile().getDeploymentMode().getInterZoneTopologyStackConfigFile());
-        processingPlant.setInterZoneSubscriptionsStackConfigFile(getPropertyFile().getDeploymentMode().getIntraZoneSubscriptionsStackConfigFile());
-        processingPlant.setMultiZoneInfinispanStackConfigFile(getPropertyFile().getDeploymentMode().getMultiZoneInfinispanStackConfigFile());
-        processingPlant.setInterZoneTaskingStackConfigFile(getPropertyFile().getDeploymentMode().getInterZoneTaskingStackConfigFile());
-        processingPlant.setInterZoneAuditStackConfigFile(getPropertyFile().getDeploymentMode().getInterZoneAuditStackConfigFile());
-        processingPlant.setInterZoneInterceptionStackConfigFile(getPropertyFile().getDeploymentMode().getInterZoneInterceptionStackConfigFile());
-        processingPlant.setInterZoneMetricsStackConfigFile(getPropertyFile().getDeploymentMode().getInterZoneMetricsStackConfigFile());
-        //
-        // Assign the Configuration File Names (IntraZone)
-        processingPlant.setIntraZoneIPCStackConfigFile(getPropertyFile().getDeploymentMode().getIntraZoneIPCStackConfigFile());
-        processingPlant.setIntraZoneTopologyStackConfigFile(getPropertyFile().getDeploymentMode().getIntraZoneTopologyStackConfigFile());
-        processingPlant.setIntraZoneSubscriptionsStackConfigFile(getPropertyFile().getDeploymentMode().getIntraZoneSubscriptionsStackConfigFile());
-        processingPlant.setIntraZoneTaskingStackConfigFile(getPropertyFile().getDeploymentMode().getIntraZoneTaskingStackConfigFile());
-        processingPlant.setIntraZoneAuditStackConfigFile(getPropertyFile().getDeploymentMode().getIntraZoneAuditStackConfigFile());
-        processingPlant.setIntraZoneInterceptionStackConfigFile(getPropertyFile().getDeploymentMode().getIntraZoneInterceptionStackConfigFile());
-        processingPlant.setIntraZoneMetricsStackConfigFile(getPropertyFile().getDeploymentMode().getIntraZoneMetricsStackConfigFile());
+        processingPlant.setPetasosIPCStackConfigFile(getPropertyFile().getDeploymentMode().getPetasosIPCStackConfigFile());
+        processingPlant.setPetasosTopologyStackConfigFile(getPropertyFile().getDeploymentMode().getPetasosTopologyStackConfigFile());
+        processingPlant.setMultiZoneInfinispanStackConfigFile(getPropertyFile().getDeploymentMode().getMultiuseInfinispanStackConfigFile());
+        processingPlant.setPetasosTaskingStackConfigFile(getPropertyFile().getDeploymentMode().getPetasosTaskingStackConfigFile());
+        processingPlant.setPetasosAuditStackConfigFile(getPropertyFile().getDeploymentMode().getPetasosAuditStackConfigFile());
+        processingPlant.setPetasosInterceptionStackConfigFile(getPropertyFile().getDeploymentMode().getPetasosInterceptionStackConfigFile());
+        processingPlant.setPetasosMetricsStackConfigFile(getPropertyFile().getDeploymentMode().getPetasosMetricsStackConfigFile());
 
         processingPlant.setDefaultDNSName(getPropertyFile().getSubsystemInstant().getProcessingPlantDNSName());
         processingPlant.setInternalTrafficEncrypted(getPropertyFile().getDeploymentMode().isUsingInternalEncryption());

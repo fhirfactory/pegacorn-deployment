@@ -24,6 +24,7 @@
 
 package net.fhirfactory.pegacorn.deployment.topology.factories.archetypes;
 
+import net.fhirfactory.pegacorn.core.model.component.valuesets.SoftwareComponentSystemRoleEnum;
 import net.fhirfactory.pegacorn.core.model.componentid.PegacornSystemComponentTypeTypeEnum;
 import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeRDN;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.base.IPCAdapterDefinition;
@@ -71,6 +72,7 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
         mllpServerTopologyNode.constructFDN(endpointProvider.getComponentFDN(), nodeRDN);
         mllpServerTopologyNode.setEndpointType(PetasosEndpointTopologyTypeEnum.INTERACT_MLLP_SERVER);
         mllpServerTopologyNode.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
+        mllpServerTopologyNode.setComponentSystemRole(SoftwareComponentSystemRoleEnum.COMPONENT_ROLE_INTERACT_INGRES);
         mllpServerTopologyNode.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
         mllpServerTopologyNode.setComponentRDN(nodeRDN);
         mllpServerTopologyNode.setConnectedSystemName(mllpServerPort.getConnectedSystem().getSubsystemName());
@@ -81,10 +83,14 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
         port.setHostName(mllpServerPort.getHostDNSEntry());
         port.setServiceDNSName(mllpServerPort.getServiceDNSEntry());
         port.setServicePortValue(mllpServerPort.getServicePortValue());
+        port.setTargetNameInstant(mllpServerPort.getConnectedSystem().getExternalisedServiceName());
+        port.setEncrypted(mllpServerPort.isEncrypted());
+        port.setEnablingTopologyEndpoint(mllpServerTopologyNode.getComponentID());
         for(InterfaceDefinitionSegment currentSegment: mllpServerPort.getSupportedInterfaceProfiles()) {
             IPCAdapterDefinition currentInterfaceDefinition = new IPCAdapterDefinition();
             currentInterfaceDefinition.setInterfaceFormalName(currentSegment.getInterfaceDefinitionName());
             currentInterfaceDefinition.setInterfaceFormalVersion(currentSegment.getInterfaceDefinitionVersion());
+            port.getSupportedInterfaceDefinitions().add(currentInterfaceDefinition);
         }
         port.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_KUBERNETES_MULTISITE_CLUSTERED);
         port.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_KUBERNETES_MULTISITE);
@@ -94,11 +100,11 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
         port.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_STANDALONE);
         port.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_CLUSTERED);
         port.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_MULTISITE_CLUSTERED);
-
+        mllpServerTopologyNode.setMLLPServerAdapter(port);
         endpointProvider.addEndpoint(mllpServerTopologyNode.getComponentFDN());
         getLogger().warn(".createMLLPServerEndpoint(): Add the {}/{} Port to the Topology Cache", mllpServerTopologyNode.getComponentRDN().getNodeName(), endpointFunctionName);
         getTopologyIM().addTopologyNode(endpointProvider.getComponentFDN(), mllpServerTopologyNode);
-        getLogger().debug(".createMLLPServerEndpoint(): Exit, endpoint added");
+        getLogger().info(".createMLLPServerEndpoint(): Exit, endpoint added->{}", mllpServerTopologyNode);
         return(mllpServerTopologyNode);
     }
 
@@ -122,6 +128,7 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
         mllpClientTopologyNode.constructFDN(endpointProvider.getComponentFDN(), nodeRDN);
         mllpClientTopologyNode.setEndpointType(PetasosEndpointTopologyTypeEnum.INTERACT_MLLP_CLIENT);
         mllpClientTopologyNode.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
+        mllpClientTopologyNode.setComponentSystemRole(SoftwareComponentSystemRoleEnum.COMPONENT_ROLE_INTERACT_EGRESS);
         mllpClientTopologyNode.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
         mllpClientTopologyNode.setComponentRDN(nodeRDN);
         mllpClientTopologyNode.setContainingNodeFDN(endpointProvider.getComponentFDN());

@@ -21,14 +21,19 @@
  */
 package net.fhirfactory.pegacorn.deployment.names.subsystems;
 
+import net.fhirfactory.pegacorn.core.interfaces.auditing.PetasosAuditEventServiceProviderNameInterface;
 import net.fhirfactory.pegacorn.core.interfaces.pubsub.PetasosSubscriptionReportingServiceProviderNameInterface;
 import net.fhirfactory.pegacorn.core.interfaces.tasks.PetasosTaskRepositoryServiceProviderNameInterface;
 import net.fhirfactory.pegacorn.core.interfaces.topology.PetasosTopologyReportingServiceProviderNameInterface;
+import org.thymeleaf.util.StringUtils;
+
+import java.util.Locale;
 
 public abstract class SubsystemNames
         implements PetasosTaskRepositoryServiceProviderNameInterface,
         PetasosTopologyReportingServiceProviderNameInterface,
-        PetasosSubscriptionReportingServiceProviderNameInterface {
+        PetasosSubscriptionReportingServiceProviderNameInterface,
+        PetasosAuditEventServiceProviderNameInterface {
 
     abstract protected String specifyDeploymentShortName();
 
@@ -47,9 +52,18 @@ public abstract class SubsystemNames
         return(hestiaDAMIM);
     }
 
+    //
+    // Hestia Audit Information Manager
+    //
+
     public String getHestiaAuditIM(){
-        String hestiaAuditIM = specifyDeploymentShortName() + "-hestia-audit-im";
+        String hestiaAuditIM = StringUtils.toLowerCase(specifyDeploymentShortName(), Locale.ROOT) + "-hestia-audit-im";
         return(hestiaAuditIM);
+    }
+
+    @Override
+    public String getPetasosAuditEventServiceProviderName() {
+        return (getHestiaAuditIM());
     }
 
     //
@@ -57,7 +71,7 @@ public abstract class SubsystemNames
     //
 
     public String getITOpsIMSystemName(){
-        String itOpsIMName = specifyDeploymentShortName() + "-itops-im";
+        String itOpsIMName = StringUtils.toLowerCase(specifyDeploymentShortName(), Locale.ROOT) + "-itops-im";
         return(itOpsIMName);
     }
 
@@ -85,7 +99,7 @@ public abstract class SubsystemNames
     //
 
     public String getPanosManager(){
-        String ponosManagerName = specifyDeploymentShortName() + "-ponos-manager";
+        String ponosManagerName = StringUtils.toLowerCase(specifyDeploymentShortName(), Locale.ROOT) + "-ponos-manager";
         return(ponosManagerName);
     }
 
