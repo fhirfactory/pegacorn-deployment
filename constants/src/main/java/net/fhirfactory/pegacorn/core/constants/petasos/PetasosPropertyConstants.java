@@ -75,8 +75,19 @@ public final class PetasosPropertyConstants {
 
     public final static String DEFAULT_TIMEZONE="Australia/Sydney";
 
+    //
+    // Task Distribution and Outcome Collection Queues
+    //
+
     public final static String TASK_DISTRIBUTION_QUEUE="seda:task_distribution_queue";
     public final static String TASK_OUTCOME_COLLECTION_QUEUE="seda:task_outcome_collection_queue";
+
+    //
+    // Inter-ProcessingPlant Task Forwarder Queue
+    //
+
+    public final static String TASK_IPC_FORWARDER_NAME = "PetasosTaskForwardWUP";
+    public final static String TASK_IPC_RECEIVER_NAME = "PetasosTaskReceiverWUP";
 
     //
     // Processing Plant

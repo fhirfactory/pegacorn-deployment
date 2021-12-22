@@ -22,7 +22,7 @@
 package net.fhirfactory.pegacorn.deployment.names.subsystems;
 
 import net.fhirfactory.pegacorn.core.interfaces.auditing.PetasosAuditEventServiceProviderNameInterface;
-import net.fhirfactory.pegacorn.core.interfaces.pubsub.PetasosSubscriptionReportingServiceProviderNameInterface;
+import net.fhirfactory.pegacorn.core.interfaces.pathway.PetasosSubscriptionReportingServiceProviderNameInterface;
 import net.fhirfactory.pegacorn.core.interfaces.tasks.PetasosTaskRepositoryServiceProviderNameInterface;
 import net.fhirfactory.pegacorn.core.interfaces.topology.PetasosTopologyReportingServiceProviderNameInterface;
 import org.thymeleaf.util.StringUtils;
@@ -98,14 +98,14 @@ public abstract class SubsystemNames
     // Ponos
     //
 
-    public String getPanosManager(){
+    public String getPonosManager(){
         String ponosManagerName = StringUtils.toLowerCase(specifyDeploymentShortName(), Locale.ROOT) + "-ponos-manager";
         return(ponosManagerName);
     }
 
     @Override
     public String getPetasosTaskRepositoryServiceProviderName() {
-        return (getPanosManager());
+        return (getPonosManager());
     }
 
 }
