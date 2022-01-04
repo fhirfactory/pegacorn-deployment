@@ -28,7 +28,7 @@ import net.fhirfactory.pegacorn.core.model.component.valuesets.SoftwareComponent
 import net.fhirfactory.pegacorn.core.model.componentid.PegacornSystemComponentTypeTypeEnum;
 import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeRDN;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.base.IPCAdapterDefinition;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.edge.petasos.PetasosEndpointTopologyTypeEnum;
+import net.fhirfactory.pegacorn.core.model.petasos.endpoint.valuesets.PetasosEndpointTopologyTypeEnum;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.interact.ClusteredInteractServerTopologyEndpointPort;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.interact.StandardInteractClientTopologyEndpointPort;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.interact.mllp.InteractMLLPClientEndpoint;
@@ -68,7 +68,6 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
         mllpServerTopologyNode.setComponentRDN(nodeRDN);
         mllpServerTopologyNode.setEndpointConfigurationName(mllpServerPort.getName());
         mllpServerTopologyNode.setActualHostIP(getActualHostIP());
-        mllpServerTopologyNode.setActualPodIP(getActualPodIP());
         mllpServerTopologyNode.constructFDN(endpointProvider.getComponentFDN(), nodeRDN);
         mllpServerTopologyNode.setEndpointType(PetasosEndpointTopologyTypeEnum.INTERACT_MLLP_SERVER);
         mllpServerTopologyNode.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
@@ -123,8 +122,6 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
         TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
         mllpClientTopologyNode.setComponentRDN(nodeRDN);
         mllpClientTopologyNode.setEndpointConfigurationName(mllpClientPort.getName());
-        mllpClientTopologyNode.setActualPodIP(getActualPodIP());
-        mllpClientTopologyNode.setActualHostIP(getActualHostIP());
         mllpClientTopologyNode.constructFDN(endpointProvider.getComponentFDN(), nodeRDN);
         mllpClientTopologyNode.setEndpointType(PetasosEndpointTopologyTypeEnum.INTERACT_MLLP_CLIENT);
         mllpClientTopologyNode.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);

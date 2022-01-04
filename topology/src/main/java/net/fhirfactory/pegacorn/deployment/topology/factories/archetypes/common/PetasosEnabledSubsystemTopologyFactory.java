@@ -4,15 +4,18 @@ import net.fhirfactory.pegacorn.core.constants.systemwide.PegacornReferencePrope
 import net.fhirfactory.pegacorn.core.model.component.valuesets.SoftwareComponentSystemRoleEnum;
 import net.fhirfactory.pegacorn.core.model.componentid.PegacornSystemComponentTypeTypeEnum;
 import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeRDN;
+import net.fhirfactory.pegacorn.core.model.petasos.endpoint.JGroupsIntegrationPointNamingUtilities;
+import net.fhirfactory.pegacorn.core.model.petasos.endpoint.valuesets.PetasosEndpointFunctionTypeEnum;
+import net.fhirfactory.pegacorn.core.model.petasos.participant.ProcessingPlantPetasosParticipantNameHolder;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.HTTPClientAdapter;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.HTTPServerAdapter;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.base.IPCAdapterDefinition;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.base.IPCServerTopologyEndpoint;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.edge.answer.StandardEdgeAnswerHTTPEndpoint;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.edge.answer.StandardEdgeIPCEndpoint;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.edge.ask.StandardEdgeAskHTTPEndpoint;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.edge.datatypes.JGroupsAdapter;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.edge.petasos.PetasosEndpointTopologyTypeEnum;
+import net.fhirfactory.pegacorn.core.model.topology.endpoints.edge.jgroups.JGroupsIntegrationPoint;
+import net.fhirfactory.pegacorn.core.model.topology.endpoints.edge.jgroups.datatypes.JGroupsAdapter;
+import net.fhirfactory.pegacorn.core.model.petasos.endpoint.valuesets.PetasosEndpointTopologyTypeEnum;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.interact.ExternalSystemIPCEndpoint;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.interact.StandardInteractClientTopologyEndpointPort;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.interact.http.InteractHTTPClientTopologyEndpoint;
@@ -37,10 +40,18 @@ import net.fhirfactory.pegacorn.util.PegacornProperties;
 
 import javax.inject.Inject;
 
+/**
+ * The PetasosEnabledSubsystemTopologyFactory adds the Ports/IntegrationPoints/Endpoints associated with delivering
+ * Petasos based services within a ClusterService and/or ProcessingPlant. Predominantly it adds the Edge service ports
+ * (EdgeAnswer, a FHIR Server; EdgeAsk, a FHIR Client; JGroupsIntegrationPoints, etc)
+ */
 public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTopologyFactoryBase{
 
     @Inject
     private PegacornReferenceProperties pegacornReferenceProperties;
+
+    @Inject
+    private JGroupsIntegrationPointNamingUtilities jgroupNamingUtilities;
 
     @Inject
     private PegacornProperties pegacornProperties;
@@ -68,7 +79,6 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
         edgeAnswerPort.setActualHostIP(getActualHostIP());
         edgeAnswerPort.setEndpointConfigurationName(getInterfaceNames().getEdgeAnswerEndpointName());
         edgeAnswerPort.setServer(true);
-        edgeAnswerPort.setActualPodIP(getActualPodIP());
         edgeAnswerPort.constructFDN(endpointProvider.getComponentFDN(), nodeRDN);
         edgeAnswerPort.setEndpointType(PetasosEndpointTopologyTypeEnum.EDGE_HTTP_API_SERVER);
         edgeAnswerPort.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
@@ -100,10 +110,8 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
         String name = PetasosEndpointTopologyTypeEnum.EDGE_HTTP_API_CLIENT.getDisplayName();
         TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
         edgeAskPort.setComponentRDN(nodeRDN);
-        edgeAskPort.setActualHostIP(getActualHostIP());
         edgeAskPort.setEndpointConfigurationName(getInterfaceNames().getEdgeAskEndpointName());
         edgeAskPort.setServer(false);
-        edgeAskPort.setActualPodIP(getActualPodIP());
         edgeAskPort.constructFDN(endpointProvider.getComponentFDN(), nodeRDN);
         edgeAskPort.setEndpointType(PetasosEndpointTopologyTypeEnum.EDGE_HTTP_API_CLIENT);
         edgeAskPort.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
@@ -141,72 +149,92 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
         getLogger().debug(".addEdgeAskPort(): Exit, endpoint added");
     }
 
+    /**
+     * This method adds ALL the JGroupsIntegrationPoints to the supplied endpointProvider. Note that, in most cases,
+     * the JGroupsIntegrationPoints DO NOT expose a kubernetes service, but rather interact with an interzone repeater
+     * as a client or via kube-ping based services at the POD level.
+     *
+     * @param endpointProvider The endpointProvider to which the JGroupsIntegrationPoints should be added (from a Topology
+     *                         management perspective). Typically a ProcessingPlant.
+     */
     protected void addAllJGroupsEndpoints(EndpointProviderInterface endpointProvider){
         PetasosEnabledSubsystemPropertyFile petasosEnabledSubsystemPropertyFile = (PetasosEnabledSubsystemPropertyFile)getPropertyFile();
         //
         // Petasos IPC Messaging Endpoint
         JGroupsInterZoneRepeaterClientPortSegment interZoneIPC = petasosEnabledSubsystemPropertyFile.getPetasosIPCMessagingEndpoint();
-        String interZoneIPCName = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_MESSAGING_SERVICE, getInterfaceNames().getPetasosIPCMessagingEndpointName());
-        addJGroupsInterZoneRepeaterClientEndpoint(endpointProvider, interZoneIPC, PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_MESSAGING_SERVICE, interZoneIPCName );
+        String interZoneIPCName = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_INTEGRATION_POINT, PetasosEndpointFunctionTypeEnum.PETASOS_MESSAGING_ENDPOINT.getDisplayName());
+        addInterZoneRepeaterJGroupsIntegrationPoint(endpointProvider, interZoneIPC, PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_INTEGRATION_POINT, PetasosEndpointFunctionTypeEnum.PETASOS_MESSAGING_ENDPOINT, interZoneIPCName );
         //
         // Petasos Topology Services Endpoint
         JGroupsInterZoneRepeaterClientPortSegment interZoneTopology = petasosEnabledSubsystemPropertyFile.getPetasosTopologyDiscoveryEndpoint();
-        String interZoneTopologyName = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_MESSAGING_SERVICE, getInterfaceNames().getPetasosTopologyServicesEndpointName());
-        addJGroupsInterZoneRepeaterClientEndpoint(endpointProvider, interZoneTopology, PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_MESSAGING_SERVICE, interZoneTopologyName );
+        String interZoneTopologyName = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_INTEGRATION_POINT, PetasosEndpointFunctionTypeEnum.PETASOS_TOPOLOGY_ENDPOINT.getDisplayName());
+        addInterZoneRepeaterJGroupsIntegrationPoint(endpointProvider, interZoneTopology, PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_INTEGRATION_POINT, PetasosEndpointFunctionTypeEnum.PETASOS_TOPOLOGY_ENDPOINT, interZoneTopologyName );
         //
         // Petasos Subscription Services Endpoint
         JGroupsInterZoneRepeaterClientPortSegment interZoneSubscriptions = petasosEnabledSubsystemPropertyFile.getPetasosSubscriptionsEndpoint();
-        String interZoneSubscriptionName = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_MESSAGING_SERVICE, getInterfaceNames().getPetasosSubscriptionsEndpointName());
-        addJGroupsInterZoneRepeaterClientEndpoint(endpointProvider, interZoneSubscriptions, PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_MESSAGING_SERVICE, interZoneSubscriptionName );
+        String interZoneSubscriptionName = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_INTEGRATION_POINT, PetasosEndpointFunctionTypeEnum.PETASOS_SUBSCRIPTIONS_ENDPOINT.getDisplayName());
+        addInterZoneRepeaterJGroupsIntegrationPoint(endpointProvider, interZoneSubscriptions, PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_INTEGRATION_POINT, PetasosEndpointFunctionTypeEnum.PETASOS_SUBSCRIPTIONS_ENDPOINT, interZoneSubscriptionName );
         //
         // Petasos Audit Services Endpoint
         JGroupsInterZoneRepeaterClientPortSegment interZoneAudit = petasosEnabledSubsystemPropertyFile.getPetasosAuditServicesEndpoint();
-        String interZoneAuditName = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_MESSAGING_SERVICE, getInterfaceNames().getPetasosAuditServicesEndpointName());
-        addJGroupsInterZoneRepeaterClientEndpoint(endpointProvider, interZoneAudit, PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_MESSAGING_SERVICE, interZoneAuditName );
+        String interZoneAuditName = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_INTEGRATION_POINT, PetasosEndpointFunctionTypeEnum.PETASOS_AUDIT_ENDPOINT.getDisplayName());
+        addInterZoneRepeaterJGroupsIntegrationPoint(endpointProvider, interZoneAudit, PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_INTEGRATION_POINT, PetasosEndpointFunctionTypeEnum.PETASOS_AUDIT_ENDPOINT, interZoneAuditName );
         //
         // Petasos Interception Services Endpoint
         JGroupsInterZoneRepeaterClientPortSegment interZoneInterception = petasosEnabledSubsystemPropertyFile.getPetasosInterceptionEndpoint();
-        String interZoneInterceptionName = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_MESSAGING_SERVICE, getInterfaceNames().getPetasosInterceptionEndpointName());
-        addJGroupsInterZoneRepeaterClientEndpoint(endpointProvider, interZoneInterception, PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_MESSAGING_SERVICE, interZoneInterceptionName );
+        String interZoneInterceptionName = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_INTEGRATION_POINT, PetasosEndpointFunctionTypeEnum.PETASOS_INTERCEPTION_ENDPOINT.getDisplayName());
+        addInterZoneRepeaterJGroupsIntegrationPoint(endpointProvider, interZoneInterception, PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_INTEGRATION_POINT, PetasosEndpointFunctionTypeEnum.PETASOS_INTERCEPTION_ENDPOINT, interZoneInterceptionName );
         //
         // Petasos Tasking Services Endpoint
         JGroupsInterZoneRepeaterClientPortSegment interZoneTasking = petasosEnabledSubsystemPropertyFile.getPetasosTaskServicesEndpoint();
-        String interZoneTaskingName = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_MESSAGING_SERVICE, getInterfaceNames().getPetasosTaskServicesEndpointName());
-        addJGroupsInterZoneRepeaterClientEndpoint(endpointProvider, interZoneTasking, PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_MESSAGING_SERVICE, interZoneTaskingName );
+        String interZoneTaskingName = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_INTEGRATION_POINT, PetasosEndpointFunctionTypeEnum.PETASOS_TASKING_ENDPOINT.getDisplayName());
+        addInterZoneRepeaterJGroupsIntegrationPoint(endpointProvider, interZoneTasking, PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_INTEGRATION_POINT, PetasosEndpointFunctionTypeEnum.PETASOS_TASKING_ENDPOINT, interZoneTaskingName );
         //
         // Petasos Metrics Services Endpoint
         JGroupsInterZoneRepeaterClientPortSegment interZoneMetrics = petasosEnabledSubsystemPropertyFile.getPetasosMetricsEndpoint();
-        String interZoneMetricsName = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_MESSAGING_SERVICE, getInterfaceNames().getPetasosMetricsEndpointName());
-        addJGroupsInterZoneRepeaterClientEndpoint(endpointProvider, interZoneMetrics, PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_MESSAGING_SERVICE, interZoneMetricsName );
+        String interZoneMetricsName = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_INTEGRATION_POINT, PetasosEndpointFunctionTypeEnum.PETASOS_METRICS_ENDPOINT.getDisplayName());
+        addInterZoneRepeaterJGroupsIntegrationPoint(endpointProvider, interZoneMetrics, PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_INTEGRATION_POINT, PetasosEndpointFunctionTypeEnum.PETASOS_METRICS_ENDPOINT, interZoneMetricsName );
         //
         // Multizone Infinispan
         JGroupsInterZoneRepeaterClientPortSegment multiZoneInfinispan = petasosEnabledSubsystemPropertyFile.getMultiuseInfinispanEndpoint();
-        String multiZoneInfinispanName = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_MESSAGING_SERVICE, getInterfaceNames().getMultiZoneInfinispaEndpointName());
-        addJGroupsInterZoneRepeaterClientEndpoint(endpointProvider, multiZoneInfinispan, PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_MESSAGING_SERVICE, multiZoneInfinispanName );
+        String multiZoneInfinispanName = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_INTEGRATION_POINT, PetasosEndpointFunctionTypeEnum.PETASOS_INFINISPAN_ENDPOINT.getDisplayName());
+        addInterZoneRepeaterJGroupsIntegrationPoint(endpointProvider, multiZoneInfinispan, PetasosEndpointTopologyTypeEnum.EDGE_JGROUPS_INTEGRATION_POINT, PetasosEndpointFunctionTypeEnum.PETASOS_INFINISPAN_ENDPOINT, multiZoneInfinispanName );
     }
 
-    protected void addJGroupsEndpoint(EndpointProviderInterface endpointProvider, JGroupsKubernetesPodPortSegment jgroupsIPCSegment, PetasosEndpointTopologyTypeEnum petasosEndpointType, String name){
-        getLogger().debug(".addJGroupsEndpoint(): Entry");
+    protected void addJGroupsEndpoint(EndpointProviderInterface endpointProvider, JGroupsKubernetesPodPortSegment jgroupsIPCSegment, PetasosEndpointTopologyTypeEnum petasosEndpointType, PetasosEndpointFunctionTypeEnum function, String name){
+        getLogger().info(".addJGroupsEndpoint(): Entry, endpointProvider->{}, jgroupsIPCSegment->{}, petasosEndpointType->{}, function->{}, name->{}",endpointProvider,jgroupsIPCSegment,petasosEndpointType,function,name );
         PetasosEnabledSubsystemPropertyFile petasosEnabledSubsystemPropertyFile = (PetasosEnabledSubsystemPropertyFile)getPropertyFile();
-        StandardEdgeIPCEndpoint interZoneIPC = new StandardEdgeIPCEndpoint();
+        JGroupsIntegrationPoint jgroupsIP = new JGroupsIntegrationPoint();
         if(jgroupsIPCSegment == null){
             getLogger().debug(".addJGroupsEndpoint(): Exit, no jgroupsIPCSegment to add");
             return;
         }
         TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
-        interZoneIPC.setComponentRDN(nodeRDN);
-        interZoneIPC.setEndpointConfigurationName(jgroupsIPCSegment.getName());
-        interZoneIPC.setActualHostIP(getActualHostIP());
-        interZoneIPC.setActualPodIP(getActualPodIP());
-        interZoneIPC.constructFDN(endpointProvider.getComponentFDN(), nodeRDN);
-        interZoneIPC.setEndpointType(petasosEndpointType);
-        interZoneIPC.setSecurityZone(NetworkSecurityZoneEnum.fromDisplayName(getPropertyFile().getDeploymentZone().getSecurityZoneName()));
-        interZoneIPC.setNameSpace(getPropertyFile().getDeploymentZone().getNameSpace());
-        interZoneIPC.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
-        interZoneIPC.setComponentSystemRole(SoftwareComponentSystemRoleEnum.COMPONENT_ROLE_SUBSYSTEM_EDGE);
-        interZoneIPC.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
-        interZoneIPC.setServer(true);
-        interZoneIPC.setContainingNodeFDN(endpointProvider.getComponentFDN());
+        jgroupsIP.setComponentRDN(nodeRDN);
+        jgroupsIP.setEndpointConfigurationName(jgroupsIPCSegment.getName());
+        jgroupsIP.setActualHostIP(getActualHostIP());
+        jgroupsIP.constructFDN(endpointProvider.getComponentFDN(), nodeRDN);
+        jgroupsIP.setEndpointType(petasosEndpointType);
+        NetworkSecurityZoneEnum securityZone = NetworkSecurityZoneEnum.fromDisplayName(getPropertyFile().getDeploymentZone().getSecurityZoneName());
+        jgroupsIP.setSecurityZone(securityZone);
+        jgroupsIP.setNameSpace(getPropertyFile().getDeploymentZone().getNameSpace());
+        jgroupsIP.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
+        jgroupsIP.setComponentSystemRole(SoftwareComponentSystemRoleEnum.COMPONENT_ROLE_SUBSYSTEM_EDGE);
+        jgroupsIP.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
+        jgroupsIP.setServer(true);
+        jgroupsIP.setResilienceMode(getResilienceMode());
+        jgroupsIP.setConcurrencyMode(getConcurrenceMode());
+        jgroupsIP.setContainingNodeFDN(endpointProvider.getComponentFDN());
+        String subsystemParticipantName = getPropertyFile().getSubsystemInstant().getParticipantName();
+        jgroupsIP.setSubsystemParticipantName(subsystemParticipantName);
+        String site = getPropertyFile().getSubsystemInstant().getSite();
+        jgroupsIP.setDeploymentSite(site);
+        jgroupsIP.setInterfaceFunction(function);
+        String channelName = jgroupNamingUtilities.buildChannelName(site, securityZone.getDisplayName(), subsystemParticipantName, function.getDisplayName(), jgroupNamingUtilities.getCurrentUUID());
+        jgroupsIP.setChannelName(channelName);
+        jgroupsIP.setEnablingProcessingPlantId(getProcessingPlantNode().getComponentID());
+        jgroupsIP.setEndpointServiceName(getPropertyFile().getSubsystemInstant().getClusterServiceName());
+        jgroupsIP.setEndpointDescription(jgroupsIPCSegment.getPortType());
 
         JGroupsAdapter adapter = new JGroupsAdapter();
         adapter.setPortNumber(jgroupsIPCSegment.getPortValue());
@@ -226,35 +254,60 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
         adapter.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_STANDALONE);
         adapter.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_CLUSTERED);
         adapter.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_MULTISITE_CLUSTERED);
-        interZoneIPC.setJGroupsAdapter(adapter);
-        endpointProvider.addEndpoint(interZoneIPC.getComponentFDN());
+        jgroupsIP.setJGroupsAdapter(adapter);
+        endpointProvider.addEndpoint(jgroupsIP.getComponentFDN());
         getLogger().trace(".addJGroupsEndpoint(): Add the InterZone JGroups IPC Port to the Topology Cache");
-        getTopologyIM().addTopologyNode(endpointProvider.getComponentFDN(), interZoneIPC);
+        getTopologyIM().addTopologyNode(endpointProvider.getComponentFDN(), jgroupsIP);
         getLogger().debug(".addJGroupsEndpoint(): Exit, endpoint added");
     }
 
-    protected void addJGroupsInterZoneRepeaterClientEndpoint(EndpointProviderInterface endpointProvider, JGroupsInterZoneRepeaterClientPortSegment jgroupsIPCSegment, PetasosEndpointTopologyTypeEnum petasosEndpointType, String name){
-        getLogger().debug(".addJGroupsInterZoneRepeaterClientEndpoint(): Entry");
+    /**
+     * This method creates a JGroupsIntegrationPoint (JChannel) for a given integration function (e.g. tasking,
+     * subscriptions, messaging, interception, etc.) - populating it with a combination of ProcessingPlant sourced
+     * information and PropertyFile() based information as passed in the JGroupsInterZoneRepeaterClientPortSegment
+     * data element.
+     *
+     * @param endpointProvider The entity to which this integrationPoint should be "added"
+     * @param jgroupsIPCSegment The PropertyFile segment describing the key attributes of this integrationPoint
+     * @param petasosEndpointType What sort of PetasosEndpointType should be assigned to the integrationPoint
+     * @param function What is it's integration "function" (i.e. tasking, subscriptions, messaging, etc.)
+     * @param name What name should be given to the create integrationPoint (SoftwareComponent)
+     */
+    protected void addInterZoneRepeaterJGroupsIntegrationPoint(EndpointProviderInterface endpointProvider, JGroupsInterZoneRepeaterClientPortSegment jgroupsIPCSegment, PetasosEndpointTopologyTypeEnum petasosEndpointType, PetasosEndpointFunctionTypeEnum function, String name){
+        getLogger().debug(".addJGroupsIntegrationPoint(): Entry, endpointProvider->{}, jgroupsIPCSegment->{}, petasosEndpointType->{}, function->{}, name->{}",endpointProvider,jgroupsIPCSegment,petasosEndpointType,function,name );
         PetasosEnabledSubsystemPropertyFile petasosEnabledSubsystemPropertyFile = (PetasosEnabledSubsystemPropertyFile)getPropertyFile();
-        StandardEdgeIPCEndpoint interZoneIPC = new StandardEdgeIPCEndpoint();
+        JGroupsIntegrationPoint jgroupsIP = new JGroupsIntegrationPoint();
         if(jgroupsIPCSegment == null){
-            getLogger().debug(".addJGroupsInterZoneRepeaterClientEndpoint(): Exit, no jgroupsIPCSegment to add");
+            getLogger().debug(".addJGroupsIntegrationPoint(): Exit, no jgroupsIPCSegment to add");
             return;
         }
         TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
-        interZoneIPC.setComponentRDN(nodeRDN);
-        interZoneIPC.setEndpointConfigurationName(jgroupsIPCSegment.getName());
-        interZoneIPC.setActualHostIP(getActualHostIP());
-        interZoneIPC.setActualPodIP(getActualPodIP());
-        interZoneIPC.constructFDN(endpointProvider.getComponentFDN(), nodeRDN);
-        interZoneIPC.setEndpointType(petasosEndpointType);
-        interZoneIPC.setSecurityZone(NetworkSecurityZoneEnum.fromDisplayName(getPropertyFile().getDeploymentZone().getSecurityZoneName()));
-        interZoneIPC.setNameSpace(getPropertyFile().getDeploymentZone().getNameSpace());
-        interZoneIPC.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
-        interZoneIPC.setComponentSystemRole(SoftwareComponentSystemRoleEnum.COMPONENT_ROLE_SUBSYSTEM_EDGE);
-        interZoneIPC.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
-        interZoneIPC.setServer(true);
-        interZoneIPC.setContainingNodeFDN(endpointProvider.getComponentFDN());
+        jgroupsIP.setComponentRDN(nodeRDN);
+        jgroupsIP.setEndpointConfigurationName(jgroupsIPCSegment.getName());
+        jgroupsIP.setActualHostIP(getActualHostIP());
+        jgroupsIP.constructFDN(endpointProvider.getComponentFDN(), nodeRDN);
+        jgroupsIP.setEndpointType(petasosEndpointType);
+        NetworkSecurityZoneEnum securityZone = NetworkSecurityZoneEnum.fromDisplayName(getPropertyFile().getDeploymentZone().getSecurityZoneName());
+        jgroupsIP.setSecurityZone(securityZone);
+        jgroupsIP.setNameSpace(getPropertyFile().getDeploymentZone().getNameSpace());
+        jgroupsIP.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
+        jgroupsIP.setComponentSystemRole(SoftwareComponentSystemRoleEnum.COMPONENT_ROLE_SUBSYSTEM_EDGE);
+        jgroupsIP.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
+        jgroupsIP.setServer(true);
+        jgroupsIP.setResilienceMode(getResilienceMode());
+        jgroupsIP.setConcurrencyMode(getConcurrenceMode());
+        jgroupsIP.setContainingNodeFDN(endpointProvider.getComponentFDN());
+        String subsystemParticipantName = getPropertyFile().getSubsystemInstant().getParticipantName();
+        jgroupsIP.setSubsystemParticipantName(subsystemParticipantName);
+        String site = getPropertyFile().getSubsystemInstant().getSite();
+        jgroupsIP.setDeploymentSite(site);
+        jgroupsIP.setInterfaceFunction(function);
+        String channelName = jgroupNamingUtilities.buildChannelName(site, securityZone.getDisplayName(), subsystemParticipantName, function.getDisplayName(), jgroupNamingUtilities.getCurrentUUID());
+        jgroupsIP.setChannelName(channelName);
+        getLogger().info(".addJGroupsIntegrationPoint(): channelName->{}", jgroupsIP.getChannelName());
+        jgroupsIP.setEnablingProcessingPlantId(getProcessingPlantNode().getComponentID());
+        jgroupsIP.setEndpointServiceName(getPropertyFile().getSubsystemInstant().getClusterServiceName());
+        jgroupsIP.setEndpointDescription(jgroupsIPCSegment.getPortType());
 
         JGroupsAdapter adapter = new JGroupsAdapter();
         adapter.setPortNumber(jgroupsIPCSegment.getTargetPortValue());
@@ -274,11 +327,11 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
         adapter.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_STANDALONE);
         adapter.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_CLUSTERED);
         adapter.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_MULTISITE_CLUSTERED);
-        interZoneIPC.setJGroupsAdapter(adapter);
-        endpointProvider.addEndpoint(interZoneIPC.getComponentFDN());
-        getLogger().trace(".addJGroupsInterZoneRepeaterClientEndpoint(): Add the InterZone JGroups IPC Port to the Topology Cache");
-        getTopologyIM().addTopologyNode(endpointProvider.getComponentFDN(), interZoneIPC);
-        getLogger().debug(".addJGroupsInterZoneRepeaterClientEndpoint(): Exit, endpoint added");
+        jgroupsIP.setJGroupsAdapter(adapter);
+        endpointProvider.addEndpoint(jgroupsIP.getComponentFDN());
+        getLogger().trace(".addJGroupsIntegrationPoint(): Add the InterZone JGroups IPC Port to the Topology Cache");
+        getTopologyIM().addTopologyNode(endpointProvider.getComponentFDN(), jgroupsIP);
+        getLogger().info(".addJGroupsIntegrationPoint(): Exit, integrationPoint added, jgroupsIP->{}", jgroupsIP);
     }
 
     //
@@ -296,8 +349,6 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
         TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
         httpFHIRClient.setComponentRDN(nodeRDN);
         httpFHIRClient.setEndpointConfigurationName(httpClientPort.getName());
-        httpFHIRClient.setActualHostIP(getActualHostIP());
-        httpFHIRClient.setActualPodIP(getActualPodIP());
         httpFHIRClient.constructFDN(endpointProvider.getComponentFDN(), nodeRDN);
         httpFHIRClient.setEndpointType(PetasosEndpointTopologyTypeEnum.INTERACT_HTTP_API_CLIENT);
         httpFHIRClient.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
@@ -366,7 +417,6 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
             TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
             httpServer.setComponentRDN(nodeRDN);
             httpServer.setEndpointConfigurationName(httpServerPort.getName());
-            httpServer.setActualPodIP(getActualPodIP());
             httpServer.setActualHostIP(getActualHostIP());
             httpServer.constructFDN(endpointProvider.getComponentFDN(), nodeRDN);
             httpServer.setEndpointType(PetasosEndpointTopologyTypeEnum.INTERACT_HTTP_API_SERVER);
@@ -400,7 +450,6 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
             TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
             httpServer.setComponentRDN(nodeRDN);
             httpServer.setEndpointConfigurationName(httpServerPort.getName());
-            httpServer.setActualPodIP(getActualPodIP());
             httpServer.setActualHostIP(getActualHostIP());
             httpServer.constructFDN(endpointProvider.getComponentFDN(), nodeRDN);
             httpServer.setEndpointType(PetasosEndpointTopologyTypeEnum.INTERACT_HTTP_API_SERVER);

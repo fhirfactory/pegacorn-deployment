@@ -22,12 +22,9 @@
 package net.fhirfactory.pegacorn.deployment.names.subsystems;
 
 import net.fhirfactory.pegacorn.core.interfaces.auditing.PetasosAuditEventServiceProviderNameInterface;
-import net.fhirfactory.pegacorn.core.interfaces.pathway.PetasosSubscriptionReportingServiceProviderNameInterface;
+import net.fhirfactory.pegacorn.core.interfaces.oam.subscriptions.PetasosSubscriptionReportingServiceProviderNameInterface;
+import net.fhirfactory.pegacorn.core.interfaces.oam.topology.PetasosTopologyReportingServiceProviderNameInterface;
 import net.fhirfactory.pegacorn.core.interfaces.tasks.PetasosTaskRepositoryServiceProviderNameInterface;
-import net.fhirfactory.pegacorn.core.interfaces.topology.PetasosTopologyReportingServiceProviderNameInterface;
-import org.thymeleaf.util.StringUtils;
-
-import java.util.Locale;
 
 public abstract class SubsystemNames
         implements PetasosTaskRepositoryServiceProviderNameInterface,
@@ -56,33 +53,33 @@ public abstract class SubsystemNames
     // Hestia Audit Information Manager
     //
 
-    public String getHestiaAuditIM(){
-        String hestiaAuditIM = StringUtils.toLowerCase(specifyDeploymentShortName(), Locale.ROOT) + "-hestia-audit-im";
+    public String getHestiaAuditIMParticipant(){
+        String hestiaAuditIM = "Hestia.Audit.IM";
         return(hestiaAuditIM);
     }
 
     @Override
     public String getPetasosAuditEventServiceProviderName() {
-        return (getHestiaAuditIM());
+        return (getHestiaAuditIMParticipant());
     }
 
     //
     // ITOps Information Manager
     //
 
-    public String getITOpsIMSystemName(){
-        String itOpsIMName = StringUtils.toLowerCase(specifyDeploymentShortName(), Locale.ROOT) + "-itops-im";
+    public String getITOpsIMParticipantName(){
+        String itOpsIMName = "ITOps.IM";
         return(itOpsIMName);
     }
 
     @Override
     public String getPetasosTopologyReportingServiceProviderName() {
-        return (getITOpsIMSystemName());
+        return (getITOpsIMParticipantName());
     }
 
     @Override
     public String getPetasosSubscriptionReportingServiceProviderName() {
-        return (getITOpsIMSystemName());
+        return (getITOpsIMParticipantName());
     }
 
     //
@@ -98,14 +95,14 @@ public abstract class SubsystemNames
     // Ponos
     //
 
-    public String getPonosManager(){
-        String ponosManagerName = StringUtils.toLowerCase(specifyDeploymentShortName(), Locale.ROOT) + "-ponos-manager";
+    public String getPonosManagerParticipantName(){
+        String ponosManagerName = "Ponos.Manager";
         return(ponosManagerName);
     }
 
     @Override
     public String getPetasosTaskRepositoryServiceProviderName() {
-        return (getPonosManager());
+        return (getPonosManagerParticipantName());
     }
 
 }

@@ -27,17 +27,18 @@ public class SubsystemInstanceSegment {
     private String owningOrganizationName;
     private String solutionName;
     private String subsystemName;
+    private String participantName;
     private String subsystemVersion;
     private String externalisedServiceName;
     private String externalisedServiceDNSName;
     private String externalisedServiceEndpointName;
     private String clusterServiceName;
     private String clusterServiceDNSName;
-    private String processingPlantName;
     private String processingPlantDNSName;
     private String processingPlantVersion;
     private String solutionGroup;
     private String solutionDescription;
+    private String site;
 
     /* an update */
 
@@ -51,11 +52,12 @@ public class SubsystemInstanceSegment {
         externalisedServiceDNSName = null;
         clusterServiceName = null;
         clusterServiceDNSName = null;
-        processingPlantName = null;
+        participantName = null;
         processingPlantVersion = null;
         processingPlantDNSName = null;
         solutionGroup = null;
         solutionDescription = null;
+        site = null;
     }
 
     public void mergeOverrides(SubsystemInstanceSegment overrides){
@@ -92,8 +94,8 @@ public class SubsystemInstanceSegment {
         if (overrides.hasClusterServiceDNSName()) {
             setClusterServiceDNSName(overrides.getClusterServiceDNSName());
         }
-        if (overrides.hasProcessingPlantName()) {
-            setProcessingPlantName(overrides.getProcessingPlantName());
+        if (overrides.hasSubsystemDisplayName()) {
+            setParticipantName(overrides.getParticipantName());
         }
         if (overrides.hasProcessingPlantVersion()) {
             setProcessingPlantVersion(overrides.getProcessingPlantVersion());
@@ -129,8 +131,8 @@ public class SubsystemInstanceSegment {
         return(has);
     }
 
-    public boolean hasProcessingPlantName(){
-        boolean has = !(StringUtils.isEmpty(processingPlantName));
+    public boolean hasSubsystemDisplayName(){
+        boolean has = !(StringUtils.isEmpty(participantName));
         return(has);
     }
 
@@ -171,6 +173,11 @@ public class SubsystemInstanceSegment {
 
     public boolean hasSubsystemVersion(){
         boolean has = !(StringUtils.isEmpty(this.subsystemVersion));
+        return(has);
+    }
+
+    public boolean hasSite(){
+        boolean has = !(StringUtils.isEmpty(this.site));
         return(has);
     }
 
@@ -254,12 +261,12 @@ public class SubsystemInstanceSegment {
         this.clusterServiceDNSName = clusterServiceDNSName;
     }
 
-    public String getProcessingPlantName() {
-        return processingPlantName;
+    public String getParticipantName() {
+        return participantName;
     }
 
-    public void setProcessingPlantName(String processingPlantName) {
-        this.processingPlantName = processingPlantName;
+    public void setParticipantName(String participantName) {
+        this.participantName = participantName;
     }
 
     public String getProcessingPlantDNSName() {
@@ -286,6 +293,14 @@ public class SubsystemInstanceSegment {
         this.solutionDescription = solutionDescription;
     }
 
+    public String getSite() {
+        return site;
+    }
+
+    public void setSite(String site) {
+        this.site = site;
+    }
+
     @Override
     public String toString() {
         return "SubsystemInstanceSegment{" +
@@ -298,7 +313,7 @@ public class SubsystemInstanceSegment {
                 ", externalisedServiceEndpointName=" + externalisedServiceEndpointName +
                 ", clusterServiceName=" + clusterServiceName +
                 ", clusterServiceDNSName=" + clusterServiceDNSName +
-                ", processingPlantName=" + processingPlantName +
+                ", subsystemParticipantName=" + participantName +
                 ", processingPlantDNSName=" + processingPlantDNSName +
                 ", processingPlantVersion=" + processingPlantVersion +
                 ", solutionGroup=" + solutionGroup +

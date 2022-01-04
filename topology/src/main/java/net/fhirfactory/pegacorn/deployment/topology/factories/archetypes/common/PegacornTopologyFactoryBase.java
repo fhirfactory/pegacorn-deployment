@@ -25,24 +25,29 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import net.fhirfactory.pegacorn.core.interfaces.topology.PegacornTopologyFactoryInterface;
-import net.fhirfactory.pegacorn.core.model.petasos.ipc.PegacornCommonInterfaceNames;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.HTTPServerAdapter;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.general.HTTPServerTopologyEndpoint;
-import net.fhirfactory.pegacorn.core.model.topology.nodes.*;
+import net.fhirfactory.pegacorn.core.model.petasos.endpoint.JGroupsIntegrationPointNamingUtilities;
 import net.fhirfactory.pegacorn.core.model.componentid.PegacornSystemComponentTypeTypeEnum;
 import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeFDN;
 import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeFunctionFDN;
 import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeRDN;
+import net.fhirfactory.pegacorn.core.model.petasos.endpoint.valuesets.PetasosEndpointTopologyTypeEnum;
+import net.fhirfactory.pegacorn.core.model.petasos.ipc.PegacornCommonInterfaceNames;
+import net.fhirfactory.pegacorn.core.model.petasos.participant.PetasosParticipant;
+import net.fhirfactory.pegacorn.core.model.petasos.participant.PetasosParticipantStatusEnum;
+import net.fhirfactory.pegacorn.core.model.petasos.participant.ProcessingPlantPetasosParticipantHolder;
+import net.fhirfactory.pegacorn.core.model.petasos.participant.ProcessingPlantPetasosParticipantNameHolder;
+import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.HTTPServerAdapter;
+import net.fhirfactory.pegacorn.core.model.topology.endpoints.general.HTTPServerTopologyEndpoint;
+import net.fhirfactory.pegacorn.core.model.topology.mode.ConcurrencyModeEnum;
+import net.fhirfactory.pegacorn.core.model.topology.mode.NetworkSecurityZoneEnum;
+import net.fhirfactory.pegacorn.core.model.topology.mode.ResilienceModeEnum;
+import net.fhirfactory.pegacorn.core.model.topology.nodes.*;
 import net.fhirfactory.pegacorn.deployment.names.sites.SiteKeyNames;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes.BaseSubsystemPropertyFile;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.datatypes.ParameterNameValuePairType;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.standard.HTTPProcessingPlantServerPortSegment;
 import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.interfaces.SolutionNodeFactoryInterface;
 import net.fhirfactory.pegacorn.deployment.topology.manager.TopologyIM;
-import net.fhirfactory.pegacorn.core.model.topology.mode.NetworkSecurityZoneEnum;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.edge.petasos.PetasosEndpointTopologyTypeEnum;
-import net.fhirfactory.pegacorn.core.model.topology.mode.ConcurrencyModeEnum;
-import net.fhirfactory.pegacorn.core.model.topology.mode.ResilienceModeEnum;
 import net.fhirfactory.pegacorn.util.PegacornProperties;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -79,6 +84,15 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
 
     @Inject
     private PegacornProperties pegacornProperties;
+
+    @Inject
+    private JGroupsIntegrationPointNamingUtilities componentNameingUtilities;
+
+    @Inject
+    private ProcessingPlantPetasosParticipantHolder participantHolder;
+
+    @Inject
+    private ProcessingPlantPetasosParticipantNameHolder participantNameHolder;
 
     //
     // Default Constructor
@@ -189,6 +203,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         getLogger().trace(".addSubsystemNode(): Create the Subsystem RDN (createNodeRDN()) --> Finish, nodeRDN->{}", nodeRDN);
         getLogger().trace(".addSubsystemNode(): Create the Subsystem FDN (constructFDN()) --> Start");
         subsystem.constructFDN(solution.getComponentFDN(), nodeRDN);
+        subsystem.getComponentID().setDisplayName(getPropertyFile().getSubsystemInstant().getParticipantName());
         getLogger().trace(".addSubsystemNode(): Create the Subsystem FDN (constructFDN()) --> Finish, nodeFDN->{}", subsystem.getComponentFDN());
         getLogger().trace(".addSubsystemNode(): Create the Subsystem Function FDN (constructFunctionFDN()) --> Start");
         subsystem.constructFunctionFDN(solution.getNodeFunctionFDN(), nodeRDN);
@@ -249,7 +264,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
     public DeploymentSiteTopologyNode addDeploymentSiteNode(BusinessServiceTopologyNode businessService){
         getLogger().debug(".addDeploymentSiteNode(): Entry, businessService->{}", businessService);
         DeploymentSiteTopologyNode site = new DeploymentSiteTopologyNode();
-        String siteName = getPropertyFile().getDeploymentSites().getSite1Name();
+        String siteName = getPropertyFile().getSubsystemInstant().getSite();
         TopologyNodeFDN businessServiceFDN = businessService.getComponentFDN();
         TopologyNodeFunctionFDN businessServiceFunctionFDN = businessService.getNodeFunctionFDN();
         getLogger().trace(".addDeploymentSiteNode(): Create the Deployment Site RDN (createNodeRDN()) --> Start");
@@ -333,10 +348,13 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
     public ProcessingPlantSoftwareComponent addPegacornProcessingPlant(PlatformTopologyNode node){
         getLogger().debug(".addPegacornProcessingPlant(): Entry");
         ProcessingPlantSoftwareComponent processingPlant = new ProcessingPlantSoftwareComponent();
-        String name = getPropertyFile().getSubsystemInstant().getProcessingPlantName();
+        String name = getPropertyFile().getSubsystemInstant().getParticipantName();
+        String uniqueId = componentNameingUtilities.buildProcessingPlantName(name, componentNameingUtilities.getCurrentUUID());
         String version = getPropertyFile().getSubsystemInstant().getProcessingPlantVersion();
-        TopologyNodeRDN nodeRDN = createNodeRDN(name, version, PegacornSystemComponentTypeTypeEnum.PROCESSING_PLANT);
+        TopologyNodeRDN nodeRDN = createNodeRDN(uniqueId, version, PegacornSystemComponentTypeTypeEnum.PROCESSING_PLANT);
         processingPlant.setComponentRDN(nodeRDN);
+        processingPlant.setSubsystemParticipantName(getPropertyFile().getSubsystemInstant().getSubsystemName());
+        processingPlant.setSubsystemParticipantName(getPropertyFile().getSubsystemInstant().getParticipantName());
         processingPlant.setActualHostIP(getActualHostIP());
         processingPlant.setActualPodIP(getActualPodIP());
         processingPlant.constructFDN(node.getComponentFDN(), nodeRDN);
@@ -345,6 +363,9 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         processingPlant.setConcurrencyMode(getConcurrenceMode());
         processingPlant.setComponentType(PegacornSystemComponentTypeTypeEnum.PROCESSING_PLANT);
         processingPlant.setNameSpace(getPropertyFile().getDeploymentZone().getNameSpace());
+        processingPlant.setDeploymentSite(getPropertyFile().getSubsystemInstant().getSite());
+
+        participantNameHolder.setSubsystemParticipantName(getPropertyFile().getSubsystemInstant().getParticipantName());
 
         //
         // Assign the Configuration File Names (InterZone)
@@ -355,16 +376,36 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         processingPlant.setPetasosAuditStackConfigFile(getPropertyFile().getDeploymentMode().getPetasosAuditStackConfigFile());
         processingPlant.setPetasosInterceptionStackConfigFile(getPropertyFile().getDeploymentMode().getPetasosInterceptionStackConfigFile());
         processingPlant.setPetasosMetricsStackConfigFile(getPropertyFile().getDeploymentMode().getPetasosMetricsStackConfigFile());
+        processingPlant.setPetasosSubscriptionsStackConfigFile(getPropertyFile().getDeploymentMode().getPetasosSubscriptionStackConfigFile());
 
-        processingPlant.setDefaultDNSName(getPropertyFile().getSubsystemInstant().getProcessingPlantDNSName());
+        processingPlant.setAssignedDNSName(getPropertyFile().getSubsystemInstant().getProcessingPlantDNSName());
         processingPlant.setInternalTrafficEncrypted(getPropertyFile().getDeploymentMode().isUsingInternalEncryption());
         processingPlant.setInstanceCount(getPropertyFile().getDeploymentMode().getProcessingPlantReplicationCount());
         processingPlant.setContainingNodeFDN(node.getComponentFDN());
-        processingPlant.setSecurityZone(NetworkSecurityZoneEnum.fromDisplayName(getPropertyFile().getDeploymentZone().getSecurityZoneName()));
+        NetworkSecurityZoneEnum zone = NetworkSecurityZoneEnum.fromDisplayName(getPropertyFile().getDeploymentZone().getSecurityZoneName());
+        if(zone == null){
+            getLogger().error(".addPegacornProcessingPlant(): Cannot resolve Network Security Zone for component, provided->{}", getPropertyFile().getDeploymentZone().getSecurityZoneName());
+            StringBuilder possibleValues = new StringBuilder();
+            for(NetworkSecurityZoneEnum currentValue: NetworkSecurityZoneEnum.values()){
+                possibleValues.append(currentValue.getDisplayName() + " ");
+            }
+            getLogger().error(".addPegacornProcessingPlant(): Possible Values Are->{}", possibleValues.toString());
+        }
+        processingPlant.setSecurityZone(zone);
+        setProcessingPlantNode(processingPlant);
         node.getProcessingPlants().add(processingPlant.getComponentFDN());
         populateOtherDeploymentProperties(processingPlant, getPropertyFile().getDeploymentMode().getOtherDeploymentParameters());
         getLogger().trace(".addPegacornProcessingPlant(): Add the ProcessingPlant to the Topology Cache");
+
         getTopologyIM().addTopologyNode(node.getComponentFDN(), processingPlant);
+
+        //
+        // Create Petasos Participant for Processing Plant
+        PetasosParticipant processingPlantPetasosParticipant = new PetasosParticipant(processingPlant);
+        processingPlantPetasosParticipant.setParticipantStatus(PetasosParticipantStatusEnum.PETASOS_PARTICIPANT_STARTING);
+        participantHolder.setMyProcessingPlantPetasosParticipant(processingPlantPetasosParticipant);
+        //
+        // All done
         getLogger().debug(".addPegacornProcessingPlant(): Exit");
         return(processingPlant);
     }
@@ -387,6 +428,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         workshop.setResilienceMode(getResilienceMode());
         workshop.setConcurrencyMode(getConcurrenceMode());
         workshop.setContainingNodeFDN(processingPlant.getComponentFDN());
+        workshop.setSecurityZone(processingPlant.getSecurityZone());
         processingPlant.getWorkshops().add(workshop.getComponentFDN());
         getLogger().trace(".addWorkshop(): Add the Workshop to the Topology Cache");
         getTopologyIM().addTopologyNode(processingPlant.getComponentFDN(), workshop);
@@ -415,6 +457,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         wup.setComponentType(nodeType);
         wup.setConcurrencyMode(getConcurrenceMode());
         wup.setResilienceMode(getResilienceMode());
+        wup.setSecurityZone(workshop.getSecurityZone());
         workshop.getWupSet().add(wup.getComponentFDN());
         getLogger().trace(".addWorkUnitProcessor(): Add the WorkUnitProcessor to the Topology Cache");
         getTopologyIM().addTopologyNode(workshop.getComponentFDN(), wup);
@@ -440,6 +483,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         wupComponent.setContainingNodeFDN(wup.getComponentFDN());
         wupComponent.setConcurrencyMode(getConcurrenceMode());
         wupComponent.setResilienceMode(getResilienceMode());
+        wupComponent.setSecurityZone(wup.getSecurityZone());
         wup.getWupComponents().add(wupComponent.getComponentFDN());
         getLogger().trace(".addWorkUnitProcessorComponent(): Add the WorkUnitProcessor Component to the Topology Cache");
         getTopologyIM().addTopologyNode(wup.getComponentFDN(), wupComponent);
@@ -465,6 +509,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         wupInterchangeComponent.setContainingNodeFDN(wup.getComponentFDN());
         wupInterchangeComponent.setConcurrencyMode(getConcurrenceMode());
         wupInterchangeComponent.setResilienceMode(getResilienceMode());
+        wupInterchangeComponent.setSecurityZone(wup.getSecurityZone());
         wup.getWupInterchangeComponents().add(wupInterchangeComponent.getComponentFDN());
         getLogger().trace(".addWorkUnitProcessorComponent(): Add the WorkUnitProcessor Interchange Component to the Topology Cache");
         getTopologyIM().addTopologyNode(wup.getComponentFDN(), wupInterchangeComponent);
