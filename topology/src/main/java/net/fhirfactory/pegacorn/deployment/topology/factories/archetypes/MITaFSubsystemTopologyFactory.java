@@ -73,7 +73,6 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
         mllpServerTopologyNode.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
         mllpServerTopologyNode.setComponentSystemRole(SoftwareComponentSystemRoleEnum.COMPONENT_ROLE_INTERACT_INGRES);
         mllpServerTopologyNode.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
-        mllpServerTopologyNode.setComponentRDN(nodeRDN);
         mllpServerTopologyNode.setConnectedSystemName(mllpServerPort.getConnectedSystem().getSubsystemName());
         mllpServerTopologyNode.setContainingNodeFDN(endpointProvider.getComponentFDN());
         mllpServerTopologyNode.setServer(true);
@@ -127,7 +126,6 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
         mllpClientTopologyNode.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
         mllpClientTopologyNode.setComponentSystemRole(SoftwareComponentSystemRoleEnum.COMPONENT_ROLE_INTERACT_EGRESS);
         mllpClientTopologyNode.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
-        mllpClientTopologyNode.setComponentRDN(nodeRDN);
         mllpClientTopologyNode.setContainingNodeFDN(endpointProvider.getComponentFDN());
         ConnectedSystemProperties connectedSystem = mllpClientPort.getConnectedSystem();
 

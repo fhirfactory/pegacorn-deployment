@@ -68,6 +68,7 @@ public final class PetasosPropertyConstants {
     public final static String WUP_JOB_CARD_EXCHANGE_PROPERTY_NAME = "WUPJobCard";
     public final static String WUP_PETASOS_FULFILLMENT_TASK_EXCHANGE_PROPERTY = "WUPPetasosParcel";
     public final static String WUP_CURRENT_UOW_EXCHANGE_PROPERTY_NAME = "WUPCurrentUnitOfWork";
+    public final static String WUP_METRICS_AGENT_EXCHANGE_PROPERTY = "WUPMetricsAgent";
 
     public final static String WUP_INTERACT_INGRES_SOURCE_SYSTEM_NAME = "WUPInteractIngresSourceSystemName";
     public final static String WUP_INTERACT_PORT_VALUE = "WUPInteractIngresPortValue";

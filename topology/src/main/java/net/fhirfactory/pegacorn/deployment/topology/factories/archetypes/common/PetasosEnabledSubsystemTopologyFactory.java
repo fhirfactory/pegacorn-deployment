@@ -28,10 +28,7 @@ import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.com
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemPort;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemProperties;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.InterfaceDefinitionSegment;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.ClusteredInteractHTTPServerPortSegment;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.StandardInteractClientPortSegment;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.StandardInteractHTTPServerPortSegment;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.StandardInteractServerPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.*;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.HTTPIPCClientPortSegment;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.HTTPIPCServerPortSegment;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.JGroupsInterZoneRepeaterClientPortSegment;
@@ -338,7 +335,7 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
     // Build an HTTP Client Endpoint (Helper Method)
     //
 
-    protected StandardInteractClientTopologyEndpointPort newHTTPClient(EndpointProviderInterface endpointProvider, String endpointFunctionName, StandardInteractClientPortSegment httpClientPort){
+    protected StandardInteractClientTopologyEndpointPort newEdgeHTTPClient(EndpointProviderInterface endpointProvider, String endpointFunctionName, StandardInteractClientPortSegment httpClientPort){
         getLogger().debug(".newHTTPClient(): Entry, endpointProvider->{}, httpClientPort->{}", endpointProvider, httpClientPort);
         InteractHTTPClientTopologyEndpoint httpFHIRClient = new InteractHTTPClientTopologyEndpoint();
         if(httpClientPort == null){
@@ -471,5 +468,48 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
             getLogger().debug(".newHTTPServer(): Exit, endpoint added");
             return(httpServer);
         }
+    }
+
+    protected StandardInteractClientTopologyEndpointPort newInteractHTTPClient(EndpointProviderInterface endpointProvider, String endpointFunctionName, StandardInteractHTTPClientPortSegment httpClientPort){
+        getLogger().debug(".newHTTPClient(): Entry, endpointProvider->{}, httpClientPort->{}", endpointProvider, httpClientPort);
+        InteractHTTPClientTopologyEndpoint httpFHIRClient = new InteractHTTPClientTopologyEndpoint();
+        if(httpClientPort == null){
+            getLogger().debug(".newHTTPClient(): Exit, no port to add");
+            return(null);
+        }
+        String name = getInterfaceNames().getEndpointServerName(endpointFunctionName);
+        TopologyNodeRDN nodeRDN = createNodeRDN(name, endpointProvider.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
+        httpFHIRClient.setComponentRDN(nodeRDN);
+        httpFHIRClient.setEndpointConfigurationName(httpClientPort.getName());
+        httpFHIRClient.constructFDN(endpointProvider.getComponentFDN(), nodeRDN);
+        httpFHIRClient.setEndpointType(PetasosEndpointTopologyTypeEnum.INTERACT_HTTP_API_CLIENT);
+        httpFHIRClient.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
+        httpFHIRClient.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
+        httpFHIRClient.setComponentRDN(nodeRDN);
+        httpFHIRClient.setContainingNodeFDN(endpointProvider.getComponentFDN());
+        ConnectedSystemProperties connectedSystem = httpClientPort.getConnectedSystem();
+        ConnectedExternalSystemTopologyNode externalSystem = new ConnectedExternalSystemTopologyNode();
+        externalSystem.setSubsystemName(connectedSystem.getSubsystemName());
+        ConnectedSystemPort targetPort1 = connectedSystem.getTargetPort1();
+        ExternalSystemIPCEndpoint systemEndpointPort1 = newExternalSystemIPCEndpoint(targetPort1);
+        externalSystem.getTargetPorts().add(systemEndpointPort1);
+        if(connectedSystem.getTargetPort2() != null)
+        {
+            ConnectedSystemPort targetPort2 = connectedSystem.getTargetPort2();
+            ExternalSystemIPCEndpoint systemEndpointPort2 = newExternalSystemIPCEndpoint(targetPort2);
+            externalSystem.getTargetPorts().add(systemEndpointPort2);
+        }
+        if(connectedSystem.getTargetPort3() != null)
+        {
+            ConnectedSystemPort targetPort3 = connectedSystem.getTargetPort3();
+            ExternalSystemIPCEndpoint systemEndpointPort3 = newExternalSystemIPCEndpoint(targetPort3);
+            externalSystem.getTargetPorts().add(systemEndpointPort3);
+        }
+        httpFHIRClient.setTargetSystem(externalSystem);
+        endpointProvider.addEndpoint(httpFHIRClient.getComponentFDN());
+        getLogger().trace(".newHTTPClient(): Add the httpFHIRClient Port to the Topology Cache");
+        getTopologyIM().addTopologyNode(endpointProvider.getComponentFDN(), httpFHIRClient);
+        getLogger().debug(".newHTTPClient(): Exit, endpoint added");
+        return(httpFHIRClient);
     }
 }
