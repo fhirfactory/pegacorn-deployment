@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc;
+package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.jgroups;
 
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.InterfaceDefinitionSegment;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.StandardClientPortSegment;
@@ -108,16 +108,20 @@ public class JGroupsInterZoneRepeaterClientPortSegment extends StandardClientPor
     public String toString() {
         return "JGroupsInterZoneRepeaterClientPortSegment{" +
                 "otherConfigurationParameters=" + getOtherConfigurationParameters() +
-                ", portType=" + getPortType() +
-                ", encrypted=" + isEncrypted() +
-                ", portParameters=" + getPortParameters() +
-                ", connectedSystem=" + getConnectedSystem() +
                 ", defaultRetryCount=" + getDefaultRetryCount() +
                 ", defaultRetryWait=" + getDefaultRetryWait() +
                 ", defaultTimeout=" + getDefaultTimeout() +
-                ", name=" + getName() +
+                ", connectedSystem=" + getConnectedSystem() +
+                ", portType='" + getPortType() + '\'' +
+                ", server=" + isServer() +
+                ", startupDelay=" + getStartupDelay() +
+                ", name='" + getName() + '\'' +
                 ", targetPortValue=" + targetPortValue +
-                ", targetHostName=" + targetHostName +
+                ", targetHostName='" + targetHostName + '\'' +
+                ", encrypted=" + encrypted +
+                ", supportedInterfaceProfiles=" + supportedInterfaceProfiles +
+                ", interfaceDefinitionName='" + getInterfaceDefinitionName() + '\'' +
+                ", interfaceDefinitionVersion='" + getInterfaceDefinitionVersion() + '\'' +
                 '}';
     }
 }

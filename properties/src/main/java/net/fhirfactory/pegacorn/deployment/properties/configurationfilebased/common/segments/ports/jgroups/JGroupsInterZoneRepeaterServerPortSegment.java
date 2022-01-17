@@ -19,31 +19,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc;
+package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.jgroups;
 
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.StandardServerPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.StandardClusterServiceServerPortSegment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-
-public class JGroupsKubernetesPodPortSegment extends StandardServerPortSegment {
-    private static Logger LOG = LoggerFactory.getLogger(JGroupsKubernetesPodPortSegment.class);
+public class JGroupsInterZoneRepeaterServerPortSegment extends StandardClusterServiceServerPortSegment {
+    private static final Logger LOG = LoggerFactory.getLogger(JGroupsInterZoneRepeaterServerPortSegment.class);
 
     @Override
     protected Logger specifyLogger() {
         return (LOG);
-    }
-
-    @Override
-    public String toString() {
-        return "JGroupsIPCPortSegment{" +
-                "portValue=" + getPortValue() +
-                ", portType=" + getPortType() +
-                ", server=" + isServer() +
-                ", encrypted=" + isEncrypted() +
-                ", supportedInterfaceProfiles=" + getSupportedInterfaceProfiles() +
-                ", hostDNSEntry=" + getHostDNSEntry() +
-                '}';
     }
 }

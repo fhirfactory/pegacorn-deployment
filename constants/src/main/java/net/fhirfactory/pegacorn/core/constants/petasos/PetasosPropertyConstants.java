@@ -70,8 +70,13 @@ public final class PetasosPropertyConstants {
     public final static String WUP_CURRENT_UOW_EXCHANGE_PROPERTY_NAME = "WUPCurrentUnitOfWork";
     public final static String WUP_METRICS_AGENT_EXCHANGE_PROPERTY = "WUPMetricsAgent";
 
+    public final static String ENDPOINT_TOPOLOGY_NODE_EXCHANGE_PROPERTY = "EndpointTopologyNode";
+    public final static String ENDPOINT_METRICS_AGENT_EXCHANGE_PROPERTY = "EndpointMetricsAgent";
+    public final static String ENDPOINT_PORT_VALUE = "EndpointPortValue";
+    public final static String ENDPOINT_HOSTNAME = "EndpointPortName";
+
     public final static String WUP_INTERACT_INGRES_SOURCE_SYSTEM_NAME = "WUPInteractIngresSourceSystemName";
-    public final static String WUP_INTERACT_PORT_VALUE = "WUPInteractIngresPortValue";
+
     public final static String WUP_INTERACT_PORT_TYPE = "WUPInteractIngresPortType";
 
     public final static String DEFAULT_TIMEZONE="Australia/Sydney";
@@ -87,7 +92,7 @@ public final class PetasosPropertyConstants {
     // Inter-ProcessingPlant Task Forwarder Queue
     //
 
-    public final static String TASK_IPC_FORWARDER_NAME = "PetasosTaskForwardWUP";
+    public final static String TASK_IPC_FORWARDER_NAME = "PetasosTaskForwarderWUP";
     public final static String TASK_IPC_RECEIVER_NAME = "PetasosTaskReceiverWUP";
 
     //

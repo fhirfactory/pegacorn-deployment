@@ -21,10 +21,9 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes;
 
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.HTTPIPCClientPortSegment;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.HTTPIPCServerPortSegment;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.JGroupsInterZoneRepeaterClientPortSegment;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.JGroupsKubernetesPodPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.http.ClusteredHTTPServerPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.http.HTTPClientPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.jgroups.JGroupsInterZoneRepeaterClientPortSegment;
 
 public class PetasosEnabledSubsystemPropertyFile extends ClusterServiceDeliverySubsystemPropertyFile{
     private JGroupsInterZoneRepeaterClientPortSegment petasosIPCMessagingEndpoint;
@@ -35,8 +34,8 @@ public class PetasosEnabledSubsystemPropertyFile extends ClusterServiceDeliveryS
     private JGroupsInterZoneRepeaterClientPortSegment petasosTaskServicesEndpoint;
     private JGroupsInterZoneRepeaterClientPortSegment petasosMetricsEndpoint;
     private JGroupsInterZoneRepeaterClientPortSegment multiuseInfinispanEndpoint;
-    private HTTPIPCServerPortSegment edgeAnswer;
-    private HTTPIPCClientPortSegment edgeAsk;
+    private ClusteredHTTPServerPortSegment edgeAnswer;
+    private HTTPClientPortSegment edgeAsk;
 
     //
     // Constructor(s)
@@ -44,8 +43,8 @@ public class PetasosEnabledSubsystemPropertyFile extends ClusterServiceDeliveryS
 
     public PetasosEnabledSubsystemPropertyFile(){
         super();
-        edgeAnswer = new HTTPIPCServerPortSegment();
-        edgeAsk = new HTTPIPCClientPortSegment();
+        edgeAnswer = new ClusteredHTTPServerPortSegment();
+        edgeAsk = new HTTPClientPortSegment();
         petasosIPCMessagingEndpoint = new JGroupsInterZoneRepeaterClientPortSegment();
         petasosTopologyDiscoveryEndpoint = new JGroupsInterZoneRepeaterClientPortSegment();
         petasosSubscriptionsEndpoint = new JGroupsInterZoneRepeaterClientPortSegment();
@@ -68,11 +67,11 @@ public class PetasosEnabledSubsystemPropertyFile extends ClusterServiceDeliveryS
         this.petasosSubscriptionsEndpoint = petasosSubscriptionsEndpoint;
     }
 
-    public HTTPIPCClientPortSegment getEdgeAsk() {
+    public HTTPClientPortSegment getEdgeAsk() {
         return edgeAsk;
     }
 
-    public void setEdgeAsk(HTTPIPCClientPortSegment edgeAsk) {
+    public void setEdgeAsk(HTTPClientPortSegment edgeAsk) {
         this.edgeAsk = edgeAsk;
     }
 
@@ -124,11 +123,11 @@ public class PetasosEnabledSubsystemPropertyFile extends ClusterServiceDeliveryS
         this.petasosIPCMessagingEndpoint = petasosIPCMessagingEndpoint;
     }
 
-    public HTTPIPCServerPortSegment getEdgeAnswer() {
+    public ClusteredHTTPServerPortSegment getEdgeAnswer() {
         return edgeAnswer;
     }
 
-    public void setEdgeAnswer(HTTPIPCServerPortSegment edgeAnswer) {
+    public void setEdgeAnswer(ClusteredHTTPServerPortSegment edgeAnswer) {
         this.edgeAnswer = edgeAnswer;
     }
 

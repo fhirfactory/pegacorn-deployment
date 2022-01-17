@@ -22,20 +22,15 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemProperties;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public abstract class StandardClientPortSegment  extends ConfigurableNodeSegment {
+public class StandardClientPortSegment  extends StandardExternalFacingPort {
+    private static final Logger LOG = LoggerFactory.getLogger(StandardClientPortSegment.class);
 
-    protected abstract Logger specifyLogger();
-
-    private String portType;
-    private String portParameters;
     private int defaultRetryCount;
     private int defaultRetryWait;
     private int defaultTimeout;
-    private ConnectedSystemProperties connectedSystem;
-    private String name;
 
     //
     // Constructor(s)
@@ -43,44 +38,16 @@ public abstract class StandardClientPortSegment  extends ConfigurableNodeSegment
 
     public StandardClientPortSegment(){
         super();
-        this.connectedSystem = new ConnectedSystemProperties();
-        this.name = null;
-        this.portType = null;
-        this.portParameters = null;
+        this.defaultRetryCount = 1;
+        this.defaultRetryWait = 30;
+        this.defaultTimeout = 15;
     }
 
     //
     // Getters and Setters
     //
 
-    @JsonIgnore
-    protected Logger getLogger(){
-        return(specifyLogger());
-    }
-
-    public String getPortType() {
-        return portType;
-    }
-
-    public void setPortType(String portType) {
-        this.portType = portType;
-    }
-
-    public String getPortParameters() {
-        return portParameters;
-    }
-
-    public void setPortParameters(String portParameters) {
-        this.portParameters = portParameters;
-    }
-
-    public ConnectedSystemProperties getConnectedSystem() {
-        return connectedSystem;
-    }
-
-    public void setConnectedSystem(ConnectedSystemProperties connectedSystem) {
-        this.connectedSystem = connectedSystem;
-    }
+    protected Logger specifyLogger(){return(getLogger());}
 
     public int getDefaultRetryCount() {
         return defaultRetryCount;
@@ -106,15 +73,6 @@ public abstract class StandardClientPortSegment  extends ConfigurableNodeSegment
         this.defaultTimeout = defaultTimeout;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
     //
     // To String
     //
@@ -122,14 +80,17 @@ public abstract class StandardClientPortSegment  extends ConfigurableNodeSegment
     @Override
     public String toString() {
         return "StandardClientPortSegment{" +
-                "otherConfigurationParameters=" + getOtherConfigurationParameters() +
-                ", portType='" + portType + '\'' +
-                ", portParameters='" + portParameters + '\'' +
+                "otherConfigurationParameters=" + otherConfigurationParameters +
+                ", otherConfigurationParameters=" + getOtherConfigurationParameters() +
                 ", defaultRetryCount=" + defaultRetryCount +
                 ", defaultRetryWait=" + defaultRetryWait +
                 ", defaultTimeout=" + defaultTimeout +
-                ", connectedSystem=" + connectedSystem +
-                ", name='" + name + '\'' +
+                ", connectedSystem=" + getConnectedSystem() +
+                ", portType='" + getPortType() + '\'' +
+                ", server=" + isServer() +
+                ", encrypted=" + isEncrypted() +
+                ", startupDelay=" + getStartupDelay() +
+                ", name='" + getName() + '\'' +
                 '}';
     }
 }

@@ -21,7 +21,7 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.fhirpersistence.dbaas;
 
-import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.common.PegacornTopologyFactoryBase;
+import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.base.PegacornTopologyFactoryBase;
 
 
 public abstract class JPAServerDBaaSSubsystemTopologyFactory extends PegacornTopologyFactoryBase {

@@ -22,7 +22,7 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes;
 
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.*;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.standard.HTTPProcessingPlantServerPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.http.HTTPServerPortSegment;
 
 public class BaseSubsystemPropertyFile {
 
@@ -30,58 +30,76 @@ public class BaseSubsystemPropertyFile {
     private DeploymentModeSegment deploymentMode;
     private DeploymentSiteSegment deploymentSites;
     private DeploymentZoneSegment deploymentZone;
-    private HTTPProcessingPlantServerPortSegment kubeReadinessProbe;
-    private HTTPProcessingPlantServerPortSegment kubeLivelinessProbe;
-    private HTTPProcessingPlantServerPortSegment prometheusPort;
-    private HTTPProcessingPlantServerPortSegment jolokiaPort;
+    private HTTPServerPortSegment kubeReadinessProbe;
+    private HTTPServerPortSegment kubeLivelinessProbe;
+    private HTTPServerPortSegment prometheusPort;
+    private HTTPServerPortSegment jolokiaPort;
+    private LoadBalancerSegment loadBalancer;
 
     private SubsystemImageSegment subsystemImageProperties;
     private SecurityCredentialSegment trustStorePassword;
     private SecurityCredentialSegment keyPassword;
 
+    //
+    // Constructor(s)
+    //
+
     public BaseSubsystemPropertyFile() {
+        loadBalancer = new LoadBalancerSegment();
         subsystemInstant = new SubsystemInstanceSegment();
         deploymentMode = new DeploymentModeSegment();
         deploymentSites = new DeploymentSiteSegment();
-        kubeLivelinessProbe = new HTTPProcessingPlantServerPortSegment();
-        kubeReadinessProbe = new HTTPProcessingPlantServerPortSegment();
+        kubeLivelinessProbe = new HTTPServerPortSegment();
+        kubeReadinessProbe = new HTTPServerPortSegment();
         subsystemImageProperties = new SubsystemImageSegment();
         trustStorePassword = new SecurityCredentialSegment();
         keyPassword = new SecurityCredentialSegment();
-        jolokiaPort = new HTTPProcessingPlantServerPortSegment();
-        prometheusPort = new HTTPProcessingPlantServerPortSegment();
+        jolokiaPort = new HTTPServerPortSegment();
+        prometheusPort = new HTTPServerPortSegment();
         deploymentZone = new DeploymentZoneSegment();
     }
 
-    public HTTPProcessingPlantServerPortSegment getKubeReadinessProbe() {
+    //
+    // Getters And Setters
+    //
+
+    public LoadBalancerSegment getLoadBalancer() {
+        return loadBalancer;
+    }
+
+    public void setLoadBalancer(LoadBalancerSegment loadBalancer) {
+        this.loadBalancer = loadBalancer;
+    }
+
+    public HTTPServerPortSegment getKubeReadinessProbe() {
         return kubeReadinessProbe;
     }
 
-    public void setKubeReadinessProbe(HTTPProcessingPlantServerPortSegment kubeReadinessProbe) {
+    public void setKubeReadinessProbe(HTTPServerPortSegment kubeReadinessProbe) {
         this.kubeReadinessProbe = kubeReadinessProbe;
     }
 
-    public HTTPProcessingPlantServerPortSegment getKubeLivelinessProbe() {
+    public HTTPServerPortSegment getKubeLivelinessProbe() {
         return kubeLivelinessProbe;
     }
 
-    public void setKubeLivelinessProbe(HTTPProcessingPlantServerPortSegment kubeLivelinessProbe) {
+    public void setKubeLivelinessProbe(HTTPServerPortSegment kubeLivelinessProbe) {
         this.kubeLivelinessProbe = kubeLivelinessProbe;
     }
 
-    public HTTPProcessingPlantServerPortSegment getPrometheusPort() {
+    public HTTPServerPortSegment getPrometheusPort() {
         return prometheusPort;
     }
 
-    public void setPrometheusPort(HTTPProcessingPlantServerPortSegment prometheusPort) {
+    public void setPrometheusPort(HTTPServerPortSegment prometheusPort) {
         this.prometheusPort = prometheusPort;
     }
 
-    public HTTPProcessingPlantServerPortSegment getJolokiaPort() {
+    public HTTPServerPortSegment getJolokiaPort() {
         return jolokiaPort;
     }
 
-    public void setJolokiaPort(HTTPProcessingPlantServerPortSegment jolokiaPort) {
+    public void setJolokiaPort(HTTPServerPortSegment jolokiaPort) {
         this.jolokiaPort = jolokiaPort;
     }
 

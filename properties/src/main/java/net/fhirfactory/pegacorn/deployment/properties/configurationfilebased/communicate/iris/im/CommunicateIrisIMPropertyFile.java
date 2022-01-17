@@ -1,15 +1,15 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.communicate.iris.im;
 
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.SecurityCredentialSegment;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.ClusteredInteractHTTPServerPortSegment;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.StandardInteractHTTPClientPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.http.ClusteredHTTPServerPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.http.HTTPClientPortSegment;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.communicate.common.CommunicateSubsystemPropertyFile;
 
 public class CommunicateIrisIMPropertyFile extends CommunicateSubsystemPropertyFile {
 
-    private StandardInteractHTTPClientPortSegment interactMatrixClientServicesClient;
-    private ClusteredInteractHTTPServerPortSegment interactMatrixApplicationServicesServer;
-    private ClusteredInteractHTTPServerPortSegment interactPegacornVoIPServicesServer;
+    private HTTPClientPortSegment interactMatrixClientServicesClient;
+    private ClusteredHTTPServerPortSegment interactMatrixApplicationServicesServer;
+    private ClusteredHTTPServerPortSegment interactPegacornVoIPServicesServer;
     private SecurityCredentialSegment wildflyUser;
 
     //
@@ -19,36 +19,36 @@ public class CommunicateIrisIMPropertyFile extends CommunicateSubsystemPropertyF
     public CommunicateIrisIMPropertyFile(){
         super();
         this.wildflyUser = new SecurityCredentialSegment();
-        this.interactMatrixClientServicesClient = new StandardInteractHTTPClientPortSegment();
-        this.interactMatrixApplicationServicesServer = new ClusteredInteractHTTPServerPortSegment();
-        this.interactPegacornVoIPServicesServer = new ClusteredInteractHTTPServerPortSegment();
+        this.interactMatrixClientServicesClient = new HTTPClientPortSegment();
+        this.interactMatrixApplicationServicesServer = new ClusteredHTTPServerPortSegment();
+        this.interactPegacornVoIPServicesServer = new ClusteredHTTPServerPortSegment();
     }
 
     //
     // Getters and Setters
     //
 
-    public StandardInteractHTTPClientPortSegment getInteractMatrixClientServicesClient() {
+    public HTTPClientPortSegment getInteractMatrixClientServicesClient() {
         return interactMatrixClientServicesClient;
     }
 
-    public void setInteractMatrixClientServicesClient(StandardInteractHTTPClientPortSegment interactMatrixClientServicesClient) {
+    public void setInteractMatrixClientServicesClient(HTTPClientPortSegment interactMatrixClientServicesClient) {
         this.interactMatrixClientServicesClient = interactMatrixClientServicesClient;
     }
 
-    public ClusteredInteractHTTPServerPortSegment getInteractMatrixApplicationServicesServer() {
+    public ClusteredHTTPServerPortSegment getInteractMatrixApplicationServicesServer() {
         return interactMatrixApplicationServicesServer;
     }
 
-    public void setInteractMatrixApplicationServicesServer(ClusteredInteractHTTPServerPortSegment interactMatrixApplicationServicesServer) {
+    public void setInteractMatrixApplicationServicesServer(ClusteredHTTPServerPortSegment interactMatrixApplicationServicesServer) {
         this.interactMatrixApplicationServicesServer = interactMatrixApplicationServicesServer;
     }
 
-    public ClusteredInteractHTTPServerPortSegment getInteractPegacornVoIPServicesServer() {
+    public ClusteredHTTPServerPortSegment getInteractPegacornVoIPServicesServer() {
         return interactPegacornVoIPServicesServer;
     }
 
-    public void setInteractPegacornVoIPServicesServer(ClusteredInteractHTTPServerPortSegment interactPegacornVoIPServicesServer) {
+    public void setInteractPegacornVoIPServicesServer(ClusteredHTTPServerPortSegment interactPegacornVoIPServicesServer) {
         this.interactPegacornVoIPServicesServer = interactPegacornVoIPServicesServer;
     }
 

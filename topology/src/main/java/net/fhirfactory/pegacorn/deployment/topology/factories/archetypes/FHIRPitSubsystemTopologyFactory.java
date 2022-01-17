@@ -24,7 +24,7 @@
 
 package net.fhirfactory.pegacorn.deployment.topology.factories.archetypes;
 
-import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.common.PetasosEnabledSubsystemTopologyFactory;
+import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.base.PetasosEnabledSubsystemTopologyFactory;
 
 /**
  * 

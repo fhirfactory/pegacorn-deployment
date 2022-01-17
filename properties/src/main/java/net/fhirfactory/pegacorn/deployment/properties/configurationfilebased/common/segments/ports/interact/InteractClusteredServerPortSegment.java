@@ -19,25 +19,55 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc;
+package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact;
 
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.StandardClusterServiceServerPortSegment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class HTTPIPCServerPortSegment extends StandardClusterServiceServerPortSegment {
-    private static Logger LOG = LoggerFactory.getLogger(HTTPIPCServerPortSegment.class);
+public class InteractClusteredServerPortSegment extends InteractServerPortSegment {
+    private static Logger LOG = LoggerFactory.getLogger(InteractClusteredServerPortSegment.class);
 
-    private  Integer clusterServicePortOffsetValue;
-    private String path;
-
-    public HTTPIPCServerPortSegment(){
+    private Integer servicePort;
+    private String servicePortName;
+    private String serviceDNS;
+    private Integer clusterServicePortOffsetValue;
+    
+    public InteractClusteredServerPortSegment(){
         super();
+        this.servicePort = null;
+        this.servicePortName = null;
+        this.serviceDNS = null;
+        this.clusterServicePortOffsetValue = null;
     }
 
     @Override
-    protected Logger specifyLogger() {
-        return (LOG);
+    protected Logger specifyLogger(){
+        return(LOG);
+    }
+
+
+    public Integer getServicePort() {
+        return servicePort;
+    }
+
+    public void setServicePort(Integer servicePort) {
+        this.servicePort = servicePort;
+    }
+
+    public String getServicePortName() {
+        return servicePortName;
+    }
+
+    public void setServicePortName(String servicePortName) {
+        this.servicePortName = servicePortName;
+    }
+
+    public String getServiceDNS() {
+        return serviceDNS;
+    }
+
+    public void setServiceDNS(String serviceDNS) {
+        this.serviceDNS = serviceDNS;
     }
 
     public Integer getClusterServicePortOffsetValue() {
@@ -48,29 +78,19 @@ public class HTTPIPCServerPortSegment extends StandardClusterServiceServerPortSe
         this.clusterServicePortOffsetValue = clusterServicePortOffsetValue;
     }
 
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
+    //
+    // To String
+    //
 
     @Override
     public String toString() {
-        return "HTTPIPCPortSegment{" +
-                "portValue=" + getPortValue() +
-                ", portType=" + getPortType() +
-                ", isServer=" + isServer() +
-                ", isEncrypted=" + isEncrypted() +
-                ", hostDNSEntry=" + getHostDNSEntry() +
-                ", supportedInterfaceProfiles=" + getSupportedInterfaceProfiles() +
-                ", servicePortValue=" + getServicePortValue() +
-                ", servicePortName=" + getServicePortName() +
-                ", serviceDNSEntry=" + getServiceDNSEntry() +
+        return "ClusteredServerPortSegment{" +
+                "otherConfigurationParameters=" + getOtherConfigurationParameters() +
+                ", connectedSystem=" + getConnectedSystem() +
+                ", servicePortValue=" + servicePort +
+                ", servicePortName='" + servicePortName + '\'' +
+                ", serviceDNSEntry='" + serviceDNS + '\'' +
                 ", clusterServicePortOffsetValue=" + clusterServicePortOffsetValue +
-                ", clusterServicePortOffsetValue=" + clusterServicePortOffsetValue +
-                ", path=" + path +
                 '}';
     }
 }

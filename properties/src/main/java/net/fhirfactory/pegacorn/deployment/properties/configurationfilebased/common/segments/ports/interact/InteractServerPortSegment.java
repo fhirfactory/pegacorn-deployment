@@ -19,17 +19,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc;
+package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact;
 
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.StandardClusterServiceServerPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.StandardServerPortSegment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class JGroupsInterZoneRepeaterServerPortSegment extends StandardClusterServiceServerPortSegment {
-    private static final Logger LOG = LoggerFactory.getLogger(JGroupsInterZoneRepeaterServerPortSegment.class);
+public class InteractServerPortSegment extends StandardServerPortSegment {
+    private static Logger LOG = LoggerFactory.getLogger(InteractServerPortSegment.class);
 
     @Override
     protected Logger specifyLogger() {
         return (LOG);
+    }
+
+    @Override
+    public String toString() {
+        return "StandardInteractServerPortSegment{" +
+                "portType=" + getPortType() +
+                ", connectedSystem=" + getConnectedSystem() +
+                ", name=" + getName() +
+                ", server=" + isServer() +
+                ", portValue=" + getServerPort() +
+                ", hostDNSEntry=" + getServerHostname() +
+                ", supportedInterfaceProfiles=" + getSupportedInterfaceProfiles() +
+                ", startupDelay=" + getStartupDelay() +
+                ", encrypted=" + isEncrypted() +
+                '}';
     }
 }

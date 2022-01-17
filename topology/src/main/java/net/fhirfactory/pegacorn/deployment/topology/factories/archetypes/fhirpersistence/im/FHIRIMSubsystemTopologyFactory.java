@@ -21,7 +21,7 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.fhirpersistence.im;
 
-import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.common.PetasosEnabledSubsystemTopologyFactory;
+import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.base.PetasosEnabledSubsystemTopologyFactory;
 
 public abstract class FHIRIMSubsystemTopologyFactory extends PetasosEnabledSubsystemTopologyFactory {
 

@@ -19,36 +19,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.common;
+package net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.base;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import net.fhirfactory.pegacorn.core.interfaces.topology.PegacornTopologyFactoryInterface;
-import net.fhirfactory.pegacorn.core.model.petasos.endpoint.JGroupsIntegrationPointNamingUtilities;
 import net.fhirfactory.pegacorn.core.model.componentid.PegacornSystemComponentTypeTypeEnum;
 import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeFDN;
 import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeFunctionFDN;
 import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeRDN;
+import net.fhirfactory.pegacorn.core.model.petasos.endpoint.JGroupsIntegrationPointNamingUtilities;
 import net.fhirfactory.pegacorn.core.model.petasos.endpoint.valuesets.PetasosEndpointTopologyTypeEnum;
 import net.fhirfactory.pegacorn.core.model.petasos.ipc.PegacornCommonInterfaceNames;
 import net.fhirfactory.pegacorn.core.model.petasos.participant.PetasosParticipant;
 import net.fhirfactory.pegacorn.core.model.petasos.participant.PetasosParticipantStatusEnum;
 import net.fhirfactory.pegacorn.core.model.petasos.participant.ProcessingPlantPetasosParticipantHolder;
 import net.fhirfactory.pegacorn.core.model.petasos.participant.ProcessingPlantPetasosParticipantNameHolder;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.HTTPClientAdapter;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.HTTPServerAdapter;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.base.IPCAdapterDefinition;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.general.HTTPServerTopologyEndpoint;
+import net.fhirfactory.pegacorn.core.model.topology.endpoints.http.HTTPServerTopologyEndpoint;
 import net.fhirfactory.pegacorn.core.model.topology.mode.ConcurrencyModeEnum;
 import net.fhirfactory.pegacorn.core.model.topology.mode.NetworkSecurityZoneEnum;
 import net.fhirfactory.pegacorn.core.model.topology.mode.ResilienceModeEnum;
 import net.fhirfactory.pegacorn.core.model.topology.nodes.*;
 import net.fhirfactory.pegacorn.deployment.names.sites.SiteKeyNames;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes.BaseSubsystemPropertyFile;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemPort;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.datatypes.ParameterNameValuePairType;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.standard.HTTPProcessingPlantServerPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.http.HTTPServerPortSegment;
+import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.base.common.TopologyFactoryHelpersBase;
 import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.interfaces.SolutionNodeFactoryInterface;
 import net.fhirfactory.pegacorn.deployment.topology.manager.TopologyIM;
 import net.fhirfactory.pegacorn.util.PegacornProperties;
@@ -65,7 +63,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFactoryInterface {
+public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpersBase implements PegacornTopologyFactoryInterface {
 
     private static final String PROPERTY_FILENAME_EXTENSION = ".yaml";
 
@@ -172,6 +170,14 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
     // Node Builders
     //
 
+    @Override
+    public TopologyNodeRDN createNodeRDN(String nodeName, String nodeVersion, PegacornSystemComponentTypeTypeEnum nodeType){
+        getLogger().debug(".createNodeRDN: Entry, nodeName->{}, nodeVersion->{}, nodeType->{}", nodeName, nodeVersion, nodeType);
+        TopologyNodeRDN newRDN = createSimpleNodeRDN(nodeName, nodeVersion, nodeType);
+        getLogger().debug(".createNodeRDN: Exit, newRDN->{}", newRDN);
+        return (newRDN);
+    }
+
     protected String getActualHostIP(){
         String actualHostIP = pegacornProperties.getProperty("MY_HOST_IP", "Unknown");
         return(actualHostIP);
@@ -180,15 +186,6 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
     protected String getActualPodIP(){
         String actualHostIP = pegacornProperties.getProperty("MY_POD_IP", "Unknown");
         return(actualHostIP);
-    }
-
-
-    @Override
-    public TopologyNodeRDN createNodeRDN(String nodeName, String nodeVersion, PegacornSystemComponentTypeTypeEnum nodeType){
-        getLogger().debug(".createNodeRDN: Entry, nodeName->{}, nodeVersion->{}, nodeType->{}", nodeName, nodeVersion, nodeType);
-        TopologyNodeRDN newRDN = new TopologyNodeRDN(nodeType, nodeName, nodeVersion);
-        getLogger().debug(".createNodeRDN: Exit, newRDN->{}", newRDN);
-        return (newRDN);
     }
 
     /**
@@ -356,6 +353,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         TopologyNodeRDN nodeRDN = createNodeRDN(uniqueId, version, PegacornSystemComponentTypeTypeEnum.PROCESSING_PLANT);
         processingPlant.setComponentRDN(nodeRDN);
         processingPlant.setParticipantName(getPropertyFile().getSubsystemInstant().getParticipantName());
+        processingPlant.setParticipantDisplayName(getPropertyFile().getSubsystemInstant().getParticipantName());
         processingPlant.setSubsystemParticipantName(getPropertyFile().getSubsystemInstant().getParticipantName());
         processingPlant.setActualHostIP(getActualHostIP());
         processingPlant.setActualPodIP(getActualPodIP());
@@ -426,7 +424,9 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         WorkshopSoftwareComponent workshop = new WorkshopSoftwareComponent();
         TopologyNodeRDN nodeRDN = createNodeRDN(name, version,nodeType);
         workshop.setComponentRDN(nodeRDN);
-        workshop.setParticipantName(name);
+        String participantName = getProcessingPlantNode().getParticipantName() + "." + name;
+        workshop.setParticipantName(participantName);
+        workshop.setParticipantDisplayName(name);
         workshop.constructFDN(processingPlant.getComponentFDN(), nodeRDN);
         workshop.constructFunctionFDN(processingPlant.getNodeFunctionFDN(), nodeRDN);
         workshop.setComponentType(nodeType);
@@ -448,7 +448,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
      * @param workshop
      */
     @Override
-    public WorkUnitProcessorSoftwareComponent createWorkUnitProcessor(String name, String version, WorkshopSoftwareComponent workshop, PegacornSystemComponentTypeTypeEnum nodeType){
+    public WorkUnitProcessorSoftwareComponent createWorkUnitProcessor(String name, String version, String participantName, WorkshopSoftwareComponent workshop, PegacornSystemComponentTypeTypeEnum nodeType){
         getLogger().debug(".addWorkUnitProcessor(): Entry, name->{}, version->{}", name, version);
         if(StringUtils.isEmpty(name) || StringUtils.isEmpty(version)){
             getLogger().error(".createWorkUnitProcessor(): name or version are emtpy!!!!");
@@ -464,7 +464,8 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         wup.setResilienceMode(getResilienceMode());
         wup.setSecurityZone(workshop.getSecurityZone());
         wup.setSubsystemParticipantName(getPropertyFile().getSubsystemInstant().getParticipantName());
-        wup.setParticipantName(name);
+        wup.setParticipantName(participantName);
+        wup.setParticipantDisplayName(name);
         wup.setReplicationCount(getPropertyFile().getDeploymentMode().getProcessingPlantReplicationCount());
         workshop.getWupSet().add(wup.getComponentFDN());
         getLogger().trace(".addWorkUnitProcessor(): Add the WorkUnitProcessor to the Topology Cache");
@@ -548,7 +549,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
     protected void addPrometheusPort( ProcessingPlantSoftwareComponent processingPlant){
         getLogger().debug(".addPrometheusPort(): Entry, processingPlant->{}", processingPlant);
         HTTPServerTopologyEndpoint prometheusPort = new HTTPServerTopologyEndpoint();
-        HTTPProcessingPlantServerPortSegment port = getPropertyFile().getPrometheusPort();
+        HTTPServerPortSegment port = getPropertyFile().getPrometheusPort();
         if(port == null){
             getLogger().debug(".addPrometheusPort(): Exit, no port to add");
             return;
@@ -557,7 +558,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         String name = interfaceNames.getEndpointServerName(interfaceNames.getPrometheusEndpointName());
         TopologyNodeRDN nodeRDN = createNodeRDN(name, processingPlant.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
         prometheusPort.setComponentRDN(nodeRDN);
-        prometheusPort.setEndpointType(PetasosEndpointTopologyTypeEnum.INTERACT_HTTP_API_SERVER);
+        prometheusPort.setEndpointType(PetasosEndpointTopologyTypeEnum.HTTP_API_SERVER);
         prometheusPort.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
         prometheusPort.constructFDN(processingPlant.getComponentFDN(), nodeRDN);
         prometheusPort.constructFunctionFDN(processingPlant.getNodeFunctionFDN(), nodeRDN );
@@ -567,9 +568,9 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
 
         HTTPServerAdapter httpServerAdapter = new HTTPServerAdapter();
         httpServerAdapter.setEncrypted(getPropertyFile().getDeploymentMode().isUsingInternalEncryption());
-        httpServerAdapter.setPortNumber(port.getPortValue());
-        httpServerAdapter.setContextPath(port.getWebServicePath());
-        httpServerAdapter.setHostName(port.getHostDNSEntry());
+        httpServerAdapter.setPortNumber(port.getServerPort());
+        httpServerAdapter.setContextPath(port.getContextPath());
+        httpServerAdapter.setHostName(port.getServerHostname());
         prometheusPort.setHTTPServerAdapter(httpServerAdapter);
 
         processingPlant.getEndpoints().add(prometheusPort.getComponentFDN());
@@ -585,7 +586,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
     protected void addJolokiaPort(ProcessingPlantSoftwareComponent processingPlant){
         getLogger().debug(".addJolokiaPort(): Entry, processingPlant->{}", processingPlant);
         HTTPServerTopologyEndpoint jolokiaPort = new HTTPServerTopologyEndpoint();
-        HTTPProcessingPlantServerPortSegment port = getPropertyFile().getJolokiaPort();
+        HTTPServerPortSegment port = getPropertyFile().getJolokiaPort();
         if(port == null){
             getLogger().debug(".addJolokiaPort(): Exit, no port to add");
             return;
@@ -595,7 +596,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         jolokiaPort.setComponentRDN(nodeRDN);
         jolokiaPort.setEndpointConfigurationName(interfaceNames.getJolokiaEndpointName());
         jolokiaPort.constructFDN(processingPlant.getComponentFDN(), nodeRDN);
-        jolokiaPort.setEndpointType(PetasosEndpointTopologyTypeEnum.INTERACT_HTTP_API_SERVER);
+        jolokiaPort.setEndpointType(PetasosEndpointTopologyTypeEnum.HTTP_API_SERVER);
         jolokiaPort.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
         jolokiaPort.constructFunctionFDN(processingPlant.getNodeFunctionFDN(), nodeRDN );
         jolokiaPort.setServer(true);
@@ -603,9 +604,9 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
 
         HTTPServerAdapter httpServerAdapter = new HTTPServerAdapter();
         httpServerAdapter.setEncrypted(getPropertyFile().getDeploymentMode().isUsingInternalEncryption());
-        httpServerAdapter.setPortNumber(port.getPortValue());
-        httpServerAdapter.setContextPath(port.getWebServicePath());
-        httpServerAdapter.setHostName(port.getHostDNSEntry());
+        httpServerAdapter.setPortNumber(port.getServerPort());
+        httpServerAdapter.setContextPath(port.getContextPath());
+        httpServerAdapter.setHostName(port.getServerHostname());
         jolokiaPort.setHTTPServerAdapter(httpServerAdapter);
 
         processingPlant.getEndpoints().add(jolokiaPort.getComponentFDN());
@@ -621,7 +622,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
     protected void addKubeLivelinessPort(ProcessingPlantSoftwareComponent processingPlant){
         getLogger().debug(".addKubeLivelinessPort(): Entry, processingPlant->{}", processingPlant);
         HTTPServerTopologyEndpoint kubeLivelinessPort = new HTTPServerTopologyEndpoint();
-        HTTPProcessingPlantServerPortSegment port = getPropertyFile().getKubeLivelinessProbe();
+        HTTPServerPortSegment port = getPropertyFile().getKubeLivelinessProbe();
         if(port == null){
             getLogger().debug(".addKubeLivelinessPort(): Exit, no port to add");
             return;
@@ -631,7 +632,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         kubeLivelinessPort.setComponentRDN(nodeRDN);
         kubeLivelinessPort.setEndpointConfigurationName(interfaceNames.getKubeLivelinessEndpointName());
         kubeLivelinessPort.constructFDN(processingPlant.getComponentFDN(), nodeRDN);
-        kubeLivelinessPort.setEndpointType(PetasosEndpointTopologyTypeEnum.INTERACT_HTTP_API_SERVER);
+        kubeLivelinessPort.setEndpointType(PetasosEndpointTopologyTypeEnum.HTTP_API_SERVER);
         kubeLivelinessPort.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
         kubeLivelinessPort.constructFunctionFDN(processingPlant.getNodeFunctionFDN(), nodeRDN );
         kubeLivelinessPort.setServer(true);
@@ -639,9 +640,9 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
 
         HTTPServerAdapter httpServerAdapter = new HTTPServerAdapter();
         httpServerAdapter.setEncrypted(getPropertyFile().getDeploymentMode().isUsingInternalEncryption());
-        httpServerAdapter.setPortNumber(port.getPortValue());
-        httpServerAdapter.setContextPath(port.getWebServicePath());
-        httpServerAdapter.setHostName(port.getHostDNSEntry());
+        httpServerAdapter.setPortNumber(port.getServerPort());
+        httpServerAdapter.setContextPath(port.getContextPath());
+        httpServerAdapter.setHostName(port.getServerHostname());
         kubeLivelinessPort.setHTTPServerAdapter(httpServerAdapter);
 
         processingPlant.getEndpoints().add(kubeLivelinessPort.getComponentFDN());
@@ -657,7 +658,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
     protected void addKubeReadinessPort( ProcessingPlantSoftwareComponent processingPlant){
         getLogger().debug(".addKubeReadinessPort(): Entry, processingPlant->{}", processingPlant);
         HTTPServerTopologyEndpoint kubeReadinessPort = new HTTPServerTopologyEndpoint();
-        HTTPProcessingPlantServerPortSegment port = getPropertyFile().getKubeReadinessProbe();
+        HTTPServerPortSegment port = getPropertyFile().getKubeReadinessProbe();
         if(port == null){
             getLogger().debug(".addKubeReadinessPort(): Exit, no port to add");
             return;
@@ -667,7 +668,7 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         kubeReadinessPort.setComponentRDN(nodeRDN);
         kubeReadinessPort.setEndpointConfigurationName(interfaceNames.getKubeReadinessEndpointName());
         kubeReadinessPort.constructFDN(processingPlant.getComponentFDN(), nodeRDN);
-        kubeReadinessPort.setEndpointType(PetasosEndpointTopologyTypeEnum.INTERACT_HTTP_API_SERVER);
+        kubeReadinessPort.setEndpointType(PetasosEndpointTopologyTypeEnum.HTTP_API_SERVER);
         kubeReadinessPort.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
         kubeReadinessPort.constructFunctionFDN(processingPlant.getNodeFunctionFDN(), nodeRDN );
         kubeReadinessPort.setComponentRDN(nodeRDN);
@@ -675,9 +676,9 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
 
         HTTPServerAdapter httpServerAdapter = new HTTPServerAdapter();
         httpServerAdapter.setEncrypted(getPropertyFile().getDeploymentMode().isUsingInternalEncryption());
-        httpServerAdapter.setPortNumber(port.getPortValue());
-        httpServerAdapter.setContextPath(port.getWebServicePath());
-        httpServerAdapter.setHostName(port.getHostDNSEntry());
+        httpServerAdapter.setPortNumber(port.getServerPort());
+        httpServerAdapter.setContextPath(port.getContextPath());
+        httpServerAdapter.setHostName(port.getServerHostname());
         kubeReadinessPort.setHTTPServerAdapter(httpServerAdapter);
 
         processingPlant.getEndpoints().add(kubeReadinessPort.getComponentFDN());
@@ -820,21 +821,5 @@ public abstract class PegacornTopologyFactoryBase implements PegacornTopologyFac
         node.setOtherConfigurationParameters(propertiesMap);
     }
 
-    protected HTTPClientAdapter newHTTPClientAdapter(ConnectedSystemPort connectedSystemPort) {
-        getLogger().debug(".HTTPClientAdapter(): Entry, connectedSystemPort->{}", connectedSystemPort);
-        HTTPClientAdapter systemEndpointPort = new HTTPClientAdapter();
-        boolean encryptionRequired = false;
-        if(connectedSystemPort.getEncryptionRequired() != null){
-            encryptionRequired = connectedSystemPort.getEncryptionRequired();
-        }
-        systemEndpointPort.setEncrypted(encryptionRequired);
-        systemEndpointPort.setHostName(connectedSystemPort.getTargetPortDNSName());
-        systemEndpointPort.setPortNumber(connectedSystemPort.getTargetPortValue());
-        IPCAdapterDefinition currentInterfaceDefinition = new IPCAdapterDefinition();
-        currentInterfaceDefinition.setInterfaceFormalName(connectedSystemPort.getTargetInterfaceDefinition().getInterfaceDefinitionName());
-        currentInterfaceDefinition.setInterfaceFormalVersion(connectedSystemPort.getTargetInterfaceDefinition().getInterfaceDefinitionVersion());
-        systemEndpointPort.getSupportedInterfaceDefinitions().add(currentInterfaceDefinition);
-        getLogger().debug(".HTTPClientAdapter(): Exit, systemEndpointPort->{}", systemEndpointPort);
-        return (systemEndpointPort);
-    }
+
 }

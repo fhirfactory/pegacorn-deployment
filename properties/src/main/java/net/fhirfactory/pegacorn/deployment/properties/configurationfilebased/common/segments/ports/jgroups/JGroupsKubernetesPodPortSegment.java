@@ -19,16 +19,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact;
+package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.jgroups;
 
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.InterfaceDefinitionSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.StandardServerPortSegment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-
-public class StandardInteractServerPortSegment extends StandardExternalFacingPort {
-    private static Logger LOG = LoggerFactory.getLogger(StandardInteractServerPortSegment.class);
+public class JGroupsKubernetesPodPortSegment extends StandardServerPortSegment {
+    private static Logger LOG = LoggerFactory.getLogger(JGroupsKubernetesPodPortSegment.class);
 
     @Override
     protected Logger specifyLogger() {
@@ -37,16 +35,13 @@ public class StandardInteractServerPortSegment extends StandardExternalFacingPor
 
     @Override
     public String toString() {
-        return "StandardInteractServerPortSegment{" +
-                "portType=" + getPortType() +
-                ", connectedSystem=" + getConnectedSystem() +
-                ", name=" + getName() +
+        return "JGroupsIPCPortSegment{" +
+                "portValue=" + getServerPort() +
+                ", portType=" + getPortType() +
                 ", server=" + isServer() +
-                ", portValue=" + getPortValue() +
-                ", hostDNSEntry=" + getHostDNSEntry() +
-                ", supportedInterfaceProfiles=" + getSupportedInterfaceProfiles() +
-                ", startupDelay=" + getStartupDelay() +
                 ", encrypted=" + isEncrypted() +
+                ", supportedInterfaceProfiles=" + getSupportedInterfaceProfiles() +
+                ", hostDNSEntry=" + getServerHostname() +
                 '}';
     }
 }

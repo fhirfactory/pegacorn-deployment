@@ -22,15 +22,15 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.hestia.dam.im;
 
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes.ClusterServiceDeliverySubsystemPropertyFile;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.HTTPIPCServerPortSegment;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.StandardServerPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.http.HTTPServerPortSegment;
 
 public class HestiaDAMIMPropertyFile extends ClusterServiceDeliverySubsystemPropertyFile {
-    //
+
     // Edge :: Answer (FHIR API Server)
     //
-    private HTTPIPCServerPortSegment edgeAnswer;
-    //
+    private HTTPServerPortSegment edgeAnswer;
+
     // Edge :: Receive (FHIR::Media Receivers)
     //
     private StandardServerPortSegment edgeReceiveMediaLadonNexusIM;
@@ -39,11 +39,29 @@ public class HestiaDAMIMPropertyFile extends ClusterServiceDeliverySubsystemProp
     private StandardServerPortSegment edgeReceiveMediaFHIRBreakEmailGateway;
     private StandardServerPortSegment edgeReceiveMediaMITaFSMSGateway;
 
-    public HTTPIPCServerPortSegment getEdgeAnswer() {
+    //
+    // Constructors
+    //
+
+    public HestiaDAMIMPropertyFile(){
+        super();
+        this.edgeAnswer = null;
+        this.edgeReceiveMediaCommunicateIrisIM = null;
+        this.edgeReceiveMediaLadonNexusIM = null;
+        this.edgeReceiveMediaFHIRBreakEmailGateway = null;
+        this.edgeReceiveMediaFHIRBreakLDAPScanner = null;
+        this.edgeReceiveMediaMITaFSMSGateway = null;
+    }
+
+    //
+    // Getters and Setters
+    //
+
+    public HTTPServerPortSegment getEdgeAnswer() {
         return edgeAnswer;
     }
 
-    public void setEdgeAnswer(HTTPIPCServerPortSegment edgeAnswer) {
+    public void setEdgeAnswer(HTTPServerPortSegment edgeAnswer) {
         this.edgeAnswer = edgeAnswer;
     }
 

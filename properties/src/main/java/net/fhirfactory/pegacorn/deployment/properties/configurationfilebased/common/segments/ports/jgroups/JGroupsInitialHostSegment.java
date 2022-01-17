@@ -1,4 +1,4 @@
-package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc;
+package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.jgroups;
 
 public class JGroupsInitialHostSegment {
     private String hostName;

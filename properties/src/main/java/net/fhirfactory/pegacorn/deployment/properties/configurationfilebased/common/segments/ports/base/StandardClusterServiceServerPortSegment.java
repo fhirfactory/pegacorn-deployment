@@ -22,22 +22,29 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base;
 
 public abstract class StandardClusterServiceServerPortSegment extends StandardServerPortSegment {
-    private Integer servicePortValue;
+    private Integer servicePort;
     private String servicePortName;
-    private String serviceDNSEntry;
+    private String serviceDNS;
     private Integer clusterServicePortOffsetValue;
+
+    //
+    // Constructor(s)
+    //
 
     public StandardClusterServiceServerPortSegment(){
         super();
         clusterServicePortOffsetValue = null;
+        this.serviceDNS = null;
+        this.servicePortName = null;
+        this.servicePort = null;
     }
 
-    public Integer getServicePortValue() {
-        return servicePortValue;
+    public Integer getServicePort() {
+        return servicePort;
     }
 
-    public void setServicePortValue(Integer servicePortValue) {
-        this.servicePortValue = servicePortValue;
+    public void setServicePort(Integer servicePort) {
+        this.servicePort = servicePort;
     }
 
     public String getServicePortName() {
@@ -65,26 +72,26 @@ public abstract class StandardClusterServiceServerPortSegment extends StandardSe
         this.clusterServicePortOffsetValue = clusterServicePortOffsetValue;
     }
 
-    public String getServiceDNSEntry() {
-        return serviceDNSEntry;
+    public String getServiceDNS() {
+        return serviceDNS;
     }
 
-    public void setServiceDNSEntry(String serviceDNSEntry) {
-        this.serviceDNSEntry = serviceDNSEntry;
+    public void setServiceDNS(String serviceDNS) {
+        this.serviceDNS = serviceDNS;
     }
 
     @Override
     public String toString() {
         return "StandardClusterServicePortSegment{" +
-                "portValue=" + getPortValue() +
+                "portValue=" + getServerPort() +
                 ", portType=" + getPortType() +
                 ", isServer=" + isServer() +
                 ", isEncrypted=" + isEncrypted() +
-                ", hostDNSEntry=" + getHostDNSEntry() +
+                ", hostDNSEntry=" + getServerHostname() +
                 ", supportedInterfaceProfiles=" + getSupportedInterfaceProfiles() +
-                ", servicePortValue=" + servicePortValue +
+                ", servicePortValue=" + servicePort +
                 ", servicePortName=" + servicePortName +
-                ", serviceDNSEntry=" + serviceDNSEntry +
+                ", serviceDNSEntry=" + serviceDNS +
                 ", clusterServicePortOffsetValue=" + clusterServicePortOffsetValue +
                 '}';
     }

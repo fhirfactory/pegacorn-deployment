@@ -19,18 +19,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact;
+package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.http;
 
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.StandardServerPortSegment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class StandardInteractHTTPServerPortSegment extends StandardInteractServerPortSegment {
-    private static Logger LOG = LoggerFactory.getLogger(StandardInteractHTTPServerPortSegment.class);
+public class HTTPServerPortSegment extends StandardServerPortSegment {
+    private static Logger LOG = LoggerFactory.getLogger(HTTPServerPortSegment.class);
 
-    private String webServicePath;
+    private String contextPath;
 
-    public StandardInteractHTTPServerPortSegment(){
+    public HTTPServerPortSegment(){
         super();
     }
 
@@ -39,11 +39,11 @@ public class StandardInteractHTTPServerPortSegment extends StandardInteractServe
         return (LOG);
     }
 
-    public String getWebServicePath() {
-        return webServicePath;
+    public String getContextPath() {
+        return contextPath;
     }
 
-    public void setWebServicePath(String webServicePath) {
-        this.webServicePath = webServicePath;
+    public void setContextPath(String contextPath) {
+        this.contextPath = contextPath;
     }
 }

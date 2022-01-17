@@ -1,16 +1,29 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes.fhirpersistence.dm;
 
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes.BaseSubsystemPropertyFile;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.standard.HTTPClusteredServiceServerPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.http.ClusteredHTTPServerPortSegment;
 
 public abstract class FHIRDataManagerPropertyFile extends BaseSubsystemPropertyFile {
-    HTTPClusteredServiceServerPortSegment fhirJPAServerPort;
+    private ClusteredHTTPServerPortSegment fhirJPAServerPort;
 
-    public HTTPClusteredServiceServerPortSegment getFHIRJPAServerPort() {
+    //
+    // Constructor(s)
+    //
+
+    public FHIRDataManagerPropertyFile(){
+        super();
+        this.fhirJPAServerPort = null;
+    }
+
+    //
+    // Getters and Setters
+    //
+
+    public ClusteredHTTPServerPortSegment getFHIRJPAServerPort() {
         return fhirJPAServerPort;
     }
 
-    public void getFHIRJPAServerPort(HTTPClusteredServiceServerPortSegment edgeAnswer) {
+    public void getFHIRJPAServerPort(ClusteredHTTPServerPortSegment edgeAnswer) {
         this.fhirJPAServerPort = edgeAnswer;
     }
 }

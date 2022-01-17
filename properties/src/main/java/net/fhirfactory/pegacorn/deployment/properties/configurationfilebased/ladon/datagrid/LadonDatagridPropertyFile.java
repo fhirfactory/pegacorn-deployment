@@ -22,7 +22,7 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.ladon.datagrid;
 
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes.PetasosEnabledSubsystemPropertyFile;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.JGroupsKubernetesPodPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.jgroups.JGroupsKubernetesPodPortSegment;
 
 public abstract class LadonDatagridPropertyFile extends PetasosEnabledSubsystemPropertyFile {
 

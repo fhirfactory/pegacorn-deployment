@@ -19,21 +19,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.standard;
+package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.http;
 
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemProperties;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.StandardClusterServiceServerPortSegment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ClusteredServiceServerPortSegment extends StandardClusterServiceServerPortSegment {
-    private static Logger LOG = LoggerFactory.getLogger(ClusteredServiceServerPortSegment.class);
+public class ClusteredHTTPServerPortSegment extends StandardClusterServiceServerPortSegment {
+    private static Logger LOG = LoggerFactory.getLogger(ClusteredHTTPServerPortSegment.class);
 
-    public ClusteredServiceServerPortSegment(){
-        super();
+    private String contextPath;
+
+    @Override
+    protected Logger specifyLogger(){
+        return(LOG);
+    }
+
+    public ConnectedSystemProperties getTargetSystem() {
+        return targetSystem;
+    }
+
+    public void setTargetSystem(ConnectedSystemProperties targetSystem) {
+        this.targetSystem = targetSystem;
+    }
+
+    private ConnectedSystemProperties targetSystem;
+
+    public String getContextPath() {
+        return contextPath;
+    }
+
+    public void setContextPath(String contextPath) {
+        this.contextPath = contextPath;
     }
 
     @Override
-    protected Logger specifyLogger() {
-        return (LOG);
+    public String toString() {
+        return "HTTPClusteredServiceInteractPortSegment{" +
+                "targetSystem=" + targetSystem +
+                '}';
     }
 }

@@ -1,170 +1,170 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes.fhirpersistence.im;
 
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes.ClusterServiceDeliverySubsystemPropertyFile;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc.HTTPIPCServerPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.http.ClusteredHTTPServerPortSegment;
 
 public abstract class FHIRInformationManagerPropertyFile extends ClusterServiceDeliverySubsystemPropertyFile {
 
-    HTTPIPCServerPortSegment edgeAnswerConformance;
-    HTTPIPCServerPortSegment edgeAnswerTerminology;
-    HTTPIPCServerPortSegment edgeAnswerSecurity;
-    HTTPIPCServerPortSegment edgeAnswerDocuments;
-    HTTPIPCServerPortSegment edgeAnswerOther;
-    HTTPIPCServerPortSegment edgeAnswerIndividuals;
-    HTTPIPCServerPortSegment edgeAnswerEntities;
-    HTTPIPCServerPortSegment edgeAnswerWorkflow;
-    HTTPIPCServerPortSegment edgeAnswerManagement;
-    HTTPIPCServerPortSegment edgeAnswerSummary;
-    HTTPIPCServerPortSegment edgeAnswerDiagnostics;
-    HTTPIPCServerPortSegment edgeAnswerMedications;
-    HTTPIPCServerPortSegment edgeAnswerCareProvision;
-    HTTPIPCServerPortSegment edgeAnswerRequestAndResponse;
-    HTTPIPCServerPortSegment edgeAnswerSupport;
-    HTTPIPCServerPortSegment edgeAnswerBilling;
-    HTTPIPCServerPortSegment edgeAnswerPayment;
-    HTTPIPCServerPortSegment edgeAnswerGeneral;
+    ClusteredHTTPServerPortSegment edgeAnswerConformance;
+    ClusteredHTTPServerPortSegment edgeAnswerTerminology;
+    ClusteredHTTPServerPortSegment edgeAnswerSecurity;
+    ClusteredHTTPServerPortSegment edgeAnswerDocuments;
+    ClusteredHTTPServerPortSegment edgeAnswerOther;
+    ClusteredHTTPServerPortSegment edgeAnswerIndividuals;
+    ClusteredHTTPServerPortSegment edgeAnswerEntities;
+    ClusteredHTTPServerPortSegment edgeAnswerWorkflow;
+    ClusteredHTTPServerPortSegment edgeAnswerManagement;
+    ClusteredHTTPServerPortSegment edgeAnswerSummary;
+    ClusteredHTTPServerPortSegment edgeAnswerDiagnostics;
+    ClusteredHTTPServerPortSegment edgeAnswerMedications;
+    ClusteredHTTPServerPortSegment edgeAnswerCareProvision;
+    ClusteredHTTPServerPortSegment edgeAnswerRequestAndResponse;
+    ClusteredHTTPServerPortSegment edgeAnswerSupport;
+    ClusteredHTTPServerPortSegment edgeAnswerBilling;
+    ClusteredHTTPServerPortSegment edgeAnswerPayment;
+    ClusteredHTTPServerPortSegment edgeAnswerGeneral;
 
-    public HTTPIPCServerPortSegment getEdgeAnswerConformance() {
+    public ClusteredHTTPServerPortSegment getEdgeAnswerConformance() {
         return edgeAnswerConformance;
     }
 
-    public void setEdgeAnswerConformance(HTTPIPCServerPortSegment edgeAnswerConformance) {
+    public void setEdgeAnswerConformance(ClusteredHTTPServerPortSegment edgeAnswerConformance) {
         this.edgeAnswerConformance = edgeAnswerConformance;
     }
 
-    public HTTPIPCServerPortSegment getEdgeAnswerTerminology() {
+    public ClusteredHTTPServerPortSegment getEdgeAnswerTerminology() {
         return edgeAnswerTerminology;
     }
 
-    public void setEdgeAnswerTerminology(HTTPIPCServerPortSegment edgeAnswerTerminology) {
+    public void setEdgeAnswerTerminology(ClusteredHTTPServerPortSegment edgeAnswerTerminology) {
         this.edgeAnswerTerminology = edgeAnswerTerminology;
     }
 
-    public HTTPIPCServerPortSegment getEdgeAnswerSecurity() {
+    public ClusteredHTTPServerPortSegment getEdgeAnswerSecurity() {
         return edgeAnswerSecurity;
     }
 
-    public void setEdgeAnswerSecurity(HTTPIPCServerPortSegment edgeAnswerSecurity) {
+    public void setEdgeAnswerSecurity(ClusteredHTTPServerPortSegment edgeAnswerSecurity) {
         this.edgeAnswerSecurity = edgeAnswerSecurity;
     }
 
-    public HTTPIPCServerPortSegment getEdgeAnswerDocuments() {
+    public ClusteredHTTPServerPortSegment getEdgeAnswerDocuments() {
         return edgeAnswerDocuments;
     }
 
-    public void setEdgeAnswerDocuments(HTTPIPCServerPortSegment edgeAnswerDocuments) {
+    public void setEdgeAnswerDocuments(ClusteredHTTPServerPortSegment edgeAnswerDocuments) {
         this.edgeAnswerDocuments = edgeAnswerDocuments;
     }
 
-    public HTTPIPCServerPortSegment getEdgeAnswerOther() {
+    public ClusteredHTTPServerPortSegment getEdgeAnswerOther() {
         return edgeAnswerOther;
     }
 
-    public void setEdgeAnswerOther(HTTPIPCServerPortSegment edgeAnswerOther) {
+    public void setEdgeAnswerOther(ClusteredHTTPServerPortSegment edgeAnswerOther) {
         this.edgeAnswerOther = edgeAnswerOther;
     }
 
-    public HTTPIPCServerPortSegment getEdgeAnswerIndividuals() {
+    public ClusteredHTTPServerPortSegment getEdgeAnswerIndividuals() {
         return edgeAnswerIndividuals;
     }
 
-    public void setEdgeAnswerIndividuals(HTTPIPCServerPortSegment edgeAnswerIndividuals) {
+    public void setEdgeAnswerIndividuals(ClusteredHTTPServerPortSegment edgeAnswerIndividuals) {
         this.edgeAnswerIndividuals = edgeAnswerIndividuals;
     }
 
-    public HTTPIPCServerPortSegment getEdgeAnswerEntities() {
+    public ClusteredHTTPServerPortSegment getEdgeAnswerEntities() {
         return edgeAnswerEntities;
     }
 
-    public void setEdgeAnswerEntities(HTTPIPCServerPortSegment edgeAnswerEntities) {
+    public void setEdgeAnswerEntities(ClusteredHTTPServerPortSegment edgeAnswerEntities) {
         this.edgeAnswerEntities = edgeAnswerEntities;
     }
 
-    public HTTPIPCServerPortSegment getEdgeAnswerWorkflow() {
+    public ClusteredHTTPServerPortSegment getEdgeAnswerWorkflow() {
         return edgeAnswerWorkflow;
     }
 
-    public void setEdgeAnswerWorkflow(HTTPIPCServerPortSegment edgeAnswerWorkflow) {
+    public void setEdgeAnswerWorkflow(ClusteredHTTPServerPortSegment edgeAnswerWorkflow) {
         this.edgeAnswerWorkflow = edgeAnswerWorkflow;
     }
 
-    public HTTPIPCServerPortSegment getEdgeAnswerManagement() {
+    public ClusteredHTTPServerPortSegment getEdgeAnswerManagement() {
         return edgeAnswerManagement;
     }
 
-    public void setEdgeAnswerManagement(HTTPIPCServerPortSegment edgeAnswerManagement) {
+    public void setEdgeAnswerManagement(ClusteredHTTPServerPortSegment edgeAnswerManagement) {
         this.edgeAnswerManagement = edgeAnswerManagement;
     }
 
-    public HTTPIPCServerPortSegment getEdgeAnswerSummary() {
+    public ClusteredHTTPServerPortSegment getEdgeAnswerSummary() {
         return edgeAnswerSummary;
     }
 
-    public void setEdgeAnswerSummary(HTTPIPCServerPortSegment edgeAnswerSummary) {
+    public void setEdgeAnswerSummary(ClusteredHTTPServerPortSegment edgeAnswerSummary) {
         this.edgeAnswerSummary = edgeAnswerSummary;
     }
 
-    public HTTPIPCServerPortSegment getEdgeAnswerDiagnostics() {
+    public ClusteredHTTPServerPortSegment getEdgeAnswerDiagnostics() {
         return edgeAnswerDiagnostics;
     }
 
-    public void setEdgeAnswerDiagnostics(HTTPIPCServerPortSegment edgeAnswerDiagnostics) {
+    public void setEdgeAnswerDiagnostics(ClusteredHTTPServerPortSegment edgeAnswerDiagnostics) {
         this.edgeAnswerDiagnostics = edgeAnswerDiagnostics;
     }
 
-    public HTTPIPCServerPortSegment getEdgeAnswerMedications() {
+    public ClusteredHTTPServerPortSegment getEdgeAnswerMedications() {
         return edgeAnswerMedications;
     }
 
-    public void setEdgeAnswerMedications(HTTPIPCServerPortSegment edgeAnswerMedications) {
+    public void setEdgeAnswerMedications(ClusteredHTTPServerPortSegment edgeAnswerMedications) {
         this.edgeAnswerMedications = edgeAnswerMedications;
     }
 
-    public HTTPIPCServerPortSegment getEdgeAnswerCareProvision() {
+    public ClusteredHTTPServerPortSegment getEdgeAnswerCareProvision() {
         return edgeAnswerCareProvision;
     }
 
-    public void setEdgeAnswerCareProvision(HTTPIPCServerPortSegment edgeAnswerCareProvision) {
+    public void setEdgeAnswerCareProvision(ClusteredHTTPServerPortSegment edgeAnswerCareProvision) {
         this.edgeAnswerCareProvision = edgeAnswerCareProvision;
     }
 
-    public HTTPIPCServerPortSegment getEdgeAnswerRequestAndResponse() {
+    public ClusteredHTTPServerPortSegment getEdgeAnswerRequestAndResponse() {
         return edgeAnswerRequestAndResponse;
     }
 
-    public void setEdgeAnswerRequestAndResponse(HTTPIPCServerPortSegment edgeAnswerRequestAndResponse) {
+    public void setEdgeAnswerRequestAndResponse(ClusteredHTTPServerPortSegment edgeAnswerRequestAndResponse) {
         this.edgeAnswerRequestAndResponse = edgeAnswerRequestAndResponse;
     }
 
-    public HTTPIPCServerPortSegment getEdgeAnswerSupport() {
+    public ClusteredHTTPServerPortSegment getEdgeAnswerSupport() {
         return edgeAnswerSupport;
     }
 
-    public void setEdgeAnswerSupport(HTTPIPCServerPortSegment edgeAnswerSupport) {
+    public void setEdgeAnswerSupport(ClusteredHTTPServerPortSegment edgeAnswerSupport) {
         this.edgeAnswerSupport = edgeAnswerSupport;
     }
 
-    public HTTPIPCServerPortSegment getEdgeAnswerBilling() {
+    public ClusteredHTTPServerPortSegment getEdgeAnswerBilling() {
         return edgeAnswerBilling;
     }
 
-    public void setEdgeAnswerBilling(HTTPIPCServerPortSegment edgeAnswerBilling) {
+    public void setEdgeAnswerBilling(ClusteredHTTPServerPortSegment edgeAnswerBilling) {
         this.edgeAnswerBilling = edgeAnswerBilling;
     }
 
-    public HTTPIPCServerPortSegment getEdgeAnswerPayment() {
+    public ClusteredHTTPServerPortSegment getEdgeAnswerPayment() {
         return edgeAnswerPayment;
     }
 
-    public void setEdgeAnswerPayment(HTTPIPCServerPortSegment edgeAnswerPayment) {
+    public void setEdgeAnswerPayment(ClusteredHTTPServerPortSegment edgeAnswerPayment) {
         this.edgeAnswerPayment = edgeAnswerPayment;
     }
 
-    public HTTPIPCServerPortSegment getEdgeAnswerGeneral() {
+    public ClusteredHTTPServerPortSegment getEdgeAnswerGeneral() {
         return edgeAnswerGeneral;
     }
 
-    public void setEdgeAnswerGeneral(HTTPIPCServerPortSegment edgeAnswerGeneral) {
+    public void setEdgeAnswerGeneral(ClusteredHTTPServerPortSegment edgeAnswerGeneral) {
         this.edgeAnswerGeneral = edgeAnswerGeneral;
     }
 }

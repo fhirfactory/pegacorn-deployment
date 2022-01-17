@@ -1,6 +1,6 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact;
 
-public class FileShareEndpointSegment {
+public class InteractFileShareEndpointSegment {
     private String fileShareName;
     private String fileShareProtocol;
     private String fileSharePath;

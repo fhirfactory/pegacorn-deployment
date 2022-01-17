@@ -1,11 +1,12 @@
-package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.ipc;
+package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.http;
 
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.StandardExternalFacingPort;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.StandardClientPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.StandardExternalFacingPort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class HTTPIPCClientPortSegment extends StandardExternalFacingPort {
-    private static Logger LOG = LoggerFactory.getLogger(HTTPIPCClientPortSegment.class);
+public class HTTPClientPortSegment extends StandardClientPortSegment {
+    private static Logger LOG = LoggerFactory.getLogger(HTTPClientPortSegment.class);
 
     private int defaultRetryCount;
     private int defaultRetryWait;
@@ -16,7 +17,7 @@ public class HTTPIPCClientPortSegment extends StandardExternalFacingPort {
     // Constructor(s)
     //
 
-    public HTTPIPCClientPortSegment() {
+    public HTTPClientPortSegment() {
         super();
         this.defaultRetryCount = 3;
         this.defaultRetryWait = 30;
@@ -71,21 +72,18 @@ public class HTTPIPCClientPortSegment extends StandardExternalFacingPort {
 
     @Override
     public String toString() {
-        return "HTTPIPCClientPortSegment{" +
-                "name=" + getName() +
-                ", otherConfigurationParameters=" + getOtherConfigurationParameters() +
-                ", portValue=" + getPortValue() +
-                ", portType=" + getPortType() +
+        return "HTTPClientPortSegment{" +
+                "otherConfigurationParameters=" + getOtherConfigurationParameters() +
+                ", connectedSystem=" + getConnectedSystem() +
+                ", portType='" + getPortType() + '\'' +
                 ", server=" + isServer() +
                 ", encrypted=" + isEncrypted() +
-                ", supportedInterfaceProfiles=" + getSupportedInterfaceProfiles() +
-                ", hostDNSEntry=" + getHostDNSEntry() +
                 ", startupDelay=" + getStartupDelay() +
-                ", contextPath=" + contextPath +
-                ", connectedSystem=" + getConnectedSystem() +
+                ", name='" + getName() + '\'' +
                 ", defaultRetryCount=" + defaultRetryCount +
                 ", defaultRetryWait=" + defaultRetryWait +
                 ", defaultTimeout=" + defaultTimeout +
+                ", contextPath='" + contextPath + '\'' +
                 '}';
     }
 }

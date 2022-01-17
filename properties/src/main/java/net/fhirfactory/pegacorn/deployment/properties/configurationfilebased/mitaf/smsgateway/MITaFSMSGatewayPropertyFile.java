@@ -1,20 +1,20 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.mitaf.smsgateway;
 
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.StandardServerPortSegment;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.StandardInteractServerPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.InteractServerPortSegment;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.mitaf.MITaFSubsystemPropertyFile;
 
 public class MITaFSMSGatewayPropertyFile extends MITaFSubsystemPropertyFile {
 
-    private StandardInteractServerPortSegment smsGateway;
+    private InteractServerPortSegment smsGateway;
 
     private StandardServerPortSegment edgeReceiveCommunication;
 
-    public StandardInteractServerPortSegment getSmsGateway() {
+    public InteractServerPortSegment getSmsGateway() {
         return smsGateway;
     }
 
-    public void setSmsGateway(StandardInteractServerPortSegment smsGateway) {
+    public void setSmsGateway(InteractServerPortSegment smsGateway) {
         this.smsGateway = smsGateway;
     }
 

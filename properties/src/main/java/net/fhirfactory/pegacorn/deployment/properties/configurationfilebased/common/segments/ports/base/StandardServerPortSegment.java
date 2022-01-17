@@ -22,23 +22,16 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.datatypes.ParameterNameValuePairType;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public abstract class StandardServerPortSegment extends ConfigurableNodeSegment{
+public abstract class StandardServerPortSegment extends StandardExternalFacingPort{
 
-    private int portValue;
-    private String portType;
-    private boolean server;
-    private boolean encrypted;
-    private String hostDNSEntry;
+    private Integer serverPort;
+    private String serverHostname;
     private ArrayList<InterfaceDefinitionSegment> supportedInterfaceProfiles;
-    private int startupDelay;
-    private String name;
-    private List<ParameterNameValuePairType> portParameters;
+
 
     //
     // Abstract Methods
@@ -53,11 +46,8 @@ public abstract class StandardServerPortSegment extends ConfigurableNodeSegment{
     public StandardServerPortSegment(){
         super();
         this.supportedInterfaceProfiles = new ArrayList<>();
-        this.server = false;
-        this.encrypted = false;
-        this.startupDelay = 0;
-        this.name = null;
-        this.portParameters = new ArrayList<>();
+        this.serverPort = null;
+
     }
 
     //
@@ -69,44 +59,12 @@ public abstract class StandardServerPortSegment extends ConfigurableNodeSegment{
         return(specifyLogger());
     }
 
-    public List<ParameterNameValuePairType> getPortParameters() {
-        return portParameters;
+    public Integer getServerPort() {
+        return serverPort;
     }
 
-    public void setPortParameters(List<ParameterNameValuePairType> portParameters) {
-        this.portParameters = portParameters;
-    }
-
-    public int getPortValue() {
-        return portValue;
-    }
-
-    public void setPortValue(int portValue) {
-        this.portValue = portValue;
-    }
-
-    public String getPortType() {
-        return portType;
-    }
-
-    public void setPortType(String portType) {
-        this.portType = portType;
-    }
-
-    public boolean isServer() {
-        return server;
-    }
-
-    public void setServer(boolean server) {
-        this.server = server;
-    }
-
-    public boolean isEncrypted() {
-        return encrypted;
-    }
-
-    public void setEncrypted(boolean encrypted) {
-        this.encrypted = encrypted;
+    public void setServerPort(Integer serverPort) {
+        this.serverPort = serverPort;
     }
 
     public ArrayList<InterfaceDefinitionSegment> getSupportedInterfaceProfiles() {
@@ -117,28 +75,12 @@ public abstract class StandardServerPortSegment extends ConfigurableNodeSegment{
         this.supportedInterfaceProfiles = supportedInterfaceProfiles;
     }
 
-    public String getHostDNSEntry() {
-        return hostDNSEntry;
+    public String getServerHostname() {
+        return serverHostname;
     }
 
-    public void setHostDNSEntry(String hostDNSEntry) {
-        this.hostDNSEntry = hostDNSEntry;
-    }
-
-    public int getStartupDelay() {
-        return startupDelay;
-    }
-
-    public void setStartupDelay(int startupDelay) {
-        this.startupDelay = startupDelay;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setServerHostname(String serverHostname) {
+        this.serverHostname = serverHostname;
     }
 
     //
@@ -148,15 +90,17 @@ public abstract class StandardServerPortSegment extends ConfigurableNodeSegment{
     @Override
     public String toString() {
         return "StandardServerPortSegment{" +
-                "otherConfigurationParameters=" + getOtherConfigurationParameters() +
-                ", portValue=" + portValue +
-                ", portType='" + portType +
-                ", server=" + server +
-                ", encrypted=" + encrypted +
-                ", hostDNSEntry='" + hostDNSEntry +
+                "otherConfigurationParameters=" + otherConfigurationParameters +
+                ", otherConfigurationParameters=" + getOtherConfigurationParameters() +
+                ", connectedSystem=" + getConnectedSystem() +
+                ", portType='" + getPortType() + '\'' +
+                ", server=" + isServer() +
+                ", encrypted=" + isEncrypted() +
+                ", startupDelay=" + getStartupDelay() +
+                ", name='" + getName() + '\'' +
+                ", portValue=" + serverPort +
+                ", hostDNSEntry='" + serverHostname + '\'' +
                 ", supportedInterfaceProfiles=" + supportedInterfaceProfiles +
-                ", startupDelay=" + startupDelay +
-                ", name=" + name +
                 '}';
     }
 }
