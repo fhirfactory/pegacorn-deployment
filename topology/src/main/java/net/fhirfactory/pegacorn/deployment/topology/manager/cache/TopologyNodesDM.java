@@ -260,24 +260,34 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
     }
 
     public List<SoftwareComponent> getSoftwareComponent(PegacornSystemComponentTypeTypeEnum nodeType, String nodeName, String nodeVersion){
-        LOG.debug(".nodeSearch(): Entry, nodeType->{}, nodeName->{}, nodeVersion->{}", nodeType, nodeName, nodeVersion);
+        LOG.debug(".getSoftwareComponent(): Entry, nodeType->{}, nodeName->{}, nodeVersion->{}", nodeType, nodeName, nodeVersion);
         ArrayList<SoftwareComponent> nodeList = new ArrayList<>();
         Collection<SoftwareComponent> topologyNodes= null;
+        LOG.trace(".getSoftwareComponent(): Getting the set of existing node FDNs - start");
         synchronized (nodeSetLock) {
             topologyNodes = fdnNodeSetMap.values();
         }
+        LOG.trace(".getSoftwareComponent(): Getting the set of existing node FDNs - End");
+        LOG.trace(".getSoftwareComponent(): Now interating through to see if we can found the required node");
         for (SoftwareComponent currentNode: topologyNodes) {
             if (LOG.isTraceEnabled()) {
-                LOG.trace(".nodeSearch(): Search Cache Entry : nodeRDN->{}, nodeComponentType->{}", currentNode.getComponentRDN(), currentNode.getComponentType());
+                LOG.trace(".getSoftwareComponent(): Search Cache Entry : nodeRDN->{}, nodeComponentType->{}", currentNode.getComponentRDN(), currentNode.getComponentType());
             }
+            LOG.trace(".getSoftwareComponent(): Comparing nodeType: Start");
             boolean nodeTypeMatches = nodeType.equals(currentNode.getComponentType());
+            LOG.trace(".getSoftwareComponent(): Comparing nodeType: Finish, result->{}", nodeTypeMatches);
+            LOG.trace(".getSoftwareComponent(): Comparing nodeName: Start");
             boolean nodeNameMatches = nodeName.contentEquals(currentNode.getComponentRDN().getNodeName());
+            LOG.trace(".getSoftwareComponent(): Comparing nodeName: Finish, result->{}", nodeNameMatches);
+            LOG.trace(".getSoftwareComponent(): Comparing nodeName: Version");
             boolean nodeVersionMatches = nodeVersion.contentEquals(currentNode.getComponentRDN().getNodeVersion());
+            LOG.trace(".getSoftwareComponent(): Comparing nodeVersion: Finish, result->{}", nodeVersionMatches);
             if (nodeTypeMatches && nodeNameMatches && nodeVersionMatches) {
-                LOG.trace(".nodeSearch(): Node found!!! Adding to search result!");
+                LOG.trace(".getSoftwareComponent(): Node found!!! Adding to search result!");
                 nodeList.add(currentNode);
             }
         }
+        LOG.trace(".getSoftwareComponent(): Exit");
         return(nodeList);
     }
 

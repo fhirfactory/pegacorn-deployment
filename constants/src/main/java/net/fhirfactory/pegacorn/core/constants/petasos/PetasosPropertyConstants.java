@@ -72,6 +72,7 @@ public final class PetasosPropertyConstants {
 
     public final static String ENDPOINT_TOPOLOGY_NODE_EXCHANGE_PROPERTY = "EndpointTopologyNode";
     public final static String ENDPOINT_METRICS_AGENT_EXCHANGE_PROPERTY = "EndpointMetricsAgent";
+    public final static String ENDPOINT_TASK_REPORT_AGENT_EXCHANGE_PROPERTY = "EndpointTaskReportAgent";
     public final static String ENDPOINT_PORT_VALUE = "EndpointPortValue";
     public final static String ENDPOINT_HOSTNAME = "EndpointPortName";
 
