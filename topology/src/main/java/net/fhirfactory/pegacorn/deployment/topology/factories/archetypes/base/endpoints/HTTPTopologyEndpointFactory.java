@@ -305,30 +305,31 @@ public class HTTPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
         // Now build the Endpoint Description
         if(targetPort1.getEncryptionRequired()) {
             if(StringUtils.isEmpty(targetPort1.getTargetPath())) {
-                httpClient.setEndpointDescription("Client-->HTTPS://" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue() + "/");
+                httpClient.setEndpointDescription(endpointProvider.getParticipantName()+"."+"Client.HTTPS://" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue() + "/");
             } else {
-                httpClient.setEndpointDescription("Client-->HTTPS://" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue() + targetPort1.getTargetPath());
+                httpClient.setEndpointDescription(endpointProvider.getParticipantName()+"."+"Client.HTTPS://" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue() + targetPort1.getTargetPath());
             }
         } else {
             if(StringUtils.isEmpty(targetPort1.getTargetPath())) {
-                httpClient.setEndpointDescription("Client-->HTTP://" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue() + "/");
+                httpClient.setEndpointDescription(endpointProvider.getParticipantName()+"."+"Server-->HTTP://" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue() + "/");
             } else {
-                httpClient.setEndpointDescription("Client-->HTTP://" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue() + targetPort1.getTargetPath());
+                httpClient.setEndpointDescription(endpointProvider.getParticipantName()+"."+"Server-->HTTP://" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue() + targetPort1.getTargetPath());
             }
         }
+
         //
         // Now build the Endpoint Participant Name
         if(targetPort1.getEncryptionRequired()) {
             if(StringUtils.isEmpty(targetPort1.getTargetPath())) {
-                httpClient.setParticipantName(endpointProvider.getParticipantName()+"."+"Client.HTTPS://" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue() + "/");
+                httpClient.setParticipantName(endpointProvider.getParticipantName()+".Client.HTTPS." + targetPort1.getTargetPortDNSName() + "." + targetPort1.getTargetPortValue());
             } else {
-                httpClient.setParticipantName(endpointProvider.getParticipantName()+"."+"Client.HTTPS://" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue() + targetPort1.getTargetPath());
+                httpClient.setParticipantName(endpointProvider.getParticipantName()+".Client.HTTPS." + targetPort1.getTargetPortDNSName() + "." + targetPort1.getTargetPortValue() + "-" +  targetPort1.getTargetPath().replace("/", "-"));
             }
         } else {
             if(StringUtils.isEmpty(targetPort1.getTargetPath())) {
-                httpClient.setParticipantName(endpointProvider.getParticipantName()+"."+"Server-->HTTP://" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue() + "/");
+                httpClient.setParticipantName(endpointProvider.getParticipantName()+".Client.HTTP." + targetPort1.getTargetPortDNSName() + "." + targetPort1.getTargetPortValue());
             } else {
-                httpClient.setParticipantName(endpointProvider.getParticipantName()+"."+"Server-->HTTP://" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue() + targetPort1.getTargetPath());
+                httpClient.setParticipantName(endpointProvider.getParticipantName()+".Client.HTTP." + targetPort1.getTargetPortDNSName() + "." + targetPort1.getTargetPortValue() + "-" +  targetPort1.getTargetPath().replace("/", "-"));
             }
         }
         //
