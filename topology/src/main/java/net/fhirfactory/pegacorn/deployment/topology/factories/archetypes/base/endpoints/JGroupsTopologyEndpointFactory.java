@@ -21,7 +21,7 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.base.endpoints;
 
-import net.fhirfactory.pegacorn.core.model.component.valuesets.SoftwareComponentSystemRoleEnum;
+import net.fhirfactory.pegacorn.core.model.component.valuesets.SoftwareComponentConnectivityContextEnum;
 import net.fhirfactory.pegacorn.core.model.componentid.PegacornSystemComponentTypeTypeEnum;
 import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeRDN;
 import net.fhirfactory.pegacorn.core.model.petasos.endpoint.JGroupsIntegrationPointNamingUtilities;
@@ -109,7 +109,7 @@ public class JGroupsTopologyEndpointFactory extends TopologyFactoryHelpersBase {
         jgroupsIP.setSecurityZone(securityZone);
         jgroupsIP.setNameSpace(petasosEnabledSubsystemPropertyFile.getDeploymentZone().getNameSpace());
         jgroupsIP.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
-        jgroupsIP.setComponentSystemRole(SoftwareComponentSystemRoleEnum.COMPONENT_ROLE_SUBSYSTEM_EDGE);
+        jgroupsIP.setComponentSystemRole(SoftwareComponentConnectivityContextEnum.COMPONENT_ROLE_SUBSYSTEM_EDGE);
         jgroupsIP.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
         jgroupsIP.setServer(true);
         jgroupsIP.setResilienceMode(resilienceMode);
@@ -195,7 +195,7 @@ public class JGroupsTopologyEndpointFactory extends TopologyFactoryHelpersBase {
         jgroupsIP.setSecurityZone(securityZone);
         jgroupsIP.setNameSpace(petasosEnabledSubsystemPropertyFile.getDeploymentZone().getNameSpace());
         jgroupsIP.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
-        jgroupsIP.setComponentSystemRole(SoftwareComponentSystemRoleEnum.COMPONENT_ROLE_SUBSYSTEM_EDGE);
+        jgroupsIP.setComponentSystemRole(SoftwareComponentConnectivityContextEnum.COMPONENT_ROLE_SUBSYSTEM_EDGE);
         jgroupsIP.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
         jgroupsIP.setServer(true);
         jgroupsIP.setResilienceMode(resilienceMode);
