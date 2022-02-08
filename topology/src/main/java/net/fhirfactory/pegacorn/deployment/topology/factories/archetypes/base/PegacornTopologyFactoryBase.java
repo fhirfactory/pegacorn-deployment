@@ -567,6 +567,9 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
 
         String name = interfaceNames.getEndpointServerName(interfaceNames.getPrometheusEndpointName());
         String uniqueName = componentNameingUtilities.buildUniqueComponentName(name);
+        String participantName = processingPlant.getParticipantName() + interfaceNames.getPrometheusEndpointName();
+        prometheusPort.setParticipantName(participantName);
+        prometheusPort.setParticipantDisplayName(participantName);
         TopologyNodeRDN nodeRDN = createNodeRDN(uniqueName, processingPlant.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
         prometheusPort.setComponentRDN(nodeRDN);
         prometheusPort.setEndpointType(PetasosEndpointTopologyTypeEnum.HTTP_API_SERVER);
@@ -603,6 +606,9 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
             getLogger().debug(".addJolokiaPort(): Exit, no port to add");
             return;
         }
+        String participantName = processingPlant.getParticipantName() + interfaceNames.getJolokiaEndpointName();
+        jolokiaPort.setParticipantName(participantName);
+        jolokiaPort.setParticipantDisplayName(participantName);
         String name = interfaceNames.getEndpointServerName(interfaceNames.getJolokiaEndpointName());
         String uniqueName = componentNameingUtilities.buildUniqueComponentName(name);
         TopologyNodeRDN nodeRDN = createNodeRDN(uniqueName, processingPlant.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
@@ -641,6 +647,9 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
             getLogger().debug(".addKubeLivelinessPort(): Exit, no port to add");
             return;
         }
+        String participantName = processingPlant.getParticipantName() + interfaceNames.getKubeLivelinessEndpointName();
+        kubeLivelinessPort.setParticipantName(participantName);
+        kubeLivelinessPort.setParticipantDisplayName(participantName);
         String name = interfaceNames.getEndpointServerName(interfaceNames.getKubeLivelinessEndpointName());
         String uniqueName = componentNameingUtilities.buildUniqueComponentName(name);
         TopologyNodeRDN nodeRDN = createNodeRDN(uniqueName, processingPlant.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
@@ -679,6 +688,9 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
             getLogger().debug(".addKubeReadinessPort(): Exit, no port to add");
             return;
         }
+        String participantName = processingPlant.getParticipantName() + interfaceNames.getKubeReadinessEndpointName();
+        kubeReadinessPort.setParticipantName(participantName);
+        kubeReadinessPort.setParticipantDisplayName(participantName);
         String name = interfaceNames.getEndpointServerName(interfaceNames.getKubeReadinessEndpointName());
         String uniqueName = componentNameingUtilities.buildUniqueComponentName(name);
         TopologyNodeRDN nodeRDN = createNodeRDN(uniqueName, processingPlant.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);

@@ -92,7 +92,7 @@ public class JGroupsTopologyEndpointFactory extends TopologyFactoryHelpersBase {
                                       PetasosEndpointFunctionTypeEnum function, String name,
                                       ResilienceModeEnum resilienceMode,
                                       ConcurrencyModeEnum concurrencyMode){
-        getLogger().info(".addJGroupsEndpoint(): Entry, endpointProvider->{}, jgroupsIPCSegment->{}, petasosEndpointType->{}, function->{}, name->{}",endpointProvider,jgroupsIPCSegment,petasosEndpointType,function,name );
+        getLogger().debug(".addJGroupsEndpoint(): Entry, endpointProvider->{}, jgroupsIPCSegment->{}, petasosEndpointType->{}, function->{}, name->{}",endpointProvider,jgroupsIPCSegment,petasosEndpointType,function,name );
         PetasosEnabledSubsystemPropertyFile petasosEnabledSubsystemPropertyFile = (PetasosEnabledSubsystemPropertyFile) propertyFile;
         JGroupsIntegrationPoint jgroupsIP = new JGroupsIntegrationPoint();
         if(jgroupsIPCSegment == null){

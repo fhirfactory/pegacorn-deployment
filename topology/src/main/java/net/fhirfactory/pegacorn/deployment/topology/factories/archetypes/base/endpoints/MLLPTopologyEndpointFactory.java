@@ -137,7 +137,7 @@ public class MLLPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
         endpointProvider.addEndpoint(mllpServerTopologyNode.getComponentFDN());
         getLogger().warn(".createMLLPServerEndpoint(): Add the {}/{} Port to the Topology Cache", mllpServerTopologyNode.getComponentRDN().getNodeName(), endpointFunctionName);
         getTopologyIM().addTopologyNode(endpointProvider.getComponentFDN(), mllpServerTopologyNode);
-        getLogger().info(".createMLLPServerEndpoint(): Exit, endpoint added->{}", mllpServerTopologyNode);
+        getLogger().debug(".createMLLPServerEndpoint(): Exit, endpoint added->{}", mllpServerTopologyNode);
         return(mllpServerTopologyNode);
     }
 
@@ -193,7 +193,7 @@ public class MLLPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
     }
 
     public MLLPClientAdapter newMLLPClientAdapter(ConnectedSystemPort connectedSystemPort) {
-        getLogger().info(".newMLLPClientAdapter(): Entry, connectedSystemPort->{}", connectedSystemPort);
+        getLogger().debug(".newMLLPClientAdapter(): Entry, connectedSystemPort->{}", connectedSystemPort);
         MLLPClientAdapter systemEndpointPort = new MLLPClientAdapter();
         boolean encryptionRequired = false;
         if(connectedSystemPort.getEncryptionRequired() != null){
