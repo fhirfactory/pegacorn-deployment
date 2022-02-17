@@ -27,7 +27,7 @@ package net.fhirfactory.pegacorn.core.constants.petasos;
  */
 
 public final class PetasosPropertyConstants {
-    
+
     // For assisting in monitoring expected end time in parcels, this period in milliseconds
     // can be used when monitoring a UoW. For example it can be added to the expected completion
     // time to provide an extra buffer to avoid classing a UoW as failed too early
@@ -35,17 +35,17 @@ public final class PetasosPropertyConstants {
 
     // How often to send a heartbeat between Nodes
     public final static long HEARTBEAT_FREQUENCY_MILLIS = 100;
-    
+
     // Every N heartbeats, include a status update with the heartbeat message
     public final static long HEARTBEAT_STATUS_UPDATE_FREQUENCY = 10;
-    
+
     // If a heartbeat fails, try to reconnect N times before failing and marking
     // the Node as unavailable
     public final static long HEARTBEAT_NUM_RETRIES = 3;
-    
+
     // If the cache is full, this is the location where the overflow is persisted
     public final static String CACHE_OVERFLOW_DIRECTORY = "/tmp";
-    
+
     // Size of the cache in bytes, once exceeded entries will be written to the overflow
     // directory
     public final static long CACHE_SIZE_IN_BYTES = 1000000000;
@@ -54,21 +54,26 @@ public final class PetasosPropertyConstants {
     // that a particular cache item in an infinity span cache is synchronised.
     // This is a very pessimistic number...
     public final static long PETASOS_DISTRIBUTED_CACHE_SYNCHRONISATION_WAIT = 5;
-    
+
     // How long should completed content be kept within the caches?
     public final static long CACHE_ENTRY_RETENTION_PERIOD_SECONDS = 60;
-    
+
     // How long should a WUP take to complete a task - worst case?
     public final static long WUP_ACTIVITY_DURATION_SECONDS = 10;
-    
+
     // How long should a WUP sleep between scans for activity?
     public final static long WUP_SLEEP_INTERVAL_MILLISECONDS = 250;
 
+    // General Workflow Exchange Objects
     public final static String WUP_TOPOLOGY_NODE_EXCHANGE_PROPERTY_NAME = "WUPTopologyNode";
-    public final static String WUP_JOB_CARD_EXCHANGE_PROPERTY_NAME = "WUPJobCard";
-    public final static String WUP_PETASOS_FULFILLMENT_TASK_EXCHANGE_PROPERTY = "WUPPetasosParcel";
-    public final static String WUP_CURRENT_UOW_EXCHANGE_PROPERTY_NAME = "WUPCurrentUnitOfWork";
     public final static String WUP_METRICS_AGENT_EXCHANGE_PROPERTY = "WUPMetricsAgent";
+    public final static String WUP_PETASOS_FULFILLMENT_TASK_EXCHANGE_PROPERTY = "WUPPetasosParcel";
+
+    @Deprecated
+    public final static String WUP_JOB_CARD_EXCHANGE_PROPERTY_NAME = "WUPJobCard";
+    @Deprecated
+    public final static String WUP_CURRENT_UOW_EXCHANGE_PROPERTY_NAME = "WUPCurrentUnitOfWork";
+
 
     public final static String ENDPOINT_TOPOLOGY_NODE_EXCHANGE_PROPERTY = "EndpointTopologyNode";
     public final static String ENDPOINT_METRICS_AGENT_EXCHANGE_PROPERTY = "EndpointMetricsAgent";

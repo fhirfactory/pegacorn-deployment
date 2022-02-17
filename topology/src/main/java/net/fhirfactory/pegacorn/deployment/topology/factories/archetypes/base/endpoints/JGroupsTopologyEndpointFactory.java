@@ -43,6 +43,7 @@ import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.com
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.jgroups.JGroupsKubernetesPodPortSegment;
 import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.base.common.TopologyFactoryHelpersBase;
 import net.fhirfactory.pegacorn.deployment.topology.manager.TopologyIM;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -123,13 +124,13 @@ public class JGroupsTopologyEndpointFactory extends TopologyFactoryHelpersBase {
         String channelName = getJGroupsNamingUtilities().buildChannelName(site, securityZone.getDisplayName(), subsystemParticipantName, function.getDisplayName(), getJGroupsNamingUtilities().getCurrentUUID());
         jgroupsIP.setChannelName(channelName);
         jgroupsIP.setEnablingProcessingPlantId(processingPlantNode.getComponentID());
-        jgroupsIP.setParticipantName(propertyFile.getSubsystemInstant().getClusterServiceName());
+        String clusterName = propertyFile.getSubsystemInstant().getClusterServiceName();
         jgroupsIP.setEndpointDescription(jgroupsIPCSegment.getPortType());
-        if(jgroupsIP == null){
+        if(StringUtils.isEmpty(clusterName)){
             getLogger().error(".addInterZoneRepeaterJGroupsIntegrationPoint(): Bad definition of Petasos IPC Endpoint->{}", jgroupsIPCSegment.getName());
             jgroupsIP.setParticipantName("unknown");
         } else {
-            jgroupsIP.setParticipantName(jgroupsIP.getParticipantName());
+            jgroupsIP.setParticipantName(clusterName);
         }
         jgroupsIP.setEndpointDescription(jgroupsIPCSegment.getPortType());
 

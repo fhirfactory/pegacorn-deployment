@@ -175,17 +175,11 @@ public class HTTPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
             // Now build the Endpoint Participant Name
             String providerParticipantName = endpointProvider.getParticipantName();
             if(clusteredHTTPServerPort.isEncrypted()) {
-                if(StringUtils.isEmpty(httpServerAdapter.getContextPath())) {
-                    httpServer.setParticipantName(providerParticipantName+".Server.HTTPS." +httpServerAdapter.getServiceDNSName() + "." + httpServerAdapter.getServicePortValue());
-                } else {
-                    httpServer.setEndpointDescription(providerParticipantName+".Server.HTTPS." + httpServerAdapter.getServiceDNSName() + "." + httpServerAdapter.getServicePortValue());
-                }
-            } else {
-                if(StringUtils.isEmpty(httpServerAdapter.getContextPath())) {
-                    httpServer.setEndpointDescription(providerParticipantName+".Server.HTTP." + httpServerAdapter.getServiceDNSName() + "." + httpServerAdapter.getServicePortValue());
-                } else {
-                    httpServer.setEndpointDescription(providerParticipantName+".Server.HTTP." + httpServerAdapter.getServiceDNSName() + "." + httpServerAdapter.getServicePortValue());
-                }
+                httpServer.setParticipantName(providerParticipantName+".Server.HTTPS." +httpServerAdapter.getServiceDNSName() + "." + httpServerAdapter.getServicePortValue());
+                httpServer.setParticipantDisplayName("Server.HTTPS." + httpServerAdapter.getServiceDNSName() + "." + httpServerAdapter.getServicePortValue());
+        } else {
+                httpServer.setParticipantName(providerParticipantName+".Server.HTTP." + httpServerAdapter.getServiceDNSName() + "." + httpServerAdapter.getServicePortValue());
+                httpServer.setParticipantDisplayName("Server.HTTP." + httpServerAdapter.getServiceDNSName() + "." + httpServerAdapter.getServicePortValue());
             }
         } else {
             //
@@ -226,24 +220,15 @@ public class HTTPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
                 }
             }
             //
-            // Now build the Endpoint Participant Name
+            // Now build the Endpoint Participant Name / Participant Display Name
             if(nonClusteredHTTPServerPort.isEncrypted()) {
-                if(StringUtils.isEmpty(httpServerAdapter.getContextPath())) {
-                    httpServer.setParticipantName(endpointProvider.getParticipantName()+"."+"Server.HTTPS." +httpServerAdapter.getHostName() + "." + httpServerAdapter.getPortNumber());
-                } else {
-                    httpServer.setEndpointDescription(endpointProvider.getParticipantName()+"."+"Server.HTTPS." + httpServerAdapter.getHostName() + "." + httpServerAdapter.getPortNumber());
-                }
+                httpServer.setParticipantName(endpointProvider.getParticipantName()+"."+"Server.HTTPS." +httpServerAdapter.getHostName() + "." + httpServerAdapter.getPortNumber());
+                httpServer.setParticipantDisplayName("HTTPS.Server:" +httpServerAdapter.getHostName() + ":" + httpServerAdapter.getPortNumber());
             } else {
-                if(StringUtils.isEmpty(httpServerAdapter.getContextPath())) {
-                    httpServer.setEndpointDescription(endpointProvider.getParticipantName()+"."+"Server.HTTP." + httpServerAdapter.getHostName() + "." + httpServerAdapter.getPortNumber());
-                } else {
-                    httpServer.setEndpointDescription(endpointProvider.getParticipantName()+"."+"Server.HTTP." + httpServerAdapter.getHostName() + "." + httpServerAdapter.getPortNumber());
-                }
+                httpServer.setEndpointDescription(endpointProvider.getParticipantName()+"."+"Server.HTTP." + httpServerAdapter.getHostName() + "." + httpServerAdapter.getPortNumber());
+                httpServer.setParticipantDisplayName("HTTP.Server:" +httpServerAdapter.getHostName() + ":" + httpServerAdapter.getPortNumber());
             }
         }
-        //
-        // Set Participant Display Name
-        httpServer.setParticipantDisplayName(httpServer.getParticipantName());
         //
         // Add the Adapter to the endpoint
         httpServer.setHTTPServerAdapter(httpServerAdapter);
@@ -318,23 +303,15 @@ public class HTTPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
         }
 
         //
-        // Now build the Endpoint Participant Name
+        // Now build the Endpoint Participant Name / Participant Display Name
         if(targetPort1.getEncryptionRequired()) {
-            if(StringUtils.isEmpty(targetPort1.getTargetPath())) {
-                httpClient.setParticipantName(endpointProvider.getParticipantName()+".Client.HTTPS." + targetPort1.getTargetPortDNSName() + "." + targetPort1.getTargetPortValue());
-            } else {
-                httpClient.setParticipantName(endpointProvider.getParticipantName()+".Client.HTTPS." + targetPort1.getTargetPortDNSName() + "." + targetPort1.getTargetPortValue() + "-" +  targetPort1.getTargetPath().replace("/", "-"));
-            }
+            httpClient.setParticipantName(endpointProvider.getParticipantName()+".Client.HTTPS." + targetPort1.getTargetPortDNSName() + "." + targetPort1.getTargetPortValue());
+            httpClient.setParticipantDisplayName("HTTPS.Client:" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue());
+
         } else {
-            if(StringUtils.isEmpty(targetPort1.getTargetPath())) {
-                httpClient.setParticipantName(endpointProvider.getParticipantName()+".Client.HTTP." + targetPort1.getTargetPortDNSName() + "." + targetPort1.getTargetPortValue());
-            } else {
-                httpClient.setParticipantName(endpointProvider.getParticipantName()+".Client.HTTP." + targetPort1.getTargetPortDNSName() + "." + targetPort1.getTargetPortValue() + "-" +  targetPort1.getTargetPath().replace("/", "-"));
-            }
+            httpClient.setParticipantName(endpointProvider.getParticipantName()+".Client.HTTP." + targetPort1.getTargetPortDNSName() + "." + targetPort1.getTargetPortValue());
+            httpClient.setParticipantDisplayName("HTTP.Client:" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue());
         }
-        //
-        // Set the Participant Display name
-        httpClient.setParticipantDisplayName(httpClient.getParticipantName());
         //
         // Add the endpoint to the provider
         endpointProvider.addEndpoint(httpClient.getComponentFDN());

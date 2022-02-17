@@ -133,7 +133,7 @@ public class MLLPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
         mllpServerTopologyNode.setMLLPServerAdapter(port);
         mllpServerTopologyNode.setEndpointDescription("Server-->MLLP:"+propertyFile.getLoadBalancer().getIpAddress()+":"+Integer.toString(port.getServicePortValue()));
         mllpServerTopologyNode.setParticipantName(endpointProvider.getParticipantName()+"."+"MLLP.Server."+propertyFile.getLoadBalancer().getIpAddress()+"."+Integer.toString(port.getServicePortValue()));
-        mllpServerTopologyNode.setParticipantDisplayName(mllpServerTopologyNode.getParticipantName());
+        mllpServerTopologyNode.setParticipantDisplayName("MLLP.Server:"+propertyFile.getLoadBalancer().getIpAddress()+":"+Integer.toString(port.getServicePortValue()));
         endpointProvider.addEndpoint(mllpServerTopologyNode.getComponentFDN());
         getLogger().warn(".createMLLPServerEndpoint(): Add the {}/{} Port to the Topology Cache", mllpServerTopologyNode.getComponentRDN().getNodeName(), endpointFunctionName);
         getTopologyIM().addTopologyNode(endpointProvider.getComponentFDN(), mllpServerTopologyNode);
@@ -183,7 +183,7 @@ public class MLLPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
         }
         mllpClientTopologyNode.setEndpointDescription("Client-->MLLP:"+targetPort1.getTargetPortDNSName()+":"+Integer.toString(targetPort1.getTargetPortValue()));
         mllpClientTopologyNode.setParticipantName(endpointProvider.getParticipantName()+"."+"MLLP.Client."+targetPort1.getTargetPortDNSName()+"."+Integer.toString(targetPort1.getTargetPortValue()));
-        mllpClientTopologyNode.setParticipantDisplayName(mllpClientTopologyNode.getParticipantName());
+        mllpClientTopologyNode.setParticipantDisplayName("MLLP.Client:"+targetPort1.getTargetPortDNSName()+":"+Integer.toString(targetPort1.getTargetPortValue()));
         mllpClientTopologyNode.setTargetSystem(externalSystem);
         endpointProvider.addEndpoint(mllpClientTopologyNode.getComponentFDN());
         getLogger().warn(".newMLLPClientEndpoint(): Add the {}/{} Port to the Topology Cache", mllpClientTopologyNode.getComponentRDN().getNodeName(), endpointFunctionName);
