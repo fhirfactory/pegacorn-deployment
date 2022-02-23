@@ -268,6 +268,7 @@ public class HTTPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
         httpClient.setParticipantName(endpointFunctionName);
         httpClient.setContainingNodeFDN(endpointProvider.getComponentFDN());
         ConnectedSystemProperties connectedSystem = httpClientPortConfigurationSegment.getConnectedSystem();
+        httpClient.setConnectedSystemName(connectedSystem.getSubsystemName());
         ConnectedExternalSystemTopologyNode externalSystem = new ConnectedExternalSystemTopologyNode();
         externalSystem.setSubsystemName(connectedSystem.getSubsystemName());
         ConnectedSystemPort targetPort1 = connectedSystem.getTargetPort1();
