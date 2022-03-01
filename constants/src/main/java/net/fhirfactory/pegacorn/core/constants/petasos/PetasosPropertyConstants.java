@@ -82,6 +82,7 @@ public final class PetasosPropertyConstants {
     public final static String ENDPOINT_HOSTNAME = "EndpointPortName";
 
     public final static String WUP_INTERACT_INGRES_SOURCE_SYSTEM_NAME = "WUPInteractIngresSourceSystemName";
+    public final static String WUP_INTERACT_EGRESS_SOURCE_SYSTEM_NAME = "WUPInteractEgressSourceSystemName";
 
     public final static String WUP_INTERACT_PORT_TYPE = "WUPInteractIngresPortType";
 
