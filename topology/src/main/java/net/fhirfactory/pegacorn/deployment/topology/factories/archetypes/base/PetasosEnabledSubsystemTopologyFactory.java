@@ -64,6 +64,14 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
     // Build EdgeAnswer Port (if there)
     //
 
+
+    /**
+     * This method creates the default edgeAnswerPort (a HTTP Server, which would normally have a set of FHIR
+     * resource handlers bound to it). It then "adds" the port to the "endpointProvder" (either a service or a
+     * ProcessingPlant).
+     *
+     * @param endpointProvider
+     */
     protected void addEdgeAnswerPort( EndpointProviderInterface endpointProvider){
         getLogger().debug(".addEdgeAnswerPort(): Entry");
         PetasosEnabledSubsystemPropertyFile petasosEnabledSubsystemPropertyFile = (PetasosEnabledSubsystemPropertyFile)getPropertyFile();
@@ -77,6 +85,12 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
         getLogger().debug(".addEdgeAnswerPort(): Exit, endpoint added");
     }
 
+    /**
+     * This method creates the default edgeAskPort (a HTTP Client) which is typically bound to the HAPIClient for
+     * access/manipulation of FHIR Resources from a RESTful (HTTP) Server (e.g. a HAPI JPA Server, for instance).
+     *
+     * @param endpointProvider
+     */
     protected void addEdgeAskPort( EndpointProviderInterface endpointProvider){
         getLogger().debug(".addEdgeAskPort(): Entry");
         PetasosEnabledSubsystemPropertyFile petasosEnabledSubsystemPropertyFile = (PetasosEnabledSubsystemPropertyFile)getPropertyFile();

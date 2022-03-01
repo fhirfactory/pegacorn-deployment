@@ -34,9 +34,14 @@ public abstract class SubsystemNames
 
     abstract protected String specifyDeploymentShortName();
 
-    public String getLadonNexusIM(){
-        String ladonNexusName =  specifyDeploymentShortName() + "-ladon-nexus-im";
-        return(ladonNexusName);
+    public String getLadonIM(){
+        String ladonName =  specifyDeploymentShortName() + "-ladon-im";
+        return(ladonName);
+    }
+
+    public String getLadonIMParticipantName(){
+        String ladonName =  specifyDeploymentShortName() + "Ladon.IM";
+        return(ladonName);
     }
 
     public String getFHIRPlaceIM(){
