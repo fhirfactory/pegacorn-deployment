@@ -40,7 +40,7 @@ public abstract class SubsystemNames
     }
 
     public String getLadonIMParticipantName(){
-        String ladonName =  specifyDeploymentShortName() + "Ladon.IM";
+        String ladonName =  "Ladon.IM";
         return(ladonName);
     }
 
