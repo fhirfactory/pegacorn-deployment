@@ -26,17 +26,11 @@ import net.fhirfactory.pegacorn.core.model.componentid.PegacornSystemComponentTy
 import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeRDN;
 import net.fhirfactory.pegacorn.core.model.petasos.endpoint.valuesets.PetasosEndpointTopologyTypeEnum;
 import net.fhirfactory.pegacorn.core.model.petasos.ipc.PegacornCommonInterfaceNames;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.base.IPCAdapterDefinition;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.mllp.MLLPServerEndpoint;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.mllp.adapters.MLLPServerAdapter;
 import net.fhirfactory.pegacorn.core.model.topology.mode.ResilienceModeEnum;
 import net.fhirfactory.pegacorn.core.model.topology.nodes.common.EndpointProviderInterface;
 import net.fhirfactory.pegacorn.core.model.topology.nodes.external.ConnectedExternalSystemTopologyNode;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes.BaseSubsystemPropertyFile;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemPort;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemProperties;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.InterfaceDefinitionSegment;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.InteractClusteredServerPortSegment;
 import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.base.common.TopologyFactoryHelpersBase;
 import net.fhirfactory.pegacorn.deployment.topology.manager.TopologyIM;
 import net.fhirfactory.pegacorn.util.PegacornProperties;
@@ -47,6 +41,7 @@ import org.thymeleaf.util.StringUtils;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.FileShareSinkAdapter;
+import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.FileShareSourceAdapter;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.file.FileShareSinkTopologyEndpoint;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.file.FileShareSourceTopologyEndpoint;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.InteractFileShareEndpointSegment;
@@ -91,57 +86,51 @@ public class FileShareTopologyEndpointFactory extends TopologyFactoryHelpersBase
     //
     // Build a FILE Source Endpoint
     //
-//    public MLLPServerEndpoint newFileShareSourceEndpoint(BaseSubsystemPropertyFile propertyFile, EndpointProviderInterface endpointProvider, String endpointFunctionName, InteractFileShareEndpointSegment fileShareSource) {
-//        getLogger().debug(".newFileShareSourceEndpoint(): Entry, endpointProvider->{}, fileShareSource->{}", endpointProvider, fileShareSource);
-//        FileShareSourceTopologyEndpoint fileShareSourceTopologyNode = new FileShareSourceTopologyEndpoint();
-//        if (fileShareSource == null) {
-//            getLogger().debug(".newFileShareSourceEndpoint(): Exit, no endpoint to add");
-//            return (null);
-//        }
-//        String name = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.FILE_SHARE_SOURCE, endpointFunctionName);
-//        TopologyNodeRDN nodeRDN = createSimpleNodeRDN(name, endpointProvider.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
-//        fileShareSourceTopologyNode.setComponentRDN(nodeRDN);
-//        fileShareSourceTopologyNode.setEndpointConfigurationName(fileShareSource.getName());
-//        fileShareSourceTopologyNode.constructFDN(endpointProvider.getComponentFDN(), nodeRDN);
-//        fileShareSourceTopologyNode.setEndpointType(PetasosEndpointTopologyTypeEnum.FILE_SHARE_SOURCE);
-//        fileShareSourceTopologyNode.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
-//        fileShareSourceTopologyNode.setComponentSystemRole(SoftwareComponentConnectivityContextEnum.COMPONENT_ROLE_INTERACT_INGRES);
-//        fileShareSourceTopologyNode.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN);
-//        fileShareSourceTopologyNode.setConnectedSystemName(fileShareSource.getConnectedSystem().getSubsystemName());
-//        fileShareSourceTopologyNode.setContainingNodeFDN(endpointProvider.getComponentFDN());
-//        fileShareSourceTopologyNode.setServer(true);
-//        MLLPServerAdapter port = new MLLPServerAdapter();
-//        port.setPortNumber(fileShareSourceTopologyNode.getServerPort());
-//        port.setHostName(fileShareSourceTopologyNode.getServerHostname());
-//        port.setServiceDNSName(fileShareSourceTopologyNode.getServiceDNS());
-//        port.setServicePortValue(fileShareSourceTopologyNode.getServicePort());
-//        port.setTargetSystemName(fileShareSourceTopologyNode.getConnectedSystem().getExternalisedServiceName());
-//        port.setEncrypted(fileShareSourceTopologyNode.isEncrypted());
-//        port.setEnablingTopologyEndpoint(fileShareSourceTopologyNode.getComponentID());
-//        for (InterfaceDefinitionSegment currentSegment : mllpServerPort.getSupportedInterfaceProfiles()) {
-//            IPCAdapterDefinition currentInterfaceDefinition = new IPCAdapterDefinition();
-//            currentInterfaceDefinition.setInterfaceFormalName(currentSegment.getInterfaceDefinitionName());
-//            currentInterfaceDefinition.setInterfaceFormalVersion(currentSegment.getInterfaceDefinitionVersion());
-//            port.getSupportedInterfaceDefinitions().add(currentInterfaceDefinition);
-//        }
-//        port.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_KUBERNETES_MULTISITE_CLUSTERED);
-//        port.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_KUBERNETES_MULTISITE);
-//        port.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_KUBERNETES_STANDALONE);
-//        port.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_KUBERNETES_CLUSTERED);
-//        port.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_MULTISITE);
-//        port.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_STANDALONE);
-//        port.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_CLUSTERED);
-//        port.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_MULTISITE_CLUSTERED);
-//        mllpServerTopologyNode.setMLLPServerAdapter(port);
-//        mllpServerTopologyNode.setEndpointDescription("Server-->MLLP:" + propertyFile.getLoadBalancer().getIpAddress() + ":" + Integer.toString(port.getServicePortValue()));
-//        mllpServerTopologyNode.setParticipantName(endpointProvider.getParticipantName() + "." + "MLLP.Server." + propertyFile.getLoadBalancer().getIpAddress() + "." + Integer.toString(port.getServicePortValue()));
-//        mllpServerTopologyNode.setParticipantDisplayName("MLLP.Server:" + propertyFile.getLoadBalancer().getIpAddress() + ":" + Integer.toString(port.getServicePortValue()));
-//        endpointProvider.addEndpoint(mllpServerTopologyNode.getComponentFDN());
-//        getLogger().warn(".createMLLPServerEndpoint(): Add the {}/{} Port to the Topology Cache", mllpServerTopologyNode.getComponentRDN().getNodeName(), endpointFunctionName);
-//        getTopologyIM().addTopologyNode(endpointProvider.getComponentFDN(), mllpServerTopologyNode);
-//        getLogger().debug(".createMLLPServerEndpoint(): Exit, endpoint added->{}", mllpServerTopologyNode);
-//        return (mllpServerTopologyNode);
-//    }
+    public FileShareSourceTopologyEndpoint newFileShareSourceEndpoint(BaseSubsystemPropertyFile propertyFile, EndpointProviderInterface endpointProvider, String endpointFunctionName, InteractFileShareEndpointSegment fileShareSource) {
+        getLogger().debug(".newFileShareSourceEndpoint(): Entry, endpointProvider->{}, fileShareSource->{}", endpointProvider, fileShareSource);
+        FileShareSourceTopologyEndpoint fileShareSourceTopologyNode = new FileShareSourceTopologyEndpoint();
+        if (fileShareSource == null) {
+            getLogger().debug(".newFileShareSourceEndpoint(): Exit, no endpoint to add");
+            return (null);
+        }
+        String name = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.FILE_SHARE_SOURCE, endpointFunctionName);
+        TopologyNodeRDN nodeRDN = createSimpleNodeRDN(name, endpointProvider.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
+        fileShareSourceTopologyNode.setComponentRDN(nodeRDN);
+        fileShareSourceTopologyNode.setEndpointConfigurationName(fileShareSource.getName());
+        fileShareSourceTopologyNode.constructFDN(endpointProvider.getComponentFDN(), nodeRDN);
+        fileShareSourceTopologyNode.setEndpointType(PetasosEndpointTopologyTypeEnum.FILE_SHARE_SOURCE);
+        fileShareSourceTopologyNode.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
+        fileShareSourceTopologyNode.setComponentSystemRole(SoftwareComponentConnectivityContextEnum.COMPONENT_ROLE_INTERACT_INGRES);
+        fileShareSourceTopologyNode.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN);
+        fileShareSourceTopologyNode.setConnectedSystemName(fileShareSource.getConnectedSystem().getSubsystemName());
+        fileShareSourceTopologyNode.setContainingNodeFDN(endpointProvider.getComponentFDN());
+        fileShareSourceTopologyNode.setServer(true);
+
+        FileShareSourceAdapter systemEndpoint = newFileShareSourceAdapter(fileShareSource);
+        systemEndpoint.setTargetSystemName(fileShareSource.getConnectedSystem().getExternalisedServiceName());
+        systemEndpoint.setEncrypted(fileShareSource.isEncrypted());
+        systemEndpoint.setEnablingTopologyEndpoint(fileShareSourceTopologyNode.getComponentID());
+        systemEndpoint.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_KUBERNETES_MULTISITE_CLUSTERED);
+        systemEndpoint.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_KUBERNETES_MULTISITE);
+        systemEndpoint.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_KUBERNETES_STANDALONE);
+        systemEndpoint.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_KUBERNETES_CLUSTERED);
+        systemEndpoint.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_MULTISITE);
+        systemEndpoint.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_STANDALONE);
+        systemEndpoint.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_CLUSTERED);
+        systemEndpoint.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_MULTISITE_CLUSTERED);
+
+        fileShareSourceTopologyNode.setFileShareSourceAdapter(systemEndpoint);
+        fileShareSourceTopologyNode.setEndpointDescription("Server-->FILE:" + systemEndpoint.getFilePath());
+        fileShareSourceTopologyNode.setParticipantName(endpointProvider.getParticipantName() + "." + "FILE.Source." + systemEndpoint.getFilePathAlias());
+        fileShareSourceTopologyNode.setParticipantDisplayName("FILE.Source:" + systemEndpoint.getFilePathAlias());
+
+        endpointProvider.addEndpoint(fileShareSourceTopologyNode.getComponentFDN());
+        getLogger().warn(".newFileShareSourceEndpoint(): Add the {}/{} Port to the Topology Cache", fileShareSourceTopologyNode.getComponentRDN().getNodeName(), endpointFunctionName);
+        getTopologyIM().addTopologyNode(endpointProvider.getComponentFDN(), fileShareSourceTopologyNode);
+        getLogger().debug(".newFileShareSourceEndpoint(): Exit, endpoint added->{}", fileShareSourceTopologyNode);
+
+        return (fileShareSourceTopologyNode);
+    }
 
     //
     // Build a FILE Sink Endpoint
@@ -182,11 +171,29 @@ public class FileShareTopologyEndpointFactory extends TopologyFactoryHelpersBase
         return (fileShareSinkTopologyNode);
     }
 
+    public FileShareSourceAdapter newFileShareSourceAdapter(InteractFileShareEndpointSegment connectedSystem) {
+        getLogger().debug(".newFileShareSourceAdapter(): Entry, connectedSystemPort->{}", connectedSystem);
+        FileShareSourceAdapter systemEndpointPort = new FileShareSourceAdapter();
+        if (StringUtils.isEmpty(connectedSystem.getFileSharePath())) {
+            throw (new IllegalArgumentException("fileSharePath is empty"));
+        }
+        if (StringUtils.isEmpty(connectedSystem.getFileSharePathAlias())) {
+            throw (new IllegalArgumentException("fileSharePathAlias is empty"));
+        }
+        systemEndpointPort.setFilePath(connectedSystem.getFileSharePath());
+        systemEndpointPort.setFilePathAlias(connectedSystem.getFileSharePathAlias());
+        getLogger().info(".newFileShareSourceAdapter(): Exit, systemEndpointPort->{}", systemEndpointPort);
+        return (systemEndpointPort);
+    }
+
     public FileShareSinkAdapter newFileShareSinkAdapter(InteractFileShareEndpointSegment connectedSystem) {
         getLogger().debug(".newFileShareSinkAdapter(): Entry, connectedSystemPort->{}", connectedSystem);
         FileShareSinkAdapter systemEndpointPort = new FileShareSinkAdapter();
         if (StringUtils.isEmpty(connectedSystem.getFileSharePath())) {
             throw (new IllegalArgumentException("fileSharePath is empty"));
+        }
+        if (StringUtils.isEmpty(connectedSystem.getFileSharePathAlias())) {
+            throw (new IllegalArgumentException("fileSharePathAlias is empty"));
         }
         systemEndpointPort.setFilePath(connectedSystem.getFileSharePath());
         systemEndpointPort.setFilePathAlias(connectedSystem.getFileSharePathAlias());
