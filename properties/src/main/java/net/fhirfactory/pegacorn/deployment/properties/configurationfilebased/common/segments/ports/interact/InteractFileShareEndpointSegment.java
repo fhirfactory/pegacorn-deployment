@@ -1,9 +1,13 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact;
 
-public class InteractFileShareEndpointSegment {
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.StandardClientPortSegment;
+
+public class InteractFileShareEndpointSegment extends StandardClientPortSegment {
+
     private String fileShareName;
     private String fileShareProtocol;
     private String fileSharePath;
+    private String fileSharePathAlias;
     private String fileShareServer;
 
     public String getFileShareName() {
@@ -28,6 +32,14 @@ public class InteractFileShareEndpointSegment {
 
     public void setFileSharePath(String fileSharePath) {
         this.fileSharePath = fileSharePath;
+    }
+
+    public String getFileSharePathAlias() {
+        return fileSharePathAlias;
+    }
+
+    public void setFileSharePathAlias(String fileSharePathAlias) {
+        this.fileSharePathAlias = fileSharePathAlias;
     }
 
     public String getFileShareServer() {
