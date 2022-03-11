@@ -210,7 +210,7 @@ public class JGroupsTopologyEndpointFactory extends TopologyFactoryHelpersBase {
         jgroupsIP.setInterfaceFunction(function);
         String channelName = getJGroupsNamingUtilities().buildChannelName(site, securityZone.getDisplayName(), subsystemParticipantName, function.getDisplayName(), getJGroupsNamingUtilities().getCurrentUUID());
         jgroupsIP.setChannelName(channelName);
-        getLogger().info(".addJGroupsIntegrationPoint(): channelName->{}", jgroupsIP.getChannelName());
+        getLogger().debug(".addJGroupsIntegrationPoint(): channelName->{}", jgroupsIP.getChannelName());
         jgroupsIP.setEnablingProcessingPlantId(processingPlantNode.getComponentID());
         PetasosIntegrationPointNameEnum endpointName = PetasosIntegrationPointNameEnum.fromConfigName(jgroupsIPCSegment.getName());
         if(endpointName == null){
@@ -243,6 +243,6 @@ public class JGroupsTopologyEndpointFactory extends TopologyFactoryHelpersBase {
         endpointProvider.addEndpoint(jgroupsIP.getComponentFDN());
         getLogger().trace(".addJGroupsIntegrationPoint(): Add the InterZone JGroups IPC Port to the Topology Cache");
         getTopologyIM().addTopologyNode(endpointProvider.getComponentFDN(), jgroupsIP);
-        getLogger().info(".addJGroupsIntegrationPoint(): Exit, integrationPoint added, jgroupsIP->{}", jgroupsIP);
+        getLogger().debug(".addJGroupsIntegrationPoint(): Exit, integrationPoint added, jgroupsIP->{}", jgroupsIP);
     }
 }
