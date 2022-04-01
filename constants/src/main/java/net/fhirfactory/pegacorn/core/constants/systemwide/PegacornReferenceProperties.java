@@ -35,7 +35,7 @@ public class PegacornReferenceProperties {
     @Inject
     private DeploymentSystemIdentificationInterface systemIdentification;
 
-    private static final String PEGACORN_INTERNAL_FHIR_RESOURCE_R4_PATH = "/fhir";
+    private static final String PEGACORN_INTERNAL_FHIR_RESOURCE_R4_PATH = "/pegacorn/internal/fhir/r4";
     private static final String PEGACORN_EXPOSED_FHIR_RESOURCE_R4_PATH = "/fhir/r4";
     private static final String PEGACORN_PETASOS_STATUS_PATH = "/pegacorn/internal/petasos/status";
     private static final String PEGACORN_PETASOS_REPLICATION_PATH = "/pegacorn/internal/petasos/replication";
