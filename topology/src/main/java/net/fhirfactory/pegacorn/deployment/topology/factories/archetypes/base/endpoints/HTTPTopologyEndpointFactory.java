@@ -225,7 +225,7 @@ public class HTTPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
                 httpServer.setParticipantName(endpointProvider.getParticipantName()+"."+"Server.HTTPS." +httpServerAdapter.getHostName() + "." + httpServerAdapter.getPortNumber());
                 httpServer.setParticipantDisplayName("HTTPS.Server:" +httpServerAdapter.getHostName() + ":" + httpServerAdapter.getPortNumber());
             } else {
-                httpServer.setEndpointDescription(endpointProvider.getParticipantName()+"."+"Server.HTTP." + httpServerAdapter.getHostName() + "." + httpServerAdapter.getPortNumber());
+                httpServer.setParticipantName(endpointProvider.getParticipantName()+"."+"Server.HTTP." + httpServerAdapter.getHostName() + "." + httpServerAdapter.getPortNumber());
                 httpServer.setParticipantDisplayName("HTTP.Server:" +httpServerAdapter.getHostName() + ":" + httpServerAdapter.getPortNumber());
             }
         }
