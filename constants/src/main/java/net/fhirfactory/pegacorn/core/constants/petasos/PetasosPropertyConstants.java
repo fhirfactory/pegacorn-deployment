@@ -89,6 +89,13 @@ public final class PetasosPropertyConstants {
     public final static String DEFAULT_TIMEZONE="Australia/Sydney";
 
     //
+    // MLLP Metrics Capture Parameters
+    //
+
+    public static final String INCLUDE_FULL_HL7_MESSAGE_IN_LOG =  "INCLUDE_FULL_HL7_MESSAGE_IN_LOG";
+    public static final String MAXIMUM_HL7_MESSAGE_SIZE_IN_LOG = "MAXIMUM_HL7_MESSAGE_SIZE_IN_LOG";
+
+    //
     // Task Distribution and Outcome Collection Queues
     //
 
