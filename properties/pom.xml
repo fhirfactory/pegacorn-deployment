@@ -11,15 +11,15 @@
     <!--***********************************************************************************-->
 
     <parent>
-        <groupId>net.fhirfactory.pegacorn</groupId>
-        <artifactId>pegacorn-deployment</artifactId>
+        <groupId>net.fhirfactory.dricats</groupId>
+        <artifactId>dricats-deployment</artifactId>
         <version>1.6.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>pegacorn-deployment-properties</artifactId>
+    <artifactId>dricats-deployment-properties</artifactId>
     <packaging>jar</packaging>
 
-    <name>Pegacorn :: Deployment :: Properties</name>
+    <name>DRICATS :: Deployment :: Properties</name>
     <description></description>
 
     <url>http://pegacorn.fhirfactory.net</url>
@@ -144,8 +144,8 @@
         <!--*******************************************************************************-->
 
         <dependency>
-            <groupId>net.fhirfactory.pegacorn</groupId>
-            <artifactId>pegacorn-buildingblocks-commoncode</artifactId>
+            <groupId>net.fhirfactory.dricats</groupId>
+            <artifactId>dricats-buildingblocks-commoncode</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
@@ -155,8 +155,8 @@
         <!--*******************************************************************************-->
 
         <dependency>
-            <groupId>net.fhirfactory.pegacorn</groupId>
-            <artifactId>pegacorn-buildingblocks-datamodels-core</artifactId>
+            <groupId>net.fhirfactory.dricats</groupId>
+            <artifactId>dricats-buildingblocks-datamodels-core</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>

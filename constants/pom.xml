@@ -5,15 +5,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>net.fhirfactory.pegacorn</groupId>
-        <artifactId>pegacorn-deployment</artifactId>
+        <groupId>net.fhirfactory.dricats</groupId>
+        <artifactId>dricats-deployment</artifactId>
         <version>1.6.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>pegacorn-deployment-constants</artifactId>
+    <artifactId>dricats-deployment-constants</artifactId>
     <packaging>jar</packaging>
 
-    <name>Pegacorn :: Deployment :: Configuration Constants</name>
+    <name>DRICATS :: Deployment :: Configuration Constants</name>
     <description>The Internal-Only Deployment (network and application) Configuration Constants</description>
 
     <licenses>
@@ -103,8 +103,8 @@
 
         <!-- Pegacorn Common Code -->
         <dependency>
-            <groupId>net.fhirfactory.pegacorn</groupId>
-            <artifactId>pegacorn-buildingblocks-commoncode</artifactId>
+            <groupId>net.fhirfactory.dricats</groupId>
+            <artifactId>dricats-buildingblocks-commoncode</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
             <scope>compile</scope>
@@ -236,7 +236,7 @@
     <profiles>
         <profile>
             <!-- An optional Arquillian testing profile -->
-            <id>pegacorn-on-wildfly</id>
+            <id>dricats-on-wildfly</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -308,7 +308,7 @@
                         <configuration>
                             <!-- Configuration for Arquillian: -->
                             <systemPropertyVariables>
-                                <arquillian.launch>pegacorn-on-wildfly</arquillian.launch>
+                                <arquillian.launch>dricats-on-wildfly</arquillian.launch>
                                 <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
                                 <JBOSS_HOME>${project.basedir}/target/wildfly-${version-org.wildfly}</JBOSS_HOME>
                             </systemPropertyVariables>
