@@ -22,11 +22,68 @@
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.mitaf;
 
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes.PetasosEnabledSubsystemPropertyFile;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.PublishAndSubscriptSegment;
 
 public abstract class MITaFSubsystemPropertyFile extends PetasosEnabledSubsystemPropertyFile {
 
+    private PublishAndSubscriptSegment contentSupport;
+
+    //
+    // Constructor
+    //
     public MITaFSubsystemPropertyFile(){
         super();
+        this.contentSupport = new PublishAndSubscriptSegment();
     }
 
+    //
+    // Getters and Setters
+    //
+
+    public PublishAndSubscriptSegment getContentSupport() {
+        return contentSupport;
+    }
+
+    public void setContentSupport(PublishAndSubscriptSegment contentSupport) {
+        this.contentSupport = contentSupport;
+    }
+
+    //
+    // toString()
+    //
+
+    @Override
+    public String toString() {
+        return "MITaFSubsystemPropertyFile{" +
+                "contentSupport=" + contentSupport +
+                ", petasosSubscriptionsEndpoint=" + getPetasosSubscriptionsEndpoint() +
+                ", edgeAsk=" + getEdgeAsk() +
+                ", petasosAuditServicesEndpoint=" + getPetasosAuditServicesEndpoint() +
+                ", petasosInterceptionEndpoint=" + getPetasosInterceptionEndpoint() +
+                ", petasosTaskServicesEndpoint=" + getPetasosTaskServicesEndpoint() +
+                ", multiuseInfinispanEndpoint=" + getMultiuseInfinispanEndpoint() +
+                ", petasosMetricsEndpoint=" + getPetasosMetricsEndpoint() +
+                ", petasosIPCMessagingEndpoint=" + getPetasosIPCMessagingEndpoint() +
+                ", edgeAnswer=" + getEdgeAnswer() +
+                ", petasosTopologyDiscoveryEndpoint=" + getPetasosTopologyDiscoveryEndpoint() +
+                ", defaultServicePortLowerBound=" + getDefaultServicePortLowerBound() +
+                ", loadBalancer=" + getLoadBalancer() +
+                ", volumeMounts=" + getVolumeMounts() +
+                ", debugProperties=" + getDebugProperties() +
+                ", hapiAPIKey=" + getHapiAPIKey() +
+                ", javaDeploymentParameters=" + getJavaDeploymentParameters() +
+                ", loadBalancer=" + getLoadBalancer() +
+                ", kubeReadinessProbe=" + getKubeReadinessProbe() +
+                ", kubeLivelinessProbe=" + getKubeLivelinessProbe() +
+                ", prometheusPort=" + getPrometheusPort() +
+                ", jolokiaPort=" + getJolokiaPort() +
+                ", subsystemInstant=" + getSubsystemInstant() +
+                ", deploymentMode=" + getDeploymentMode() +
+                ", deploymentSites=" + getDeploymentSites() +
+                ", subsystemImageProperties=" + getSubsystemImageProperties() +
+                ", trustStorePassword=" + getTrustStorePassword() +
+                ", keyPassword=" + getKeyPassword() +
+                ", deploymentZone=" + getDeploymentZone() +
+                '}';
+    }
 }

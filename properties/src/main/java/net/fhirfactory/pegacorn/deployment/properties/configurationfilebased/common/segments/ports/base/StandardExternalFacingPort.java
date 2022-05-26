@@ -23,8 +23,12 @@ package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.co
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemProperties;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.StandardServerPortSegment;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.datatypes.PublishListEntryType;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.datatypes.SubscriptionListEntryType;
 import org.slf4j.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class StandardExternalFacingPort extends ConfigurableNodeSegment{
 
@@ -35,6 +39,9 @@ public abstract class StandardExternalFacingPort extends ConfigurableNodeSegment
     private boolean encrypted;
     private Integer startupDelay;
     private String name;
+
+    private List<PublishListEntryType> publishedContent;
+    private List<SubscriptionListEntryType> subscribedContent;
 
     //
     // Constructor(s)
@@ -48,11 +55,29 @@ public abstract class StandardExternalFacingPort extends ConfigurableNodeSegment
         this.startupDelay = 0;
         this.name = null;
         this.connectedSystem = new ConnectedSystemProperties();
+        this.publishedContent = new ArrayList<>();
+        this.subscribedContent = new ArrayList<>();
     }
 
     //
     // Getters and Setters
     //
+
+    public List<PublishListEntryType> getPublishedContent() {
+        return publishedContent;
+    }
+
+    public void setPublishedContent(List<PublishListEntryType> publishedContent) {
+        this.publishedContent = publishedContent;
+    }
+
+    public List<SubscriptionListEntryType> getSubscribedContent() {
+        return subscribedContent;
+    }
+
+    public void setSubscribedContent(List<SubscriptionListEntryType> subscribedContent) {
+        this.subscribedContent = subscribedContent;
+    }
 
     @JsonIgnore
     protected Logger getLogger(){
