@@ -37,6 +37,7 @@ import net.fhirfactory.pegacorn.core.model.topology.nodes.external.ConnectedExte
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes.BaseSubsystemPropertyFile;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemPort;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemProperties;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.datatypes.ParameterNameValuePairType;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.InterfaceDefinitionSegment;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.InteractClientPortSegment;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.InteractClusteredServerPortSegment;
@@ -49,6 +50,7 @@ import org.thymeleaf.util.StringUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.List;
 
 @ApplicationScoped
 public class MLLPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
@@ -116,6 +118,9 @@ public class MLLPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
         port.setTargetSystemName(mllpServerPort.getConnectedSystem().getExternalisedServiceName());
         port.setEncrypted(mllpServerPort.isEncrypted());
         port.setEnablingTopologyEndpoint(mllpServerTopologyNode.getComponentID());
+        for(ParameterNameValuePairType otherConfigurationParameter: mllpServerPort.getOtherConfigurationParameters()){
+            port.getAdditionalParameters().put(otherConfigurationParameter.getParameterName(), otherConfigurationParameter.getParameterValue());
+        }
         for(InterfaceDefinitionSegment currentSegment: mllpServerPort.getSupportedInterfaceProfiles()) {
             IPCAdapterDefinition currentInterfaceDefinition = new IPCAdapterDefinition();
             currentInterfaceDefinition.setInterfaceFormalName(currentSegment.getInterfaceDefinitionName());
