@@ -29,6 +29,7 @@ public class HTTPServerPortSegment extends StandardServerPortSegment {
     private static Logger LOG = LoggerFactory.getLogger(HTTPServerPortSegment.class);
 
     private String contextPath;
+    private Boolean enabled;
 
     public HTTPServerPortSegment(){
         super();
@@ -46,4 +47,12 @@ public class HTTPServerPortSegment extends StandardServerPortSegment {
     public void setContextPath(String contextPath) {
         this.contextPath = contextPath;
     }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }    
 }
