@@ -109,6 +109,9 @@ public class MLLPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
         mllpServerTopologyNode.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
         mllpServerTopologyNode.setConnectedSystemName(mllpServerPort.getConnectedSystem().getSubsystemName());
         mllpServerTopologyNode.setContainingNodeFDN(endpointProvider.getComponentFDN());
+        for(ParameterNameValuePairType otherConfigurationParameter: mllpServerPort.getOtherConfigurationParameters()){
+            mllpServerTopologyNode.getOtherConfigurationParameters().put(otherConfigurationParameter.getParameterName(), otherConfigurationParameter.getParameterValue());
+        }
         mllpServerTopologyNode.setServer(true);
         MLLPServerAdapter port = new MLLPServerAdapter();
         port.setPortNumber(mllpServerPort.getServerPort());
@@ -185,6 +188,9 @@ public class MLLPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
             ConnectedSystemPort targetPort3 = connectedSystem.getTargetPort3();
             MLLPClientAdapter systemEndpointPort3 = newMLLPClientAdapter(targetPort3);
             externalSystem.getTargetPorts().add(systemEndpointPort3);
+        }
+        for(ParameterNameValuePairType otherConfigurationParameter: mllpClientPort.getOtherConfigurationParameters()){
+            mllpClientTopologyNode.getOtherConfigurationParameters().put(otherConfigurationParameter.getParameterName(), otherConfigurationParameter.getParameterValue());
         }
         mllpClientTopologyNode.setEndpointDescription("Client-->MLLP:"+targetPort1.getTargetPortDNSName()+":"+Integer.toString(targetPort1.getTargetPortValue()));
         mllpClientTopologyNode.setParticipantName(endpointProvider.getParticipantName()+"."+"MLLP.Client."+targetPort1.getTargetPortDNSName()+"."+Integer.toString(targetPort1.getTargetPortValue()));

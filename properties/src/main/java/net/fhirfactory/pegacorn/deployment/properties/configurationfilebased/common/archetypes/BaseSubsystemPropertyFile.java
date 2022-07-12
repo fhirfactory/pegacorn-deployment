@@ -35,7 +35,7 @@ public class BaseSubsystemPropertyFile {
     private HTTPServerPortSegment prometheusPort;
     private HTTPServerPortSegment jolokiaPort;
     private LoadBalancerSegment loadBalancer;
-
+    private PetasosNetworkingSegment networking;
     private SubsystemImageSegment subsystemImageProperties;
     private SecurityCredentialSegment trustStorePassword;
     private SecurityCredentialSegment keyPassword;
@@ -57,11 +57,21 @@ public class BaseSubsystemPropertyFile {
         jolokiaPort = new HTTPServerPortSegment();
         prometheusPort = new HTTPServerPortSegment();
         deploymentZone = new DeploymentZoneSegment();
+        networking = new PetasosNetworkingSegment();
     }
 
     //
     // Getters And Setters
     //
+
+
+    public PetasosNetworkingSegment getNetworking() {
+        return networking;
+    }
+
+    public void setNetworking(PetasosNetworkingSegment networking) {
+        this.networking = networking;
+    }
 
     public LoadBalancerSegment getLoadBalancer() {
         return loadBalancer;
@@ -174,6 +184,7 @@ public class BaseSubsystemPropertyFile {
                 ", trustStorePassword=" + trustStorePassword +
                 ", keyPassword=" + keyPassword +
                 ", deploymentZone=" + deploymentZone +
+                ", networking=" + networking +
                 "," + super.toString() +
                 '}';
     }
