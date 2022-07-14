@@ -96,6 +96,12 @@ public final class PetasosPropertyConstants {
     public static final String MAXIMUM_HL7_MESSAGE_SIZE_IN_LOG = "MAXIMUM_HL7_MESSAGE_SIZE_IN_LOG";
 
     //
+    // HL7v2 ZDE Inclusion Flag
+    //
+
+    public static final String FORWARD_ZDE_SEGMENT = "FORWARD_ZDE_SEGMENT";
+
+    //
     // Task Distribution and Outcome Collection Queues
     //
 
