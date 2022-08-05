@@ -378,6 +378,7 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
         processingPlant.setMultiZoneInfinispanStackConfigFile(getPropertyFile().getDeploymentMode().getMultiuseInfinispanStackConfigFile());
         processingPlant.setPetasosTaskingStackConfigFile(getPropertyFile().getDeploymentMode().getPetasosTaskingStackConfigFile());
         processingPlant.setPetasosAuditStackConfigFile(getPropertyFile().getDeploymentMode().getPetasosAuditStackConfigFile());
+        processingPlant.setPetasosMediaStackConfigFile(getPropertyFile().getDeploymentMode().getPetasosMediaStackConfigFile());
         processingPlant.setPetasosInterceptionStackConfigFile(getPropertyFile().getDeploymentMode().getPetasosInterceptionStackConfigFile());
         processingPlant.setPetasosMetricsStackConfigFile(getPropertyFile().getDeploymentMode().getPetasosMetricsStackConfigFile());
         processingPlant.setPetasosSubscriptionsStackConfigFile(getPropertyFile().getDeploymentMode().getPetasosSubscriptionStackConfigFile());

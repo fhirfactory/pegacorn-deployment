@@ -30,6 +30,7 @@ public class PetasosEnabledSubsystemPropertyFile extends ClusterServiceDeliveryS
     private JGroupsInterZoneRepeaterClientPortSegment petasosTopologyDiscoveryEndpoint;
     private JGroupsInterZoneRepeaterClientPortSegment petasosSubscriptionsEndpoint;
     private JGroupsInterZoneRepeaterClientPortSegment petasosAuditServicesEndpoint;
+    private JGroupsInterZoneRepeaterClientPortSegment petasosMediaServicesEndpoint;
     private JGroupsInterZoneRepeaterClientPortSegment petasosInterceptionEndpoint;
     private JGroupsInterZoneRepeaterClientPortSegment petasosTaskServicesEndpoint;
     private JGroupsInterZoneRepeaterClientPortSegment petasosMetricsEndpoint;
@@ -49,6 +50,7 @@ public class PetasosEnabledSubsystemPropertyFile extends ClusterServiceDeliveryS
         petasosTopologyDiscoveryEndpoint = new JGroupsInterZoneRepeaterClientPortSegment();
         petasosSubscriptionsEndpoint = new JGroupsInterZoneRepeaterClientPortSegment();
         petasosAuditServicesEndpoint = new JGroupsInterZoneRepeaterClientPortSegment();
+        petasosMediaServicesEndpoint = new JGroupsInterZoneRepeaterClientPortSegment();
         petasosInterceptionEndpoint = new JGroupsInterZoneRepeaterClientPortSegment();
         petasosTaskServicesEndpoint = new JGroupsInterZoneRepeaterClientPortSegment();
         multiuseInfinispanEndpoint = new JGroupsInterZoneRepeaterClientPortSegment();
@@ -82,6 +84,15 @@ public class PetasosEnabledSubsystemPropertyFile extends ClusterServiceDeliveryS
     public void setPetasosAuditServicesEndpoint(JGroupsInterZoneRepeaterClientPortSegment petasosAuditServicesEndpoint) {
         this.petasosAuditServicesEndpoint = petasosAuditServicesEndpoint;
     }
+
+    public JGroupsInterZoneRepeaterClientPortSegment getPetasosMediaServicesEndpoint() {
+        return petasosMediaServicesEndpoint;
+    }
+
+    public void setPetasosMediaServicesEndpoint(JGroupsInterZoneRepeaterClientPortSegment petasosMediaServicesEndpoint) {
+        this.petasosMediaServicesEndpoint = petasosMediaServicesEndpoint;
+    }
+
 
     public JGroupsInterZoneRepeaterClientPortSegment getPetasosInterceptionEndpoint() {
         return petasosInterceptionEndpoint;
@@ -167,6 +178,7 @@ public class PetasosEnabledSubsystemPropertyFile extends ClusterServiceDeliveryS
                 ", petasosTopologyDiscoveryEndpoint=" + petasosTopologyDiscoveryEndpoint +
                 ", petasosSubscriptionsEndpoint=" + petasosSubscriptionsEndpoint +
                 ", petasosAuditServicesEndpoint=" + petasosAuditServicesEndpoint +
+                ", petasosMediaServicesEndpoint=" + petasosMediaServicesEndpoint +
                 ", petasosInterceptionEndpoint=" + petasosInterceptionEndpoint +
                 ", petasosTaskServicesEndpoint=" + petasosTaskServicesEndpoint +
                 ", multiuseInfinispanEndpoint=" + multiuseInfinispanEndpoint +

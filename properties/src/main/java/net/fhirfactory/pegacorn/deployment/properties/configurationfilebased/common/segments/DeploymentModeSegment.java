@@ -40,6 +40,7 @@ public class DeploymentModeSegment {
     private String petasosSubscriptionStackConfigFile;
     private String petasosTaskingStackConfigFile;
     private String petasosAuditStackConfigFile;
+    private String petasosMediaStackConfigFile;
     private String multiuseInfinispanStackConfigFile;
     private List<ParameterNameValuePairType> otherDeploymentParameters;
 
@@ -57,6 +58,7 @@ public class DeploymentModeSegment {
         this.petasosTaskingStackConfigFile = null;
         this.multiuseInfinispanStackConfigFile = null;
         this.petasosAuditStackConfigFile = null;
+        this.setPetasosMediaStackConfigFile(null);
         this.otherDeploymentParameters = new ArrayList<>();
     }
 
@@ -93,6 +95,9 @@ public class DeploymentModeSegment {
         }
         if(!StringUtils.isEmpty(overrides.getPetasosAuditStackConfigFile())){
             this.setPetasosAuditStackConfigFile(overrides.getPetasosAuditStackConfigFile());
+        }
+        if(!StringUtils.isEmpty(overrides.getPetasosMediaStackConfigFile())){
+            this.setPetasosMediaStackConfigFile(overrides.getPetasosMediaStackConfigFile());
         }
     }
 
@@ -172,6 +177,14 @@ public class DeploymentModeSegment {
     public void setMultiuseInfinispanStackConfigFile(String multiuseInfinispanStackConfigFile) {
         this.multiuseInfinispanStackConfigFile = multiuseInfinispanStackConfigFile;
     }
+    
+	public String getPetasosMediaStackConfigFile() {
+		return petasosMediaStackConfigFile;
+	}
+
+	public void setPetasosMediaStackConfigFile(String petasosMediaStackConfigFile) {
+		this.petasosMediaStackConfigFile = petasosMediaStackConfigFile;
+	}
 
     public String getDeploymentConfig() {
         return deploymentConfig;
@@ -212,6 +225,7 @@ public class DeploymentModeSegment {
     public void setUsingInternalEncryption(boolean usingInternalEncryption) {
         this.usingInternalEncryption = usingInternalEncryption;
     }
+   
 
     //
     // To String
@@ -233,6 +247,7 @@ public class DeploymentModeSegment {
                 ", petasosTaskingStackConfigFile=" + petasosTaskingStackConfigFile +
                 ", multiuseInfinispanStackConfigFile=" + multiuseInfinispanStackConfigFile +
                 ", petasosAuditStackConfigFile=" + petasosAuditStackConfigFile +
+                ", petasosMediaStackConfigFile=" + petasosMediaStackConfigFile +
                 '}';
     }
 }

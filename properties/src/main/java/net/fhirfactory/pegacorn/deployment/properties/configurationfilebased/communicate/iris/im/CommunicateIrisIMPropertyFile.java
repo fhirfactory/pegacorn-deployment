@@ -87,6 +87,7 @@ public class CommunicateIrisIMPropertyFile extends CommunicateSubsystemPropertyF
                 ", petasosSubscriptionsEndpoint=" + getPetasosSubscriptionsEndpoint() +
                 ", edgeAsk=" + getEdgeAsk() +
                 ", petasosAuditServicesEndpoint=" + getPetasosAuditServicesEndpoint() +
+                ", petasosMediaServicesEndpoint=" + getPetasosMediaServicesEndpoint() +
                 ", petasosInterceptionEndpoint=" + getPetasosInterceptionEndpoint() +
                 ", petasosTaskServicesEndpoint=" + getPetasosTaskServicesEndpoint() +
                 ", multiuseInfinispanEndpoint=" + getMultiuseInfinispanEndpoint() +
