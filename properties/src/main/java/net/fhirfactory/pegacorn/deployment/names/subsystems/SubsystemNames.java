@@ -22,6 +22,7 @@
 package net.fhirfactory.pegacorn.deployment.names.subsystems;
 
 import net.fhirfactory.pegacorn.core.interfaces.auditing.PetasosAuditEventServiceProviderNameInterface;
+import net.fhirfactory.pegacorn.core.interfaces.media.PetasosMediaServiceProviderNameInterface;
 import net.fhirfactory.pegacorn.core.interfaces.oam.subscriptions.PetasosSubscriptionReportingServiceProviderNameInterface;
 import net.fhirfactory.pegacorn.core.interfaces.oam.topology.PetasosTopologyReportingServiceProviderNameInterface;
 import net.fhirfactory.pegacorn.core.interfaces.tasks.PetasosTaskRepositoryServiceProviderNameInterface;
@@ -30,7 +31,8 @@ public abstract class SubsystemNames
         implements PetasosTaskRepositoryServiceProviderNameInterface,
         PetasosTopologyReportingServiceProviderNameInterface,
         PetasosSubscriptionReportingServiceProviderNameInterface,
-        PetasosAuditEventServiceProviderNameInterface {
+        PetasosAuditEventServiceProviderNameInterface,
+        PetasosMediaServiceProviderNameInterface {
 
     abstract protected String specifyDeploymentShortName();
 
@@ -63,6 +65,16 @@ public abstract class SubsystemNames
         return (getHestiaAuditIMParticipant());
     }
 
+
+    public String getHestiaDAMIMParticipant(){
+        String hestiaDAMIM = "Hestia.DAM.IM";
+        return(hestiaDAMIM);
+    }
+    
+    @Override
+    public String getPetasosMediaServiceProviderName() {
+        return (getHestiaDAMIMParticipant());
+    }
     //
     // ITOps Information Manager
     //
