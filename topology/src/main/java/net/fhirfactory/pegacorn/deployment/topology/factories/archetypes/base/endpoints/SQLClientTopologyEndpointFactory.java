@@ -1,0 +1,180 @@
+/*
+ * Copyright (c) 2021 Mark A. Hunter (ACT Health)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+package net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.base.endpoints;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.thymeleaf.util.StringUtils;
+
+import net.fhirfactory.pegacorn.core.model.componentid.PegacornSystemComponentTypeTypeEnum;
+import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeRDN;
+import net.fhirfactory.pegacorn.core.model.petasos.endpoint.valuesets.PetasosEndpointTopologyTypeEnum;
+import net.fhirfactory.pegacorn.core.model.petasos.ipc.PegacornCommonInterfaceNames;
+import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.HTTPClientAdapter;
+import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.base.IPCAdapterDefinition;
+import net.fhirfactory.pegacorn.core.model.topology.endpoints.interact.StandardInteractClientTopologyEndpointPort;
+import net.fhirfactory.pegacorn.core.model.topology.endpoints.sql.SQLClientTopologyEndpoint;
+import net.fhirfactory.pegacorn.core.model.topology.endpoints.sql.adapters.SQLClientAdapter;
+import net.fhirfactory.pegacorn.core.model.topology.nodes.common.EndpointProviderInterface;
+import net.fhirfactory.pegacorn.core.model.topology.nodes.external.ConnectedExternalSystemTopologyNode;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes.BaseSubsystemPropertyFile;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemPort;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemProperties;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.InteractSQLClientPortSegment;
+import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.base.common.TopologyFactoryHelpersBase;
+import net.fhirfactory.pegacorn.deployment.topology.manager.TopologyIM;
+import net.fhirfactory.pegacorn.util.PegacornProperties;
+
+@ApplicationScoped
+public class SQLClientTopologyEndpointFactory extends TopologyFactoryHelpersBase {
+    private static final Logger LOG = LoggerFactory.getLogger(SQLClientTopologyEndpointFactory.class);
+
+    @Inject
+    private PegacornProperties pegacornProperties;
+
+    @Inject
+    private PegacornCommonInterfaceNames interfaceNames;
+
+    @Inject
+    private TopologyIM topologyIM;
+
+    //
+    // Constructor(s)
+    //
+
+    //
+    // Getters and Setters
+    //
+
+    @Override
+    protected Logger getLogger(){
+        return(LOG);
+    }
+
+    protected PegacornCommonInterfaceNames getInterfaceNames(){
+        return(interfaceNames);
+    }
+
+    protected TopologyIM getTopologyIM(){
+        return(topologyIM);
+    }
+
+    //
+    // Business Methods
+    //
+
+   
+    // Build a SQL Client Endpoint (Helper Method)
+    //
+
+    public StandardInteractClientTopologyEndpointPort newSQLClientTopologyEndpoint(BaseSubsystemPropertyFile propertyFile, EndpointProviderInterface endpointProvider, String endpointFunctionName, InteractSQLClientPortSegment sqlClientPortConfigurationSegment){
+        getLogger().debug(".newSQLClientTopologyEndpoint(): Entry, endpointProvider->{}, httpClientPortConfigurationSegment->{}", endpointProvider, sqlClientPortConfigurationSegment);
+        SQLClientTopologyEndpoint sqlClientEndpoint = new SQLClientTopologyEndpoint();
+        if(sqlClientPortConfigurationSegment == null){
+            getLogger().debug(".newSQLClientTopologyEndpoint(): Exit, no port to add");
+            return(null);
+        }
+        String name = getInterfaceNames().getEndpointServerName(endpointFunctionName);
+        TopologyNodeRDN nodeRDN = createSimpleNodeRDN(name, endpointProvider.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
+        sqlClientEndpoint.setComponentRDN(nodeRDN);
+        sqlClientEndpoint.setEndpointConfigurationName(sqlClientPortConfigurationSegment.getName());
+        sqlClientEndpoint.constructFDN(endpointProvider.getComponentFDN(), nodeRDN);
+        sqlClientEndpoint.setEndpointType(PetasosEndpointTopologyTypeEnum.SQL_CLIENT);
+        sqlClientEndpoint.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
+        sqlClientEndpoint.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
+        sqlClientEndpoint.setComponentRDN(nodeRDN);
+        sqlClientEndpoint.setParticipantName(endpointFunctionName);
+        sqlClientEndpoint.setContainingNodeFDN(endpointProvider.getComponentFDN());
+        sqlClientEndpoint.setDataSource(sqlClientPortConfigurationSegment.getDataSource());
+        sqlClientEndpoint.setQueryTemplate(sqlClientPortConfigurationSegment.getQueryTemplate());
+        ConnectedSystemProperties connectedSystem = sqlClientPortConfigurationSegment.getConnectedSystem();
+        sqlClientEndpoint.setConnectedSystemName(connectedSystem.getSubsystemName());
+        ConnectedExternalSystemTopologyNode externalSystem = new ConnectedExternalSystemTopologyNode();
+        externalSystem.setSubsystemName(connectedSystem.getSubsystemName());
+        ConnectedSystemPort targetPort1 = connectedSystem.getTargetPort1();
+        SQLClientAdapter systemEndpointPort1 = newSQLClientAdapter(targetPort1);
+        externalSystem.getTargetPorts().add(systemEndpointPort1);
+        if(connectedSystem.getTargetPort2() != null)
+        {
+            ConnectedSystemPort targetPort2 = connectedSystem.getTargetPort2();
+            SQLClientAdapter systemEndpointPort2 = newSQLClientAdapter(targetPort2);
+            externalSystem.getTargetPorts().add(systemEndpointPort2);
+        }
+        if(connectedSystem.getTargetPort3() != null)
+        {
+            ConnectedSystemPort targetPort3 = connectedSystem.getTargetPort3();
+            SQLClientAdapter systemEndpointPort3 = newSQLClientAdapter(targetPort3);
+            externalSystem.getTargetPorts().add(systemEndpointPort3);
+        }
+        sqlClientEndpoint.setTargetSystem(externalSystem);
+        //
+        // Now build the Endpoint Description
+        if(StringUtils.isEmpty(targetPort1.getTargetPath())) {
+            sqlClientEndpoint.setEndpointDescription(endpointProvider.getParticipantName()+"."+"SQL(Client)://" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue() + "/");
+        } else {
+            sqlClientEndpoint.setEndpointDescription(endpointProvider.getParticipantName()+"."+"SQL(Client)://" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue() + targetPort1.getTargetPath());
+        }
+        //
+        // Now build the Endpoint Participant Name / Participant Display Name
+        sqlClientEndpoint.setParticipantName(endpointProvider.getParticipantName()+".SQL.Client." + targetPort1.getTargetPortDNSName() + "." + targetPort1.getTargetPortValue());
+        sqlClientEndpoint.setParticipantDisplayName("SQL.Client:" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue());
+        //
+        // Add the endpoint to the provider
+        endpointProvider.addEndpoint(sqlClientEndpoint.getComponentFDN());
+        //
+        // Add the endpoint to the topology cache
+        getLogger().trace(".newSQLClientTopologyEndpoint(): Add the httpClient Port to the Topology Cache");
+        getTopologyIM().addTopologyNode(endpointProvider.getComponentFDN(), sqlClientEndpoint);
+        //
+        // We're done
+        getLogger().debug(".newSQLClientTopologyEndpoint(): Exit, endpoint added");
+        return(sqlClientEndpoint);
+    }
+
+    public SQLClientAdapter newSQLClientAdapter(ConnectedSystemPort connectedSystemPort) {
+        getLogger().debug(".newSQLClientAdapter(): Entry, connectedSystemPort->{}", connectedSystemPort);
+        SQLClientAdapter clientAdapter = new SQLClientAdapter();
+        boolean encryptionRequired = false;
+        if(connectedSystemPort.getEncryptionRequired() != null){
+            encryptionRequired = connectedSystemPort.getEncryptionRequired();
+        }
+        clientAdapter.setEncrypted(encryptionRequired);
+        if(StringUtils.isEmpty(connectedSystemPort.getTargetPortDNSName())){
+            throw (new IllegalArgumentException("TargetPortDNSName is not defined in configuration file"));
+        }
+        clientAdapter.setHostName(connectedSystemPort.getTargetPortDNSName());
+        if(connectedSystemPort.getTargetPortValue() == null){
+            throw(new IllegalArgumentException("TargetPortValue is not defined in configuration file"));
+        }
+        clientAdapter.setPortNumber(connectedSystemPort.getTargetPortValue());
+        IPCAdapterDefinition currentInterfaceDefinition = new IPCAdapterDefinition();
+        currentInterfaceDefinition.setInterfaceFormalName(connectedSystemPort.getTargetInterfaceDefinition().getInterfaceDefinitionName());
+        currentInterfaceDefinition.setInterfaceFormalVersion(connectedSystemPort.getTargetInterfaceDefinition().getInterfaceDefinitionVersion());
+        clientAdapter.getSupportedInterfaceDefinitions().add(currentInterfaceDefinition);
+        getLogger().debug(".newSQLClientAdapter(): Exit, systemEndpointPort->{}", clientAdapter);
+        return (clientAdapter);
+    }
+
+}

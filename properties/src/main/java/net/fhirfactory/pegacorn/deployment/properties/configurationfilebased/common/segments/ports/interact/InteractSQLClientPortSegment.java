@@ -25,28 +25,52 @@ import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.com
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class InteractClientPortSegment extends StandardClientPortSegment {
-    private static Logger LOG = LoggerFactory.getLogger(InteractClientPortSegment.class);
+public class InteractSQLClientPortSegment extends StandardClientPortSegment {
+    private static Logger LOG = LoggerFactory.getLogger(InteractSQLClientPortSegment.class);
+    
+    private String dataSource;
+    private String queryTemplate;
+    
+    // 
+    // Constructor(s)
+    //
+    
+    //
+    // Getters and Setters
+    //
+    
+	public String getDataSource() {
+		return dataSource;
+	}
 
+	public void setDataSource(String dataSource) {
+		this.dataSource = dataSource;
+	}
 
+	public String getQueryTemplate() {
+		return queryTemplate;
+	}
+
+	public void setQueryTemplate(String queryTemplate) {
+		this.queryTemplate = queryTemplate;
+	}
+    
     @Override
     protected Logger specifyLogger() {
         return (LOG);
     }
+    
+    //
+    // toString
+    //
 
-    @Override
-    public String toString() {
-        return "InteractClientPortSegment{" +
-                "otherConfigurationParameters=" + getOtherConfigurationParameters() +
-                ", defaultRetryCount=" + getDefaultRetryCount() +
-                ", defaultRetryWait=" + getDefaultRetryWait() +
-                ", defaultTimeout=" + getDefaultTimeout() +
-                ", connectedSystem=" + getConnectedSystem() +
-                ", portType='" + getPortType() + '\'' +
-                ", server=" + isServer() +
-                ", encrypted=" + isEncrypted() +
-                ", startupDelay=" + getStartupDelay() +
-                ", name='" + getName() + '\'' +
-                '}';
-    }
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("InteractSQLClientPortSegment [dataSource=").append(dataSource);
+		builder.append(", queryTemplate=").append(queryTemplate);
+		builder.append(", ").append(super.toString()).append("]");
+		return builder.toString();
+	}
+    
 }
