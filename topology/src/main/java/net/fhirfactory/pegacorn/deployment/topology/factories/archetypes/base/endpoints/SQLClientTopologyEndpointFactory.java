@@ -32,9 +32,7 @@ import net.fhirfactory.pegacorn.core.model.componentid.PegacornSystemComponentTy
 import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeRDN;
 import net.fhirfactory.pegacorn.core.model.petasos.endpoint.valuesets.PetasosEndpointTopologyTypeEnum;
 import net.fhirfactory.pegacorn.core.model.petasos.ipc.PegacornCommonInterfaceNames;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.HTTPClientAdapter;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.base.IPCAdapterDefinition;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.interact.StandardInteractClientTopologyEndpointPort;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.sql.SQLClientTopologyEndpoint;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.sql.adapters.SQLClientAdapter;
 import net.fhirfactory.pegacorn.core.model.topology.nodes.common.EndpointProviderInterface;
@@ -89,7 +87,7 @@ public class SQLClientTopologyEndpointFactory extends TopologyFactoryHelpersBase
     // Build a SQL Client Endpoint (Helper Method)
     //
 
-    public StandardInteractClientTopologyEndpointPort newSQLClientTopologyEndpoint(BaseSubsystemPropertyFile propertyFile, EndpointProviderInterface endpointProvider, String endpointFunctionName, InteractSQLClientPortSegment sqlClientPortConfigurationSegment){
+    public SQLClientTopologyEndpoint newSQLClientTopologyEndpoint(BaseSubsystemPropertyFile propertyFile, EndpointProviderInterface endpointProvider, String endpointFunctionName, InteractSQLClientPortSegment sqlClientPortConfigurationSegment){
         getLogger().debug(".newSQLClientTopologyEndpoint(): Entry, endpointProvider->{}, httpClientPortConfigurationSegment->{}", endpointProvider, sqlClientPortConfigurationSegment);
         SQLClientTopologyEndpoint sqlClientEndpoint = new SQLClientTopologyEndpoint();
         if(sqlClientPortConfigurationSegment == null){
