@@ -12,7 +12,7 @@
     <artifactId>dricats-deployment</artifactId>
     <packaging>pom</packaging>
     
-    <name>DRICATS :: Deployment</name>
+    <name>DRICaTS :: Deployment</name>
     <description>The per-instance configuration information</description>
 
     <properties>
@@ -20,17 +20,7 @@
     </properties>
     
     <modules>
-        <module>constants</module>
-        <module>properties</module>
-        <module>datasets</module>
-        <module>topology</module>
+        <module>configuration</module>
+        <!--module>topology</module-->
     </modules>
-    <dependencies>
-        <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
-            <version>2.0.SP1</version>
-            <scope>compile</scope>
-        </dependency>
-    </dependencies>
 </project>

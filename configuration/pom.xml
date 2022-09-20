@@ -10,11 +10,11 @@
         <version>1.6.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>dricats-deployment-topology</artifactId>
+    <artifactId>dricats-deployment-configuration</artifactId>
     <packaging>jar</packaging>
 
-    <name>DRICaTS :: Deployment :: Topology</name>
-    <description>The (network and application) Topology Configuration of a Pegacorn deployment system</description>
+    <name>DRICaTS :: Deployment :: Configuration</name>
+    <description>The Internal-Only Deployment (network and application) Configuration Constants</description>
 
     <licenses>
         <license>
@@ -42,11 +42,6 @@
     </properties>
 
     <dependencies>
-
-        <!--                                 -->
-        <!-- Jakarta/JEE & Wildfly Libraries -->
-        <!--                                 -->
-
         <dependency>
             <groupId>javax.enterprise</groupId>
             <artifactId>cdi-api</artifactId>
@@ -79,18 +74,12 @@
             <scope>provided</scope>
         </dependency>
 
-        <!--                          -->
-        <!-- Apache Commons Libraries -->
-        <!--                          -->
 
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
 
-        <!--                -->
-        <!-- JSON Libraries -->
-        <!--                -->
 
         <dependency>
             <groupId>org.json</groupId>
@@ -102,23 +91,12 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <scope>compile</scope>
         </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <scope>compile</scope>
-        </dependency>
-
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
-            <artifactId>jackson-dataformat-yaml</artifactId>
+            <artifactId>jackson-dataformat-xml</artifactId>
         </dependency>
 
-        <!--                              -->
-        <!-- Pegacorn Component Libraries -->
-        <!--                              -->
 
         <!-- Pegacorn Common Code -->
         <dependency>
@@ -128,35 +106,15 @@
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
-        
-        <!-- Pegacorn Deployment Properties -->
-        <dependency>
-            <groupId>net.fhirfactory.dricats</groupId>
-            <artifactId>dricats-deployment-configuration</artifactId>
-            <version>${project.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>net.fhirfactory.dricats</groupId>
-            <artifactId>dricats-datamodels-common</artifactId>
-            <version>${project.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>net.fhirfactory.dricats</groupId>
-            <artifactId>dricats-datamodels-topology</artifactId>
-            <version>1.6.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        
+
         <dependency>
             <groupId>net.fhirfactory.dricats</groupId>
             <artifactId>dricats-datamodels-configuration</artifactId>
-            <version>1.6.0-SNAPSHOT</version>
+            <version>${project.version}</version>
+            <type>jar</type>
             <scope>compile</scope>
         </dependency>
+
 
         <!-- Infinispan -->
         <dependency>
@@ -245,7 +203,6 @@
             <scope>test</scope>
             <optional>true</optional>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -261,7 +218,6 @@
             </plugin>
             <!--Build configuration for the WAR plugin: -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>${version-org.apache.maven-war-plugin}</version>
                 <configuration>
@@ -276,10 +232,99 @@
                 <version>${version-org.apache.maven-surefire-plugin}</version>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>${version-org.apache.maven-failsafe-plugin}</version>
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <!-- An optional Arquillian testing profile -->
+            <id>dricats-on-wildfly</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.wildfly.arquillian</groupId>
+                    <artifactId>wildfly-arquillian-container-managed</artifactId>
+                    <version>${version-org.wildfly.arquillian-wildfly-arquillian-container-managed}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+            <build>
+              <pluginManagement>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <version>${version-org.apache.maven-dependency-plugin}</version>
+                        <executions>
+                            <execution>
+                                <id>unpack</id>
+                                <phase>process-test-classes</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.wildfly</groupId>
+                                            <artifactId>wildfly-dist</artifactId>
+                                            <version>${version-org.wildfly}</version>
+                                            <type>zip</type>
+                                            <overWrite>false</overWrite>
+                                            <outputDirectory>${project.basedir}/target/</outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>${version-org.apache.maven-antrun-plugin}</version>
+                        <executions>
+                            <execution>
+                                <id>set-wildfly-xml</id>
+                                <phase>process-test-classes</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <echo>ANT TASK - Copying standalone-full-ha.xml from ${project.basedir}/src/test/resources/wildfly/${version-org.wildfly} to ${project.basedir}/target/wildfly-${version-org.wildfly}/standalone/configuration</echo>
+                                        <copy todir="${project.basedir}/target/wildfly-${version-org.wildfly}/standalone/configuration" overwrite="true" flatten="true">
+                                            <fileset dir="${project.basedir}/src/test/resources/wildfly/${version-org.wildfly}/">
+                                                <include name="standalone-full-ha.xml"/>
+                                            </fileset>
+                                        </copy>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${version-org.apache.maven-surefire-plugin}</version>
+                        <configuration>
+                            <!-- Configuration for Arquillian: -->
+                            <systemPropertyVariables>
+                                <arquillian.launch>dricats-on-wildfly</arquillian.launch>
+                                <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                                <JBOSS_HOME>${project.basedir}/target/wildfly-${version-org.wildfly}</JBOSS_HOME>
+                            </systemPropertyVariables>
+                            <redirectTestOutputToFile>false</redirectTestOutputToFile>
+                        </configuration>
+                    </plugin>
+                </plugins>
+              </pluginManagement>
+            </build>
+        </profile>
+    </profiles>
+
+
 </project>
