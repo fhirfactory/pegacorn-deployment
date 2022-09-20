@@ -26,20 +26,14 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.thymeleaf.util.StringUtils;
 
 import net.fhirfactory.pegacorn.core.model.componentid.PegacornSystemComponentTypeTypeEnum;
 import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeRDN;
 import net.fhirfactory.pegacorn.core.model.petasos.endpoint.valuesets.PetasosEndpointTopologyTypeEnum;
 import net.fhirfactory.pegacorn.core.model.petasos.ipc.PegacornCommonInterfaceNames;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.base.IPCAdapterDefinition;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.sql.SQLClientTopologyEndpoint;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.sql.adapters.SQLClientAdapter;
 import net.fhirfactory.pegacorn.core.model.topology.nodes.common.EndpointProviderInterface;
-import net.fhirfactory.pegacorn.core.model.topology.nodes.external.ConnectedExternalSystemTopologyNode;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes.BaseSubsystemPropertyFile;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemPort;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemProperties;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.InteractSQLClientPortSegment;
 import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.base.common.TopologyFactoryHelpersBase;
 import net.fhirfactory.pegacorn.deployment.topology.manager.TopologyIM;
@@ -105,39 +99,12 @@ public class SQLClientTopologyEndpointFactory extends TopologyFactoryHelpersBase
         sqlClientEndpoint.setComponentRDN(nodeRDN);
         sqlClientEndpoint.setParticipantName(endpointFunctionName);
         sqlClientEndpoint.setContainingNodeFDN(endpointProvider.getComponentFDN());
-        sqlClientEndpoint.setDataSource(sqlClientPortConfigurationSegment.getDataSource());
+        sqlClientEndpoint.setDataSourceName(sqlClientPortConfigurationSegment.getDataSourceName());
+        sqlClientEndpoint.setDriverClassName(sqlClientPortConfigurationSegment.getDriverClassName());
+        sqlClientEndpoint.setConnectionURL(sqlClientPortConfigurationSegment.getConnectionURL());
         sqlClientEndpoint.setQueryTemplate(sqlClientPortConfigurationSegment.getQueryTemplate());
-        ConnectedSystemProperties connectedSystem = sqlClientPortConfigurationSegment.getConnectedSystem();
-        sqlClientEndpoint.setConnectedSystemName(connectedSystem.getSubsystemName());
-        ConnectedExternalSystemTopologyNode externalSystem = new ConnectedExternalSystemTopologyNode();
-        externalSystem.setSubsystemName(connectedSystem.getSubsystemName());
-        ConnectedSystemPort targetPort1 = connectedSystem.getTargetPort1();
-        SQLClientAdapter systemEndpointPort1 = newSQLClientAdapter(targetPort1);
-        externalSystem.getTargetPorts().add(systemEndpointPort1);
-        if(connectedSystem.getTargetPort2() != null)
-        {
-            ConnectedSystemPort targetPort2 = connectedSystem.getTargetPort2();
-            SQLClientAdapter systemEndpointPort2 = newSQLClientAdapter(targetPort2);
-            externalSystem.getTargetPorts().add(systemEndpointPort2);
-        }
-        if(connectedSystem.getTargetPort3() != null)
-        {
-            ConnectedSystemPort targetPort3 = connectedSystem.getTargetPort3();
-            SQLClientAdapter systemEndpointPort3 = newSQLClientAdapter(targetPort3);
-            externalSystem.getTargetPorts().add(systemEndpointPort3);
-        }
-        sqlClientEndpoint.setTargetSystem(externalSystem);
-        //
-        // Now build the Endpoint Description
-        if(StringUtils.isEmpty(targetPort1.getTargetPath())) {
-            sqlClientEndpoint.setEndpointDescription(endpointProvider.getParticipantName()+"."+"SQL(Client)://" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue() + "/");
-        } else {
-            sqlClientEndpoint.setEndpointDescription(endpointProvider.getParticipantName()+"."+"SQL(Client)://" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue() + targetPort1.getTargetPath());
-        }
-        //
-        // Now build the Endpoint Participant Name / Participant Display Name
-        sqlClientEndpoint.setParticipantName(endpointProvider.getParticipantName()+".SQL.Client." + targetPort1.getTargetPortDNSName() + "." + targetPort1.getTargetPortValue());
-        sqlClientEndpoint.setParticipantDisplayName("SQL.Client:" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue());
+       
+       
         //
         // Add the endpoint to the provider
         endpointProvider.addEndpoint(sqlClientEndpoint.getComponentFDN());
@@ -150,29 +117,4 @@ public class SQLClientTopologyEndpointFactory extends TopologyFactoryHelpersBase
         getLogger().debug(".newSQLClientTopologyEndpoint(): Exit, endpoint added");
         return(sqlClientEndpoint);
     }
-
-    public SQLClientAdapter newSQLClientAdapter(ConnectedSystemPort connectedSystemPort) {
-        getLogger().debug(".newSQLClientAdapter(): Entry, connectedSystemPort->{}", connectedSystemPort);
-        SQLClientAdapter clientAdapter = new SQLClientAdapter();
-        boolean encryptionRequired = false;
-        if(connectedSystemPort.getEncryptionRequired() != null){
-            encryptionRequired = connectedSystemPort.getEncryptionRequired();
-        }
-        clientAdapter.setEncrypted(encryptionRequired);
-        if(StringUtils.isEmpty(connectedSystemPort.getTargetPortDNSName())){
-            throw (new IllegalArgumentException("TargetPortDNSName is not defined in configuration file"));
-        }
-        clientAdapter.setHostName(connectedSystemPort.getTargetPortDNSName());
-        if(connectedSystemPort.getTargetPortValue() == null){
-            throw(new IllegalArgumentException("TargetPortValue is not defined in configuration file"));
-        }
-        clientAdapter.setPortNumber(connectedSystemPort.getTargetPortValue());
-        IPCAdapterDefinition currentInterfaceDefinition = new IPCAdapterDefinition();
-        currentInterfaceDefinition.setInterfaceFormalName(connectedSystemPort.getTargetInterfaceDefinition().getInterfaceDefinitionName());
-        currentInterfaceDefinition.setInterfaceFormalVersion(connectedSystemPort.getTargetInterfaceDefinition().getInterfaceDefinitionVersion());
-        clientAdapter.getSupportedInterfaceDefinitions().add(currentInterfaceDefinition);
-        getLogger().debug(".newSQLClientAdapter(): Exit, systemEndpointPort->{}", clientAdapter);
-        return (clientAdapter);
-    }
-
 }

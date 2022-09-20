@@ -21,30 +21,27 @@
  */
 package net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact;
 
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.StandardClientPortSegment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.base.StandardClientPortSegment;
 
 public class InteractSQLClientPortSegment extends StandardClientPortSegment {
     private static Logger LOG = LoggerFactory.getLogger(InteractSQLClientPortSegment.class);
     
-    private String dataSource;
+    private String connectionURL;
     private String queryTemplate;
+    private String dataSourceName;
+    private String driverClassName;
     
-    // 
-    // Constructor(s)
-    //
+
     
-    //
-    // Getters and Setters
-    //
-    
-	public String getDataSource() {
-		return dataSource;
+    public String getConnectionURL() {
+		return connectionURL;
 	}
 
-	public void setDataSource(String dataSource) {
-		this.dataSource = dataSource;
+	public void setConnectionURL(String connectionURL) {
+		this.connectionURL = connectionURL;
 	}
 
 	public String getQueryTemplate() {
@@ -54,8 +51,24 @@ public class InteractSQLClientPortSegment extends StandardClientPortSegment {
 	public void setQueryTemplate(String queryTemplate) {
 		this.queryTemplate = queryTemplate;
 	}
-    
-    @Override
+
+	public String getDataSourceName() {
+		return dataSourceName;
+	}
+
+	public void setDataSourceName(String dataSourceName) {
+		this.dataSourceName = dataSourceName;
+	}
+
+	public String getDriverClassName() {
+		return driverClassName;
+	}
+
+	public void setDriverClassName(String driverClassName) {
+		this.driverClassName = driverClassName;
+	}
+
+	@Override
     protected Logger specifyLogger() {
         return (LOG);
     }
@@ -67,8 +80,10 @@ public class InteractSQLClientPortSegment extends StandardClientPortSegment {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("InteractSQLClientPortSegment [dataSource=").append(dataSource);
+		builder.append("InteractSQLClientPortSegment [connectionURL=").append(connectionURL);
 		builder.append(", queryTemplate=").append(queryTemplate);
+		builder.append(", dataSourceName=").append(dataSourceName);
+		builder.append(", driverClassName=").append(driverClassName);
 		builder.append(", ").append(super.toString()).append("]");
 		return builder.toString();
 	}
