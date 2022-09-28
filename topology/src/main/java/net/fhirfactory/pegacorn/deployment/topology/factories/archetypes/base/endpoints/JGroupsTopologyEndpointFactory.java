@@ -127,7 +127,11 @@ public class JGroupsTopologyEndpointFactory extends TopologyFactoryHelpersBase {
         String clusterName = propertyFile.getSubsystemInstant().getClusterServiceName();
         jgroupsIP.setEndpointDescription(jgroupsIPCSegment.getPortType());
         if(StringUtils.isEmpty(clusterName)){
-            getLogger().error(".addInterZoneRepeaterJGroupsIntegrationPoint(): Bad definition of Petasos IPC Endpoint->{}", jgroupsIPCSegment.getName());
+            Object jgroupsEndpointLogDisplay = jgroupsIPCSegment.getName();
+            if (jgroupsEndpointLogDisplay == null) {
+                jgroupsEndpointLogDisplay = jgroupsIPCSegment;
+            }
+            getLogger().error(".addInterZoneRepeaterJGroupsIntegrationPoint(): Bad definition (no clusterServiceName) of Petasos IPC Endpoint->{}", jgroupsEndpointLogDisplay);
             jgroupsIP.setParticipantName("unknown");
         } else {
             jgroupsIP.setParticipantName(clusterName);
@@ -213,8 +217,12 @@ public class JGroupsTopologyEndpointFactory extends TopologyFactoryHelpersBase {
         getLogger().info(".addJGroupsIntegrationPoint(): channelName->{}", jgroupsIP.getChannelName());
         jgroupsIP.setEnablingProcessingPlantId(processingPlantNode.getComponentID());
         PetasosIntegrationPointNameEnum endpointName = PetasosIntegrationPointNameEnum.fromConfigName(jgroupsIPCSegment.getName());
-        if(endpointName == null){
-            getLogger().error(".addInterZoneRepeaterJGroupsIntegrationPoint(): Bad definition of Petasos IPC Endpoint->{}", jgroupsIPCSegment.getName());
+        if(endpointName == null) {
+            Object jgroupsEndpointLogDisplay = jgroupsIPCSegment.getName();
+            if (jgroupsEndpointLogDisplay == null) {
+                jgroupsEndpointLogDisplay = jgroupsIPCSegment;
+            }
+            getLogger().error(".addInterZoneRepeaterJGroupsIntegrationPoint(): Bad definition (endpoint name) of Petasos IPC Endpoint->{}", jgroupsEndpointLogDisplay);
             jgroupsIP.setParticipantName("unknown");
         } else {
             jgroupsIP.setParticipantName(endpointProvider.getParticipantName()+"."+endpointName.getParticipantName());
