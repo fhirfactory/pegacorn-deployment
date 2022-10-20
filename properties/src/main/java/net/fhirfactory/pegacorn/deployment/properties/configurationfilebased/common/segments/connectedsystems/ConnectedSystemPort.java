@@ -28,14 +28,14 @@ public class ConnectedSystemPort {
     private Boolean encryptionRequired;
     private Integer targetPortValue;
     private String targetPortDNSName;
-    private String targetPath;
+    private String targetContextPath;
     
     public ConnectedSystemPort(){
         this.targetInterfaceDefinition = null;
         this.encryptionRequired = false;
         this.targetPortValue = null;
         this.targetPortDNSName = null;
-        this.targetPath = null;
+        this.targetContextPath = null;
     }
 
     public InterfaceDefinitionSegment getTargetInterfaceDefinition() {
@@ -70,12 +70,12 @@ public class ConnectedSystemPort {
         this.targetPortDNSName = targetPortDNSName;
     }
 
-    public String getTargetPath() {
-        return targetPath;
+    public String getTargetContextPath() {
+        return targetContextPath;
     }
 
-    public void setTargetPath(String targetPath) {
-        this.targetPath = targetPath;
+    public void setTargetContextPath(String targetContextPath) {
+        this.targetContextPath = targetContextPath;
     }
 
     @Override
@@ -85,7 +85,7 @@ public class ConnectedSystemPort {
                 ", encryptionRequired=" + encryptionRequired +
                 ", targetPortValue=" + targetPortValue +
                 ", targetPortDNSName=" + targetPortDNSName +
-                ", targetPath=" + targetPath +
+                ", targetContextPath=" + targetContextPath +
                 '}';
     }
 }

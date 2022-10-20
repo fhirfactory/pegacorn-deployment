@@ -23,9 +23,7 @@ package net.fhirfactory.pegacorn.deployment.topology.manager;
 
 import net.fhirfactory.pegacorn.core.model.component.SoftwareComponent;
 import net.fhirfactory.pegacorn.core.model.componentid.ComponentIdType;
-import net.fhirfactory.pegacorn.core.model.componentid.PegacornSystemComponentTypeTypeEnum;
-import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeFDN;
-import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeFDNToken;
+import net.fhirfactory.pegacorn.core.model.componentid.SoftwareComponentTypeEnum;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.base.IPCTopologyEndpoint;
 import net.fhirfactory.pegacorn.core.model.topology.mode.NetworkSecurityZoneEnum;
 import net.fhirfactory.pegacorn.core.model.topology.nodes.*;
@@ -93,10 +91,10 @@ public class TopologyIM {
         return(solution);
     }
 
-    public void addTopologyNode(TopologyNodeFDN parentNodeFDN, SoftwareComponent newNodeElement) {
+    public void addTopologyNode(ComponentIdType parentNodeFDN, SoftwareComponent newNodeElement) {
         LOG.debug(".addTopologyNode(): Entry, parentNodeFDN->{}, newElement->{}", parentNodeFDN, newNodeElement);
 
-        newNodeElement.setContainingNodeFDN(parentNodeFDN);
+        newNodeElement.setParentComponent(parentNodeFDN);
         topologyDataManager.addTopologyNode(newNodeElement);
         SoftwareComponent parentNodeElement = getNode(parentNodeFDN);
         switch(newNodeElement.getComponentType()){
@@ -104,7 +102,7 @@ public class TopologyIM {
                 SolutionTopologyNode solution = (SolutionTopologyNode) parentNodeElement;
                 LOG.trace(".addTopologyNode(): Adding a Subsystem, parent Solution->{}", solution);
                 SubsystemTopologyNode subsystem = (SubsystemTopologyNode) newNodeElement;
-                TopologyNodeFDN newNodeFDN = subsystem.getComponentFDN();
+                ComponentIdType newNodeFDN = subsystem.getComponentId();
                 if(!solution.getSubsystemList().contains(newNodeFDN)) {
                     solution.getSubsystemList().add(newNodeFDN);
                 }
@@ -113,64 +111,56 @@ public class TopologyIM {
             case EXTERNALISED_SERVICE: {
                 SubsystemTopologyNode subsystem = (SubsystemTopologyNode) parentNodeElement;
                 BusinessServiceTopologyNode businessService = (BusinessServiceTopologyNode) newNodeElement;
-                if(!subsystem.getBusinessServices().contains(businessService.getComponentFDN())) {
-                    subsystem.getBusinessServices().add(businessService.getComponentFDN());
+                if(!subsystem.getBusinessServices().contains(businessService.getComponentId())) {
+                    subsystem.getBusinessServices().add(businessService.getComponentId());
                 }
                 break;
             }
             case SITE: {
                 BusinessServiceTopologyNode businessService = (BusinessServiceTopologyNode) parentNodeElement;
                 DeploymentSiteTopologyNode deploymentSite = (DeploymentSiteTopologyNode) newNodeElement;
-                if(!businessService.getDeploymentSites().contains(deploymentSite.getComponentFDN())) {
-                    businessService.getDeploymentSites().add(deploymentSite.getComponentFDN());
+                if(!businessService.getDeploymentSites().contains(deploymentSite.getComponentId())) {
+                    businessService.getDeploymentSites().add(deploymentSite.getComponentId());
                 }
                 break;
             }
             case CLUSTER_SERVICE:{
                 DeploymentSiteTopologyNode deploymentSite = (DeploymentSiteTopologyNode) parentNodeElement;
                 ClusterServiceTopologyNode clusterService = (ClusterServiceTopologyNode) newNodeElement;
-                if(!deploymentSite.getClusterServices().contains(clusterService.getComponentFDN())) {
-                    deploymentSite.getClusterServices().add(clusterService.getComponentFDN());
+                if(!deploymentSite.getClusterServices().contains(clusterService.getComponentId())) {
+                    deploymentSite.getClusterServices().add(clusterService.getComponentId());
                 }
                 break;
             }
             case PLATFORM:{
                 ClusterServiceTopologyNode clusterService = (ClusterServiceTopologyNode) parentNodeElement;
                 PlatformTopologyNode platformTopologyNode = (PlatformTopologyNode) newNodeElement;
-                if(!clusterService.getPlatformNodes().contains(platformTopologyNode.getComponentFDN())) {
-                    clusterService.getPlatformNodes().add(platformTopologyNode.getComponentFDN());
+                if(!clusterService.getPlatformNodes().contains(platformTopologyNode.getComponentId())) {
+                    clusterService.getPlatformNodes().add(platformTopologyNode.getComponentId());
                 }
                 break;
             }
             case PROCESSING_PLANT:{
                 PlatformTopologyNode platformTopologyNode = (PlatformTopologyNode) parentNodeElement;
                 ProcessingPlantSoftwareComponent processingPlant = (ProcessingPlantSoftwareComponent) newNodeElement;
-                if(!platformTopologyNode.getProcessingPlants().contains(processingPlant.getComponentFDN())) {
-                    platformTopologyNode.getProcessingPlants().add(processingPlant.getComponentFDN());
+                if(!platformTopologyNode.getProcessingPlants().contains(processingPlant.getComponentId())) {
+                    platformTopologyNode.getProcessingPlants().add(processingPlant.getComponentId());
                 }
                 break;
             }
             case WORKSHOP:{
                 ProcessingPlantSoftwareComponent processingPlant = (ProcessingPlantSoftwareComponent) parentNodeElement;
                 WorkshopSoftwareComponent workshop = (WorkshopSoftwareComponent) newNodeElement;
-                if(!processingPlant.getWorkshops().contains(workshop.getComponentFDN())) {
-                    processingPlant.getWorkshops().add(workshop.getComponentFDN());
+                if(!processingPlant.getWorkshops().contains(workshop.getComponentId())) {
+                    processingPlant.getWorkshops().add(workshop.getComponentId());
                 }
                 break;
             }
             case WUP:{
                 WorkshopSoftwareComponent workshop = (WorkshopSoftwareComponent) parentNodeElement;
                 WorkUnitProcessorSoftwareComponent wup = (WorkUnitProcessorSoftwareComponent) newNodeElement;
-                if(!workshop.getWupSet().contains(wup.getComponentFDN())) {
-                    workshop.getWupSet().add(wup.getComponentFDN());
-                    WorkUnitProcessorSubComponentSoftwareComponent wupCore = new WorkUnitProcessorSubComponentSoftwareComponent();
-                    wupCore.setContainingNodeFDN(workshop.getComponentFDN());
-                    wupCore.setComponentType(PegacornSystemComponentTypeTypeEnum.WUP_CORE);
-                    TopologyNodeFDN newFDN = new TopologyNodeFDN(wup.getComponentFDN());
-                    newFDN.appendTopologyNodeRDN(wup.getComponentRDN());
-                    wupCore.setComponentFDN(newFDN);
-                    wupCore.constructFunctionFDN(wup.getNodeFunctionFDN(), wup.getComponentRDN());
-                    topologyDataManager.addTopologyNode(wupCore);
+                if(!workshop.getWupSet().contains(wup.getComponentId())) {
+                    workshop.getWupSet().add(wup.getComponentId());
                 }
                 break;
             }
@@ -178,8 +168,8 @@ public class TopologyIM {
             case WUP_INTERCHANGE_PAYLOAD_TRANSFORMER:{
                 WorkUnitProcessorSoftwareComponent wup = (WorkUnitProcessorSoftwareComponent) parentNodeElement;
                 WorkUnitProcessorInterchangeSoftwareComponent wupInterchangeComponent = (WorkUnitProcessorInterchangeSoftwareComponent) newNodeElement;
-                if(!wup.getWupInterchangeComponents().contains(wupInterchangeComponent.getComponentFDN())) {
-                    wup.getWupInterchangeComponents().add(wupInterchangeComponent.getComponentFDN());
+                if(!wup.getWupInterchangeComponents().contains(wupInterchangeComponent.getComponentId())) {
+                    wup.getWupInterchangeComponents().add(wupInterchangeComponent.getComponentId());
                 }
                 break;
             }
@@ -192,8 +182,8 @@ public class TopologyIM {
             case WUP_CONTAINER_INGRES_GATEKEEPER:{
                 WorkUnitProcessorSoftwareComponent wup = (WorkUnitProcessorSoftwareComponent) parentNodeElement;
                 WorkUnitProcessorSubComponentSoftwareComponent wupComponent = (WorkUnitProcessorSubComponentSoftwareComponent) newNodeElement;
-                if(!wup.getWupInterchangeComponents().contains(wupComponent.getComponentFDN())) {
-                    wup.getWupComponents().add(wupComponent.getComponentFDN());
+                if(!wup.getWupInterchangeComponents().contains(wupComponent.getComponentId())) {
+                    wup.getWupComponents().add(wupComponent.getComponentId());
                 }
                 break;
             }
@@ -202,24 +192,24 @@ public class TopologyIM {
                     case EXTERNALISED_SERVICE:{
                         BusinessServiceTopologyNode businessService = (BusinessServiceTopologyNode) parentNodeElement;
                         IPCTopologyEndpoint endpoint = (IPCTopologyEndpoint) newNodeElement;
-                        if(!businessService.getExternalisedServices().contains(endpoint.getComponentFDN())) {
-                            businessService.getExternalisedServices().add(endpoint.getComponentFDN());
+                        if(!businessService.getExternalisedServices().contains(endpoint.getComponentId())) {
+                            businessService.getExternalisedServices().add(endpoint.getComponentId());
                         }
                         break;
                     }
                     case CLUSTER_SERVICE:{
                         ClusterServiceTopologyNode clusterService = (ClusterServiceTopologyNode) parentNodeElement;
                         IPCTopologyEndpoint endpoint = (IPCTopologyEndpoint) newNodeElement;
-                        if(!clusterService.getServiceEndpoints().contains(endpoint.getComponentFDN())) {
-                            clusterService.getServiceEndpoints().add(endpoint.getComponentFDN());
+                        if(!clusterService.getServiceEndpoints().contains(endpoint.getComponentId())) {
+                            clusterService.getServiceEndpoints().add(endpoint.getComponentId());
                         }
                         break;
                     }
                     case PROCESSING_PLANT:{
                         ProcessingPlantSoftwareComponent processingPlant = (ProcessingPlantSoftwareComponent) parentNodeElement;
                         IPCTopologyEndpoint endpoint = (IPCTopologyEndpoint) newNodeElement;
-                        if(!processingPlant.getEndpoints().contains(endpoint.getComponentFDN())) {
-                            processingPlant.getEndpoints().add(endpoint.getComponentFDN());
+                        if(!processingPlant.getEndpoints().contains(endpoint.getComponentId())) {
+                            processingPlant.getEndpoints().add(endpoint.getComponentId());
                         }
                         break;
                     }
@@ -258,7 +248,7 @@ public class TopologyIM {
         }
     }
 
-    public void removeNode(TopologyNodeFDN elementID) {
+    public void removeNode(ComponentIdType elementID) {
         LOG.debug(".unregisterNode(): Entry, elementID --> {}", elementID);
         topologyDataManager.deleteTopologyNode(elementID);
     }
@@ -270,21 +260,6 @@ public class TopologyIM {
         return (topologyNodeSet);
     }
 
-    public SoftwareComponent getNode(TopologyNodeFDN nodeID) {
-        LOG.debug(".getNode(): Entry, nodeID --> {}", nodeID);
-        SoftwareComponent retrievedNode = topologyDataManager.getSoftwareComponent(nodeID);
-        LOG.debug(".getNode(): Exit, retrievedNode --> {}", retrievedNode);
-        return (retrievedNode);
-    }
-
-    public SoftwareComponent getNode(TopologyNodeFDNToken nodeFDNToken){
-        LOG.debug(".getNode(): Entry, nodeFDNToken --> {}", nodeFDNToken);
-        TopologyNodeFDN nodeFDN = new TopologyNodeFDN(nodeFDNToken);
-        SoftwareComponent retrievedNode = getNode(nodeFDN);
-        LOG.debug(".getNode(): Exit, retrievedNode --> {}", retrievedNode);
-        return(retrievedNode);
-    }
-
     public SoftwareComponent getNode(ComponentIdType componentId){
         LOG.debug(".getNode(): Entry, componentId --> {}", componentId);
         SoftwareComponent retrievedNode = topologyDataManager.getSoftwareComponent(componentId);
@@ -292,7 +267,7 @@ public class TopologyIM {
         return(retrievedNode);
     }
 
-    public List<SoftwareComponent> nodeSearch(PegacornSystemComponentTypeTypeEnum nodeType, String nodeName, String nodeVersion ){
+    public List<SoftwareComponent> nodeSearch(SoftwareComponentTypeEnum nodeType, String nodeName, String nodeVersion ){
         List<SoftwareComponent> nodeList = topologyDataManager.getSoftwareComponent(nodeType, nodeName, nodeVersion);
         return(nodeList);
     }

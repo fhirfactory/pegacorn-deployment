@@ -25,17 +25,13 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import net.fhirfactory.pegacorn.core.interfaces.topology.PegacornTopologyFactoryInterface;
-import net.fhirfactory.pegacorn.core.model.componentid.PegacornSystemComponentTypeTypeEnum;
-import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeFDN;
-import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeFunctionFDN;
-import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeRDN;
+import net.fhirfactory.pegacorn.core.model.componentid.ComponentIdType;
+import net.fhirfactory.pegacorn.core.model.componentid.SoftwareComponentTypeEnum;
 import net.fhirfactory.pegacorn.core.model.petasos.endpoint.JGroupsIntegrationPointNamingUtilities;
 import net.fhirfactory.pegacorn.core.model.petasos.endpoint.valuesets.PetasosEndpointTopologyTypeEnum;
 import net.fhirfactory.pegacorn.core.model.petasos.ipc.PegacornCommonInterfaceNames;
-import net.fhirfactory.pegacorn.core.model.petasos.participant.PetasosParticipant;
-import net.fhirfactory.pegacorn.core.model.petasos.participant.PetasosParticipantStatusEnum;
-import net.fhirfactory.pegacorn.core.model.petasos.participant.ProcessingPlantPetasosParticipantHolder;
-import net.fhirfactory.pegacorn.core.model.petasos.participant.ProcessingPlantPetasosParticipantNameHolder;
+import net.fhirfactory.pegacorn.core.model.petasos.participant.*;
+import net.fhirfactory.pegacorn.core.model.petasos.participant.id.PetasosParticipantId;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.HTTPServerAdapter;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.http.HTTPServerTopologyEndpoint;
 import net.fhirfactory.pegacorn.core.model.topology.mode.ConcurrencyModeEnum;
@@ -60,13 +56,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.temporal.TemporalAmount;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpersBase implements PegacornTopologyFactoryInterface {
 
     private static final String PROPERTY_FILENAME_EXTENSION = ".yaml";
+
+    private static final Integer ID_VALIDITY_RANGE_IN_YEARS = 100;
 
     private BaseSubsystemPropertyFile propertyFile;
     private ProcessingPlantSoftwareComponent processingPlantNode;
@@ -171,14 +171,6 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
     // Node Builders
     //
 
-    @Override
-    public TopologyNodeRDN createNodeRDN(String nodeName, String nodeVersion, PegacornSystemComponentTypeTypeEnum nodeType){
-        getLogger().debug(".createNodeRDN: Entry, nodeName->{}, nodeVersion->{}, nodeType->{}", nodeName, nodeVersion, nodeType);
-        TopologyNodeRDN newRDN = createSimpleNodeRDN(nodeName, nodeVersion, nodeType);
-        getLogger().debug(".createNodeRDN: Exit, newRDN->{}", newRDN);
-        return (newRDN);
-    }
-
     protected String getActualHostIP(){
         String actualHostIP = pegacornProperties.getProperty("MY_HOST_IP", "Unknown");
         return(actualHostIP);
@@ -192,37 +184,75 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
     /**
      * Subsystem Node Builder
      *
-     * @param solution
+     * @param
      * @return
      */
 
-    public SubsystemTopologyNode addSubsystemNode(SolutionTopologyNode solution){
-        getLogger().debug(".addSubsystemNode(): Entry, solution->{}", solution);
+    public SubsystemTopologyNode buildSubsystemNodeFromConfigurationFile(){
+        getLogger().debug(".addSubsystemNode(): Entry");
         SubsystemTopologyNode subsystem = new SubsystemTopologyNode();
-        getLogger().trace(".addSubsystemNode(): Create the Subsystem RDN (createNodeRDN()) --> Start");
-        TopologyNodeRDN nodeRDN = createNodeRDN(getPropertyFile().getSubsystemInstant().getSubsystemName(), getPropertyFile().getSubsystemInstant().getSubsystemVersion(), PegacornSystemComponentTypeTypeEnum.SUBSYSTEM);
-        getLogger().trace(".addSubsystemNode(): Create the Subsystem RDN (createNodeRDN()) --> Finish, nodeRDN->{}", nodeRDN);
-        getLogger().trace(".addSubsystemNode(): Create the Subsystem FDN (constructFDN()) --> Start");
-        subsystem.constructFDN(solution.getComponentFDN(), nodeRDN);
-        subsystem.getComponentID().setDisplayName(getPropertyFile().getSubsystemInstant().getParticipantName());
-        getLogger().trace(".addSubsystemNode(): Create the Subsystem FDN (constructFDN()) --> Finish, nodeFDN->{}", subsystem.getComponentFDN());
-        getLogger().trace(".addSubsystemNode(): Create the Subsystem Function FDN (constructFunctionFDN()) --> Start");
-        subsystem.constructFunctionFDN(solution.getNodeFunctionFDN(), nodeRDN);
-        getLogger().trace(".addSubsystemNode(): Create the Subsystem FDN (constructFunctionFDN()) --> Finish, nodeFunctionFDN->{}", subsystem.getNodeFunctionFDN());
-        subsystem.setComponentRDN(nodeRDN);
-        getLogger().trace(".addSubsystemNode(): Set the Subsystem Concurrency Mode");
+
+        getLogger().trace(".addSubsystemNode(): [Create the Subsystem ComponentId] Start");
+        ComponentIdType componentId = ComponentIdType.fromComponentName(getPropertyFile().getSubsystemInstant().getSubsystemName());
+        subsystem.setComponentID(componentId);
+        getLogger().trace(".addSubsystemNode(): [Create the Subsystem ComponentId] id->{}", subsystem.getComponentId());
+        getLogger().trace(".addSubsystemNode(): [Create the Subsystem ComponentId] Finish");
+
+        getLogger().trace(".addSubsystemNode(): [Create the Subsystem ParticipantId] Start");
+        PetasosParticipantId participantId = new PetasosParticipantId();
+        String participantName = getPropertyFile().getSubsystemInstant().getParticipantName();
+        if(StringUtils.isEmpty(participantName)){
+            participantName = componentId.getName();
+        }
+        participantId.setName(participantName);
+        participantId.setDisplayName(participantName);
+        participantId.setSubsystemName(participantName);
+        participantId.setFullName(getSolutionNodeInterface().getSolutionTopologyNode().getParticipantId().getName() + "." + participantName);
+        String subsystemVersion = getPropertyFile().getSubsystemInstant().getSubsystemVersion();
+        if(StringUtils.isEmpty(subsystemVersion)){
+            subsystemVersion = "1.0.0";
+        }
+        participantId.setVersion(subsystemVersion);
+        PetasosParticipant participant = new PetasosParticipant();
+        participant.setComponentId(componentId);
+        participant.setParticipantId(participantId);
+        participant.setFulfillmentState(new PetasosParticipantFulfillment());
+        participant.getFulfillmentState().getFulfillerComponents().add(componentId);
+        participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_FULLY_FULFILLED);
+        participant.getFulfillmentState().setNumberOfActualFulfillers(1);
+        participant.getFulfillmentState().setNumberOfFulfillersExpected(1);
+        subsystem.setParticipant(participant);
+        getLogger().trace(".addSubsystemNode(): [Create the Subsystem ParticipantId] id->{}", subsystem.getParticipant());
+        getLogger().trace(".addSubsystemNode(): [Create the Subsystem ParticipantId] Finish");
+
+        getLogger().trace(".addSubsystemNode(): [Set the Subsystem Concurrency Mode] Start");
         subsystem.setConcurrencyMode(getConcurrenceMode());
-        getLogger().trace(".addSubsystemNode(): Set the Subsystem Resilience Mode");
+        getLogger().trace(".addSubsystemNode(): [Set the Subsystem Concurrency Mode] Finish");
+
+        getLogger().trace(".addSubsystemNode(): [Set the Subsystem Resilience Mode] Start");
         subsystem.setResilienceMode(getResilienceMode());
-        getLogger().trace(".addSubsystemNode(): Set the Subsystem Site Count");
+        getLogger().trace(".addSubsystemNode(): [Set the Subsystem Resilience Mode] Finish");
+
+        getLogger().trace(".addSubsystemNode(): [Set the Subsystem Site Count] Start");
         subsystem.setSiteCount(getPropertyFile().getDeploymentSites().getSiteCount());
-        getLogger().trace(".addSubsystemNode(): Set the Subsystem's Parent Solution");
-        subsystem.setContainingNodeFDN(solution.getComponentFDN());
-        getLogger().trace(".addSubsystemNode(): Add the subsystem to the Solution subsystem list");
-        solution.getSubsystemList().add(subsystem.getComponentFDN());
-        subsystem.setComponentType(PegacornSystemComponentTypeTypeEnum.SUBSYSTEM);
-        getLogger().trace(".addSubsystemNode(): Add the subsystem to the Topology Cache");
-        getTopologyIM().addTopologyNode(solution.getComponentFDN(), subsystem);
+        getLogger().trace(".addSubsystemNode(): [Set the Subsystem Site Count] Finish");
+
+        getLogger().trace(".addSubsystemNode(): [Set the Subsystem's Parent Solution] Start");
+        subsystem.setParentComponent(getSolutionNodeInterface().getSolutionTopologyNode().getComponentId());
+        getLogger().trace(".addSubsystemNode(): [Set the Subsystem's Parent Solution] Finish");
+
+        getLogger().trace(".addSubsystemNode(): [Add the subsystem to the Solution subsystem list] Start");
+        getSolutionNodeInterface().getSolutionTopologyNode().getSubsystemList().add(subsystem.getComponentId());
+        getLogger().trace(".addSubsystemNode(): [Add the subsystem to the Solution subsystem list] Start");
+
+        getLogger().trace(".addSubsystemNode(): [Set subsystem type] Start");
+        subsystem.setComponentType(SoftwareComponentTypeEnum.SUBSYSTEM);
+        getLogger().trace(".addSubsystemNode(): [Set subsystem type] Finish");
+
+        getLogger().trace(".addSubsystemNode(): [Add the subsystem to the Topology Cache] Start");
+        getTopologyIM().addTopologyNode(getSolutionNodeInterface().getSolutionTopologyNode().getComponentId(), subsystem);
+        getLogger().trace(".addSubsystemNode(): [Add the subsystem to the Topology Cache] Finish");
+
         getLogger().debug(".addSubsystemNode(): Exit");
         return(subsystem);
     }
@@ -234,25 +264,61 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
      * @return
      */
 
-    public BusinessServiceTopologyNode addBusinessServiceNode( SubsystemTopologyNode subsystem){
-        getLogger().debug(".addBusinessServiceNode(): Entry");
+    public BusinessServiceTopologyNode buildBusinessServiceNode(SubsystemTopologyNode subsystem){
+        getLogger().debug(".buildBusinessServiceNode(): Entry, subsystem->{}", subsystem);
         BusinessServiceTopologyNode businessService = new BusinessServiceTopologyNode();
-        getLogger().trace(".addBusinessServiceNode(): Create the Business Service RDN (createNodeRDN()) --> Start");
-        TopologyNodeRDN nodeRDN = createNodeRDN(getPropertyFile().getSubsystemInstant().getExternalisedServiceName(), getPropertyFile().getSubsystemInstant().getSubsystemVersion(), PegacornSystemComponentTypeTypeEnum.EXTERNALISED_SERVICE);
-        getLogger().trace(".addBusinessServiceNode(): Create the Business Service RDN (createNodeRDN()) --> Finish, nodeRDN->{}", nodeRDN);
-        getLogger().trace(".addBusinessServiceNode(): Create the Business Service FDN (constructFDN()) --> Start");
-        businessService.constructFDN(subsystem.getComponentFDN(),nodeRDN);
-        getLogger().trace(".addBusinessServiceNode(): Create the Business Service FDN (constructFDN()) --> Finish, nodeFDN->{}", businessService.getComponentFDN());
-        getLogger().trace(".addBusinessServiceNode(): Create the Business Service Function FDN (constructFunctionFDN()) --> Start");
-        businessService.constructFunctionFDN(subsystem.getNodeFunctionFDN(),nodeRDN);
-        getLogger().trace(".addBusinessServiceNode(): Create the Business Service FDN (constructFunctionFDN()) --> Finish, nodeFunctionFDN->{}", businessService.getNodeFunctionFDN());
-        businessService.setComponentRDN(nodeRDN);
-        businessService.setComponentType(PegacornSystemComponentTypeTypeEnum.EXTERNALISED_SERVICE);
-        businessService.setContainingNodeFDN(subsystem.getComponentFDN());
-        subsystem.getBusinessServices().add(businessService.getComponentFDN());
-        getLogger().trace(".addBusinessServiceNode(): Add the BusinessService to the Topology Cache");
-        getTopologyIM().addTopologyNode(subsystem.getComponentFDN(), businessService);
-        getLogger().debug(".addBusinessServiceNode(): Exit");
+
+        businessService.setParentComponent(subsystem.getComponentId());
+
+        getLogger().trace(".buildBusinessServiceNode(): [Create the Subsystem ComponentId] Start");
+        String businessServiceName = getPropertyFile().getSubsystemInstant().getExternalisedServiceName();
+        if(StringUtils.isEmpty(businessServiceName)){
+            businessServiceName = "ExtSvc." + subsystem.getComponentId().getName();
+        }
+        ComponentIdType componentId = ComponentIdType.fromComponentName(businessServiceName);
+        businessService.setComponentID(componentId);
+        getLogger().trace(".buildBusinessServiceNode(): [Create the Subsystem ComponentId] id->{}", businessService.getComponentId());
+        getLogger().trace(".buildBusinessServiceNode(): [Create the Subsystem ComponentId] Finish");
+
+        getLogger().trace(".buildBusinessServiceNode(): [Create the Subsystem ParticipantId] Start");
+        PetasosParticipantId participantId = new PetasosParticipantId();
+        String participantName = getPropertyFile().getSubsystemInstant().getExternalisedServiceName();
+        if(StringUtils.isEmpty(participantName)){
+            participantName =  componentId.getName();
+        }
+        participantId.setName(participantName);
+        participantId.setDisplayName(participantName);
+        participantId.setSubsystemName(getPropertyFile().getSubsystemInstant().getParticipantName());
+        participantId.setFullName(subsystem.getParticipant().getParticipantId().getFullName() + "." + participantName);
+        String subsystemVersion = getPropertyFile().getSubsystemInstant().getSubsystemVersion();
+        if(StringUtils.isEmpty(subsystemVersion)){
+            subsystemVersion = "1.0.0";
+        }
+        participantId.setVersion(subsystemVersion);
+        PetasosParticipant participant = new PetasosParticipant();
+        participant.setComponentId(componentId);
+        participant.setParticipantId(participantId);
+        participant.setFulfillmentState(new PetasosParticipantFulfillment());
+        participant.getFulfillmentState().getFulfillerComponents().add(componentId);
+        participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_FULLY_FULFILLED);
+        participant.getFulfillmentState().setNumberOfActualFulfillers(1);
+        participant.getFulfillmentState().setNumberOfFulfillersExpected(1);
+        businessService.setParticipant(participant);
+        getLogger().trace(".buildBusinessServiceNode(): [Create the Subsystem ParticipantId] Start");
+
+        getLogger().trace(".addSubsystemNode(): [Set subsystem type] Start");
+        businessService.setComponentType(SoftwareComponentTypeEnum.EXTERNALISED_SERVICE);
+        getLogger().trace(".addSubsystemNode(): [Set subsystem type] Finish");
+
+        getLogger().trace(".addSubsystemNode(): [Add the businesService to the Subsystem] Start");
+        subsystem.getBusinessServices().add(businessService.getComponentId());
+        getLogger().trace(".addSubsystemNode(): [Add the businesService to the Subsystem] Start");
+
+        getLogger().trace(".addSubsystemNode(): [Add the businesService to the Topology Cache] Start");
+        getTopologyIM().addTopologyNode(subsystem.getComponentId(), businessService);
+        getLogger().trace(".addSubsystemNode(): [Add the businesService to the Topology Cache] Finish");
+
+        getLogger().debug(".buildBusinessServiceNode(): Exit");
         return(businessService);
     }
 
@@ -262,29 +328,61 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
      * @param businessService
      * @return
      */
-    public DeploymentSiteTopologyNode addDeploymentSiteNode(BusinessServiceTopologyNode businessService){
-        getLogger().debug(".addDeploymentSiteNode(): Entry, businessService->{}", businessService);
+    public DeploymentSiteTopologyNode buildDeploymentSiteNode(BusinessServiceTopologyNode businessService){
+        getLogger().debug(".buildDeploymentSiteNode(): Entry, businessService->{}", businessService);
+
         DeploymentSiteTopologyNode site = new DeploymentSiteTopologyNode();
+
+        getLogger().trace(".buildDeploymentSiteNode(): [Set the deploymentSite's Parent BusinessService] Start");
+        site.setParentComponent(businessService.getComponentId());
+        getLogger().trace(".buildDeploymentSiteNode(): [Set the deploymentSite's Parent BusinessService] Finish");
+
+        getLogger().trace(".buildDeploymentSiteNode(): [Create the Site ComponentId] Start");
         String siteName = getPropertyFile().getSubsystemInstant().getSite();
-        TopologyNodeFDN businessServiceFDN = businessService.getComponentFDN();
-        TopologyNodeFunctionFDN businessServiceFunctionFDN = businessService.getNodeFunctionFDN();
-        getLogger().trace(".addDeploymentSiteNode(): Create the Deployment Site RDN (createNodeRDN()) --> Start");
-        TopologyNodeRDN nodeRDN = createNodeRDN(getPropertyFile().getDeploymentSites().getSite1Name(), getPropertyFile().getSubsystemInstant().getSubsystemVersion(), PegacornSystemComponentTypeTypeEnum.SITE);
-        getLogger().trace(".addDeploymentSiteNode(): Create the Deployment Site RDN (createNodeRDN()) --> Finish, nodeRDN->{}", nodeRDN);
-        getLogger().trace(".addDeploymentSiteNode(): Create the Deployment Site FDN (constructFDN()) --> Start, businessServiceFDN->{}, nodeRDN->{}", businessServiceFDN, nodeRDN);
-        site.constructFDN(businessServiceFDN, nodeRDN);
-        getLogger().trace(".addDeploymentSiteNode(): Create the Deployment Site FDN (constructFDN()) --> Finish, nodeFDN->{}", businessServiceFDN);
-        getLogger().trace(".addDeploymentSiteNode(): Create the Deployment Site Function FDN (constructFunctionFDN()) --> Start, businessServiceFunctionFDN->{}, nodeRDN->{}", businessServiceFunctionFDN, nodeRDN);
-        site.constructFunctionFDN(businessServiceFunctionFDN, nodeRDN);
-        getLogger().trace(".addDeploymentSiteNode(): Create the Deployment Site FDN (constructFunctionFDN()) --> Finish, nodeFunctionFDN->{}", businessServiceFunctionFDN);
-        site.setComponentRDN(nodeRDN);
-        site.setComponentType(PegacornSystemComponentTypeTypeEnum.SITE);
+        ComponentIdType componentId = ComponentIdType.fromComponentName(siteName);
+        site.setComponentID(componentId);
+        getLogger().trace(".buildDeploymentSiteNode(): [Create the Site ComponentId] Finish");
+
+        getLogger().trace(".buildDeploymentSiteNode(): [Create the Site ParticipantId] Start");
+        PetasosParticipantId participantId = new PetasosParticipantId();
+        String participantName = componentId.getName();
+        participantId.setName(participantName);
+        participantId.setDisplayName(participantName);
+        participantId.setSubsystemName(getPropertyFile().getSubsystemInstant().getParticipantName());
+        participantId.setFullName(businessService.getParticipant().getParticipantId().getFullName() + "." + participantName);
+        String siteVersion = getPropertyFile().getSubsystemInstant().getSubsystemVersion();
+        if(StringUtils.isEmpty(siteVersion)){
+            siteVersion = "1.0.0";
+        }
+        participantId.setVersion(siteVersion);
+        PetasosParticipant participant = new PetasosParticipant();
+        participant.setComponentId(componentId);
+        participant.setParticipantId(participantId);
+        participant.setFulfillmentState(new PetasosParticipantFulfillment());
+        participant.getFulfillmentState().getFulfillerComponents().add(componentId);
+        participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_FULLY_FULFILLED);
+        participant.getFulfillmentState().setNumberOfActualFulfillers(1);
+        participant.getFulfillmentState().setNumberOfFulfillersExpected(1);
+        site.setParticipant(participant);
+        getLogger().trace(".buildDeploymentSiteNode(): [Create the Site ParticipantId] Finish");
+
+        getLogger().trace(".buildDeploymentSiteNode(): [Set component type] Start");
+        site.setComponentType(SoftwareComponentTypeEnum.SITE);
+        getLogger().trace(".buildDeploymentSiteNode(): [Set component type] Finish");
+
+        getLogger().trace(".buildDeploymentSiteNode(): [Set site instance count] Start");
         site.setInstanceCount(getPropertyFile().getDeploymentSites().getSiteCount());
-        site.setContainingNodeFDN(businessService.getComponentFDN());
-        businessService.getDeploymentSites().add(site.getComponentFDN());
-        getLogger().trace(".addDeploymentSiteNode(): Add the DeploymentSite to the Topology Cache");
-        getTopologyIM().addTopologyNode(businessService.getComponentFDN(), site);
-        getLogger().debug(".addDeploymentSiteNode(): Exit");
+        getLogger().trace(".buildDeploymentSiteNode(): [Set site instance count] Finish");
+
+        getLogger().trace(".buildDeploymentSiteNode(): [Add the DeploymentSite to the Business Service] Start");
+        businessService.getDeploymentSites().add(site.getComponentId());
+        getLogger().trace(".buildDeploymentSiteNode(): [Add the DeploymentSite to the Business Service] Finish");
+
+        getLogger().trace(".buildDeploymentSiteNode(): [Add the DeploymentSite to the Topology Cache] Start");
+        getTopologyIM().addTopologyNode(businessService.getComponentId(), site);
+        getLogger().trace(".buildDeploymentSiteNode(): [Add the DeploymentSite to the Topology Cache] Finish");
+
+        getLogger().debug(".buildDeploymentSiteNode(): Exit");
         return(site);
     }
 
@@ -294,23 +392,72 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
      * @param site
      * @return
      */
-    public ClusterServiceTopologyNode addClusterServiceNode(DeploymentSiteTopologyNode site){
-        getLogger().debug(".addClusterServiceNode(): Entry");
+    public ClusterServiceTopologyNode buildClusterServiceNode(DeploymentSiteTopologyNode site, BusinessServiceTopologyNode businessService){
+        getLogger().debug(".buildClusterServiceNode(): Entry");
         ClusterServiceTopologyNode clusterService = new ClusterServiceTopologyNode();
-        TopologyNodeRDN nodeRDN = createNodeRDN(getPropertyFile().getSubsystemInstant().getClusterServiceName(), getPropertyFile().getSubsystemInstant().getProcessingPlantVersion(), PegacornSystemComponentTypeTypeEnum.CLUSTER_SERVICE);
-        clusterService.constructFDN(site.getComponentFDN(),nodeRDN);
-        clusterService.constructFunctionFDN(site.getNodeFunctionFDN(),nodeRDN);
-        clusterService.setComponentRDN(nodeRDN);
-        clusterService.setComponentType(PegacornSystemComponentTypeTypeEnum.CLUSTER_SERVICE);
+
+        getLogger().trace(".buildClusterServiceNode(): [Set the node's Parent site] Start");
+        site.setParentComponent(site.getComponentId());
+        getLogger().trace(".buildClusterServiceNode(): [Set the node's Parent site] Finish");
+
+        getLogger().trace(".buildClusterServiceNode(): [Create the Node ComponentId] Start");
+        String clusterServiceName = getPropertyFile().getSubsystemInstant().getClusterServiceName();
+        ComponentIdType componentId = ComponentIdType.fromComponentName(clusterServiceName);
+        clusterService.setComponentID(componentId);
+        getLogger().trace(".buildClusterServiceNode(): [Create the ClusterService ComponentId] Finish");
+
+        getLogger().trace(".buildClusterServiceNode(): [Create the ClusterService ParticipantId] Start");
+        PetasosParticipantId participantId = new PetasosParticipantId();
+        String participantName = componentId.getName();
+        participantId.setName(participantName);
+        participantId.setDisplayName(participantName);
+        participantId.setFullName(businessService.getParticipant().getParticipantId().getFullName() + "." + participantName);
+        participantId.setSubsystemName(getPropertyFile().getSubsystemInstant().getParticipantName());
+        String siteVersion = getPropertyFile().getSubsystemInstant().getProcessingPlantVersion();
+        if(StringUtils.isEmpty(siteVersion)){
+            siteVersion = "1.0.0";
+        }
+        participantId.setVersion(siteVersion);
+        PetasosParticipant participant = new PetasosParticipant();
+        participant.setComponentId(componentId);
+        participant.setParticipantId(participantId);
+        participant.setFulfillmentState(new PetasosParticipantFulfillment());
+        participant.getFulfillmentState().getFulfillerComponents().add(componentId);
+        participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_FULLY_FULFILLED);
+        participant.getFulfillmentState().setNumberOfActualFulfillers(1);
+        participant.getFulfillmentState().setNumberOfFulfillersExpected(getPropertyFile().getDeploymentSites().getSiteCount());
+        clusterService.setParticipant(participant);
+        getLogger().trace(".buildClusterServiceNode(): [Create the ClusterService ParticipantId] Finish");
+
+        getLogger().trace(".buildClusterServiceNode(): [Set component type] Start");
+        clusterService.setComponentType(SoftwareComponentTypeEnum.CLUSTER_SERVICE);
+        getLogger().trace(".buildClusterServiceNode(): [Set component type] Finish");
+
+        getLogger().trace(".buildClusterServiceNode(): [Set Resilience Mode] Start");
         clusterService.setResilienceMode(getResilienceMode());
+        getLogger().trace(".buildClusterServiceNode(): [Set Resilience Mode] Finish");
+
+        getLogger().trace(".buildClusterServiceNode(): [Set Concurrency Mode] Start");
         clusterService.setConcurrencyMode(getConcurrenceMode());
+        getLogger().trace(".buildClusterServiceNode(): [Set Concurrency Mode] Finish");
+
+        getLogger().trace(".buildClusterServiceNode(): [Set Default DNS Name] Start");
         clusterService.setDefaultDNSName(getPropertyFile().getSubsystemInstant().getClusterServiceDNSName());
+        getLogger().trace(".buildClusterServiceNode(): [Set Default DNS Name] Finish");
+
+        getLogger().trace(".buildClusterServiceNode(): [Set Encryption Status] Start");
         clusterService.setInternalTrafficEncrypted(getPropertyFile().getDeploymentMode().isUsingInternalEncryption());
-        clusterService.setContainingNodeFDN(site.getComponentFDN());
-        site.getClusterServices().add(clusterService.getComponentFDN());
-        getLogger().trace(".addClusterServiceNode(): Add the ClusterService to the Topology Cache");
-        getTopologyIM().addTopologyNode(site.getComponentFDN(), clusterService);
-        getLogger().debug(".addClusterServiceNode(): Exit");
+        getLogger().trace(".buildClusterServiceNode(): [Set Encryption Status] Finish");
+
+        getLogger().trace(".addDeploymentSiteNode(): [Add the ClusterService to Site] Start");
+        site.getClusterServices().add(clusterService.getComponentId());
+        getLogger().trace(".addDeploymentSiteNode(): [Add the ClusterService to Site] Finish");
+
+        getLogger().trace(".buildClusterServiceNode(): [Add the ClusterService to the Topology Cache] Start");
+        getTopologyIM().addTopologyNode(site.getComponentId(), clusterService);
+        getLogger().trace(".buildClusterServiceNode(): [Add the ClusterService to the Topology Cache] Finish");
+
+        getLogger().debug(".buildClusterServiceNode(): Exit");
         return(clusterService);
     }
 
@@ -320,22 +467,69 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
      * @param clusterService
      * @return
      */
-    public PlatformTopologyNode addPlatformNode(ClusterServiceTopologyNode clusterService){
+    public PlatformTopologyNode buildPlatformNode(ClusterServiceTopologyNode clusterService){
         getLogger().debug(".addPlatformNode(): Entry");
+
         PlatformTopologyNode node = new PlatformTopologyNode();
+
+        getLogger().trace(".addPlatformNode(): [Set the node's Parent site] Start");
+        node.setParentComponent(clusterService.getComponentId());
+        getLogger().trace(".addPlatformNode(): [Set the node's Parent site] Finish");
+
+        getLogger().trace(".addPlatformNode(): [Create the ComponentId] Start");
         String hostName = pegacornProperties.getProperty("MY_POD_NAME", "PlatformNode0");
-//      TODO Fix This --> lookup POD Name or DNS Name
-        TopologyNodeRDN nodeRDN = createNodeRDN(hostName, getPropertyFile().getSubsystemInstant().getProcessingPlantVersion(), PegacornSystemComponentTypeTypeEnum.PLATFORM);
-        node.constructFDN(clusterService.getComponentFDN(), nodeRDN);
+        ComponentIdType componentId = ComponentIdType.fromComponentName(hostName);
+        node.setComponentID(componentId);
+        getLogger().trace(".addPlatformNode(): [Create the ComponentId] Finish");
+
+        getLogger().trace(".addPlatformNode(): [Create the ParticipantId] Start");
+        PetasosParticipantId participantId = new PetasosParticipantId();
+        String participantDisplayName = clusterService.getParticipant().getParticipantId().getName() + "." + componentId.getName();
+        participantId.setName(componentId.getName());
+        participantId.setDisplayName( participantDisplayName);
+        participantId.setFullName(clusterService.getParticipant().getParticipantId().getFullName() + "." + componentId.getName());
+        participantId.setSubsystemName(getPropertyFile().getSubsystemInstant().getParticipantName());
+        String siteVersion = getPropertyFile().getSubsystemInstant().getProcessingPlantVersion();
+        if(StringUtils.isEmpty(siteVersion)){
+            siteVersion = "1.0.0";
+        }
+        participantId.setVersion(siteVersion);
+        PetasosParticipant participant = new PetasosParticipant();
+        participant.setComponentId(componentId);
+        participant.setParticipantId(participantId);
+        participant.setFulfillmentState(new PetasosParticipantFulfillment());
+        participant.getFulfillmentState().getFulfillerComponents().add(componentId);
+        participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_FULLY_FULFILLED);
+        participant.getFulfillmentState().setNumberOfActualFulfillers(1);
+        participant.getFulfillmentState().setNumberOfFulfillersExpected(1);
+        node.setParticipant(participant);
+        getLogger().trace(".addPlatformNode(): [Create the ParticipantId] Finish");
+
+        getLogger().trace(".addPlatformNode(): [Set IP Address Detail] Start");
         node.setActualHostIP(getActualHostIP());
         node.setActualPodIP(getActualPodIP());
-        node.setComponentType(PegacornSystemComponentTypeTypeEnum.PLATFORM);
-        node.constructFunctionFDN(clusterService.getNodeFunctionFDN(), nodeRDN);
-        node.setComponentRDN(nodeRDN);
-        node.setContainingNodeFDN(clusterService.getComponentFDN());
-        clusterService.getPlatformNodes().add(node.getComponentFDN());
-        getLogger().trace(".addPlatformNode(): Add the PlatformNode to the Topology Cache");
-        getTopologyIM().addTopologyNode(clusterService.getComponentFDN(), node);
+        getLogger().trace(".addPlatformNode(): [Set IP Address Detail] Finish");
+
+        getLogger().trace(".addPlatformNode(): [Set component type] Start");
+        node.setComponentType(SoftwareComponentTypeEnum.PLATFORM);
+        getLogger().trace(".addPlatformNode(): [Set component type] Finish");
+
+        getLogger().trace(".addPlatformNode(): [Set Resilience Mode] Start");
+        node.setResilienceMode(getResilienceMode());
+        getLogger().trace(".addPlatformNode(): [Set Resilience Mode] Finish");
+
+        getLogger().trace(".addPlatformNode(): [Set Concurrency Mode] Start");
+        node.setConcurrencyMode(getConcurrenceMode());
+        getLogger().trace(".addPlatformNode(): [Set Concurrency Mode] Finish");
+
+        getLogger().trace(".addPlatformNode(): [Add the Node to Cluster Service] Start");
+        clusterService.getPlatformNodes().add(node.getComponentId());
+        getLogger().trace(".addPlatformNode(): [Add the Node to Cluster Service] Finish");
+
+        getLogger().trace(".addPlatformNode(): [Add the PlatformNode to the Topology Cache] Start");
+        getTopologyIM().addTopologyNode(clusterService.getComponentId(), node);
+        getLogger().trace(".addPlatformNode(): [Add the PlatformNode to the Topology Cache] Start");
+
         getLogger().debug(".addPlatformNode(): Exit");
         return(node);
     }
@@ -345,34 +539,84 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
      * @param node
      * @return
      */
-    public ProcessingPlantSoftwareComponent addPegacornProcessingPlant(PlatformTopologyNode node){
-        getLogger().debug(".addPegacornProcessingPlant(): Entry");
+    public ProcessingPlantSoftwareComponent buildProcessingPlant(PlatformTopologyNode node, ClusterServiceTopologyNode clusterService){
+        getLogger().debug(".buildProcessingPlant(): Entry");
+
         ProcessingPlantSoftwareComponent processingPlant = new ProcessingPlantSoftwareComponent();
+
+        getLogger().trace(".buildProcessingPlant(): [Set Parent] Start");
+        processingPlant.setParentComponent(node.getComponentId());
+        getLogger().trace(".buildProcessingPlant(): [Set Parent] Finish");
+
+        getLogger().trace(".buildProcessingPlant(): [Create ComponentId] Start");
         String name = getPropertyFile().getSubsystemInstant().getParticipantName();
-        String uniqueId = componentNameingUtilities.buildProcessingPlantName(name, componentNameingUtilities.getCurrentUUID());
-        String version = getPropertyFile().getSubsystemInstant().getProcessingPlantVersion();
-        TopologyNodeRDN nodeRDN = createNodeRDN(uniqueId, version, PegacornSystemComponentTypeTypeEnum.PROCESSING_PLANT);
-        processingPlant.setComponentRDN(nodeRDN);
-        processingPlant.constructFDN(node.getComponentFDN(), nodeRDN);
-        processingPlant.setParticipantName(getPropertyFile().getSubsystemInstant().getParticipantName());
-        processingPlant.setParticipantDisplayName(getPropertyFile().getSubsystemInstant().getParticipantName());
-        processingPlant.setSubsystemParticipantName(getPropertyFile().getSubsystemInstant().getParticipantName());
+        ComponentIdType componentId = ComponentIdType.fromComponentName(name);
+        processingPlant.setComponentID(componentId);
+        getLogger().trace(".buildProcessingPlant(): [Create ComponentId] Finish");
+
+        getLogger().trace(".buildProcessingPlant(): [Create ParticipantId] Start");
+        PetasosParticipantId participantId = new PetasosParticipantId();
+        String participantName = getPropertyFile().getSubsystemInstant().getParticipantName();
+        participantId.setName(participantName);
+        participantId.setDisplayName(participantName);
+        participantId.setFullName(getSolutionNodeInterface().getSolutionTopologyNode().getParticipantId().getName() + "." + participantName);
+        participantId.setSubsystemName(getPropertyFile().getSubsystemInstant().getParticipantName());
+        String siteVersion = getPropertyFile().getSubsystemInstant().getProcessingPlantVersion();
+        if(StringUtils.isEmpty(siteVersion)){
+            siteVersion = "1.0.0";
+        }
+        participantId.setVersion(siteVersion);
+        PetasosParticipant participant = new PetasosParticipant();
+        participant.setComponentId(componentId);
+        participant.setParticipantId(participantId);
+        participant.setFulfillmentState(new PetasosParticipantFulfillment());
+        participant.getFulfillmentState().getFulfillerComponents().add(componentId);
+        participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_FULLY_FULFILLED);
+        participant.getFulfillmentState().setNumberOfActualFulfillers(1);
+        participant.getFulfillmentState().setNumberOfFulfillersExpected(getPropertyFile().getDeploymentMode().getProcessingPlantReplicationCount());
+        if(participant.getFulfillmentState().getNumberOfFulfillersExpected() > participant.getFulfillmentState().getNumberOfActualFulfillers()){
+            participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_PARTIALLY_FULFILLED);
+        }
+        processingPlant.setParticipant(participant);
+        getLogger().trace(".buildProcessingPlant(): [Create ParticipantId] Finish");
+
+        getLogger().trace(".buildProcessingPlant(): [Set Location Metadata Detail] Start");
         processingPlant.setActualHostIP(getActualHostIP());
         processingPlant.setActualPodIP(getActualPodIP());
-        TopologyNodeRDN functionRDN = createNodeRDN(name, version, PegacornSystemComponentTypeTypeEnum.PROCESSING_PLANT);
-        processingPlant.constructFunctionFDN(node.getNodeFunctionFDN(), functionRDN);
-        processingPlant.setResilienceMode(getResilienceMode());
-        processingPlant.setConcurrencyMode(getConcurrenceMode());
-        processingPlant.setComponentType(PegacornSystemComponentTypeTypeEnum.PROCESSING_PLANT);
-        processingPlant.setNameSpace(getPropertyFile().getDeploymentZone().getNameSpace());
-        processingPlant.setDeploymentSite(getPropertyFile().getSubsystemInstant().getSite());
+        processingPlant.setPodName(node.getComponentId().getName());
+        String siteName = getPropertyFile().getSubsystemInstant().getSite();
+        processingPlant.setSiteName(siteName);
+        getLogger().trace(".buildProcessingPlant(): [Set Location Metadata Detail] Finish");
 
+        getLogger().trace(".buildProcessingPlant(): [Set Resilience Mode] Start");
+        processingPlant.setResilienceMode(getResilienceMode());
+        getLogger().trace(".buildProcessingPlant(): [Set Resilience Mode] Finish");
+
+        getLogger().trace(".buildProcessingPlant(): [Set Concurrency Mode] Start");
+        processingPlant.setConcurrencyMode(getConcurrenceMode());
+        getLogger().trace(".buildProcessingPlant(): [Set Concurrency Mode] Finish");
+
+        getLogger().trace(".buildProcessingPlant(): [Set component type] Start");
+        processingPlant.setComponentType(SoftwareComponentTypeEnum.PROCESSING_PLANT);
+        getLogger().trace(".buildProcessingPlant(): [Set component type] Finish");
+
+        getLogger().trace(".buildProcessingPlant(): [Set deployment zone namespace] Start");
+        processingPlant.setNameSpace(getPropertyFile().getDeploymentZone().getNameSpace());
+        getLogger().trace(".buildProcessingPlant(): [Set deployment zone namespace] Finish");
+
+        getLogger().trace(".buildProcessingPlant(): [Set component site] Start");
+        processingPlant.setDeploymentSite(getPropertyFile().getSubsystemInstant().getSite());
+        getLogger().trace(".buildProcessingPlant(): [Set component site] Finish");
+
+        getLogger().trace(".buildProcessingPlant(): [Set Replication Count] Start");
         processingPlant.setReplicationCount(getPropertyFile().getDeploymentMode().getProcessingPlantReplicationCount());
+        getLogger().trace(".buildProcessingPlant(): [Set Replication Count] Finish");
 
         participantNameHolder.setSubsystemParticipantName(getPropertyFile().getSubsystemInstant().getParticipantName());
 
         //
         // Assign the Configuration File Names (InterZone)
+        getLogger().trace(".buildProcessingPlant(): [Set Petasos Configuration Files] Start");
         processingPlant.setPetasosIPCStackConfigFile(getPropertyFile().getDeploymentMode().getPetasosIPCStackConfigFile());
         processingPlant.setPetasosTopologyStackConfigFile(getPropertyFile().getDeploymentMode().getPetasosTopologyStackConfigFile());
         processingPlant.setMultiZoneInfinispanStackConfigFile(getPropertyFile().getDeploymentMode().getMultiuseInfinispanStackConfigFile());
@@ -381,36 +625,54 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
         processingPlant.setPetasosInterceptionStackConfigFile(getPropertyFile().getDeploymentMode().getPetasosInterceptionStackConfigFile());
         processingPlant.setPetasosMetricsStackConfigFile(getPropertyFile().getDeploymentMode().getPetasosMetricsStackConfigFile());
         processingPlant.setPetasosSubscriptionsStackConfigFile(getPropertyFile().getDeploymentMode().getPetasosSubscriptionStackConfigFile());
+        getLogger().trace(".buildProcessingPlant(): [Set Petasos Configuration Files] Finish");
 
+        getLogger().trace(".buildProcessingPlant(): [Set Assigned DNS Name] Start");
         processingPlant.setAssignedDNSName(getPropertyFile().getSubsystemInstant().getProcessingPlantDNSName());
+        getLogger().trace(".buildProcessingPlant(): [Set Assigned DNS Name] Finish");
+
+        getLogger().trace(".buildProcessingPlant(): [Set Encryption Status] Start");
         processingPlant.setInternalTrafficEncrypted(getPropertyFile().getDeploymentMode().isUsingInternalEncryption());
-        processingPlant.setReplicationCount(getPropertyFile().getDeploymentMode().getProcessingPlantReplicationCount());
-        processingPlant.setContainingNodeFDN(node.getComponentFDN());
+        getLogger().trace(".buildProcessingPlant(): [Set Encryption Status] Finish");
+
+        getLogger().trace(".buildProcessingPlant(): [Set Network Zone] Start");
         NetworkSecurityZoneEnum zone = NetworkSecurityZoneEnum.fromDisplayName(getPropertyFile().getDeploymentZone().getSecurityZoneName());
         if(zone == null){
-            getLogger().error(".addPegacornProcessingPlant(): Cannot resolve Network Security Zone for component, provided->{}", getPropertyFile().getDeploymentZone().getSecurityZoneName());
+            getLogger().error(".buildProcessingPlant(): [Set Network Zone] Cannot resolve Network Security Zone for component, provided->{}", getPropertyFile().getDeploymentZone().getSecurityZoneName());
             StringBuilder possibleValues = new StringBuilder();
             for(NetworkSecurityZoneEnum currentValue: NetworkSecurityZoneEnum.values()){
                 possibleValues.append(currentValue.getDisplayName() + " ");
             }
-            getLogger().error(".addPegacornProcessingPlant(): Possible Values Are->{}", possibleValues.toString());
+            getLogger().error(".buildProcessingPlant(): [Set Network Zone] Possible Values Are->{}", possibleValues.toString());
         }
         processingPlant.setSecurityZone(zone);
-        setProcessingPlantNode(processingPlant);
-        node.getProcessingPlants().add(processingPlant.getComponentFDN());
-        populateOtherDeploymentProperties(processingPlant, getPropertyFile().getDeploymentMode().getOtherDeploymentParameters());
-        getLogger().trace(".addPegacornProcessingPlant(): Add the ProcessingPlant to the Topology Cache");
+        getLogger().trace(".buildProcessingPlant(): [Set Network Zone] Finish");
 
-        getTopologyIM().addTopologyNode(node.getComponentFDN(), processingPlant);
+        getLogger().trace(".buildProcessingPlant(): [Set Local Default ProcessingPlant] Start");
+        setProcessingPlantNode(processingPlant);
+        getLogger().trace(".buildProcessingPlant(): [Set Local Default ProcessingPlant] Finish");
+
+        getLogger().trace(".buildProcessingPlant(): [Populate OtherDeploymentProperties] Start");
+        populateOtherDeploymentProperties(processingPlant, getPropertyFile().getDeploymentMode().getOtherDeploymentParameters());
+        getLogger().trace(".buildProcessingPlant(): [Populate OtherDeploymentProperties] Start");
+
+        getLogger().trace(".buildProcessingPlant(): [Add the Node to Cluster Service] Start");
+        node.getProcessingPlants().add(processingPlant.getComponentId());
+        getLogger().trace(".buildProcessingPlant(): [Add the Node to Cluster Service] Finish");
+
+        getLogger().trace(".buildProcessingPlant(): [Add the ProcessingPlant to the Topology Cache] Start");
+        getTopologyIM().addTopologyNode(node.getComponentId(), processingPlant);
+        getLogger().trace(".buildProcessingPlant(): [Add the ProcessingPlant to the Topology Cache] Finish");
 
         //
         // Create Petasos Participant for Processing Plant
-        PetasosParticipant processingPlantPetasosParticipant = new PetasosParticipant(processingPlant);
-        processingPlantPetasosParticipant.setParticipantStatus(PetasosParticipantStatusEnum.PETASOS_PARTICIPANT_STARTING);
-        participantHolder.setMyProcessingPlantPetasosParticipant(processingPlantPetasosParticipant);
+        getLogger().trace(".buildProcessingPlant(): [Create Petasos Participant for Processing Plant] Start");
+        getProcessingPlantNode().getParticipant().setParticipantStatus(PetasosParticipantStatusEnum.PARTICIPANT_IS_NOT_READY);
+        participantHolder.setMeAsPetasosParticipant(getProcessingPlantNode().getParticipant());
+        getLogger().trace(".buildProcessingPlant(): [Create Petasos Participant for Processing Plant] Finish");
         //
         // All done
-        getLogger().debug(".addPegacornProcessingPlant(): Exit");
+        getLogger().debug(".buildProcessingPlant(): Exit");
         return(processingPlant);
     }
 
@@ -421,27 +683,70 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
      * @param processingPlant
      */
     @Override
-    public WorkshopSoftwareComponent createWorkshop(String name, String version, ProcessingPlantSoftwareComponent processingPlant, PegacornSystemComponentTypeTypeEnum nodeType){
-        getLogger().debug(".addWorkshop(): Entry");
+    public WorkshopSoftwareComponent buildWorkshop(String name, String version, ProcessingPlantSoftwareComponent processingPlant, SoftwareComponentTypeEnum nodeType){
+        getLogger().debug(".buildWorkshop(): Entry");
+
         WorkshopSoftwareComponent workshop = new WorkshopSoftwareComponent();
-        String uniqueName = componentNameingUtilities.buildUniqueComponentName(name);
-        TopologyNodeRDN nodeRDN = createNodeRDN(uniqueName, version,nodeType);
-        workshop.setComponentRDN(nodeRDN);
-        String participantName = getProcessingPlantNode().getParticipantName() + "." + name;
-        workshop.setParticipantName(participantName);
-        workshop.setParticipantDisplayName(name);
-        workshop.constructFDN(processingPlant.getComponentFDN(), nodeRDN);
-        TopologyNodeRDN functionRDN = createNodeRDN(name, version,nodeType);
-        workshop.constructFunctionFDN(processingPlant.getNodeFunctionFDN(), functionRDN);
-        workshop.setComponentType(nodeType);
+
+        getLogger().trace(".buildWorkshop(): [Set Parent] Start");
+        workshop.setParentComponent(processingPlant.getComponentId());
+        getLogger().trace(".buildWorkshop(): [Set Parent] Finish");
+
+        getLogger().trace(".buildWorkshop(): [Create ComponentId] Start");
+        ComponentIdType componentId = ComponentIdType.fromComponentName(name);
+        workshop.setComponentID(componentId);
+        getLogger().trace(".buildWorkshop(): [Create ComponentId] Finish");
+
+        getLogger().trace(".buildWorkshop(): [Create ParticipantId] Start");
+        PetasosParticipantId participantId = new PetasosParticipantId();
+        participantId.setName(processingPlant.getParticipant().getParticipantId().getName() + "." + name);
+        participantId.setDisplayName(name);
+        participantId.setFullName(processingPlant.getParticipant().getParticipantId().getFullName() + "." + name);
+        participantId.setSubsystemName(getPropertyFile().getSubsystemInstant().getParticipantName());
+        participantId.setVersion(version);
+        PetasosParticipant participant = new PetasosParticipant();
+        participant.setComponentId(componentId);
+        participant.setParticipantId(participantId);
+        participant.setFulfillmentState(new PetasosParticipantFulfillment());
+        participant.getFulfillmentState().getFulfillerComponents().add(componentId);
+        participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_FULLY_FULFILLED);
+        participant.getFulfillmentState().setNumberOfActualFulfillers(1);
+        participant.getFulfillmentState().setNumberOfFulfillersExpected(getPropertyFile().getDeploymentMode().getProcessingPlantReplicationCount());
+        if(participant.getFulfillmentState().getNumberOfFulfillersExpected() > participant.getFulfillmentState().getNumberOfActualFulfillers()){
+            participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_PARTIALLY_FULFILLED);
+        }
+        workshop.setParticipant(participant);
+        getLogger().trace(".buildWorkshop(): [Create ParticipantId] Finish");
+
+        getLogger().trace(".buildWorkshop(): [Set Resilience Mode] Start");
         workshop.setResilienceMode(getResilienceMode());
+        getLogger().trace(".buildWorkshop(): [Set Resilience Mode] Finish");
+
+        getLogger().trace(".buildWorkshop(): [Set Concurrency Mode] Start");
         workshop.setConcurrencyMode(getConcurrenceMode());
-        workshop.setContainingNodeFDN(processingPlant.getComponentFDN());
+        getLogger().trace(".buildWorkshop(): [Set Concurrency Mode] Finish");
+
+        getLogger().trace(".buildWorkshop(): [Set component type] Start");
+        workshop.setComponentType(nodeType);
+        getLogger().trace(".buildWorkshop(): [Set component type] Finish");
+
+        getLogger().trace(".buildWorkshop(): [Set component site] Start");
+        workshop.setDeploymentSite(getPropertyFile().getSubsystemInstant().getSite());
+        getLogger().trace(".buildWorkshop(): [Set component site] Finish");
+
+        getLogger().trace(".buildWorkshop(): [Set Network Zone] Start");
         workshop.setSecurityZone(processingPlant.getSecurityZone());
-        processingPlant.getWorkshops().add(workshop.getComponentFDN());
-        getLogger().trace(".addWorkshop(): Add the Workshop to the Topology Cache");
-        getTopologyIM().addTopologyNode(processingPlant.getComponentFDN(), workshop);
-        getLogger().debug(".addWorkshop(): Exit");
+        getLogger().trace(".buildWorkshop(): [Set Network Zone] Finish");
+
+        getLogger().trace(".buildWorkshop(): [Add the Workshop to ProcessingPlant] Start");
+        processingPlant.getWorkshops().add(workshop.getComponentId());
+        getLogger().trace(".buildWorkshop(): [Add the Workshop to ProcessingPlant] Finish");
+
+        getLogger().trace(".buildWorkshop(): [Add the Workshop to the Topology Cache] Start");
+        getTopologyIM().addTopologyNode(processingPlant.getComponentId(), workshop);
+        getLogger().trace(".buildWorkshop(): [Add the Workshop to the Topology Cache] Finish");
+
+        getLogger().debug(".buildWorkshop(): Exit");
         return(workshop);
     }
 
@@ -452,31 +757,79 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
      * @param workshop
      */
     @Override
-    public WorkUnitProcessorSoftwareComponent createWorkUnitProcessor(String name, String version, String participantName, WorkshopSoftwareComponent workshop, PegacornSystemComponentTypeTypeEnum nodeType){
-        getLogger().debug(".addWorkUnitProcessor(): Entry, name->{}, version->{}", name, version);
+    public WorkUnitProcessorSoftwareComponent buildWUP(String name, String version, String participantDisplayNameOverride, WorkshopSoftwareComponent workshop, SoftwareComponentTypeEnum nodeType){
+        getLogger().debug(".buildWUP(): Entry, name->{}, version->{}", name, version);
         if(StringUtils.isEmpty(name) || StringUtils.isEmpty(version)){
-            getLogger().error(".createWorkUnitProcessor(): name or version are emtpy!!!!");
+            getLogger().error(".buildWUP(): name or version are emtpy!!!!");
         }
         WorkUnitProcessorSoftwareComponent wup = new WorkUnitProcessorSoftwareComponent();
-        String uniqueName = componentNameingUtilities.buildUniqueComponentName(name);
-        TopologyNodeRDN nodeRDN = createNodeRDN(uniqueName, version, nodeType);
-        wup.setComponentRDN(nodeRDN);
-        wup.constructFDN(workshop.getComponentFDN(), nodeRDN);
-        TopologyNodeRDN functionRDN = createNodeRDN(name, version,nodeType);
-        wup.constructFunctionFDN(workshop.getNodeFunctionFDN(), functionRDN);
-        wup.setContainingNodeFDN(workshop.getComponentFDN());
-        wup.setComponentType(nodeType);
-        wup.setConcurrencyMode(getConcurrenceMode());
+
+        getLogger().trace(".buildWUP(): [Set Parent] Start");
+        wup.setParentComponent(workshop.getComponentId());
+        getLogger().trace(".buildWUP(): [Set Parent] Finish");
+
+        getLogger().trace(".buildWUP(): [Create ComponentId] Start");
+        ComponentIdType componentId = ComponentIdType.fromComponentName(name);
+        wup.setComponentID(componentId);
+        getLogger().trace(".buildWUP(): [Create ComponentId] Finish");
+
+        getLogger().trace(".buildWUP(): [Create ParticipantId] Start");
+        PetasosParticipantId participantId = new PetasosParticipantId();
+        participantId.setName(workshop.getParticipant().getParticipantId().getName() + "." + name);
+        if(StringUtils.isNotEmpty(participantDisplayNameOverride)) {
+            participantId.setDisplayName(participantDisplayNameOverride);
+        } else {
+            participantId.setDisplayName(name);
+        }
+        participantId.setFullName(workshop.getParticipant().getParticipantId().getFullName() + "." + name);
+        participantId.setSubsystemName(getPropertyFile().getSubsystemInstant().getParticipantName());
+        participantId.setVersion(version);
+        PetasosParticipant participant = new PetasosParticipant();
+        participant.setComponentId(componentId);
+        participant.setParticipantId(participantId);
+        participant.setFulfillmentState(new PetasosParticipantFulfillment());
+        participant.getFulfillmentState().getFulfillerComponents().add(componentId);
+        participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_FULLY_FULFILLED);
+        participant.getFulfillmentState().setNumberOfActualFulfillers(1);
+        participant.getFulfillmentState().setNumberOfFulfillersExpected(getPropertyFile().getDeploymentMode().getProcessingPlantReplicationCount());
+        if(participant.getFulfillmentState().getNumberOfFulfillersExpected() > participant.getFulfillmentState().getNumberOfActualFulfillers()){
+            participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_PARTIALLY_FULFILLED);
+        }
+        wup.setParticipant(participant);
+        getLogger().trace(".buildWUP(): [Create ParticipantId] Finish");
+
+        getLogger().trace(".buildWUP(): [Set Resilience Mode] Start");
         wup.setResilienceMode(getResilienceMode());
+        getLogger().trace(".buildWUP(): [Set Resilience Mode] Finish");
+
+        getLogger().trace(".buildWUP(): [Set Concurrency Mode] Start");
+        wup.setConcurrencyMode(getConcurrenceMode());
+        getLogger().trace(".buildWUP(): [Set Concurrency Mode] Finish");
+
+        getLogger().trace(".buildWUP(): [Set component type] Start");
+        wup.setComponentType(nodeType);
+        getLogger().trace(".buildWUP(): [Set component type] Finish");
+
+        getLogger().trace(".buildWUP(): [Set component site] Start");
+        wup.setDeploymentSite(getPropertyFile().getSubsystemInstant().getSite());
+        getLogger().trace(".buildWUP(): [Set component site] Finish");
+
+        getLogger().trace(".buildWUP(): [Set Network Zone] Start");
         wup.setSecurityZone(workshop.getSecurityZone());
-        wup.setSubsystemParticipantName(getPropertyFile().getSubsystemInstant().getParticipantName());
-        wup.setParticipantName(participantName);
-        wup.setParticipantDisplayName(name);
+        getLogger().trace(".buildWUP(): [Set Network Zone] Finish");
+
+        getLogger().trace(".buildWUP(): [Set Replication Count] Start");
         wup.setReplicationCount(getPropertyFile().getDeploymentMode().getProcessingPlantReplicationCount());
-        workshop.getWupSet().add(wup.getComponentFDN());
-        getLogger().trace(".addWorkUnitProcessor(): Add the WorkUnitProcessor to the Topology Cache");
-        getTopologyIM().addTopologyNode(workshop.getComponentFDN(), wup);
-        getLogger().debug(".addWorkUnitProcessor(): Exit");
+        getLogger().trace(".buildWUP(): [Set Replication Count] Finish");
+
+        getLogger().trace(".buildWUP(): [Add the WUP to Workshop] Start");
+        workshop.getWupSet().add(wup.getComponentId());
+        getLogger().trace(".buildWUP(): [Add the WUP to Workshop] Finish");
+
+        getLogger().trace(".buildWUP(): [Add the WUP to the Topology Cache] Start");
+        getTopologyIM().addTopologyNode(workshop.getComponentId(), wup);
+        getLogger().trace(".buildWUP(): [Add the WUP to the Topology Cache] Finish");
+
         return(wup);
     }
 
@@ -487,23 +840,68 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
      * @param wup
      */
     @Override
-    public WorkUnitProcessorSubComponentSoftwareComponent createWorkUnitProcessorComponent(String name, PegacornSystemComponentTypeTypeEnum topologyType, WorkUnitProcessorSoftwareComponent wup){
-        getLogger().debug(".addWorkUnitProcessorComponent(): Entry");
+    public WorkUnitProcessorSubComponentSoftwareComponent buildWUPComponent(String name, SoftwareComponentTypeEnum topologyType, WorkUnitProcessorSoftwareComponent wup){
+        getLogger().debug(".buildWUPComponent(): Entry");
         WorkUnitProcessorSubComponentSoftwareComponent wupComponent = new WorkUnitProcessorSubComponentSoftwareComponent();
-        String uniqueName = componentNameingUtilities.buildUniqueComponentName(name);
-        TopologyNodeRDN nodeRDN = createNodeRDN(uniqueName, wup.getComponentRDN().getNodeVersion(), topologyType);
-        wupComponent.constructFDN(wup.getComponentFDN(), nodeRDN);
-        TopologyNodeRDN functionRDN = createNodeRDN(name, wup.getComponentRDN().getNodeVersion() ,topologyType);
-        wupComponent.constructFunctionFDN(wup.getNodeFunctionFDN(), functionRDN);
-        wupComponent.setComponentRDN(nodeRDN);
-        wupComponent.setComponentType(topologyType);
-        wupComponent.setContainingNodeFDN(wup.getComponentFDN());
-        wupComponent.setConcurrencyMode(getConcurrenceMode());
+
+        getLogger().trace(".buildWUPComponent(): [Set Parent] Start");
+        wupComponent.setParentComponent(wup.getComponentId());
+        getLogger().trace(".buildWUPComponent(): [Set Parent] Finish");
+
+        getLogger().trace(".buildWUPComponent(): [Create ComponentId] Start");
+        ComponentIdType componentId = ComponentIdType.fromComponentName(name);
+        wupComponent.setComponentID(componentId);
+        getLogger().trace(".buildWUPComponent(): [Create ComponentId] Finish");
+
+        getLogger().trace(".buildWUPComponent(): [Create ParticipantId] Start");
+        PetasosParticipantId participantId = new PetasosParticipantId();
+        participantId.setName(wup.getParticipant().getParticipantId().getName() + "." + name);
+        participantId.setDisplayName(wup.getParticipant().getParticipantId().getDisplayName() + "." + name);
+        participantId.setFullName(wup.getParticipant().getParticipantId().getFullName() + "." + name);
+        participantId.setSubsystemName(getPropertyFile().getSubsystemInstant().getParticipantName());
+        participantId.setVersion(wup.getParticipant().getParticipantId().getVersion());
+        PetasosParticipant participant = new PetasosParticipant();
+        participant.setComponentId(componentId);
+        participant.setParticipantId(participantId);
+        participant.setFulfillmentState(new PetasosParticipantFulfillment());
+        participant.getFulfillmentState().getFulfillerComponents().add(componentId);
+        participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_FULLY_FULFILLED);
+        participant.getFulfillmentState().setNumberOfActualFulfillers(1);
+        participant.getFulfillmentState().setNumberOfFulfillersExpected(getPropertyFile().getDeploymentMode().getProcessingPlantReplicationCount());
+        if(participant.getFulfillmentState().getNumberOfFulfillersExpected() > participant.getFulfillmentState().getNumberOfActualFulfillers()){
+            participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_PARTIALLY_FULFILLED);
+        }
+        wupComponent.setParticipant(participant);
+        getLogger().trace(".buildWUPComponent(): [Create ParticipantId] Finish");
+
+        getLogger().trace(".buildWUP(): [Set Resilience Mode] Start");
         wupComponent.setResilienceMode(getResilienceMode());
+        getLogger().trace(".buildWUP(): [Set Resilience Mode] Finish");
+
+        getLogger().trace(".buildWUP(): [Set Concurrency Mode] Start");
+        wupComponent.setConcurrencyMode(getConcurrenceMode());
+        getLogger().trace(".buildWUP(): [Set Concurrency Mode] Finish");
+
+        getLogger().trace(".buildWUP(): [Set component type] Start");
+        wupComponent.setComponentType(topologyType);
+        getLogger().trace(".buildWUP(): [Set component type] Finish");
+
+        getLogger().trace(".buildWUP(): [Set component site] Start");
+        wupComponent.setDeploymentSite(getPropertyFile().getSubsystemInstant().getSite());
+        getLogger().trace(".buildWUP(): [Set component site] Finish");
+
+        getLogger().trace(".buildWUP(): [Set Network Zone] Start");
         wupComponent.setSecurityZone(wup.getSecurityZone());
-        wup.getWupComponents().add(wupComponent.getComponentFDN());
-        getLogger().trace(".addWorkUnitProcessorComponent(): Add the WorkUnitProcessor Component to the Topology Cache");
-        getTopologyIM().addTopologyNode(wup.getComponentFDN(), wupComponent);
+        getLogger().trace(".buildWUP(): [Set Network Zone] Finish");
+
+        getLogger().trace(".buildWUP(): [Add the WUPComponent to WUP] Start");
+        wup.getWupComponents().add(wupComponent.getComponentId());
+        getLogger().trace(".buildWUP(): [Add the WUPComponent to WUP] Finish");
+
+        getLogger().trace(".buildWUP(): [Add the wupComponent to the Topology Cache] Start");
+        getTopologyIM().addTopologyNode(wup.getComponentId(), wupComponent);
+        getLogger().trace(".buildWUP(): [Add the wupComponent to the Topology Cache] Finish");
+
         getLogger().debug(".addWorkUnitProcessorComponent(): Exit");
         return(wupComponent);
     }
@@ -515,24 +913,70 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
      * @param wup
      */
     @Override
-    public WorkUnitProcessorInterchangeSoftwareComponent createWorkUnitProcessingInterchangeComponent(String name, PegacornSystemComponentTypeTypeEnum topologyNodeType, WorkUnitProcessorSoftwareComponent wup){
-        getLogger().debug(".addWorkUnitProcessingInterchangeComponent(): Entry");
+    public WorkUnitProcessorInterchangeSoftwareComponent buildWUPInterchange(String name, SoftwareComponentTypeEnum topologyNodeType, WorkUnitProcessorSoftwareComponent wup){
+        getLogger().debug(".buildWUPInterchange(): Entry");
+
         WorkUnitProcessorInterchangeSoftwareComponent wupInterchangeComponent = new WorkUnitProcessorInterchangeSoftwareComponent();
-        String uniqueName = componentNameingUtilities.buildUniqueComponentName(name);
-        TopologyNodeRDN nodeRDN = createNodeRDN(uniqueName, wup.getComponentRDN().getNodeVersion(), topologyNodeType);
-        wupInterchangeComponent.constructFDN(wup.getComponentFDN(), nodeRDN);
-        TopologyNodeRDN functionRDN = createNodeRDN(name, wup.getComponentRDN().getNodeVersion() ,topologyNodeType);
-        wupInterchangeComponent.constructFunctionFDN(wup.getNodeFunctionFDN(), functionRDN);
-        wupInterchangeComponent.setComponentRDN(nodeRDN);
-        wupInterchangeComponent.setComponentType(topologyNodeType);
-        wupInterchangeComponent.setContainingNodeFDN(wup.getComponentFDN());
-        wupInterchangeComponent.setConcurrencyMode(getConcurrenceMode());
+
+        getLogger().trace(".buildWUPComponent(): [Set Parent] Start");
+        wupInterchangeComponent.setParentComponent(wup.getComponentId());
+        getLogger().trace(".buildWUPComponent(): [Set Parent] Finish");
+
+        getLogger().trace(".buildWUPComponent(): [Create ComponentId] Start");
+        ComponentIdType componentId = ComponentIdType.fromComponentName(name);
+        wupInterchangeComponent.setComponentID(componentId);
+        getLogger().trace(".buildWUPComponent(): [Create ComponentId] Finish");
+
+        getLogger().trace(".buildWUPComponent(): [Create ParticipantId] Start");
+        PetasosParticipantId participantId = new PetasosParticipantId();
+        participantId.setName(wup.getParticipant().getParticipantId().getName() + "." + name);
+        participantId.setDisplayName(wup.getParticipant().getParticipantId().getDisplayName() + "." + name);
+        participantId.setFullName(wup.getParticipant().getParticipantId().getFullName() + "." + name);
+        participantId.setSubsystemName(getPropertyFile().getSubsystemInstant().getParticipantName());
+        participantId.setVersion(wup.getParticipant().getParticipantId().getVersion());
+        PetasosParticipant participant = new PetasosParticipant();
+        participant.setComponentId(componentId);
+        participant.setParticipantId(participantId);
+        participant.setFulfillmentState(new PetasosParticipantFulfillment());
+        participant.getFulfillmentState().getFulfillerComponents().add(componentId);
+        participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_FULLY_FULFILLED);
+        participant.getFulfillmentState().setNumberOfActualFulfillers(1);
+        participant.getFulfillmentState().setNumberOfFulfillersExpected(getPropertyFile().getDeploymentMode().getProcessingPlantReplicationCount());
+        if(participant.getFulfillmentState().getNumberOfFulfillersExpected() > participant.getFulfillmentState().getNumberOfActualFulfillers()){
+            participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_PARTIALLY_FULFILLED);
+        }
+        wupInterchangeComponent.setParticipant(participant);
+        getLogger().trace(".buildWUPComponent(): [Create ParticipantId] Finish");
+
+        getLogger().trace(".buildWUP(): [Set Resilience Mode] Start");
         wupInterchangeComponent.setResilienceMode(getResilienceMode());
+        getLogger().trace(".buildWUP(): [Set Resilience Mode] Finish");
+
+        getLogger().trace(".buildWUP(): [Set Concurrency Mode] Start");
+        wupInterchangeComponent.setConcurrencyMode(getConcurrenceMode());
+        getLogger().trace(".buildWUP(): [Set Concurrency Mode] Finish");
+
+        getLogger().trace(".buildWUP(): [Set component type] Start");
+        wupInterchangeComponent.setComponentType(topologyNodeType);
+        getLogger().trace(".buildWUP(): [Set component type] Finish");
+
+        getLogger().trace(".buildWUP(): [Set component site] Start");
+        wupInterchangeComponent.setDeploymentSite(getPropertyFile().getSubsystemInstant().getSite());
+        getLogger().trace(".buildWUP(): [Set component site] Finish");
+
+        getLogger().trace(".buildWUP(): [Set Network Zone] Start");
         wupInterchangeComponent.setSecurityZone(wup.getSecurityZone());
-        wup.getWupInterchangeComponents().add(wupInterchangeComponent.getComponentFDN());
-        getLogger().trace(".addWorkUnitProcessorComponent(): Add the WorkUnitProcessor Interchange Component to the Topology Cache");
-        getTopologyIM().addTopologyNode(wup.getComponentFDN(), wupInterchangeComponent);
-        getLogger().debug(".addWorkUnitProcessingInterchangeComponent(): Exit");
+        getLogger().trace(".buildWUP(): [Set Network Zone] Finish");
+
+        getLogger().trace(".buildWUP(): [Add the WUPComponent to WUP] Start");
+        wup.getWupInterchangeComponents().add(wupInterchangeComponent.getComponentId());
+        getLogger().trace(".buildWUP(): [Add the WUPComponent to WUP] Finish");
+
+        getLogger().trace(".buildWUP(): [Add the wupComponent to the Topology Cache] Start");
+        getTopologyIM().addTopologyNode(wup.getComponentId(), wupInterchangeComponent);
+        getLogger().trace(".buildWUP(): [Add the wupComponent to the Topology Cache] Finish");
+
+        getLogger().debug(".buildWUPInterchange(): Exit");
         return(wupInterchangeComponent);
     }
 
@@ -565,32 +1009,8 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
             return;
         }
 
-        String name = interfaceNames.getEndpointServerName(interfaceNames.getPrometheusEndpointName());
-        String uniqueName = componentNameingUtilities.buildUniqueComponentName(name);
-        String participantName = processingPlant.getParticipantName() + interfaceNames.getPrometheusEndpointName();
-        prometheusPort.setParticipantName(participantName);
-        prometheusPort.setParticipantDisplayName(participantName);
-        TopologyNodeRDN nodeRDN = createNodeRDN(uniqueName, processingPlant.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
-        prometheusPort.setComponentRDN(nodeRDN);
-        prometheusPort.setEndpointType(PetasosEndpointTopologyTypeEnum.HTTP_API_SERVER);
-        prometheusPort.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
-        prometheusPort.constructFDN(processingPlant.getComponentFDN(), nodeRDN);
-        TopologyNodeRDN functionRDN = createNodeRDN(name, processingPlant.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
-        prometheusPort.constructFunctionFDN(processingPlant.getNodeFunctionFDN(), functionRDN );
-        prometheusPort.setEndpointConfigurationName(interfaceNames.getPrometheusEndpointName());
-        prometheusPort.setContainingNodeFDN(processingPlant.getComponentFDN());
-        prometheusPort.setServer(true);
+        addWildflyOAMPort(processingPlant, interfaceNames.getPrometheusEndpointName(), port);
 
-        HTTPServerAdapter httpServerAdapter = new HTTPServerAdapter();
-        httpServerAdapter.setEncrypted(getPropertyFile().getDeploymentMode().isUsingInternalEncryption());
-        httpServerAdapter.setPortNumber(port.getServerPort());
-        httpServerAdapter.setContextPath(port.getContextPath());
-        httpServerAdapter.setHostName(port.getServerHostname());
-        prometheusPort.setHTTPServerAdapter(httpServerAdapter);
-
-        processingPlant.getEndpoints().add(prometheusPort.getComponentFDN());
-        getLogger().trace(".addPrometheusPort(): Add the Prometheus Port to the Topology Cache");
-        getTopologyIM().addTopologyNode(processingPlant.getComponentFDN(), prometheusPort);
         getLogger().debug(".addPrometheusPort(): Exit, endpoint added");
     }
 
@@ -606,32 +1026,9 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
             getLogger().debug(".addJolokiaPort(): Exit, no port to add");
             return;
         }
-        String participantName = processingPlant.getParticipantName() + interfaceNames.getJolokiaEndpointName();
-        jolokiaPort.setParticipantName(participantName);
-        jolokiaPort.setParticipantDisplayName(participantName);
-        String name = interfaceNames.getEndpointServerName(interfaceNames.getJolokiaEndpointName());
-        String uniqueName = componentNameingUtilities.buildUniqueComponentName(name);
-        TopologyNodeRDN nodeRDN = createNodeRDN(uniqueName, processingPlant.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
-        jolokiaPort.setComponentRDN(nodeRDN);
-        jolokiaPort.setEndpointConfigurationName(interfaceNames.getJolokiaEndpointName());
-        jolokiaPort.constructFDN(processingPlant.getComponentFDN(), nodeRDN);
-        jolokiaPort.setEndpointType(PetasosEndpointTopologyTypeEnum.HTTP_API_SERVER);
-        jolokiaPort.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
-        TopologyNodeRDN functionRDN = createNodeRDN(name, processingPlant.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
-        jolokiaPort.constructFunctionFDN(processingPlant.getNodeFunctionFDN(), functionRDN );
-        jolokiaPort.setServer(true);
-        jolokiaPort.setContainingNodeFDN(processingPlant.getComponentFDN());
 
-        HTTPServerAdapter httpServerAdapter = new HTTPServerAdapter();
-        httpServerAdapter.setEncrypted(getPropertyFile().getDeploymentMode().isUsingInternalEncryption());
-        httpServerAdapter.setPortNumber(port.getServerPort());
-        httpServerAdapter.setContextPath(port.getContextPath());
-        httpServerAdapter.setHostName(port.getServerHostname());
-        jolokiaPort.setHTTPServerAdapter(httpServerAdapter);
+        addWildflyOAMPort(processingPlant, interfaceNames.getJolokiaEndpointName(), port);
 
-        processingPlant.getEndpoints().add(jolokiaPort.getComponentFDN());
-        getLogger().trace(".addJolokiaPort(): Add the Jolokia Port to the Topology Cache");
-        getTopologyIM().addTopologyNode(processingPlant.getComponentFDN(), jolokiaPort);
         getLogger().debug(".addJolokiaPort(): Exit, endpoint added");
     }
 
@@ -647,33 +1044,7 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
             getLogger().debug(".addKubeLivelinessPort(): Exit, no port to add");
             return;
         }
-        String participantName = processingPlant.getParticipantName() + interfaceNames.getKubeLivelinessEndpointName();
-        kubeLivelinessPort.setParticipantName(participantName);
-        kubeLivelinessPort.setParticipantDisplayName(participantName);
-        String name = interfaceNames.getEndpointServerName(interfaceNames.getKubeLivelinessEndpointName());
-        String uniqueName = componentNameingUtilities.buildUniqueComponentName(name);
-        TopologyNodeRDN nodeRDN = createNodeRDN(uniqueName, processingPlant.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
-        kubeLivelinessPort.setComponentRDN(nodeRDN);
-        kubeLivelinessPort.setEndpointConfigurationName(interfaceNames.getKubeLivelinessEndpointName());
-        kubeLivelinessPort.constructFDN(processingPlant.getComponentFDN(), nodeRDN);
-        kubeLivelinessPort.setEndpointType(PetasosEndpointTopologyTypeEnum.HTTP_API_SERVER);
-        kubeLivelinessPort.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
-        TopologyNodeRDN functionRDN = createNodeRDN(name, processingPlant.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
-        kubeLivelinessPort.constructFunctionFDN(processingPlant.getNodeFunctionFDN(), functionRDN );
-        kubeLivelinessPort.setServer(true);
-        kubeLivelinessPort.setContainingNodeFDN(processingPlant.getComponentFDN());
-
-        HTTPServerAdapter httpServerAdapter = new HTTPServerAdapter();
-        httpServerAdapter.setEncrypted(getPropertyFile().getDeploymentMode().isUsingInternalEncryption());
-        httpServerAdapter.setPortNumber(port.getServerPort());
-        httpServerAdapter.setContextPath(port.getContextPath());
-        httpServerAdapter.setHostName(port.getServerHostname());
-        kubeLivelinessPort.setHTTPServerAdapter(httpServerAdapter);
-
-        processingPlant.getEndpoints().add(kubeLivelinessPort.getComponentFDN());
-        getLogger().trace(".addKubeLivelinessPort(): Add the KubeLivelinessPort Port to the Topology Cache");
-        getTopologyIM().addTopologyNode(processingPlant.getComponentFDN(), kubeLivelinessPort);
-        getLogger().debug(".addKubeLivelinessPort(): Exit, endpoint added");
+        addWildflyOAMPort(processingPlant, interfaceNames.getKubeLivelinessEndpointName(), port);
     }
 
     //
@@ -688,34 +1059,96 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
             getLogger().debug(".addKubeReadinessPort(): Exit, no port to add");
             return;
         }
-        String participantName = processingPlant.getParticipantName() + interfaceNames.getKubeReadinessEndpointName();
-        kubeReadinessPort.setParticipantName(participantName);
-        kubeReadinessPort.setParticipantDisplayName(participantName);
-        String name = interfaceNames.getEndpointServerName(interfaceNames.getKubeReadinessEndpointName());
-        String uniqueName = componentNameingUtilities.buildUniqueComponentName(name);
-        TopologyNodeRDN nodeRDN = createNodeRDN(uniqueName, processingPlant.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
-        kubeReadinessPort.setComponentRDN(nodeRDN);
-        kubeReadinessPort.setEndpointConfigurationName(interfaceNames.getKubeReadinessEndpointName());
-        kubeReadinessPort.constructFDN(processingPlant.getComponentFDN(), nodeRDN);
-        kubeReadinessPort.setEndpointType(PetasosEndpointTopologyTypeEnum.HTTP_API_SERVER);
-        kubeReadinessPort.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
-        TopologyNodeRDN functionRDN = createNodeRDN(name, processingPlant.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
-        kubeReadinessPort.constructFunctionFDN(processingPlant.getNodeFunctionFDN(), functionRDN );
-        kubeReadinessPort.setComponentRDN(nodeRDN);
-        kubeReadinessPort.setContainingNodeFDN(processingPlant.getComponentFDN());
 
+        addWildflyOAMPort(processingPlant, interfaceNames.getKubeReadinessEndpointName(), port);
+
+        getLogger().debug(".addKubeReadinessPort(): Exit, endpoint added");
+    }
+
+    protected void addWildflyOAMPort(ProcessingPlantSoftwareComponent processingPlant, String interfaceName, HTTPServerPortSegment port){
+        getLogger().debug(".addWildflyOAMPort(): Entry, processingPlant->{}", processingPlant);
+        HTTPServerTopologyEndpoint oamPort = new HTTPServerTopologyEndpoint();
+        if(port == null){
+            getLogger().debug(".addWildflyOAMPort(): Exit, no port to add");
+            return;
+        }
+
+        String name = interfaceNames.getEndpointServerName(interfaceName);
+        String uniqueName = componentNameingUtilities.buildUniqueComponentName(name);
+
+        getLogger().trace(".addWildflyOAMPort(): [Set Parent] Start");
+        oamPort.setParentComponent(processingPlant.getComponentId());
+        getLogger().trace(".addWildflyOAMPort(): [Set Parent] Finish");
+
+        getLogger().trace(".addWildflyOAMPort(): [Create ComponentId] Start");
+        ComponentIdType componentId = new ComponentIdType();
+        componentId.setName(uniqueName);
+        componentId.setDisplayName(name);
+        componentId.setIdValidityEndInstant(ZonedDateTime.now().plusYears(ID_VALIDITY_RANGE_IN_YEARS).toInstant());
+        componentId.setIdValidityStartInstant(Instant.now());
+        componentId.setId(uniqueName);
+        oamPort.setComponentID(componentId);
+        getLogger().trace(".addWildflyOAMPort(): [Create ComponentId] Finish");
+
+        getLogger().trace(".addWildflyOAMPort(): [Create ParticipantId] Start");
+        PetasosParticipantId participantId = new PetasosParticipantId();
+        String participantName = processingPlant.getParticipant() + interfaceName;
+        participantId.setName(participantName);
+        participantId.setDisplayName(getProcessingPlantNode().getParticipant().getParticipantId().getDisplayName() +"." + participantName);
+        participantId.setFullName(processingPlant.getParticipant().getParticipantId().getFullName() + "." + interfaceName);
+        participantId.setSubsystemName(processingPlant.getParticipant().getParticipantId().getSubsystemName());
+        participantId.setVersion(processingPlant.getParticipant().getParticipantId().getVersion());
+        PetasosParticipant participant = new PetasosParticipant();
+        participant.setComponentId(componentId);
+        participant.setParticipantId(participantId);
+        participant.setFulfillmentState(new PetasosParticipantFulfillment());
+        participant.getFulfillmentState().getFulfillerComponents().add(componentId);
+        participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_FULLY_FULFILLED);
+        participant.getFulfillmentState().setNumberOfActualFulfillers(1);
+        participant.getFulfillmentState().setNumberOfFulfillersExpected(getPropertyFile().getDeploymentMode().getProcessingPlantReplicationCount());
+        if(participant.getFulfillmentState().getNumberOfFulfillersExpected() > participant.getFulfillmentState().getNumberOfActualFulfillers()){
+            participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_PARTIALLY_FULFILLED);
+        }
+        oamPort.setParticipant(participant);
+        getLogger().trace(".addWildflyOAMPort(): [Create ParticipantId] Finish");
+
+        getLogger().trace(".addWildflyOAMPort(): [Set Endpoint Type] Start");
+        oamPort.setEndpointType(PetasosEndpointTopologyTypeEnum.HTTP_API_SERVER);
+        getLogger().trace(".addWildflyOAMPort(): [Set Endpoint Type] Finish");
+
+        getLogger().trace(".addWildflyOAMPort(): [Set Component Type] Start");
+        oamPort.setComponentType(SoftwareComponentTypeEnum.ENDPOINT);
+        getLogger().trace(".addWildflyOAMPort(): [Set Component Type] Finish");
+
+        getLogger().trace(".addWildflyOAMPort(): [Set Endpoint Configuration Name] Start");
+        oamPort.setEndpointConfigurationName(interfaceName);
+        getLogger().trace(".addWildflyOAMPort(): [Set Endpoint Configuration Name] Finish");
+
+        getLogger().trace(".addWildflyOAMPort(): [Set Server Status] Start");
+        oamPort.setServer(true);
+        getLogger().trace(".addWildflyOAMPort(): [Set Server Status] Finish");
+
+        getLogger().trace(".addWildflyOAMPort(): [Set Adapter] Start");
         HTTPServerAdapter httpServerAdapter = new HTTPServerAdapter();
         httpServerAdapter.setEncrypted(getPropertyFile().getDeploymentMode().isUsingInternalEncryption());
         httpServerAdapter.setPortNumber(port.getServerPort());
         httpServerAdapter.setContextPath(port.getContextPath());
         httpServerAdapter.setHostName(port.getServerHostname());
-        kubeReadinessPort.setHTTPServerAdapter(httpServerAdapter);
+        oamPort.setHTTPServerAdapter(httpServerAdapter);
+        getLogger().trace(".addWildflyOAMPort(): [Set Adapter] Finish");
 
-        processingPlant.getEndpoints().add(kubeReadinessPort.getComponentFDN());
-        getLogger().trace(".addKubeReadinessPort(): Add the KubeReadinessPort Port to the Topology Cache");
-        getTopologyIM().addTopologyNode(processingPlant.getComponentFDN(), kubeReadinessPort);
-        getLogger().debug(".addKubeReadinessPort(): Exit, endpoint added");
+        getLogger().trace(".addWildflyOAMPort(): [Add the OAM Port to the Processing Plant] Start");
+        processingPlant.getEndpoints().add(oamPort.getComponentId());
+        getLogger().trace(".addWildflyOAMPort(): [Add the OAM Port to the Processing Plant] Finish");
+
+        getLogger().trace(".addWildflyOAMPort(): [Add the OAM Port to the Topology Cache] Start");
+        getTopologyIM().addTopologyNode(processingPlant.getComponentId(), oamPort);
+        getLogger().trace(".addWildflyOAMPort(): [Add the OAM Port to the Topology Cache] Finish");
+
+        getLogger().debug(".addWildflyOAMPort(): Exit, endpoint added");
     }
+
+
 
     //
     // Resilience Mode Calculation

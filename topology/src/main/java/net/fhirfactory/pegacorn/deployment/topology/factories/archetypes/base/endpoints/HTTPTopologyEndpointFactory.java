@@ -21,17 +21,20 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.base.endpoints;
 
-import net.fhirfactory.pegacorn.core.model.componentid.PegacornSystemComponentTypeTypeEnum;
-import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeRDN;
+import net.fhirfactory.pegacorn.core.model.componentid.ComponentIdType;
+import net.fhirfactory.pegacorn.core.model.componentid.SoftwareComponentTypeEnum;
 import net.fhirfactory.pegacorn.core.model.petasos.endpoint.valuesets.PetasosEndpointTopologyTypeEnum;
 import net.fhirfactory.pegacorn.core.model.petasos.ipc.PegacornCommonInterfaceNames;
+import net.fhirfactory.pegacorn.core.model.petasos.participant.PetasosParticipant;
+import net.fhirfactory.pegacorn.core.model.petasos.participant.PetasosParticipantFulfillment;
+import net.fhirfactory.pegacorn.core.model.petasos.participant.PetasosParticipantFulfillmentStatusEnum;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.HTTPClientAdapter;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.HTTPServerAdapter;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.base.IPCAdapterDefinition;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.base.IPCServerTopologyEndpoint;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.interact.StandardInteractClientTopologyEndpointPort;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.http.HTTPClientTopologyEndpoint;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.http.HTTPServerTopologyEndpoint;
+import net.fhirfactory.pegacorn.core.model.topology.endpoints.interact.StandardInteractClientTopologyEndpointPort;
 import net.fhirfactory.pegacorn.core.model.topology.nodes.common.EndpointProviderInterface;
 import net.fhirfactory.pegacorn.core.model.topology.nodes.external.ConnectedExternalSystemTopologyNode;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes.BaseSubsystemPropertyFile;
@@ -96,17 +99,27 @@ public class HTTPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
             return(null);
         }
         HTTPServerTopologyEndpoint httpServer = new HTTPServerTopologyEndpoint();
-        TopologyNodeRDN nodeRDN = createSimpleNodeRDN(name, endpointProvider.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
-        httpServer.setComponentRDN(nodeRDN);
+        ComponentIdType componentId = ComponentIdType.fromComponentName(name);
+        httpServer.setVersion(endpointProvider.getVersion());
+        httpServer.setComponentID(componentId);
         httpServer.setEndpointConfigurationName(httpServerPort.getName());
         httpServer.setActualHostIP(getActualHostIP());
-        httpServer.constructFDN(endpointProvider.getComponentFDN(), nodeRDN);
         httpServer.setEndpointType(PetasosEndpointTopologyTypeEnum.HTTP_API_SERVER);
-        httpServer.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
-        httpServer.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
+        httpServer.setComponentType(SoftwareComponentTypeEnum.ENDPOINT);
         httpServer.setServer(true);
-        httpServer.setContainingNodeFDN(endpointProvider.getComponentFDN());
         httpServer.setConnectedSystemName(httpServerPort.getConnectedSystem().getSubsystemName());
+        // Build Petasos Participant
+        PetasosParticipant participant = new PetasosParticipant();
+        participant.setComponentId(componentId);
+        participant.setFulfillmentState(new PetasosParticipantFulfillment());
+        participant.getFulfillmentState().getFulfillerComponents().add(componentId);
+        participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_FULLY_FULFILLED);
+        participant.getFulfillmentState().setNumberOfActualFulfillers(1);
+        participant.getFulfillmentState().setNumberOfFulfillersExpected(propertyFile.getDeploymentMode().getProcessingPlantReplicationCount());
+        if(participant.getFulfillmentState().getNumberOfFulfillersExpected() > participant.getFulfillmentState().getNumberOfActualFulfillers()){
+            participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_PARTIALLY_FULFILLED);
+        }
+        httpServer.setParticipant(participant);
         //
         // Create the ServerAdapter (the thing that actually holds the port number and ip address details)
         HTTPServerAdapter httpServerAdapter = new HTTPServerAdapter();
@@ -173,14 +186,17 @@ public class HTTPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
             }
             //
             // Now build the Endpoint Participant Name
-            String providerParticipantName = endpointProvider.getParticipantName();
+            String providerParticipantName = endpointProvider.getParticipantId().getName();
             if(clusteredHTTPServerPort.isEncrypted()) {
-                httpServer.setParticipantName(providerParticipantName+".Server.HTTPS." +httpServerAdapter.getServiceDNSName() + "." + httpServerAdapter.getServicePortValue());
-                httpServer.setParticipantDisplayName("Server.HTTPS." + httpServerAdapter.getServiceDNSName() + "." + httpServerAdapter.getServicePortValue());
-        } else {
-                httpServer.setParticipantName(providerParticipantName+".Server.HTTP." + httpServerAdapter.getServiceDNSName() + "." + httpServerAdapter.getServicePortValue());
-                httpServer.setParticipantDisplayName("Server.HTTP." + httpServerAdapter.getServiceDNSName() + "." + httpServerAdapter.getServicePortValue());
+                httpServer.getParticipant().getParticipantId().setName(providerParticipantName+".Server.HTTPS." +httpServerAdapter.getServiceDNSName() + "." + httpServerAdapter.getServicePortValue());
+                httpServer.getParticipant().getParticipantId().setDisplayName("Server.HTTPS." + httpServerAdapter.getServiceDNSName() + "." + httpServerAdapter.getServicePortValue());
+                httpServer.getParticipant().getParticipantId().setFullName(endpointProvider.getParticipantId().getFullName() + ".Server.HTTPS." + httpServerAdapter.getServiceDNSName() + "." + httpServerAdapter.getServicePortValue());
+            } else {
+                httpServer.getParticipant().getParticipantId().setName(providerParticipantName+".Server.HTTP." + httpServerAdapter.getServiceDNSName() + "." + httpServerAdapter.getServicePortValue());
+                httpServer.getParticipant().getParticipantId().setDisplayName("Server.HTTP." + httpServerAdapter.getServiceDNSName() + "." + httpServerAdapter.getServicePortValue());
+                httpServer.getParticipant().getParticipantId().setFullName(endpointProvider.getParticipantId().getFullName() + ".Server.HTTP." + httpServerAdapter.getServiceDNSName() + "." + httpServerAdapter.getServicePortValue());
             }
+            httpServer.getParticipant().getParticipantId().setVersion(endpointProvider.getParticipantId().getVersion());
         } else {
             //
             // This assumes that there is nothing between our exposed ports and client connections
@@ -222,23 +238,26 @@ public class HTTPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
             //
             // Now build the Endpoint Participant Name / Participant Display Name
             if(nonClusteredHTTPServerPort.isEncrypted()) {
-                httpServer.setParticipantName(endpointProvider.getParticipantName()+"."+"Server.HTTPS." +httpServerAdapter.getHostName() + "." + httpServerAdapter.getPortNumber());
-                httpServer.setParticipantDisplayName("HTTPS.Server:" +httpServerAdapter.getHostName() + ":" + httpServerAdapter.getPortNumber());
+                httpServer.getParticipant().getParticipantId().setName(endpointProvider.getParticipantId()+"."+"Server.HTTPS." +httpServerAdapter.getHostName() + "." + httpServerAdapter.getPortNumber());
+                httpServer.getParticipant().getParticipantId().setDisplayName("HTTPS.Server:" +httpServerAdapter.getHostName() + ":" + httpServerAdapter.getPortNumber());
+                httpServer.getParticipant().getParticipantId().setFullName(endpointProvider.getParticipantId().getFullName() + ".HTTPS.Server:" +httpServerAdapter.getHostName() + ":" + httpServerAdapter.getPortNumber());
             } else {
-                httpServer.setParticipantName(endpointProvider.getParticipantName()+"."+"Server.HTTP." + httpServerAdapter.getHostName() + "." + httpServerAdapter.getPortNumber());
-                httpServer.setParticipantDisplayName("HTTP.Server:" +httpServerAdapter.getHostName() + ":" + httpServerAdapter.getPortNumber());
+                httpServer.getParticipant().getParticipantId().setName(endpointProvider.getParticipantId()+"."+"Server.HTTP." + httpServerAdapter.getHostName() + "." + httpServerAdapter.getPortNumber());
+                httpServer.getParticipant().getParticipantId().setDisplayName("HTTP.Server:" +httpServerAdapter.getHostName() + ":" + httpServerAdapter.getPortNumber());
+                httpServer.getParticipant().getParticipantId().setFullName(endpointProvider.getParticipantId().getFullName() + ".HTTP.Server:" +httpServerAdapter.getHostName() + ":" + httpServerAdapter.getPortNumber());
             }
+            httpServer.getParticipant().getParticipantId().setVersion(endpointProvider.getParticipantId().getVersion());
         }
         //
         // Add the Adapter to the endpoint
         httpServer.setHTTPServerAdapter(httpServerAdapter);
         //
         // Add the endpoint to the provider
-        endpointProvider.addEndpoint(httpServer.getComponentFDN());
+        endpointProvider.addEndpoint(httpServer.getComponentId());
         //
         // Add the endpoint to the topology cache
         getLogger().trace(".newHTTPServerTopologyEndpoint(): Add the HTTP Server Port to the Topology Cache");
-        getTopologyIM().addTopologyNode(endpointProvider.getComponentFDN(), httpServer);
+        getTopologyIM().addTopologyNode(endpointProvider.getComponentId(), httpServer);
         //
         // We're done
         getLogger().debug(".newHTTPServerTopologyEndpoint(): Exit, clusteredHTTPServerPort added");
@@ -257,20 +276,30 @@ public class HTTPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
             return(null);
         }
         String name = getInterfaceNames().getEndpointServerName(endpointFunctionName);
-        TopologyNodeRDN nodeRDN = createSimpleNodeRDN(name, endpointProvider.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
-        httpClient.setComponentRDN(nodeRDN);
+        ComponentIdType componentId = ComponentIdType.fromComponentName(name);
+        httpClient.setComponentID(componentId);
+        httpClient.setVersion(endpointProvider.getVersion());
         httpClient.setEndpointConfigurationName(httpClientPortConfigurationSegment.getName());
-        httpClient.constructFDN(endpointProvider.getComponentFDN(), nodeRDN);
         httpClient.setEndpointType(PetasosEndpointTopologyTypeEnum.HTTP_API_CLIENT);
-        httpClient.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
-        httpClient.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
-        httpClient.setComponentRDN(nodeRDN);
-        httpClient.setParticipantName(endpointFunctionName);
-        httpClient.setContainingNodeFDN(endpointProvider.getComponentFDN());
+        httpClient.setComponentType(SoftwareComponentTypeEnum.ENDPOINT);
+        httpClient.getParticipant().getParticipantId().setName(endpointFunctionName);
         ConnectedSystemProperties connectedSystem = httpClientPortConfigurationSegment.getConnectedSystem();
         httpClient.setConnectedSystemName(connectedSystem.getSubsystemName());
         ConnectedExternalSystemTopologyNode externalSystem = new ConnectedExternalSystemTopologyNode();
         externalSystem.setSubsystemName(connectedSystem.getSubsystemName());
+        // Build Petasos Participant
+        PetasosParticipant participant = new PetasosParticipant();
+        participant.setComponentId(componentId);
+        participant.setFulfillmentState(new PetasosParticipantFulfillment());
+        participant.getFulfillmentState().getFulfillerComponents().add(componentId);
+        participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_FULLY_FULFILLED);
+        participant.getFulfillmentState().setNumberOfActualFulfillers(1);
+        participant.getFulfillmentState().setNumberOfFulfillersExpected(propertyFile.getDeploymentMode().getProcessingPlantReplicationCount());
+        if(participant.getFulfillmentState().getNumberOfFulfillersExpected() > participant.getFulfillmentState().getNumberOfActualFulfillers()){
+            participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_PARTIALLY_FULFILLED);
+        }
+        httpClient.setParticipant(participant);
+        // Build Ports
         ConnectedSystemPort targetPort1 = connectedSystem.getTargetPort1();
         HTTPClientAdapter systemEndpointPort1 = newHTTPClientAdapter(targetPort1);
         externalSystem.getTargetPorts().add(systemEndpointPort1);
@@ -290,36 +319,39 @@ public class HTTPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
         //
         // Now build the Endpoint Description
         if(targetPort1.getEncryptionRequired()) {
-            if(StringUtils.isEmpty(targetPort1.getTargetPath())) {
-                httpClient.setEndpointDescription(endpointProvider.getParticipantName()+"."+"Client.HTTPS://" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue() + "/");
+            if(StringUtils.isEmpty(targetPort1.getTargetContextPath())) {
+                httpClient.setEndpointDescription(endpointProvider.getParticipantId().getName() +"."+"Client.HTTPS://" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue() + "/");
             } else {
-                httpClient.setEndpointDescription(endpointProvider.getParticipantName()+"."+"Client.HTTPS://" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue() + targetPort1.getTargetPath());
+                httpClient.setEndpointDescription(endpointProvider.getParticipantId().getName() +"."+"Client.HTTPS://" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue() + targetPort1.getTargetContextPath());
             }
         } else {
-            if(StringUtils.isEmpty(targetPort1.getTargetPath())) {
-                httpClient.setEndpointDescription(endpointProvider.getParticipantName()+"."+"Server-->HTTP://" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue() + "/");
+            if(StringUtils.isEmpty(targetPort1.getTargetContextPath())) {
+                httpClient.setEndpointDescription(endpointProvider.getParticipantId().getName() +"."+"Server-->HTTP://" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue() + "/");
             } else {
-                httpClient.setEndpointDescription(endpointProvider.getParticipantName()+"."+"Server-->HTTP://" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue() + targetPort1.getTargetPath());
+                httpClient.setEndpointDescription(endpointProvider.getParticipantId().getName() + "."+"Server-->HTTP://" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue() + targetPort1.getTargetContextPath());
             }
         }
 
         //
         // Now build the Endpoint Participant Name / Participant Display Name
         if(targetPort1.getEncryptionRequired()) {
-            httpClient.setParticipantName(endpointProvider.getParticipantName()+".Client.HTTPS." + targetPort1.getTargetPortDNSName() + "." + targetPort1.getTargetPortValue());
-            httpClient.setParticipantDisplayName("HTTPS.Client:" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue());
+            httpClient.getParticipant().getParticipantId().setName(endpointProvider.getParticipantId().getName() + ".Client.HTTPS." + targetPort1.getTargetPortDNSName() + "." + targetPort1.getTargetPortValue());
+            httpClient.getParticipant().getParticipantId().setDisplayName("HTTPS.Client:" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue());
+            httpClient.getParticipant().getParticipantId().setFullName(endpointProvider.getParticipantId().getFullName() + "." + ".Client.HTTPS." + targetPort1.getTargetPortDNSName() + "." + targetPort1.getTargetPortValue());
 
         } else {
-            httpClient.setParticipantName(endpointProvider.getParticipantName()+".Client.HTTP." + targetPort1.getTargetPortDNSName() + "." + targetPort1.getTargetPortValue());
-            httpClient.setParticipantDisplayName("HTTP.Client:" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue());
+            httpClient.getParticipant().getParticipantId().setName(endpointProvider.getParticipantId().getName() + ".Client.HTTP." + targetPort1.getTargetPortDNSName() + "." + targetPort1.getTargetPortValue());
+            httpClient.getParticipant().getParticipantId().setDisplayName("HTTP.Client:" + targetPort1.getTargetPortDNSName() + ":" + targetPort1.getTargetPortValue());
+            httpClient.getParticipant().getParticipantId().setFullName(endpointProvider.getParticipantId().getFullName() + "." + ".Client.HTTP." + targetPort1.getTargetPortDNSName() + "." + targetPort1.getTargetPortValue());
         }
+        httpClient.getParticipant().getParticipantId().setVersion(endpointProvider.getParticipantId().getVersion());
         //
         // Add the endpoint to the provider
-        endpointProvider.addEndpoint(httpClient.getComponentFDN());
+        endpointProvider.addEndpoint(httpClient.getComponentId());
         //
         // Add the endpoint to the topology cache
         getLogger().trace(".newHTTPClient(): Add the httpClient Port to the Topology Cache");
-        getTopologyIM().addTopologyNode(endpointProvider.getComponentFDN(), httpClient);
+        getTopologyIM().addTopologyNode(endpointProvider.getComponentId(), httpClient);
         //
         // We're done
         getLogger().debug(".newHTTPClient(): Exit, endpoint added");
@@ -342,6 +374,7 @@ public class HTTPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
             throw(new IllegalArgumentException("TargetPortValue is not defined in configuration file"));
         }
         systemEndpointPort.setPortNumber(connectedSystemPort.getTargetPortValue());
+        systemEndpointPort.setContextPath(connectedSystemPort.getTargetContextPath());
         IPCAdapterDefinition currentInterfaceDefinition = new IPCAdapterDefinition();
         currentInterfaceDefinition.setInterfaceFormalName(connectedSystemPort.getTargetInterfaceDefinition().getInterfaceDefinitionName());
         currentInterfaceDefinition.setInterfaceFormalVersion(connectedSystemPort.getTargetInterfaceDefinition().getInterfaceDefinitionVersion());

@@ -22,15 +22,23 @@
 package net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.base.endpoints;
 
 import net.fhirfactory.pegacorn.core.model.component.valuesets.SoftwareComponentConnectivityContextEnum;
-import net.fhirfactory.pegacorn.core.model.componentid.PegacornSystemComponentTypeTypeEnum;
-import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeRDN;
+import net.fhirfactory.pegacorn.core.model.componentid.ComponentIdType;
+import net.fhirfactory.pegacorn.core.model.componentid.SoftwareComponentTypeEnum;
 import net.fhirfactory.pegacorn.core.model.petasos.endpoint.valuesets.PetasosEndpointTopologyTypeEnum;
 import net.fhirfactory.pegacorn.core.model.petasos.ipc.PegacornCommonInterfaceNames;
+import net.fhirfactory.pegacorn.core.model.petasos.participant.PetasosParticipant;
+import net.fhirfactory.pegacorn.core.model.petasos.participant.PetasosParticipantFulfillment;
+import net.fhirfactory.pegacorn.core.model.petasos.participant.PetasosParticipantFulfillmentStatusEnum;
+import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.FileShareSinkAdapter;
+import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.FileShareSourceAdapter;
+import net.fhirfactory.pegacorn.core.model.topology.endpoints.file.FileShareSinkTopologyEndpoint;
+import net.fhirfactory.pegacorn.core.model.topology.endpoints.file.FileShareSourceTopologyEndpoint;
 import net.fhirfactory.pegacorn.core.model.topology.mode.ResilienceModeEnum;
 import net.fhirfactory.pegacorn.core.model.topology.nodes.common.EndpointProviderInterface;
 import net.fhirfactory.pegacorn.core.model.topology.nodes.external.ConnectedExternalSystemTopologyNode;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.archetypes.BaseSubsystemPropertyFile;
 import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.connectedsystems.ConnectedSystemProperties;
+import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.InteractFileShareEndpointSegment;
 import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.base.common.TopologyFactoryHelpersBase;
 import net.fhirfactory.pegacorn.deployment.topology.manager.TopologyIM;
 import net.fhirfactory.pegacorn.util.PegacornProperties;
@@ -40,11 +48,6 @@ import org.thymeleaf.util.StringUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.FileShareSinkAdapter;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.FileShareSourceAdapter;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.file.FileShareSinkTopologyEndpoint;
-import net.fhirfactory.pegacorn.core.model.topology.endpoints.file.FileShareSourceTopologyEndpoint;
-import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.common.segments.ports.interact.InteractFileShareEndpointSegment;
 
 @ApplicationScoped
 public class FileShareTopologyEndpointFactory extends TopologyFactoryHelpersBase {
@@ -94,22 +97,21 @@ public class FileShareTopologyEndpointFactory extends TopologyFactoryHelpersBase
             return (null);
         }
         String name = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.FILE_SHARE_SOURCE, endpointFunctionName);
-        TopologyNodeRDN nodeRDN = createSimpleNodeRDN(name, endpointProvider.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
-        fileShareSourceTopologyNode.setComponentRDN(nodeRDN);
+        ComponentIdType componentId = ComponentIdType.fromComponentName(name);
+        fileShareSourceTopologyNode.setComponentID(componentId);
+        fileShareSourceTopologyNode.setParentComponent(endpointProvider.getComponentId());
+        fileShareSourceTopologyNode.setVersion(endpointProvider.getVersion());
         fileShareSourceTopologyNode.setEndpointConfigurationName(fileShareSource.getName());
-        fileShareSourceTopologyNode.constructFDN(endpointProvider.getComponentFDN(), nodeRDN);
         fileShareSourceTopologyNode.setEndpointType(PetasosEndpointTopologyTypeEnum.FILE_SHARE_SOURCE);
-        fileShareSourceTopologyNode.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
+        fileShareSourceTopologyNode.setComponentType(SoftwareComponentTypeEnum.ENDPOINT);
         fileShareSourceTopologyNode.setComponentSystemRole(SoftwareComponentConnectivityContextEnum.COMPONENT_ROLE_INTERACT_INGRES);
-        fileShareSourceTopologyNode.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN);
         fileShareSourceTopologyNode.setConnectedSystemName(fileShareSource.getConnectedSystem().getSubsystemName());
-        fileShareSourceTopologyNode.setContainingNodeFDN(endpointProvider.getComponentFDN());
         fileShareSourceTopologyNode.setServer(true);
 
         FileShareSourceAdapter systemEndpoint = newFileShareSourceAdapter(fileShareSource);
         systemEndpoint.setTargetSystemName(fileShareSource.getConnectedSystem().getExternalisedServiceName());
         systemEndpoint.setEncrypted(fileShareSource.isEncrypted());
-        systemEndpoint.setEnablingTopologyEndpoint(fileShareSourceTopologyNode.getComponentID());
+        systemEndpoint.setEnablingTopologyEndpoint(fileShareSourceTopologyNode.getComponentId());
         systemEndpoint.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_KUBERNETES_MULTISITE_CLUSTERED);
         systemEndpoint.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_KUBERNETES_MULTISITE);
         systemEndpoint.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_KUBERNETES_STANDALONE);
@@ -121,12 +123,27 @@ public class FileShareTopologyEndpointFactory extends TopologyFactoryHelpersBase
 
         fileShareSourceTopologyNode.setFileShareSourceAdapter(systemEndpoint);
         fileShareSourceTopologyNode.setEndpointDescription("Server-->FILE:" + systemEndpoint.getFilePath());
-        fileShareSourceTopologyNode.setParticipantName(endpointProvider.getParticipantName() + "." + "FILE.Source." + systemEndpoint.getFilePathAlias());
-        fileShareSourceTopologyNode.setParticipantDisplayName("FILE.Source:" + systemEndpoint.getFilePathAlias());
 
-        endpointProvider.addEndpoint(fileShareSourceTopologyNode.getComponentFDN());
-        getLogger().warn(".newFileShareSourceEndpoint(): Add the {}/{} Port to the Topology Cache", fileShareSourceTopologyNode.getComponentRDN().getNodeName(), endpointFunctionName);
-        getTopologyIM().addTopologyNode(endpointProvider.getComponentFDN(), fileShareSourceTopologyNode);
+        PetasosParticipant participant = new PetasosParticipant();
+        participant.setComponentId(componentId);
+        participant.setFulfillmentState(new PetasosParticipantFulfillment());
+        participant.getFulfillmentState().getFulfillerComponents().add(componentId);
+        participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_FULLY_FULFILLED);
+        participant.getFulfillmentState().setNumberOfActualFulfillers(1);
+        participant.getFulfillmentState().setNumberOfFulfillersExpected(propertyFile.getDeploymentMode().getProcessingPlantReplicationCount());
+        if(participant.getFulfillmentState().getNumberOfFulfillersExpected() > participant.getFulfillmentState().getNumberOfActualFulfillers()){
+            participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_PARTIALLY_FULFILLED);
+        }
+        participant.getParticipantId().setSubsystemName(endpointProvider.getParticipantId().getSubsystemName());
+        participant.getParticipantId().setName(endpointProvider.getParticipantId().getName() + "." + "FILE.Source." + systemEndpoint.getFilePathAlias());
+        participant.getParticipantId().setDisplayName("FILE.Source:" + systemEndpoint.getFilePathAlias());
+        participant.getParticipantId().setVersion(endpointProvider.getParticipantId().getVersion());
+        participant.getParticipantId().setFullName(endpointProvider.getParticipantId().getFullName() + "." + "FILE.Source." + systemEndpoint.getFilePathAlias());
+        fileShareSourceTopologyNode.setParticipant(participant);
+
+        endpointProvider.addEndpoint(fileShareSourceTopologyNode.getComponentId());
+        getLogger().warn(".newFileShareSourceEndpoint(): Add the {}/{} Port to the Topology Cache", fileShareSourceTopologyNode.getComponentId().getDisplayName(), endpointFunctionName);
+        getTopologyIM().addTopologyNode(endpointProvider.getComponentId(), fileShareSourceTopologyNode);
         getLogger().debug(".newFileShareSourceEndpoint(): Exit, endpoint added->{}", fileShareSourceTopologyNode);
 
         return (fileShareSourceTopologyNode);
@@ -143,30 +160,43 @@ public class FileShareTopologyEndpointFactory extends TopologyFactoryHelpersBase
             return (null);
         }
         String name = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.FILE_SHARE_SINK, endpointFunctionName);
-        TopologyNodeRDN nodeRDN = createSimpleNodeRDN(name, endpointProvider.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
-        fileShareSinkTopologyNode.setComponentRDN(nodeRDN);
+        ComponentIdType componentId = ComponentIdType.fromComponentName(name);
+        fileShareSinkTopologyNode.setComponentID(componentId);
+        fileShareSinkTopologyNode.setVersion(endpointProvider.getVersion());
         fileShareSinkTopologyNode.setEndpointConfigurationName(fileShareSink.getName());
-        fileShareSinkTopologyNode.constructFDN(endpointProvider.getComponentFDN(), nodeRDN);
         fileShareSinkTopologyNode.setEndpointType(PetasosEndpointTopologyTypeEnum.FILE_SHARE_SINK);
-        fileShareSinkTopologyNode.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
+        fileShareSinkTopologyNode.setComponentType(SoftwareComponentTypeEnum.ENDPOINT);
         fileShareSinkTopologyNode.setComponentSystemRole(SoftwareComponentConnectivityContextEnum.COMPONENT_ROLE_INTERACT_EGRESS);
-        fileShareSinkTopologyNode.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN);
-        fileShareSinkTopologyNode.setContainingNodeFDN(endpointProvider.getComponentFDN());
         ConnectedSystemProperties connectedSystem = fileShareSink.getConnectedSystem();
         fileShareSinkTopologyNode.setConnectedSystemName(connectedSystem.getSubsystemName());
         ConnectedExternalSystemTopologyNode externalSystem = new ConnectedExternalSystemTopologyNode();
         externalSystem.setSubsystemName(connectedSystem.getSubsystemName());
+
         FileShareSinkAdapter systemEndpoint = newFileShareSinkAdapter(fileShareSink);
         externalSystem.getTargetPorts().add(systemEndpoint);
-
         fileShareSinkTopologyNode.setEndpointDescription("Client-->FILE:" + systemEndpoint.getFilePath());
-        fileShareSinkTopologyNode.setParticipantName(endpointProvider.getParticipantName() + "." + "FILE.Sink." + systemEndpoint.getFilePathAlias());
-        fileShareSinkTopologyNode.setParticipantDisplayName("FILE.Sink:" + systemEndpoint.getFilePathAlias());
-
         fileShareSinkTopologyNode.setTargetSystem(externalSystem);
-        endpointProvider.addEndpoint(fileShareSinkTopologyNode.getComponentFDN());
-        getLogger().warn(".newFileShareSinkEndpoint(): Add the {}/{} Port to the Topology Cache", fileShareSinkTopologyNode.getComponentRDN().getNodeName(), endpointFunctionName);
-        getTopologyIM().addTopologyNode(endpointProvider.getComponentFDN(), fileShareSinkTopologyNode);
+
+        PetasosParticipant participant = new PetasosParticipant();
+        participant.setComponentId(componentId);
+        participant.setFulfillmentState(new PetasosParticipantFulfillment());
+        participant.getFulfillmentState().getFulfillerComponents().add(componentId);
+        participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_FULLY_FULFILLED);
+        participant.getFulfillmentState().setNumberOfActualFulfillers(1);
+        participant.getFulfillmentState().setNumberOfFulfillersExpected(propertyFile.getDeploymentMode().getProcessingPlantReplicationCount());
+        if(participant.getFulfillmentState().getNumberOfFulfillersExpected() > participant.getFulfillmentState().getNumberOfActualFulfillers()){
+            participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_PARTIALLY_FULFILLED);
+        }
+        participant.getParticipantId().setName(endpointProvider.getParticipantId().getName() + "." + "FILE.Sink." + systemEndpoint.getFilePathAlias());
+        participant.getParticipantId().setDisplayName("FILE.Sink:" + systemEndpoint.getFilePathAlias());
+        participant.getParticipantId().setVersion(endpointProvider.getParticipantId().getVersion());
+        participant.getParticipantId().setFullName(endpointProvider.getParticipantId().getFullName() + "." + "FILE.Sink." + systemEndpoint.getFilePathAlias());
+        participant.getParticipantId().setSubsystemName(endpointProvider.getParticipantId().getSubsystemName());
+        fileShareSinkTopologyNode.setParticipant(participant);
+
+        endpointProvider.addEndpoint(fileShareSinkTopologyNode.getComponentId());
+        getLogger().warn(".newFileShareSinkEndpoint(): Add the {}/{} Port to the Topology Cache", fileShareSinkTopologyNode.getComponentId().getDisplayName(), endpointFunctionName);
+        getTopologyIM().addTopologyNode(endpointProvider.getComponentId(), fileShareSinkTopologyNode);
         getLogger().debug(".newFileShareSinkEndpoint(): Exit, endpoint added");
         return (fileShareSinkTopologyNode);
     }

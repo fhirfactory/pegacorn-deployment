@@ -1,6 +1,6 @@
 package net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.base.common;
 
-import net.fhirfactory.pegacorn.core.model.componentid.PegacornSystemComponentTypeTypeEnum;
+import net.fhirfactory.pegacorn.core.model.componentid.SoftwareComponentTypeEnum;
 import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeRDN;
 import net.fhirfactory.pegacorn.util.PegacornProperties;
 import org.slf4j.Logger;
@@ -40,7 +40,7 @@ public abstract class TopologyFactoryHelpersBase {
         return(actualHostIP);
     }
 
-    public TopologyNodeRDN createSimpleNodeRDN(String nodeName, String nodeVersion, PegacornSystemComponentTypeTypeEnum nodeType){
+    public TopologyNodeRDN createSimpleNodeRDN(String nodeName, String nodeVersion, SoftwareComponentTypeEnum nodeType){
         getLogger().debug(".createNodeRDN: Entry, nodeName->{}, nodeVersion->{}, nodeType->{}", nodeName, nodeVersion, nodeType);
         TopologyNodeRDN newRDN = new TopologyNodeRDN(nodeType, nodeName, nodeVersion);
         getLogger().debug(".createNodeRDN: Exit, newRDN->{}", newRDN);

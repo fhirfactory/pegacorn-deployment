@@ -22,12 +22,16 @@
 package net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.base.endpoints;
 
 import net.fhirfactory.pegacorn.core.model.component.valuesets.SoftwareComponentConnectivityContextEnum;
-import net.fhirfactory.pegacorn.core.model.componentid.PegacornSystemComponentTypeTypeEnum;
-import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeRDN;
+import net.fhirfactory.pegacorn.core.model.componentid.ComponentIdType;
+import net.fhirfactory.pegacorn.core.model.componentid.SoftwareComponentTypeEnum;
 import net.fhirfactory.pegacorn.core.model.petasos.endpoint.JGroupsIntegrationPointNamingUtilities;
 import net.fhirfactory.pegacorn.core.model.petasos.endpoint.valuesets.PetasosEndpointFunctionTypeEnum;
 import net.fhirfactory.pegacorn.core.model.petasos.endpoint.valuesets.PetasosEndpointTopologyTypeEnum;
 import net.fhirfactory.pegacorn.core.model.petasos.endpoint.valuesets.PetasosIntegrationPointNameEnum;
+import net.fhirfactory.pegacorn.core.model.petasos.participant.PetasosParticipant;
+import net.fhirfactory.pegacorn.core.model.petasos.participant.PetasosParticipantFulfillment;
+import net.fhirfactory.pegacorn.core.model.petasos.participant.PetasosParticipantFulfillmentStatusEnum;
+import net.fhirfactory.pegacorn.core.model.petasos.participant.id.PetasosParticipantId;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.base.IPCAdapterDefinition;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.edge.jgroups.JGroupsIntegrationPoint;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.edge.jgroups.datatypes.JGroupsAdapter;
@@ -100,39 +104,53 @@ public class JGroupsTopologyEndpointFactory extends TopologyFactoryHelpersBase {
             getLogger().debug(".addJGroupsEndpoint(): Exit, no jgroupsIPCSegment to add");
             return;
         }
-        TopologyNodeRDN nodeRDN = createSimpleNodeRDN(name, endpointProvider.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
-        jgroupsIP.setComponentRDN(nodeRDN);
+        ComponentIdType componentId = ComponentIdType.fromComponentName(name);
+        jgroupsIP.setComponentID(componentId);
+        jgroupsIP.setVersion(endpointProvider.getVersion());
         jgroupsIP.setEndpointConfigurationName(jgroupsIPCSegment.getName());
         jgroupsIP.setActualHostIP(getActualHostIP());
-        jgroupsIP.constructFDN(endpointProvider.getComponentFDN(), nodeRDN);
         jgroupsIP.setEndpointType(petasosEndpointType);
         NetworkSecurityZoneEnum securityZone = NetworkSecurityZoneEnum.fromDisplayName(petasosEnabledSubsystemPropertyFile.getDeploymentZone().getSecurityZoneName());
         jgroupsIP.setSecurityZone(securityZone);
         jgroupsIP.setNameSpace(petasosEnabledSubsystemPropertyFile.getDeploymentZone().getNameSpace());
-        jgroupsIP.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
         jgroupsIP.setComponentSystemRole(SoftwareComponentConnectivityContextEnum.COMPONENT_ROLE_SUBSYSTEM_EDGE);
-        jgroupsIP.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
+        jgroupsIP.setComponentType(SoftwareComponentTypeEnum.ENDPOINT);
         jgroupsIP.setServer(true);
         jgroupsIP.setResilienceMode(resilienceMode);
         jgroupsIP.setConcurrencyMode(concurrencyMode);
-        jgroupsIP.setContainingNodeFDN(endpointProvider.getComponentFDN());
-        String subsystemParticipantName =petasosEnabledSubsystemPropertyFile.getSubsystemInstant().getParticipantName();
-        jgroupsIP.setSubsystemParticipantName(subsystemParticipantName);
         String site = petasosEnabledSubsystemPropertyFile.getSubsystemInstant().getSite();
         jgroupsIP.setDeploymentSite(site);
         jgroupsIP.setInterfaceFunction(function);
-        String channelName = getJGroupsNamingUtilities().buildChannelName(site, securityZone.getDisplayName(), subsystemParticipantName, function.getDisplayName(), getJGroupsNamingUtilities().getCurrentUUID());
-        jgroupsIP.setChannelName(channelName);
-        jgroupsIP.setEnablingProcessingPlantId(processingPlantNode.getComponentID());
-        String clusterName = propertyFile.getSubsystemInstant().getClusterServiceName();
+        jgroupsIP.setEnablingProcessingPlantId(processingPlantNode.getComponentId());
         jgroupsIP.setEndpointDescription(jgroupsIPCSegment.getPortType());
+        // Build Petasos Participant
+        PetasosParticipant participant = new PetasosParticipant();
+        participant.setComponentId(componentId);
+        participant.setFulfillmentState(new PetasosParticipantFulfillment());
+        participant.getFulfillmentState().getFulfillerComponents().add(componentId);
+        participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_FULLY_FULFILLED);
+        participant.getFulfillmentState().setNumberOfActualFulfillers(1);
+        participant.getFulfillmentState().setNumberOfFulfillersExpected(propertyFile.getDeploymentMode().getProcessingPlantReplicationCount());
+        if(participant.getFulfillmentState().getNumberOfFulfillersExpected() > participant.getFulfillmentState().getNumberOfActualFulfillers()){
+            participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_PARTIALLY_FULFILLED);
+        }
+        String subsystemParticipantName = petasosEnabledSubsystemPropertyFile.getSubsystemInstant().getParticipantName();
+        participant.getParticipantId().setSubsystemName(subsystemParticipantName);
+        String clusterName = propertyFile.getSubsystemInstant().getClusterServiceName();
         if(StringUtils.isEmpty(clusterName)){
             getLogger().error(".addInterZoneRepeaterJGroupsIntegrationPoint(): Bad definition of Petasos IPC Endpoint->{}", jgroupsIPCSegment.getName());
-            jgroupsIP.setParticipantName("unknown");
+            participant.getParticipantId().setName("unknown");
         } else {
-            jgroupsIP.setParticipantName(clusterName);
+            participant.getParticipantId().setName(clusterName);
         }
+        participant.getParticipantId().setDisplayName(endpointProvider.getParticipantId().getDisplayName() + "." + clusterName);
+        participant.getParticipantId().setFullName(endpointProvider.getParticipantId().getFullName() + "." + clusterName);
+        participant.getParticipantId().setVersion(endpointProvider.getParticipantId().getVersion());
+        jgroupsIP.setParticipant(participant);
         jgroupsIP.setEndpointDescription(jgroupsIPCSegment.getPortType());
+
+        String channelName = getJGroupsNamingUtilities().buildChannelName(site, securityZone.getDisplayName(), subsystemParticipantName, function.getDisplayName(), getJGroupsNamingUtilities().getCurrentUUID());
+        jgroupsIP.setChannelName(channelName);
 
         JGroupsAdapter adapter = new JGroupsAdapter();
         adapter.setPortNumber(jgroupsIPCSegment.getServerPort());
@@ -153,9 +171,9 @@ public class JGroupsTopologyEndpointFactory extends TopologyFactoryHelpersBase {
         adapter.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_CLUSTERED);
         adapter.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_MULTISITE_CLUSTERED);
         jgroupsIP.setJGroupsAdapter(adapter);
-        endpointProvider.addEndpoint(jgroupsIP.getComponentFDN());
+        endpointProvider.addEndpoint(jgroupsIP.getComponentId());
         getLogger().trace(".addJGroupsEndpoint(): Add the InterZone JGroups IPC Port to the Topology Cache");
-        getTopologyIM().addTopologyNode(endpointProvider.getComponentFDN(), jgroupsIP);
+        getTopologyIM().addTopologyNode(endpointProvider.getComponentId(), jgroupsIP);
         getLogger().debug(".addJGroupsEndpoint(): Exit, endpoint added");
     }
 
@@ -186,41 +204,75 @@ public class JGroupsTopologyEndpointFactory extends TopologyFactoryHelpersBase {
             getLogger().debug(".addJGroupsIntegrationPoint(): Exit, no jgroupsIPCSegment to add");
             return;
         }
-        TopologyNodeRDN nodeRDN = createSimpleNodeRDN(name, endpointProvider.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
-        jgroupsIP.setComponentRDN(nodeRDN);
+        ComponentIdType componentId = ComponentIdType.fromComponentName(name);
+        jgroupsIP.setComponentID(componentId);
+        jgroupsIP.setVersion(endpointProvider.getVersion());
         jgroupsIP.setEndpointConfigurationName(jgroupsIPCSegment.getName());
         jgroupsIP.setActualHostIP(getActualHostIP());
-        jgroupsIP.constructFDN(endpointProvider.getComponentFDN(), nodeRDN);
         jgroupsIP.setEndpointType(petasosEndpointType);
         NetworkSecurityZoneEnum securityZone = NetworkSecurityZoneEnum.fromDisplayName(petasosEnabledSubsystemPropertyFile.getDeploymentZone().getSecurityZoneName());
         jgroupsIP.setSecurityZone(securityZone);
         jgroupsIP.setNameSpace(petasosEnabledSubsystemPropertyFile.getDeploymentZone().getNameSpace());
-        jgroupsIP.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
         jgroupsIP.setComponentSystemRole(SoftwareComponentConnectivityContextEnum.COMPONENT_ROLE_SUBSYSTEM_EDGE);
-        jgroupsIP.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
+        jgroupsIP.setComponentType(SoftwareComponentTypeEnum.ENDPOINT);
         jgroupsIP.setServer(true);
         jgroupsIP.setResilienceMode(resilienceMode);
         jgroupsIP.setConcurrencyMode(concurrencyMode);
-        jgroupsIP.setContainingNodeFDN(endpointProvider.getComponentFDN());
-        String subsystemParticipantName = petasosEnabledSubsystemPropertyFile.getSubsystemInstant().getParticipantName();
-        jgroupsIP.setSubsystemParticipantName(subsystemParticipantName);
-        String site = petasosEnabledSubsystemPropertyFile.getSubsystemInstant().getSite();
 
+        String site = petasosEnabledSubsystemPropertyFile.getSubsystemInstant().getSite();
         jgroupsIP.setDeploymentSite(site);
         jgroupsIP.setInterfaceFunction(function);
+        // Build Participant
+        PetasosParticipantId participantId = new PetasosParticipantId();
+        participantId.setName(name);
+        participantId.setFullName(processingPlantNode.getParticipantId().getFullName() + "." + name);
+        participantId.setDisplayName(name);
+        participantId.setVersion(endpointProvider.getVersion());
+        String subsystemParticipantName = petasosEnabledSubsystemPropertyFile.getSubsystemInstant().getParticipantName();
+        participantId.setSubsystemName(subsystemParticipantName);
+        PetasosParticipant participant = new PetasosParticipant();
+        participant.setComponentId(componentId);
+        participant.setParticipantId(participantId);
+        participant.setFulfillmentState(new PetasosParticipantFulfillment());
+        participant.getFulfillmentState().getFulfillerComponents().add(componentId);
+        participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_FULLY_FULFILLED);
+        participant.getFulfillmentState().setNumberOfActualFulfillers(1);
+        participant.getFulfillmentState().setNumberOfFulfillersExpected(propertyFile.getDeploymentMode().getProcessingPlantReplicationCount());
+        if(participant.getFulfillmentState().getNumberOfFulfillersExpected() > participant.getFulfillmentState().getNumberOfActualFulfillers()){
+            participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_PARTIALLY_FULFILLED);
+        }
+        jgroupsIP.setEnablingProcessingPlantId(processingPlantNode.getComponentId());
+        jgroupsIP.setEndpointDescription(jgroupsIPCSegment.getPortType());
+        jgroupsIP.setParticipant(participant);
+
+        switch(function){
+            case PETASOS_MESSAGING_ENDPOINT:
+                jgroupsIP.setConfigurationFileName(propertyFile.getDeploymentMode().getPetasosIPCStackConfigFile());
+                break;
+            case PETASOS_SUBSCRIPTIONS_ENDPOINT:
+                jgroupsIP.setConfigurationFileName(propertyFile.getDeploymentMode().getPetasosSubscriptionStackConfigFile());
+                break;
+            case PETASOS_INTERCEPTION_ENDPOINT:
+                jgroupsIP.setConfigurationFileName(propertyFile.getDeploymentMode().getPetasosInterceptionStackConfigFile());
+                break;
+            case PETASOS_TASKING_ENDPOINT:
+                jgroupsIP.setConfigurationFileName(propertyFile.getDeploymentMode().getPetasosTaskingStackConfigFile());
+                break;
+            case PETASOS_AUDIT_ENDPOINT:
+                jgroupsIP.setConfigurationFileName(propertyFile.getDeploymentMode().getPetasosAuditStackConfigFile());
+                break;
+            case PETASOS_METRICS_ENDPOINT:
+                jgroupsIP.setConfigurationFileName(propertyFile.getDeploymentMode().getPetasosMetricsStackConfigFile());
+                break;
+            case PETASOS_TOPOLOGY_ENDPOINT:
+                jgroupsIP.setConfigurationFileName(propertyFile.getDeploymentMode().getPetasosTopologyStackConfigFile());
+                break;
+        }
+
         String channelName = getJGroupsNamingUtilities().buildChannelName(site, securityZone.getDisplayName(), subsystemParticipantName, function.getDisplayName(), getJGroupsNamingUtilities().getCurrentUUID());
         jgroupsIP.setChannelName(channelName);
         getLogger().info(".addJGroupsIntegrationPoint(): channelName->{}", jgroupsIP.getChannelName());
-        jgroupsIP.setEnablingProcessingPlantId(processingPlantNode.getComponentID());
-        PetasosIntegrationPointNameEnum endpointName = PetasosIntegrationPointNameEnum.fromConfigName(jgroupsIPCSegment.getName());
-        if(endpointName == null){
-            getLogger().error(".addInterZoneRepeaterJGroupsIntegrationPoint(): Bad definition of Petasos IPC Endpoint->{}", jgroupsIPCSegment.getName());
-            jgroupsIP.setParticipantName("unknown");
-        } else {
-            jgroupsIP.setParticipantName(endpointProvider.getParticipantName()+"."+endpointName.getParticipantName());
-        }
-        jgroupsIP.setEndpointDescription(jgroupsIPCSegment.getPortType());
-        jgroupsIP.setParticipantDisplayName(jgroupsIP.getParticipantName());
+        // Build Adapter Set
         JGroupsAdapter adapter = new JGroupsAdapter();
         adapter.setPortNumber(jgroupsIPCSegment.getTargetPortValue());
         adapter.setHostName(jgroupsIPCSegment.getTargetHostName());
@@ -240,9 +292,9 @@ public class JGroupsTopologyEndpointFactory extends TopologyFactoryHelpersBase {
         adapter.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_CLUSTERED);
         adapter.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_MULTISITE_CLUSTERED);
         jgroupsIP.setJGroupsAdapter(adapter);
-        endpointProvider.addEndpoint(jgroupsIP.getComponentFDN());
+        endpointProvider.addEndpoint(jgroupsIP.getComponentId());
         getLogger().trace(".addJGroupsIntegrationPoint(): Add the InterZone JGroups IPC Port to the Topology Cache");
-        getTopologyIM().addTopologyNode(endpointProvider.getComponentFDN(), jgroupsIP);
+        getTopologyIM().addTopologyNode(endpointProvider.getComponentId(), jgroupsIP);
         getLogger().info(".addJGroupsIntegrationPoint(): Exit, integrationPoint added, jgroupsIP->{}", jgroupsIP);
     }
 }

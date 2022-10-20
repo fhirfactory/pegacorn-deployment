@@ -23,10 +23,14 @@
  */
 package net.fhirfactory.pegacorn.deployment.topology.factories.archetypes;
 
-import net.fhirfactory.pegacorn.core.model.componentid.PegacornSystemComponentTypeTypeEnum;
-import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeRDN;
-import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.interfaces.SolutionNodeFactoryInterface;
+import net.fhirfactory.pegacorn.core.model.componentid.ComponentIdType;
+import net.fhirfactory.pegacorn.core.model.componentid.SoftwareComponentTypeEnum;
+import net.fhirfactory.pegacorn.core.model.petasos.endpoint.valuesets.PetasosIntegrationPointNameEnum;
+import net.fhirfactory.pegacorn.core.model.petasos.participant.PetasosParticipant;
+import net.fhirfactory.pegacorn.core.model.petasos.participant.PetasosParticipantFulfillment;
+import net.fhirfactory.pegacorn.core.model.petasos.participant.PetasosParticipantFulfillmentStatusEnum;
 import net.fhirfactory.pegacorn.core.model.topology.nodes.SolutionTopologyNode;
+import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.interfaces.SolutionNodeFactoryInterface;
 import org.slf4j.Logger;
 
 import javax.annotation.PostConstruct;
@@ -102,11 +106,22 @@ public abstract class SolutionNodeTopologyFactory implements SolutionNodeFactory
     public SolutionTopologyNode newSolutionNode(){
         getLogger().debug(".buildSolutionNode(): Entry");
         SolutionTopologyNode solution = new SolutionTopologyNode();
-        TopologyNodeRDN nodeRDN = new TopologyNodeRDN(PegacornSystemComponentTypeTypeEnum.SOLUTION, specifySystemName(), specifySystemVersion() );
-        solution.constructFDN(null, nodeRDN);
-        solution.constructFunctionFDN(null,nodeRDN );
-        solution.setComponentRDN(nodeRDN);
-        solution.setComponentType(PegacornSystemComponentTypeTypeEnum.SOLUTION);
+        ComponentIdType componentId = ComponentIdType.fromComponentName(specifySystemName());
+        solution.setComponentID(componentId);
+        solution.setVersion(specifySystemVersion());
+        PetasosParticipant participant = new PetasosParticipant();
+        participant.setComponentId(componentId);
+        participant.setFulfillmentState(new PetasosParticipantFulfillment());
+        participant.getFulfillmentState().getFulfillerComponents().add(componentId);
+        participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_FULLY_FULFILLED);
+        participant.getFulfillmentState().setNumberOfActualFulfillers(1);
+        participant.getFulfillmentState().setNumberOfFulfillersExpected(1);
+        participant.getParticipantId().setName(specifySystemName());
+        participant.getParticipantId().setDisplayName(specifySystemName());
+        participant.getParticipantId().setFullName(specifySystemName());
+        participant.getParticipantId().setVersion(specifySystemVersion());
+        solution.setParticipant(participant);
+        solution.setComponentType(SoftwareComponentTypeEnum.SOLUTION);
         getLogger().debug(".buildSolutionNode(): Exit, solution ->{}", solution);
         return(solution);
     }

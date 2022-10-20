@@ -24,17 +24,16 @@ package net.fhirfactory.pegacorn.deployment.topology.manager.cache;
 import net.fhirfactory.pegacorn.core.constants.systemwide.DeploymentSystemIdentificationInterface;
 import net.fhirfactory.pegacorn.core.model.component.SoftwareComponent;
 import net.fhirfactory.pegacorn.core.model.componentid.ComponentIdType;
-import net.fhirfactory.pegacorn.core.model.componentid.PegacornSystemComponentTypeTypeEnum;
+import net.fhirfactory.pegacorn.core.model.componentid.SoftwareComponentTypeEnum;
 import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeFDN;
-import net.fhirfactory.pegacorn.core.model.generalid.FDNToken;
 import net.fhirfactory.pegacorn.core.model.topology.mode.NetworkSecurityZoneEnum;
 import net.fhirfactory.pegacorn.core.model.topology.nodes.SolutionTopologyNode;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.*;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -48,31 +47,49 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
     private static final Logger LOG = LoggerFactory.getLogger(TopologyNodesDM.class);
 
     private SolutionTopologyNode deploymentSolution;
-    private ConcurrentHashMap<TopologyNodeFDN, SoftwareComponent> fdnNodeSetMap;
-    private ConcurrentHashMap<ComponentIdType, SoftwareComponent> idNodeSetMap;
+    private ConcurrentHashMap<ComponentIdType, SoftwareComponent> nodeSet;
     private Object nodeSetLock;
+
+    //
+    // Constructor(s)
+    //
 
     public TopologyNodesDM() {
         LOG.debug(".TopologyDM(): Constructor initialisation");
         this.deploymentSolution = null;
-        this.fdnNodeSetMap = new ConcurrentHashMap<TopologyNodeFDN, SoftwareComponent>();
-        this.idNodeSetMap = new ConcurrentHashMap<>();
+        this.nodeSet = new ConcurrentHashMap<>();
         this.nodeSetLock = new Object();
     }
 
-    private void insertOrOverwriteTopologyNode(SolutionTopologyNode node){
-        LOG.debug(".insertOrOverwriteTopologyNode(): Entry");
-        synchronized (nodeSetLock) {
-            if (fdnNodeSetMap.containsKey(node.getComponentFDN())) {
-                fdnNodeSetMap.remove(node.getComponentFDN());
-            }
-            fdnNodeSetMap.put(node.getComponentFDN(), node);
-        }
-        LOG.debug(".insertOrOverwriteTopologyNode(): Exit");
+    //
+    // Getters (and Setters)
+    //
+
+    protected ConcurrentHashMap<ComponentIdType, SoftwareComponent> getNodeSet(){
+        return(this.nodeSet);
+    }
+
+    protected Object getNodeSetLock(){
+        return(this.nodeSetLock);
     }
 
     public SolutionTopologyNode getDeploymentSolution() {
         return deploymentSolution;
+    }
+
+    //
+    // Business Methods
+    //
+
+    private void insertOrOverwriteTopologyNode(SolutionTopologyNode node){
+        LOG.debug(".insertOrOverwriteTopologyNode(): Entry");
+        synchronized (getNodeSetLock()) {
+            if (getNodeSet().containsKey(node.getComponentId())) {
+                getNodeSet().remove(node.getComponentId());
+            }
+            getNodeSet().put(node.getComponentId(), node);
+        }
+        LOG.debug(".insertOrOverwriteTopologyNode(): Exit");
     }
 
     public void setDeploymentSolution(SolutionTopologyNode deploymentSolution) {
@@ -84,16 +101,16 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
 
     @Override
     public String getSystemName() {
-        return (getDeploymentSolution().getComponentFDN().extractRDNForNodeType(PegacornSystemComponentTypeTypeEnum.SOLUTION).getNodeName());
+        return (getDeploymentSolution().getParticipant().getParticipantId().getName());
     }
 
     @Override
     public String getSystemVersion() {
-        return (getDeploymentSolution().getComponentFDN().extractRDNForNodeType(PegacornSystemComponentTypeTypeEnum.SOLUTION).getNodeVersion());
+        return (getDeploymentSolution().getVersion());
     }
 
-    public FDNToken getSystemIdentifier() {
-        return (getDeploymentSolution().getComponentFDN().toTypeBasedFDN().getToken());
+    public String getSystemIdentifier() {
+        return (getDeploymentSolution().getComponentId().getDisplayName());
     }
 
     @Override
@@ -117,54 +134,26 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
         if (newElement == null) {
             throw (new IllegalArgumentException(".addTopologyNode(): newElement is null"));
         }
-        if (newElement.getComponentFDN() == null) {
+        if (newElement.getComponentId() == null) {
             throw (new IllegalArgumentException(".addTopologyNode(): bad elementID within newElement"));
         }
-        synchronized (nodeSetLock) {
+        synchronized (getNodeSetLock()) {
             ComponentIdType componentId = null;
-            if(this.fdnNodeSetMap.containsKey(newElement.getComponentFDN())){
-                SoftwareComponent node = this.fdnNodeSetMap.get(newElement.getComponentFDN());
+            if(getNodeSet().containsKey(newElement.getComponentId())){
+                SoftwareComponent node = getNodeSet().get(newElement.getComponentId());
                 if(node != null){
-                    componentId = node.getComponentID();
+                    componentId = node.getComponentId();
                 }
-                this.fdnNodeSetMap.remove(newElement.getComponentFDN());
+                getNodeSet().remove(newElement.getComponentId());
             }
             if(componentId != null){
-                if(this.idNodeSetMap.containsKey(componentId)) {
-                    this.idNodeSetMap.remove(componentId);
+                if(this.nodeSet.containsKey(componentId)) {
+                    this.nodeSet.remove(componentId);
                 }
             }
-            this.idNodeSetMap.put(newElement.getComponentID(), newElement);
-            this.fdnNodeSetMap.put(newElement.getComponentFDN(), newElement);
+            getNodeSet().put(newElement.getComponentId(), newElement);
         }
         LOG.debug(".addTopologyNode(): Exit");
-    }
-
-    /**
-     *
-     * @param elementID
-     */
-    public void deleteTopologyNode(TopologyNodeFDN elementID) {
-        LOG.debug(".deleteTopologyNode(): Entry, elementID --> {}", elementID);
-        if (elementID == null) {
-            throw (new IllegalArgumentException(".removeNode(): elementID is null"));
-        }
-        synchronized (nodeSetLock){
-            if(this.fdnNodeSetMap.containsKey(elementID)){
-                this.fdnNodeSetMap.remove(elementID);
-            }
-            SoftwareComponent node = this.fdnNodeSetMap.get(elementID);
-            ComponentIdType componentId = null;
-            if(node != null){
-                componentId = node.getComponentID();
-            }
-            if(componentId != null) {
-                if (idNodeSetMap.containsKey(componentId)){
-                    idNodeSetMap.remove(componentId);
-                }
-            }
-        }
-        LOG.debug(".deleteTopologyNode(): Exit");
     }
 
     /**
@@ -176,19 +165,10 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
         if (componentId == null) {
             throw (new IllegalArgumentException(".removeNode(): elementID is null"));
         }
-        synchronized (nodeSetLock){
+        synchronized (getNodeSetLock()){
             TopologyNodeFDN topologyNodeFDN = null;
-            if(this.idNodeSetMap.containsKey(componentId)){
-                SoftwareComponent node = idNodeSetMap.get(componentId);
-                if(node != null) {
-                    topologyNodeFDN = node.getComponentFDN();
-                }
-                this.idNodeSetMap.remove(componentId);
-            }
-            if(topologyNodeFDN != null){
-                if(fdnNodeSetMap.containsKey(topologyNodeFDN)){
-                    this.fdnNodeSetMap.remove(topologyNodeFDN);
-                }
+            if(this.nodeSet.containsKey(componentId)){
+                this.nodeSet.remove(componentId);
             }
         }
         LOG.debug(".deleteTopologyNode(): Exit");
@@ -201,36 +181,17 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
     public Set<SoftwareComponent> getTopologyNodeSet() {
         LOG.debug(".getTopologyNodeSet(): Entry");
         LinkedHashSet<SoftwareComponent> elementSet = new LinkedHashSet<SoftwareComponent>();
-        if (this.fdnNodeSetMap.isEmpty()) {
+        if (getNodeSet().isEmpty()) {
             LOG.debug(".getTopologyNodeSet(): Exit, The module map is empty, returning null");
             return (null);
         }
-        synchronized (nodeSetLock) {
-            elementSet.addAll(this.fdnNodeSetMap.values());
+        synchronized (getNodeSetLock()) {
+            elementSet.addAll(getNodeSet().values());
         }
         if (LOG.isDebugEnabled()) {
             LOG.debug(".getTopologyNodeSet(): Exit, returning an element set, size --> {}", elementSet.size());
         }
         return (elementSet);
-    }
-
-    /**
-     *
-     * @param nodeFDN
-     * @return
-     */
-    public SoftwareComponent getSoftwareComponent(TopologyNodeFDN nodeFDN) {
-        LOG.debug(".getSoftwareComponent(): Entry, nodeFDN --> {}", nodeFDN);
-        if (nodeFDN == null) {
-            LOG.debug(".getSoftwareComponent(): Exit, provided a null nodeFDN , so returning null");
-            return (null);
-        }
-        SoftwareComponent retrievedNode = null;
-        synchronized (nodeSetLock) {
-            retrievedNode = this.fdnNodeSetMap.get(nodeFDN);
-        }
-        LOG.debug(".getSoftwareComponent(): Exit, retrievedNode->{}", retrievedNode);
-        return (retrievedNode);
     }
 
     public SoftwareComponent getSoftwareComponent(ComponentIdType nodeId) {
@@ -240,8 +201,8 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
             return (null);
         }
         SoftwareComponent retrievedNode = null;
-        synchronized (nodeSetLock) {
-            retrievedNode = this.idNodeSetMap.get(nodeId);
+        synchronized (getNodeSetLock()) {
+            retrievedNode = getNodeSet().get(nodeId);
         }
         LOG.debug(".getSoftwareComponent(): Exit, retrievedNode->{}", retrievedNode);
         return (retrievedNode);
@@ -259,46 +220,72 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
         return(stringsAreEqual);
     }
 
-    public List<SoftwareComponent> getSoftwareComponent(PegacornSystemComponentTypeTypeEnum nodeType, String nodeName, String nodeVersion){
-        LOG.debug(".getSoftwareComponent(): Entry, nodeType->{}, nodeName->{}, nodeVersion->{}", nodeType, nodeName, nodeVersion);
+    public List<SoftwareComponent> getSoftwareComponent(SoftwareComponentTypeEnum nodeType, String participantName, String participantVersion){
+        LOG.debug(".getSoftwareComponent(): Entry, nodeType->{}, participantName->{}, participantVersion->{}", nodeType, participantName, participantVersion);
+
         ArrayList<SoftwareComponent> nodeList = new ArrayList<>();
-        Collection<SoftwareComponent> topologyNodes= null;
-        LOG.trace(".getSoftwareComponent(): Getting the set of existing node FDNs - start");
-        synchronized (nodeSetLock) {
-            topologyNodes = fdnNodeSetMap.values();
+        Collection<SoftwareComponent> topologyNodes= new ArrayList<>();
+
+        if(nodeType == null){
+            LOG.debug(".getSoftwareComponent(): Exit, provided nodeType is null");
+            return(nodeList);
         }
-        LOG.trace(".getSoftwareComponent(): Getting the set of existing node FDNs - End");
-        LOG.trace(".getSoftwareComponent(): Now interating through to see if we can found the required node");
+        if(StringUtils.isEmpty(participantName)){
+            LOG.debug(".getSoftwareComponent(): Exit, provided participantName is empty");
+            return (nodeList);
+        }
+
+        LOG.trace(".getSoftwareComponent(): [Get the set of existing SoftwareComponents] Start");
+        synchronized (nodeSetLock) {
+            topologyNodes.addAll(getNodeSet().values());
+        }
+        LOG.trace(".getSoftwareComponent(): [Get the set of existing SoftwareComponents] Finish");
+
+        LOG.trace(".getSoftwareComponent(): [Iterating through SoftwareComponents List for Matching Name/Version] Start");
         for (SoftwareComponent currentNode: topologyNodes) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace(".getSoftwareComponent(): Search Cache Entry : nodeRDN->{}, nodeComponentType->{}", currentNode.getComponentRDN(), currentNode.getComponentType());
-            }
+            boolean nodeNameMatches = false;
+            boolean nodeVersionMatches = false;
+            boolean nodeTypeMatches = false;
             LOG.trace(".getSoftwareComponent(): Comparing nodeType: Start");
-            boolean nodeTypeMatches = nodeType.equals(currentNode.getComponentType());
+            nodeTypeMatches = nodeType.equals(currentNode.getComponentType());
             LOG.trace(".getSoftwareComponent(): Comparing nodeType: Finish, result->{}", nodeTypeMatches);
-            LOG.trace(".getSoftwareComponent(): Comparing nodeName: Start");
-            boolean nodeNameMatches = nodeName.contentEquals(currentNode.getComponentRDN().getNodeName());
-            LOG.trace(".getSoftwareComponent(): Comparing nodeName: Finish, result->{}", nodeNameMatches);
-            LOG.trace(".getSoftwareComponent(): Comparing nodeName: Version");
-            boolean nodeVersionMatches = nodeVersion.contentEquals(currentNode.getComponentRDN().getNodeVersion());
-            LOG.trace(".getSoftwareComponent(): Comparing nodeVersion: Finish, result->{}", nodeVersionMatches);
+            if(nodeTypeMatches) {
+                LOG.trace(".getSoftwareComponent(): Comparing nodeName: Start");
+                nodeNameMatches = participantName.contentEquals(currentNode.getParticipant().getParticipantId().getName());
+                LOG.trace(".getSoftwareComponent(): Comparing nodeName: Finish, result->{}", nodeNameMatches);
+                LOG.trace(".getSoftwareComponent(): Comparing nodeName: Version");
+                if(StringUtils.isNotEmpty(participantVersion)) {
+                    if (currentNode.hasParticipant()) {
+                        if (currentNode.getParticipant().hasParticipantId()) {
+                            if(StringUtils.isNotEmpty(currentNode.getParticipant().getParticipantId().getVersion())) {
+                                nodeVersionMatches = participantVersion.contentEquals(currentNode.getParticipant().getParticipantId().getVersion());
+                            }
+                        }
+                    }
+                } else {
+                    nodeVersionMatches = true;
+                }
+                LOG.trace(".getSoftwareComponent(): Comparing nodeVersion: Finish, result->{}", nodeVersionMatches);
+            }
             if (nodeTypeMatches && nodeNameMatches && nodeVersionMatches) {
                 LOG.trace(".getSoftwareComponent(): Node found!!! Adding to search result!");
                 nodeList.add(currentNode);
             }
         }
+        LOG.trace(".getSoftwareComponent(): [Iterating through SoftwareComponents List for Matching Name/Version] Finish");
+
         LOG.trace(".getSoftwareComponent(): Exit");
         return(nodeList);
     }
 
-    public NetworkSecurityZoneEnum getDeploymentNetworkSecurityZone(String nodeName){
-        Collection<SoftwareComponent> nodeCollection = null;
+    public NetworkSecurityZoneEnum getDeploymentNetworkSecurityZone(String subsystemName){
+        Collection<SoftwareComponent> nodeCollection = new ArrayList<>();
         synchronized (nodeSetLock) {
-            nodeCollection = fdnNodeSetMap.values();
+            nodeCollection.addAll(getNodeSet().values());
         }
         for(SoftwareComponent currentNode: nodeCollection){
-            boolean nameSame = currentNode.getComponentRDN().getNodeName().contentEquals(nodeName);
-            boolean isProcessingPlant = currentNode.getComponentType().equals(PegacornSystemComponentTypeTypeEnum.PROCESSING_PLANT);
+            boolean nameSame = currentNode.getParticipant().getParticipantId().getSubsystemName().contentEquals(subsystemName);
+            boolean isProcessingPlant = currentNode.getComponentType().equals(SoftwareComponentTypeEnum.PROCESSING_PLANT);
             if(nameSame && isProcessingPlant){
                 return(currentNode.getSecurityZone());
             }

@@ -22,10 +22,13 @@
 package net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.base.endpoints;
 
 import net.fhirfactory.pegacorn.core.model.component.valuesets.SoftwareComponentConnectivityContextEnum;
-import net.fhirfactory.pegacorn.core.model.componentid.PegacornSystemComponentTypeTypeEnum;
-import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeRDN;
+import net.fhirfactory.pegacorn.core.model.componentid.ComponentIdType;
+import net.fhirfactory.pegacorn.core.model.componentid.SoftwareComponentTypeEnum;
 import net.fhirfactory.pegacorn.core.model.petasos.endpoint.valuesets.PetasosEndpointTopologyTypeEnum;
 import net.fhirfactory.pegacorn.core.model.petasos.ipc.PegacornCommonInterfaceNames;
+import net.fhirfactory.pegacorn.core.model.petasos.participant.PetasosParticipant;
+import net.fhirfactory.pegacorn.core.model.petasos.participant.PetasosParticipantFulfillment;
+import net.fhirfactory.pegacorn.core.model.petasos.participant.PetasosParticipantFulfillmentStatusEnum;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.adapters.base.IPCAdapterDefinition;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.mllp.MLLPClientEndpoint;
 import net.fhirfactory.pegacorn.core.model.topology.endpoints.mllp.MLLPServerEndpoint;
@@ -50,7 +53,6 @@ import org.thymeleaf.util.StringUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.List;
 
 @ApplicationScoped
 public class MLLPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
@@ -98,17 +100,16 @@ public class MLLPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
             return(null);
         }
         String name = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.MLLP_SERVER, endpointFunctionName);
-        TopologyNodeRDN nodeRDN = createSimpleNodeRDN(name, endpointProvider.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
-        mllpServerTopologyNode.setComponentRDN(nodeRDN);
+        ComponentIdType componentId = ComponentIdType.fromComponentName(name);
+        mllpServerTopologyNode.setComponentID(componentId);
+        mllpServerTopologyNode.setParentComponent(endpointProvider.getComponentId());
+        mllpServerTopologyNode.setVersion(endpointProvider.getVersion());
         mllpServerTopologyNode.setEndpointConfigurationName(mllpServerPort.getName());
         mllpServerTopologyNode.setActualHostIP(getActualHostIP());
-        mllpServerTopologyNode.constructFDN(endpointProvider.getComponentFDN(), nodeRDN);
         mllpServerTopologyNode.setEndpointType(PetasosEndpointTopologyTypeEnum.MLLP_SERVER);
-        mllpServerTopologyNode.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
+        mllpServerTopologyNode.setComponentType(SoftwareComponentTypeEnum.ENDPOINT);
         mllpServerTopologyNode.setComponentSystemRole(SoftwareComponentConnectivityContextEnum.COMPONENT_ROLE_INTERACT_INGRES);
-        mllpServerTopologyNode.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
         mllpServerTopologyNode.setConnectedSystemName(mllpServerPort.getConnectedSystem().getSubsystemName());
-        mllpServerTopologyNode.setContainingNodeFDN(endpointProvider.getComponentFDN());
         for(ParameterNameValuePairType otherConfigurationParameter: mllpServerPort.getOtherConfigurationParameters()){
             mllpServerTopologyNode.getOtherConfigurationParameters().put(otherConfigurationParameter.getParameterName(), otherConfigurationParameter.getParameterValue());
         }
@@ -120,7 +121,7 @@ public class MLLPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
         port.setServicePortValue(mllpServerPort.getServicePort());
         port.setTargetSystemName(mllpServerPort.getConnectedSystem().getExternalisedServiceName());
         port.setEncrypted(mllpServerPort.isEncrypted());
-        port.setEnablingTopologyEndpoint(mllpServerTopologyNode.getComponentID());
+        port.setEnablingTopologyEndpoint(mllpServerTopologyNode.getComponentId());
         for(ParameterNameValuePairType otherConfigurationParameter: mllpServerPort.getOtherConfigurationParameters()){
             port.getAdditionalParameters().put(otherConfigurationParameter.getParameterName(), otherConfigurationParameter.getParameterValue());
         }
@@ -140,11 +141,27 @@ public class MLLPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
         port.getSupportedDeploymentModes().add(ResilienceModeEnum.RESILIENCE_MODE_MULTISITE_CLUSTERED);
         mllpServerTopologyNode.setMLLPServerAdapter(port);
         mllpServerTopologyNode.setEndpointDescription("Server-->MLLP:"+propertyFile.getLoadBalancer().getIpAddress()+":"+Integer.toString(port.getServicePortValue()));
-        mllpServerTopologyNode.setParticipantName(endpointProvider.getParticipantName()+"."+"MLLP.Server."+propertyFile.getLoadBalancer().getIpAddress()+"."+Integer.toString(port.getServicePortValue()));
-        mllpServerTopologyNode.setParticipantDisplayName("MLLP.Server:"+propertyFile.getLoadBalancer().getIpAddress()+":"+Integer.toString(port.getServicePortValue()));
-        endpointProvider.addEndpoint(mllpServerTopologyNode.getComponentFDN());
-        getLogger().warn(".createMLLPServerEndpoint(): Add the {}/{} Port to the Topology Cache", mllpServerTopologyNode.getComponentRDN().getNodeName(), endpointFunctionName);
-        getTopologyIM().addTopologyNode(endpointProvider.getComponentFDN(), mllpServerTopologyNode);
+
+        PetasosParticipant participant = new PetasosParticipant();
+        participant.setComponentId(componentId);
+        participant.setFulfillmentState(new PetasosParticipantFulfillment());
+        participant.getFulfillmentState().getFulfillerComponents().add(componentId);
+        participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_FULLY_FULFILLED);
+        participant.getFulfillmentState().setNumberOfActualFulfillers(1);
+        participant.getFulfillmentState().setNumberOfFulfillersExpected(propertyFile.getDeploymentMode().getProcessingPlantReplicationCount());
+        if(participant.getFulfillmentState().getNumberOfFulfillersExpected() > participant.getFulfillmentState().getNumberOfActualFulfillers()){
+            participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_PARTIALLY_FULFILLED);
+        }
+        participant.getParticipantId().setSubsystemName(endpointProvider.getParticipantId().getSubsystemName());
+        participant.getParticipantId().setName(endpointProvider.getParticipantId()+"."+"MLLP.Server."+propertyFile.getLoadBalancer().getIpAddress()+"."+Integer.toString(port.getServicePortValue()));
+        participant.getParticipantId().setDisplayName("MLLP.Server:"+propertyFile.getLoadBalancer().getIpAddress()+":"+Integer.toString(port.getServicePortValue()));
+        participant.getParticipantId().setFullName(endpointProvider.getParticipantId().getFullName() + "." + "MLLP.Server."+propertyFile.getLoadBalancer().getIpAddress()+"."+Integer.toString(port.getServicePortValue()));
+        participant.getParticipantId().setVersion(endpointProvider.getParticipantId().getVersion());
+        mllpServerTopologyNode.setParticipant(participant);
+
+        endpointProvider.addEndpoint(mllpServerTopologyNode.getComponentId());
+        getLogger().warn(".createMLLPServerEndpoint(): Add the {}/{} Port to the Topology Cache", mllpServerTopologyNode.getComponentId().getDisplayName(), endpointFunctionName);
+        getTopologyIM().addTopologyNode(endpointProvider.getComponentId(), mllpServerTopologyNode);
         getLogger().debug(".createMLLPServerEndpoint(): Exit, endpoint added->{}", mllpServerTopologyNode);
         return(mllpServerTopologyNode);
     }
@@ -161,15 +178,13 @@ public class MLLPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
             return(null);
         }
         String name = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.MLLP_CLIENT, endpointFunctionName);
-        TopologyNodeRDN nodeRDN = createSimpleNodeRDN(name, endpointProvider.getComponentRDN().getNodeVersion(), PegacornSystemComponentTypeTypeEnum.ENDPOINT);
-        mllpClientTopologyNode.setComponentRDN(nodeRDN);
+        ComponentIdType componentId = ComponentIdType.fromComponentName(name);
+        mllpClientTopologyNode.setComponentID(componentId);
+        mllpClientTopologyNode.setParentComponent(endpointProvider.getComponentId());
         mllpClientTopologyNode.setEndpointConfigurationName(mllpClientPort.getName());
-        mllpClientTopologyNode.constructFDN(endpointProvider.getComponentFDN(), nodeRDN);
         mllpClientTopologyNode.setEndpointType(PetasosEndpointTopologyTypeEnum.MLLP_CLIENT);
-        mllpClientTopologyNode.setComponentType(PegacornSystemComponentTypeTypeEnum.ENDPOINT);
+        mllpClientTopologyNode.setComponentType(SoftwareComponentTypeEnum.ENDPOINT);
         mllpClientTopologyNode.setComponentSystemRole(SoftwareComponentConnectivityContextEnum.COMPONENT_ROLE_INTERACT_EGRESS);
-        mllpClientTopologyNode.constructFunctionFDN(endpointProvider.getNodeFunctionFDN(), nodeRDN );
-        mllpClientTopologyNode.setContainingNodeFDN(endpointProvider.getComponentFDN());
         ConnectedSystemProperties connectedSystem = mllpClientPort.getConnectedSystem();
         mllpClientTopologyNode.setConnectedSystemName(connectedSystem.getSubsystemName());
         ConnectedExternalSystemTopologyNode externalSystem = new ConnectedExternalSystemTopologyNode();
@@ -193,12 +208,27 @@ public class MLLPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
             mllpClientTopologyNode.getOtherConfigurationParameters().put(otherConfigurationParameter.getParameterName(), otherConfigurationParameter.getParameterValue());
         }
         mllpClientTopologyNode.setEndpointDescription("Client-->MLLP:"+targetPort1.getTargetPortDNSName()+":"+Integer.toString(targetPort1.getTargetPortValue()));
-        mllpClientTopologyNode.setParticipantName(endpointProvider.getParticipantName()+"."+"MLLP.Client."+targetPort1.getTargetPortDNSName()+"."+Integer.toString(targetPort1.getTargetPortValue()));
-        mllpClientTopologyNode.setParticipantDisplayName("MLLP.Client:"+targetPort1.getTargetPortDNSName()+":"+Integer.toString(targetPort1.getTargetPortValue()));
+
+        PetasosParticipant participant = new PetasosParticipant();
+        participant.setComponentId(componentId);
+        participant.setFulfillmentState(new PetasosParticipantFulfillment());
+        participant.getFulfillmentState().getFulfillerComponents().add(componentId);
+        participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_FULLY_FULFILLED);
+        participant.getFulfillmentState().setNumberOfActualFulfillers(1);
+        participant.getFulfillmentState().setNumberOfFulfillersExpected(propertyFile.getDeploymentMode().getProcessingPlantReplicationCount());
+        if(participant.getFulfillmentState().getNumberOfFulfillersExpected() > participant.getFulfillmentState().getNumberOfActualFulfillers()){
+            participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_PARTIALLY_FULFILLED);
+        }
+        participant.getParticipantId().setSubsystemName(endpointProvider.getParticipantId().getSubsystemName());
+        participant.getParticipantId().setName(endpointProvider.getParticipantId()+"."+"MLLP.Client."+targetPort1.getTargetPortDNSName()+"."+Integer.toString(targetPort1.getTargetPortValue()));
+        participant.getParticipantId().setDisplayName("MLLP.Client:"+targetPort1.getTargetPortDNSName()+":"+Integer.toString(targetPort1.getTargetPortValue()));
+        participant.getParticipantId().setFullName(endpointProvider.getParticipantId().getFullName() + "." + "MLLP.Client."+targetPort1.getTargetPortDNSName()+"."+Integer.toString(targetPort1.getTargetPortValue()));
+        participant.getParticipantId().setVersion(endpointProvider.getParticipantId().getVersion());
+        mllpClientTopologyNode.setParticipant(participant);
         mllpClientTopologyNode.setTargetSystem(externalSystem);
-        endpointProvider.addEndpoint(mllpClientTopologyNode.getComponentFDN());
-        getLogger().warn(".newMLLPClientEndpoint(): Add the {}/{} Port to the Topology Cache", mllpClientTopologyNode.getComponentRDN().getNodeName(), endpointFunctionName);
-        getTopologyIM().addTopologyNode(endpointProvider.getComponentFDN(), mllpClientTopologyNode);
+        endpointProvider.addEndpoint(mllpClientTopologyNode.getComponentId());
+        getLogger().warn(".newMLLPClientEndpoint(): Add the {}/{} Port to the Topology Cache", mllpClientTopologyNode.getComponentId().getDisplayName(), endpointFunctionName);
+        getTopologyIM().addTopologyNode(endpointProvider.getComponentId(), mllpClientTopologyNode);
         getLogger().debug(".newMLLPClientEndpoint(): Exit, endpoint added");
         return(mllpClientTopologyNode);
     }
