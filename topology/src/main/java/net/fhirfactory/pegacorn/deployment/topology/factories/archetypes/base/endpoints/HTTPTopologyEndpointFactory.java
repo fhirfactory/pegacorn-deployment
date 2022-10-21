@@ -101,7 +101,7 @@ public class HTTPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
         HTTPServerTopologyEndpoint httpServer = new HTTPServerTopologyEndpoint();
         ComponentIdType componentId = ComponentIdType.fromComponentName(name);
         httpServer.setVersion(endpointProvider.getVersion());
-        httpServer.setComponentID(componentId);
+        httpServer.setComponentId(componentId);
         httpServer.setEndpointConfigurationName(httpServerPort.getName());
         httpServer.setActualHostIP(getActualHostIP());
         httpServer.setEndpointType(PetasosEndpointTopologyTypeEnum.HTTP_API_SERVER);
@@ -277,7 +277,7 @@ public class HTTPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
         }
         String name = getInterfaceNames().getEndpointServerName(endpointFunctionName);
         ComponentIdType componentId = ComponentIdType.fromComponentName(name);
-        httpClient.setComponentID(componentId);
+        httpClient.setComponentId(componentId);
         httpClient.setVersion(endpointProvider.getVersion());
         httpClient.setEndpointConfigurationName(httpClientPortConfigurationSegment.getName());
         httpClient.setEndpointType(PetasosEndpointTopologyTypeEnum.HTTP_API_CLIENT);

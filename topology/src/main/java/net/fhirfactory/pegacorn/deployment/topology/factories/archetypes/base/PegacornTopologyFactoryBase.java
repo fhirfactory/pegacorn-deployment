@@ -58,7 +58,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.ZonedDateTime;
-import java.time.temporal.TemporalAmount;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -194,7 +193,7 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
 
         getLogger().trace(".addSubsystemNode(): [Create the Subsystem ComponentId] Start");
         ComponentIdType componentId = ComponentIdType.fromComponentName(getPropertyFile().getSubsystemInstant().getSubsystemName());
-        subsystem.setComponentID(componentId);
+        subsystem.setComponentId(componentId);
         getLogger().trace(".addSubsystemNode(): [Create the Subsystem ComponentId] id->{}", subsystem.getComponentId());
         getLogger().trace(".addSubsystemNode(): [Create the Subsystem ComponentId] Finish");
 
@@ -276,7 +275,7 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
             businessServiceName = "ExtSvc." + subsystem.getComponentId().getName();
         }
         ComponentIdType componentId = ComponentIdType.fromComponentName(businessServiceName);
-        businessService.setComponentID(componentId);
+        businessService.setComponentId(componentId);
         getLogger().trace(".buildBusinessServiceNode(): [Create the Subsystem ComponentId] id->{}", businessService.getComponentId());
         getLogger().trace(".buildBusinessServiceNode(): [Create the Subsystem ComponentId] Finish");
 
@@ -340,7 +339,7 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
         getLogger().trace(".buildDeploymentSiteNode(): [Create the Site ComponentId] Start");
         String siteName = getPropertyFile().getSubsystemInstant().getSite();
         ComponentIdType componentId = ComponentIdType.fromComponentName(siteName);
-        site.setComponentID(componentId);
+        site.setComponentId(componentId);
         getLogger().trace(".buildDeploymentSiteNode(): [Create the Site ComponentId] Finish");
 
         getLogger().trace(".buildDeploymentSiteNode(): [Create the Site ParticipantId] Start");
@@ -403,7 +402,7 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
         getLogger().trace(".buildClusterServiceNode(): [Create the Node ComponentId] Start");
         String clusterServiceName = getPropertyFile().getSubsystemInstant().getClusterServiceName();
         ComponentIdType componentId = ComponentIdType.fromComponentName(clusterServiceName);
-        clusterService.setComponentID(componentId);
+        clusterService.setComponentId(componentId);
         getLogger().trace(".buildClusterServiceNode(): [Create the ClusterService ComponentId] Finish");
 
         getLogger().trace(".buildClusterServiceNode(): [Create the ClusterService ParticipantId] Start");
@@ -479,7 +478,7 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
         getLogger().trace(".addPlatformNode(): [Create the ComponentId] Start");
         String hostName = pegacornProperties.getProperty("MY_POD_NAME", "PlatformNode0");
         ComponentIdType componentId = ComponentIdType.fromComponentName(hostName);
-        node.setComponentID(componentId);
+        node.setComponentId(componentId);
         getLogger().trace(".addPlatformNode(): [Create the ComponentId] Finish");
 
         getLogger().trace(".addPlatformNode(): [Create the ParticipantId] Start");
@@ -551,7 +550,7 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
         getLogger().trace(".buildProcessingPlant(): [Create ComponentId] Start");
         String name = getPropertyFile().getSubsystemInstant().getParticipantName();
         ComponentIdType componentId = ComponentIdType.fromComponentName(name);
-        processingPlant.setComponentID(componentId);
+        processingPlant.setComponentId(componentId);
         getLogger().trace(".buildProcessingPlant(): [Create ComponentId] Finish");
 
         getLogger().trace(".buildProcessingPlant(): [Create ParticipantId] Start");
@@ -694,7 +693,7 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
 
         getLogger().trace(".buildWorkshop(): [Create ComponentId] Start");
         ComponentIdType componentId = ComponentIdType.fromComponentName(name);
-        workshop.setComponentID(componentId);
+        workshop.setComponentId(componentId);
         getLogger().trace(".buildWorkshop(): [Create ComponentId] Finish");
 
         getLogger().trace(".buildWorkshop(): [Create ParticipantId] Start");
@@ -770,7 +769,7 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
 
         getLogger().trace(".buildWUP(): [Create ComponentId] Start");
         ComponentIdType componentId = ComponentIdType.fromComponentName(name);
-        wup.setComponentID(componentId);
+        wup.setComponentId(componentId);
         getLogger().trace(".buildWUP(): [Create ComponentId] Finish");
 
         getLogger().trace(".buildWUP(): [Create ParticipantId] Start");
@@ -850,7 +849,7 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
 
         getLogger().trace(".buildWUPComponent(): [Create ComponentId] Start");
         ComponentIdType componentId = ComponentIdType.fromComponentName(name);
-        wupComponent.setComponentID(componentId);
+        wupComponent.setComponentId(componentId);
         getLogger().trace(".buildWUPComponent(): [Create ComponentId] Finish");
 
         getLogger().trace(".buildWUPComponent(): [Create ParticipantId] Start");
@@ -924,7 +923,7 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
 
         getLogger().trace(".buildWUPComponent(): [Create ComponentId] Start");
         ComponentIdType componentId = ComponentIdType.fromComponentName(name);
-        wupInterchangeComponent.setComponentID(componentId);
+        wupInterchangeComponent.setComponentId(componentId);
         getLogger().trace(".buildWUPComponent(): [Create ComponentId] Finish");
 
         getLogger().trace(".buildWUPComponent(): [Create ParticipantId] Start");
@@ -1087,7 +1086,7 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
         componentId.setIdValidityEndInstant(ZonedDateTime.now().plusYears(ID_VALIDITY_RANGE_IN_YEARS).toInstant());
         componentId.setIdValidityStartInstant(Instant.now());
         componentId.setId(uniqueName);
-        oamPort.setComponentID(componentId);
+        oamPort.setComponentId(componentId);
         getLogger().trace(".addWildflyOAMPort(): [Create ComponentId] Finish");
 
         getLogger().trace(".addWildflyOAMPort(): [Create ParticipantId] Start");

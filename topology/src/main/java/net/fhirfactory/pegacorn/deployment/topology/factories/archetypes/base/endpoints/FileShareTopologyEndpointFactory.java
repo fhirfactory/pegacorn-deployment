@@ -98,7 +98,7 @@ public class FileShareTopologyEndpointFactory extends TopologyFactoryHelpersBase
         }
         String name = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.FILE_SHARE_SOURCE, endpointFunctionName);
         ComponentIdType componentId = ComponentIdType.fromComponentName(name);
-        fileShareSourceTopologyNode.setComponentID(componentId);
+        fileShareSourceTopologyNode.setComponentId(componentId);
         fileShareSourceTopologyNode.setParentComponent(endpointProvider.getComponentId());
         fileShareSourceTopologyNode.setVersion(endpointProvider.getVersion());
         fileShareSourceTopologyNode.setEndpointConfigurationName(fileShareSource.getName());
@@ -161,7 +161,7 @@ public class FileShareTopologyEndpointFactory extends TopologyFactoryHelpersBase
         }
         String name = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.FILE_SHARE_SINK, endpointFunctionName);
         ComponentIdType componentId = ComponentIdType.fromComponentName(name);
-        fileShareSinkTopologyNode.setComponentID(componentId);
+        fileShareSinkTopologyNode.setComponentId(componentId);
         fileShareSinkTopologyNode.setVersion(endpointProvider.getVersion());
         fileShareSinkTopologyNode.setEndpointConfigurationName(fileShareSink.getName());
         fileShareSinkTopologyNode.setEndpointType(PetasosEndpointTopologyTypeEnum.FILE_SHARE_SINK);

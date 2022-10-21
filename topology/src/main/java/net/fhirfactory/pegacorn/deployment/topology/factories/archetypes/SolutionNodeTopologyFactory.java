@@ -25,7 +25,6 @@ package net.fhirfactory.pegacorn.deployment.topology.factories.archetypes;
 
 import net.fhirfactory.pegacorn.core.model.componentid.ComponentIdType;
 import net.fhirfactory.pegacorn.core.model.componentid.SoftwareComponentTypeEnum;
-import net.fhirfactory.pegacorn.core.model.petasos.endpoint.valuesets.PetasosIntegrationPointNameEnum;
 import net.fhirfactory.pegacorn.core.model.petasos.participant.PetasosParticipant;
 import net.fhirfactory.pegacorn.core.model.petasos.participant.PetasosParticipantFulfillment;
 import net.fhirfactory.pegacorn.core.model.petasos.participant.PetasosParticipantFulfillmentStatusEnum;
@@ -107,7 +106,7 @@ public abstract class SolutionNodeTopologyFactory implements SolutionNodeFactory
         getLogger().debug(".buildSolutionNode(): Entry");
         SolutionTopologyNode solution = new SolutionTopologyNode();
         ComponentIdType componentId = ComponentIdType.fromComponentName(specifySystemName());
-        solution.setComponentID(componentId);
+        solution.setComponentId(componentId);
         solution.setVersion(specifySystemVersion());
         PetasosParticipant participant = new PetasosParticipant();
         participant.setComponentId(componentId);

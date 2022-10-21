@@ -27,7 +27,6 @@ import net.fhirfactory.pegacorn.core.model.componentid.SoftwareComponentTypeEnum
 import net.fhirfactory.pegacorn.core.model.petasos.endpoint.JGroupsIntegrationPointNamingUtilities;
 import net.fhirfactory.pegacorn.core.model.petasos.endpoint.valuesets.PetasosEndpointFunctionTypeEnum;
 import net.fhirfactory.pegacorn.core.model.petasos.endpoint.valuesets.PetasosEndpointTopologyTypeEnum;
-import net.fhirfactory.pegacorn.core.model.petasos.endpoint.valuesets.PetasosIntegrationPointNameEnum;
 import net.fhirfactory.pegacorn.core.model.petasos.participant.PetasosParticipant;
 import net.fhirfactory.pegacorn.core.model.petasos.participant.PetasosParticipantFulfillment;
 import net.fhirfactory.pegacorn.core.model.petasos.participant.PetasosParticipantFulfillmentStatusEnum;
@@ -105,7 +104,7 @@ public class JGroupsTopologyEndpointFactory extends TopologyFactoryHelpersBase {
             return;
         }
         ComponentIdType componentId = ComponentIdType.fromComponentName(name);
-        jgroupsIP.setComponentID(componentId);
+        jgroupsIP.setComponentId(componentId);
         jgroupsIP.setVersion(endpointProvider.getVersion());
         jgroupsIP.setEndpointConfigurationName(jgroupsIPCSegment.getName());
         jgroupsIP.setActualHostIP(getActualHostIP());
@@ -205,7 +204,7 @@ public class JGroupsTopologyEndpointFactory extends TopologyFactoryHelpersBase {
             return;
         }
         ComponentIdType componentId = ComponentIdType.fromComponentName(name);
-        jgroupsIP.setComponentID(componentId);
+        jgroupsIP.setComponentId(componentId);
         jgroupsIP.setVersion(endpointProvider.getVersion());
         jgroupsIP.setEndpointConfigurationName(jgroupsIPCSegment.getName());
         jgroupsIP.setActualHostIP(getActualHostIP());

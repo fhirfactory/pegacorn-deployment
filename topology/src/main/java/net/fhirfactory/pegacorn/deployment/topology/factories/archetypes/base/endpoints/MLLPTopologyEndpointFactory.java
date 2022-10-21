@@ -101,7 +101,7 @@ public class MLLPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
         }
         String name = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.MLLP_SERVER, endpointFunctionName);
         ComponentIdType componentId = ComponentIdType.fromComponentName(name);
-        mllpServerTopologyNode.setComponentID(componentId);
+        mllpServerTopologyNode.setComponentId(componentId);
         mllpServerTopologyNode.setParentComponent(endpointProvider.getComponentId());
         mllpServerTopologyNode.setVersion(endpointProvider.getVersion());
         mllpServerTopologyNode.setEndpointConfigurationName(mllpServerPort.getName());
@@ -179,7 +179,7 @@ public class MLLPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
         }
         String name = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.MLLP_CLIENT, endpointFunctionName);
         ComponentIdType componentId = ComponentIdType.fromComponentName(name);
-        mllpClientTopologyNode.setComponentID(componentId);
+        mllpClientTopologyNode.setComponentId(componentId);
         mllpClientTopologyNode.setParentComponent(endpointProvider.getComponentId());
         mllpClientTopologyNode.setEndpointConfigurationName(mllpClientPort.getName());
         mllpClientTopologyNode.setEndpointType(PetasosEndpointTopologyTypeEnum.MLLP_CLIENT);
