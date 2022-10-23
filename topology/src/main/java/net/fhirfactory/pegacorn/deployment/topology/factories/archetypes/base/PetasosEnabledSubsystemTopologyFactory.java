@@ -1,6 +1,6 @@
 package net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.base;
 
-import net.fhirfactory.pegacorn.core.constants.systemwide.PegacornReferenceProperties;
+import net.fhirfactory.pegacorn.core.constants.systemwide.DRICaTSReferenceProperties;
 import net.fhirfactory.pegacorn.core.model.petasos.endpoint.JGroupsIntegrationPointNamingUtilities;
 import net.fhirfactory.pegacorn.core.model.petasos.endpoint.valuesets.PetasosEndpointFunctionTypeEnum;
 import net.fhirfactory.pegacorn.core.model.petasos.endpoint.valuesets.PetasosEndpointTopologyTypeEnum;
@@ -26,7 +26,7 @@ import javax.inject.Inject;
 public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTopologyFactoryBase{
 
     @Inject
-    private PegacornReferenceProperties pegacornReferenceProperties;
+    private DRICaTSReferenceProperties pegacornReferenceProperties;
 
     @Inject
     private JGroupsIntegrationPointNamingUtilities jgroupNamingUtilities;

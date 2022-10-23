@@ -30,32 +30,32 @@ import javax.inject.Inject;
  * @author Mark A. Hunter
  */
 @ApplicationScoped
-public class PegacornReferenceProperties {
+public class DRICaTSReferenceProperties {
 
     @Inject
     private DeploymentSystemIdentificationInterface systemIdentification;
 
-    private static final String PEGACORN_INTERNAL_FHIR_RESOURCE_R4_PATH = "/pegacorn/internal/fhir/r4";
-    private static final String PEGACORN_EXPOSED_FHIR_RESOURCE_R4_PATH = "/fhir/r4";
-    private static final String PEGACORN_PETASOS_STATUS_PATH = "/pegacorn/internal/petasos/status";
-    private static final String PEGACORN_PETASOS_REPLICATION_PATH = "/pegacorn/internal/petasos/replication";
-    private static final String PEGACORN_PETASOS_IPC_PATH = "/pegacorn/internal/petasos/ipc";
-    private static final String PEGACORN_RESOURCE_DIRECTORY_R1_PATH = "/pegacorn/operations/directory/r1";
-    private static final String PEGACORN_COMMUNICATE_DIRECTORY_R1_PATH = "/pegacorn/communicate/directory/r1";
+    private static final String DRICATS_INTERNAL_FHIR_RESOURCE_R4_PATH = "/dricats/internal/fhir/r4";
+    private static final String DRICATS_EXPOSED_FHIR_RESOURCE_R4_PATH = "/fhir/r4";
+    private static final String DRICATS_PETASOS_STATUS_PATH = "/dricats/internal/petasos/status";
+    private static final String DRICATS_PETASOS_REPLICATION_PATH = "/dricats/internal/petasos/replication";
+    private static final String DRICATS_PETASOS_IPC_PATH = "/dricats/internal/petasos/ipc";
+    private static final String DRICATS_RESOURCE_DIRECTORY_R1_PATH = "/dricats/operations/directory/r1";
+    private static final String DRICATS_COMMUNICATE_DIRECTORY_R1_PATH = "/dricats/communicate/directory/r1";
 
     public String getSystemDeploymentName() {
         return (systemIdentification.getSystemName());
     }
 
     public String getPegacornInternalFhirResourceR4Path() {
-        return PEGACORN_INTERNAL_FHIR_RESOURCE_R4_PATH;
+        return DRICATS_INTERNAL_FHIR_RESOURCE_R4_PATH;
     }
 
     public String getPegacornExposedFhirResourceR4Path() {
-        return PEGACORN_EXPOSED_FHIR_RESOURCE_R4_PATH;
+        return DRICATS_EXPOSED_FHIR_RESOURCE_R4_PATH;
     }
 
-    public String getPegacornCodeSystemSite(){
+    public String getDRICaTSCodeSystemSite(){
         return("http://ontology.fhirfactory.net/fhir/code-systems");
     }
 
@@ -65,24 +65,24 @@ public class PegacornReferenceProperties {
 
     public String getPegacornDefaultFHIRVersion(){return("4.0.1");}
 
-    public static String getPegacornPetasosStatusPath() {
-        return PEGACORN_PETASOS_STATUS_PATH;
+    public static String getDricatsPetasosStatusPath() {
+        return DRICATS_PETASOS_STATUS_PATH;
     }
 
-    public static String getPegacornResourceDirectoryR1Path() {
-        return PEGACORN_RESOURCE_DIRECTORY_R1_PATH;
+    public static String getDricatsResourceDirectoryR1Path() {
+        return DRICATS_RESOURCE_DIRECTORY_R1_PATH;
     }
 
-    public static String getPegacornCommunicateDirectoryR1Path() {
-        return PEGACORN_COMMUNICATE_DIRECTORY_R1_PATH;
+    public static String getDricatsCommunicateDirectoryR1Path() {
+        return DRICATS_COMMUNICATE_DIRECTORY_R1_PATH;
     }
 
-    public static String getPegacornPetasosReplicationPath() {
-        return PEGACORN_PETASOS_REPLICATION_PATH;
+    public static String getDricatsPetasosReplicationPath() {
+        return DRICATS_PETASOS_REPLICATION_PATH;
     }
 
     public static String getPegacornPetasosIPCPath() {
-        return PEGACORN_PETASOS_IPC_PATH;
+        return DRICATS_PETASOS_IPC_PATH;
     }
 
     public String getLocalCodeSystemPath(){
@@ -90,16 +90,16 @@ public class PegacornReferenceProperties {
     }
 
     public String getITOpsContextPath(){
-        return("/pegacorn/internal/itops/r1");
+        return("/dricats/internal/itops/r1");
     }
 
     public String getAuditDMContextPath(){
-        return("/pegacorn/hestia/audit-event");
+        return("/dricats/hestia/audit-event");
     }
     
 
     public String getTaskDMContextPath(){
-        return("/pegacorn/hestia/task");
+        return("/dricats/hestia/task");
     }
 
     //
