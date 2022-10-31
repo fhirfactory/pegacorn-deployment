@@ -119,6 +119,7 @@ public abstract class SolutionNodeTopologyFactory implements SolutionNodeFactory
         participant.getParticipantId().setDisplayName(specifySystemName());
         participant.getParticipantId().setFullName(specifySystemName());
         participant.getParticipantId().setVersion(specifySystemVersion());
+        participant.setComponentType(SoftwareComponentTypeEnum.SOLUTION);
         solution.setParticipant(participant);
         solution.setComponentType(SoftwareComponentTypeEnum.SOLUTION);
         getLogger().debug(".buildSolutionNode(): Exit, solution ->{}", solution);

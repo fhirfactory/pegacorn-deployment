@@ -220,6 +220,7 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
         participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_FULLY_FULFILLED);
         participant.getFulfillmentState().setNumberOfActualFulfillers(1);
         participant.getFulfillmentState().setNumberOfFulfillersExpected(1);
+        participant.setComponentType(SoftwareComponentTypeEnum.SUBSYSTEM);
         subsystem.setParticipant(participant);
         getLogger().trace(".addSubsystemNode(): [Create the Subsystem ParticipantId] id->{}", subsystem.getParticipant());
         getLogger().trace(".addSubsystemNode(): [Create the Subsystem ParticipantId] Finish");
@@ -302,6 +303,7 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
         participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_FULLY_FULFILLED);
         participant.getFulfillmentState().setNumberOfActualFulfillers(1);
         participant.getFulfillmentState().setNumberOfFulfillersExpected(1);
+        participant.setComponentType(SoftwareComponentTypeEnum.EXTERNALISED_SERVICE);
         businessService.setParticipant(participant);
         getLogger().trace(".buildBusinessServiceNode(): [Create the Subsystem ParticipantId] Start");
 
@@ -362,6 +364,7 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
         participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_FULLY_FULFILLED);
         participant.getFulfillmentState().setNumberOfActualFulfillers(1);
         participant.getFulfillmentState().setNumberOfFulfillersExpected(1);
+        participant.setComponentType(SoftwareComponentTypeEnum.SITE);
         site.setParticipant(participant);
         getLogger().trace(".buildDeploymentSiteNode(): [Create the Site ParticipantId] Finish");
 
@@ -425,6 +428,7 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
         participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_FULLY_FULFILLED);
         participant.getFulfillmentState().setNumberOfActualFulfillers(1);
         participant.getFulfillmentState().setNumberOfFulfillersExpected(getPropertyFile().getDeploymentSites().getSiteCount());
+        participant.setComponentType(SoftwareComponentTypeEnum.CLUSTER_SERVICE);
         clusterService.setParticipant(participant);
         getLogger().trace(".buildClusterServiceNode(): [Create the ClusterService ParticipantId] Finish");
 
@@ -501,6 +505,7 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
         participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_FULLY_FULFILLED);
         participant.getFulfillmentState().setNumberOfActualFulfillers(1);
         participant.getFulfillmentState().setNumberOfFulfillersExpected(1);
+        participant.setComponentType(SoftwareComponentTypeEnum.PLATFORM);
         node.setParticipant(participant);
         getLogger().trace(".addPlatformNode(): [Create the ParticipantId] Finish");
 
@@ -576,6 +581,7 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
         if(participant.getFulfillmentState().getNumberOfFulfillersExpected() > participant.getFulfillmentState().getNumberOfActualFulfillers()){
             participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_PARTIALLY_FULFILLED);
         }
+        participant.setComponentType(SoftwareComponentTypeEnum.PROCESSING_PLANT);
         processingPlant.setParticipant(participant);
         getLogger().trace(".buildProcessingPlant(): [Create ParticipantId] Finish");
 
@@ -714,6 +720,7 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
         if(participant.getFulfillmentState().getNumberOfFulfillersExpected() > participant.getFulfillmentState().getNumberOfActualFulfillers()){
             participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_PARTIALLY_FULFILLED);
         }
+        participant.setComponentType(SoftwareComponentTypeEnum.WORKSHOP);
         workshop.setParticipant(participant);
         getLogger().trace(".buildWorkshop(): [Create ParticipantId] Finish");
 
@@ -794,6 +801,7 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
         if(participant.getFulfillmentState().getNumberOfFulfillersExpected() > participant.getFulfillmentState().getNumberOfActualFulfillers()){
             participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_PARTIALLY_FULFILLED);
         }
+        participant.setComponentType(SoftwareComponentTypeEnum.WUP);
         wup.setParticipant(participant);
         getLogger().trace(".buildWUP(): [Create ParticipantId] Finish");
 
@@ -870,6 +878,7 @@ public abstract class PegacornTopologyFactoryBase extends TopologyFactoryHelpers
         if(participant.getFulfillmentState().getNumberOfFulfillersExpected() > participant.getFulfillmentState().getNumberOfActualFulfillers()){
             participant.getFulfillmentState().setFulfillmentStatus(PetasosParticipantFulfillmentStatusEnum.PETASOS_PARTICIPANT_PARTIALLY_FULFILLED);
         }
+        participant.setComponentType(SoftwareComponentTypeEnum.WUP_CORE);
         wupComponent.setParticipant(participant);
         getLogger().trace(".buildWUPComponent(): [Create ParticipantId] Finish");
 
