@@ -102,10 +102,15 @@ public abstract class PetasosEnabledSubsystemTopologyFactory extends PegacornTop
     protected void addAllJGroupsEndpoints(EndpointProviderInterface endpointProvider){
         PetasosEnabledSubsystemPropertyFile petasosEnabledSubsystemPropertyFile = (PetasosEnabledSubsystemPropertyFile)getPropertyFile();
         //
-        // Petasos IPC Messaging Endpoint
-        JGroupsInterZoneRepeaterClientPortSegment interZoneIPC = petasosEnabledSubsystemPropertyFile.getPetasosIPCMessagingEndpoint();
-        String interZoneIPCName = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.JGROUPS_INTEGRATION_POINT, PetasosEndpointFunctionTypeEnum.PETASOS_MESSAGING_ENDPOINT.getDisplayName());
-        getJGroupsTopologyEndpointFactory().newInterZoneRepeaterJGroupsIntegrationPoint(getProcessingPlantNode(), getPropertyFile(), endpointProvider, interZoneIPC, PetasosEndpointTopologyTypeEnum.JGROUPS_INTEGRATION_POINT, PetasosEndpointFunctionTypeEnum.PETASOS_MESSAGING_ENDPOINT, interZoneIPCName, getResilienceMode(), getConcurrenceMode() );
+        // Petasos Task Routing (Receiver) Endpoint
+        JGroupsInterZoneRepeaterClientPortSegment interZoneTaskReceiver = petasosEnabledSubsystemPropertyFile.getPetasosIPCMessagingEndpoint();
+        String interzoneTaskReceiverName = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.JGROUPS_INTEGRATION_POINT, PetasosEndpointFunctionTypeEnum.PETASOS_TASK_ROUTING_RECEIVER_ENDPOINT.getDisplayName());
+        getJGroupsTopologyEndpointFactory().newInterZoneRepeaterJGroupsIntegrationPoint(getProcessingPlantNode(), getPropertyFile(), endpointProvider, interZoneTaskReceiver, PetasosEndpointTopologyTypeEnum.JGROUPS_INTEGRATION_POINT, PetasosEndpointFunctionTypeEnum.PETASOS_TASK_ROUTING_RECEIVER_ENDPOINT, interzoneTaskReceiverName, getResilienceMode(), getConcurrenceMode() );
+        //
+        // Petasos Task Routing (Forwarder) Endpoint
+        JGroupsInterZoneRepeaterClientPortSegment interZoneTaskForwarder = petasosEnabledSubsystemPropertyFile.getPetasosIPCMessagingEndpoint();
+        String interZoneTaskForwarderName = getInterfaceNames().getEndpointName(PetasosEndpointTopologyTypeEnum.JGROUPS_INTEGRATION_POINT, PetasosEndpointFunctionTypeEnum.PETASOS_TASK_ROUTING_FORWARDER_ENDPOINT.getDisplayName());
+        getJGroupsTopologyEndpointFactory().newInterZoneRepeaterJGroupsIntegrationPoint(getProcessingPlantNode(), getPropertyFile(), endpointProvider, interZoneTaskForwarder, PetasosEndpointTopologyTypeEnum.JGROUPS_INTEGRATION_POINT, PetasosEndpointFunctionTypeEnum.PETASOS_TASK_ROUTING_FORWARDER_ENDPOINT, interZoneTaskForwarderName, getResilienceMode(), getConcurrenceMode() );
         //
         // Petasos Topology Services Endpoint
         JGroupsInterZoneRepeaterClientPortSegment interZoneTopology = petasosEnabledSubsystemPropertyFile.getPetasosTopologyDiscoveryEndpoint();
