@@ -34,8 +34,9 @@ public enum MLLPComponentConfigurationConstantsEnum {
     CAMEL_MLLP_KEEPALIVE("CAMEL_MLLP_KEEPALIVE", "keepAlive", "true"),
     CAMEL_MLLP_PAYLOAD_VALIDATION("CAMEL_MLLP_PAYLOAD_VALIDATION", "validatePayload", "false"),
     CAMEL_MLLP_MINIMAL_CONFORMANCE_ENFORCEMENT ("TRIGGER_EVENT_MINIMAL_CONFORMANCE_ENFORCEMENT", "validatePayload", "false"),
-    CAMEL_MLLP_STRING_PAYLOAD("CAMEL_MLLP_STRING_PAYLOAD", "stringPayload", "true");
+    CAMEL_MLLP_STRING_PAYLOAD("CAMEL_MLLP_STRING_PAYLOAD", "stringPayload", "true"),
 
+    CAMEL_MLLP_ACKNOWLEDGEMENT_TIMEOUT("CAMEL_MLLP_ACKNOWLEDGEMENT_TIMEOUT", "not_supported", "30000");
 
     private String configurationFileAttributeName;
     private String camelConfigurationName;

@@ -27,6 +27,24 @@ package net.fhirfactory.pegacorn.core.constants.petasos;
  */
 
 public final class PetasosPropertyConstants {
+    public static final Long PONOS_TASK_FORWARDER_RETRY_DELAY = 60000L;
+    public static final Long PONOS_TASK_FORWARDER_DAEMON_STARTUP_DELAY = 60000L;
+    public static final Long PONOS_TASK_FORWARDER_DAEMON_PERIOD = 10000L;
+    public static final Long PONOS_TASK_FORWARDER_DAEMON_RESET_PERIOD = 300000L;
+
+    // Each participant within any Petasos enabled module has a Task Queue
+    // managed by the TaskQueueManager. This value dictates the default "maximum"
+    // size of the queue before it will shunt (offload) the tasks to Ponos.
+    public static final Integer PARTICIPANT_QUEUE_SIZE = 100;
+    // This value is the size of the queue that the TaskQueueManager will "shrink to"
+    // in the event that the queue exceeds its maximum size.
+    public static final Integer PARTICIPANT_QUEUE_OFFLOAD_THRESHOLD = 60;
+    // This value is the size of the queue that the TaskQueueManager will "shrink to"
+    // before it begins to "onload" tasks back into the local queue.
+    public static final Integer PARTICIPANT_QUEUE_ONLOAD_THRESHOLD = 20;
+    // This value is the nominal size of a batch of tasks "offloaded" or "onloaded"
+    // by the local TaskQueueManager.
+    public static final Integer PARTICIPANT_QUEUE_TASK_BATCH_SIZE = 20;
 
     // For assisting in monitoring expected end time in parcels, this period in milliseconds
     // can be used when monitoring a UoW. For example it can be added to the expected completion
