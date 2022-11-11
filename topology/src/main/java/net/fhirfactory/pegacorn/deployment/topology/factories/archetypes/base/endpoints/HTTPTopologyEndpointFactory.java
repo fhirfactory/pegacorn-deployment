@@ -44,9 +44,9 @@ import net.fhirfactory.pegacorn.deployment.properties.configurationfilebased.com
 import net.fhirfactory.pegacorn.deployment.topology.factories.archetypes.base.common.TopologyFactoryHelpersBase;
 import net.fhirfactory.pegacorn.deployment.topology.manager.TopologyIM;
 import net.fhirfactory.pegacorn.util.PegacornProperties;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.thymeleaf.util.StringUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -334,6 +334,9 @@ public class HTTPTopologyEndpointFactory extends TopologyFactoryHelpersBase {
             encryptionRequired = connectedSystemPort.getEncryptionRequired();
         }
         systemEndpointPort.setEncrypted(encryptionRequired);
+        if(StringUtils.isNotEmpty(connectedSystemPort.getTargetPath())) {
+            systemEndpointPort.setContextPath(connectedSystemPort.getTargetPath());
+        }
         if(StringUtils.isEmpty(connectedSystemPort.getTargetPortDNSName())){
             throw (new IllegalArgumentException("TargetPortDNSName is not defined in configuration file"));
         }
