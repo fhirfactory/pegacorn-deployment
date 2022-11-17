@@ -27,6 +27,11 @@ package net.fhirfactory.pegacorn.core.constants.petasos;
  */
 
 public final class PetasosPropertyConstants {
+
+    public static final Long TASK_DATA_GRID_TASK_QUEUEING_RETRY_DELAY = 2500L;
+    public static final Integer TASK_DATA_GRID_TASK_QUEUEING_MAX_RETRY = 10;
+
+
     public static final Long PONOS_TASK_FORWARDER_RETRY_DELAY = 60000L;
     public static final Long PONOS_TASK_FORWARDER_DAEMON_STARTUP_DELAY = 60000L;
     public static final Long PONOS_TASK_FORWARDER_DAEMON_PERIOD = 10000L;
@@ -80,7 +85,7 @@ public final class PetasosPropertyConstants {
     public final static long WUP_ACTIVITY_DURATION_SECONDS = 10;
 
     // How long should a WUP sleep between scans for activity?
-    public final static long WUP_SLEEP_INTERVAL_MILLISECONDS = 250;
+    public final static long WUP_SLEEP_INTERVAL_MILLISECONDS = 2000;
 
     // General Workflow Exchange Objects
     public final static String WUP_TOPOLOGY_NODE_EXCHANGE_PROPERTY_NAME = "WUPTopologyNode";
