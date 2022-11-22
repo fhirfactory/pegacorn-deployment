@@ -47,6 +47,14 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
     private MLLPTopologyEndpointFactory mllpTopologyEndpointFactory;
 
     //
+    // Getters (and Setters)
+    //
+
+    protected MLLPTopologyEndpointFactory getMLLPTopologyEndpointFactory(){
+        return(mllpTopologyEndpointFactory);
+    }
+
+    //
     // Build an MLLP Server Endpoint
     //
 
@@ -56,7 +64,7 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
             getLogger().debug(".createMLLPServerEndpoint(): Exit, no port to add");
             return(null);
         }
-        MLLPServerEndpoint mllpServerEndpoint = mllpTopologyEndpointFactory.newMLLPServerEndpoint(getPropertyFile(), endpointProvider, endpointFunctionName, mllpServerPort);
+        MLLPServerEndpoint mllpServerEndpoint = getMLLPTopologyEndpointFactory().newMLLPServerEndpoint(getPropertyFile(), endpointProvider, endpointFunctionName, mllpServerPort);
         getLogger().info(".createMLLPServerEndpoint(): Exit, endpoint added->{}", mllpServerEndpoint);
         return(mllpServerEndpoint);
     }
@@ -71,7 +79,7 @@ public abstract class MITaFSubsystemTopologyFactory extends PetasosEnabledSubsys
             getLogger().debug(".newMLLPClientEndpoint(): Exit, no port to add");
             return(null);
         }
-        MLLPClientEndpoint mllpClientEndpoint = mllpTopologyEndpointFactory.newMLLPClientEndpoint(getPropertyFile(), endpointProvider, endpointFunctionName, mllpClientPort);
+        MLLPClientEndpoint mllpClientEndpoint = getMLLPTopologyEndpointFactory().newMLLPClientEndpoint(getPropertyFile(), endpointProvider, endpointFunctionName, mllpClientPort);
         getLogger().debug(".newMLLPClientEndpoint(): Exit, endpoint added");
         return(mllpClientEndpoint);
     }
