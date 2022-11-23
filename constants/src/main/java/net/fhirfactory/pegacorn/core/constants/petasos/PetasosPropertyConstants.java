@@ -138,6 +138,9 @@ public final class PetasosPropertyConstants {
     public final static String TASK_IPC_FORWARDER_NAME = "PetasosTaskForwarderWUP";
     public final static String TASK_IPC_RECEIVER_NAME = "PetasosTaskReceiverWUP";
 
+    public final static String OUTBOUND_CHECKPOINT_WUP_NAME = "OutboundMessageCheckpoint";
+    public final static String INBOUND_CHECKPOINT_WUP_NAME = "InboundMessageCheckpoint";
+
     //
     // Processing Plant
     //
