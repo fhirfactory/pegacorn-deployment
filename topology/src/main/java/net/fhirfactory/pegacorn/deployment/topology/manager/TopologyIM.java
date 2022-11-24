@@ -292,6 +292,13 @@ public class TopologyIM {
         return(retrievedNode);
     }
 
+    public SoftwareComponent getNode(String participantName){
+        LOG.debug(".getNode(): Entry, participantName --> {}", participantName);
+        SoftwareComponent retrievedNode = topologyDataManager.getSoftwareComponent(participantName);
+        LOG.debug(".getNode(): Exit, retrievedNode --> {}", retrievedNode);
+        return(retrievedNode);
+    }
+
     public List<SoftwareComponent> nodeSearch(PegacornSystemComponentTypeTypeEnum nodeType, String nodeName, String nodeVersion ){
         List<SoftwareComponent> nodeList = topologyDataManager.getSoftwareComponent(nodeType, nodeName, nodeVersion);
         return(nodeList);

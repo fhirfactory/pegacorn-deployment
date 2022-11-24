@@ -29,6 +29,7 @@ import net.fhirfactory.pegacorn.core.model.componentid.TopologyNodeFDN;
 import net.fhirfactory.pegacorn.core.model.generalid.FDNToken;
 import net.fhirfactory.pegacorn.core.model.topology.mode.NetworkSecurityZoneEnum;
 import net.fhirfactory.pegacorn.core.model.topology.nodes.SolutionTopologyNode;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -212,6 +213,28 @@ public class TopologyNodesDM implements DeploymentSystemIdentificationInterface 
             LOG.debug(".getTopologyNodeSet(): Exit, returning an element set, size --> {}", elementSet.size());
         }
         return (elementSet);
+    }
+
+
+    public SoftwareComponent getSoftwareComponent(String participantName) {
+        LOG.debug(".getSoftwareComponent(): Entry, participantName --> {}", participantName);
+        if (participantName == null) {
+            LOG.debug(".getSoftwareComponent(): Exit, provided a null nodeFDN , so returning null");
+            return (null);
+        }
+        SoftwareComponent retrievedNode = null;
+        synchronized (nodeSetLock) {
+            for(SoftwareComponent currentSoftwareComponent: this.fdnNodeSetMap.values()){
+                if(StringUtils.isNotEmpty(currentSoftwareComponent.getParticipantName())){
+                    if(participantName.contentEquals(currentSoftwareComponent.getParticipantName())){
+                        retrievedNode = currentSoftwareComponent;
+                        break;
+                    }
+                }
+            }
+        }
+        LOG.debug(".getSoftwareComponent(): Exit, retrievedNode->{}", retrievedNode);
+        return (retrievedNode);
     }
 
     /**
